@@ -1,0 +1,16 @@
+- moveDec = require('move-decimal-point')
+
+.modal.fade
+ .modal-dialog.modal-sm
+   .modal-content
+     .modal-header
+       h5.modal-title Pay with Lightning
+       button.close(type='button', data-dismiss='modal'): span &times;
+
+     .modal-body
+       p.text-muted= description
+       p Approve paying #{ moveDec(msatoshi, -3) } satoshis?
+
+     .modal-footer
+       button.btn.btn-primary.approve(type='button') Pay now
+       button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
