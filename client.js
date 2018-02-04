@@ -12,7 +12,7 @@ const scanner = new Instascan.Scanner({ video: document.getElementById('cam') })
 let cameras
 Instascan.Camera.getCameras().then(_cameras => (cameras = _cameras, scan()))
 
-const scan = (index=0) => ($('#cam').removeClass('d-none'), scanner.start(cameras[index]))
+const scan = (index=0) => ($('#cam').removeClass('d-none'), scanner.start(cameras[cameras.length-1]))
 
 const stopscan = _ => ($('#cam').addClass('d-none'), scanner.stop())
 
