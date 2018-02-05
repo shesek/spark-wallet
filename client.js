@@ -33,7 +33,10 @@ const displayPay = async bolt11 => {
   console.log('pay req', payreq)
 
   const diag = $(approveView(payreq)).modal()
-    .find('.approve').click(e => (diag.remove(), pay(bolt11))).end()
+    .find('.approve').click(e => {
+      diag.off('hidden.bs.modal', scan).modal('hide')
+      pay(bolt11)
+    }).end()
     .on('hidden.bs.modal', scan)
 }
 
