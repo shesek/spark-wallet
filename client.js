@@ -7,7 +7,12 @@ const approveView = require('./views/approve.pug')
 
 const _csrf = $('meta[name=csrf]').attr('content')
 
-const scanner = new Instascan.Scanner({ video: document.getElementById('cam') })
+const scanner = new Instascan.Scanner({
+  video: document.getElementById('cam')
+, continuous: true
+, mirror: false
+, backgroundScan: false
+})
 
 let cameras
 Instascan.Camera.getCameras().then(_cameras => (cameras = _cameras, scan()))
