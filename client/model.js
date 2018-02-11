@@ -3,7 +3,7 @@ import { dbg, combine, extractErrors } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
-, sumChans = peers => peers.reduce((T, p) => T + p.channels.reduce((C, c) => C + c.msatoshi_to_us, 0), 0)
+, sumChans = peers => peers.reduce((T, p) => T + (p.channels||[]).reduce((C, c) => C + c.msatoshi_to_us, 0), 0)
 , updatePaid = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
 module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
