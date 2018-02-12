@@ -5,7 +5,7 @@ import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
 
 const formatNum = require('format-number')({ round: 3 })
-const json = data => pre(require('js-yaml').safeDump(data))
+const yaml = data => pre(require('js-yaml').safeDump(data))
 const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 const sat = msat => `${ formatNum(msat/1000) } sat`
@@ -29,7 +29,7 @@ const navbar = ({ cbalance }) =>
   , cbalance != null ? span('.navbar-brand.mr-0', sat(cbalance)) : ''
   ]))
 
-const home = ({ history, expert }) => div([
+const home = ({ history, peers, expert }) => div([
   div('.row', [
     div('.col-sm-6', a('.btn.btn-lg.btn-primary.btn-block.mb-2', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6', a('.btn.btn-lg.btn-secondary.btn-block.mb-2', { attrs: { href: '#/recv' } }, 'Request'))
@@ -49,7 +49,7 @@ const home = ({ history, expert }) => div([
     , span('.badge.badge-secondary.badge-pill', ago(h.ts))
     ])))
 
-//, json({ peers: S.peers })
+, !expert ? '' : div('.mt-4', yaml({ peers }))
 ])
 
 const scan = div('.text-center.text-md-left', [
@@ -58,13 +58,13 @@ const scan = div('.text-center.text-md-left', [
 ])
 
 const confirmPay = payreq => div('.confirm', [
-  json(payreq)
+  yaml(payreq)
 , button('.btn.btn-lg.btn-primary', { dataset: { do: 'confirm-pay', bolt11: payreq.bolt11, msatoshi: payreq.msatoshi } }, `Pay ${sat(payreq.msatoshi)}`)
 , ' '
 , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
-const paySuccess = json
+const paySuccess = yaml
 
 const recv = form({ dataset: { do: 'newinv' } }, [
   h2('Request payment')
@@ -91,14 +91,14 @@ const recvInv = inv => O.from(qruri(inv)).map(qr =>
   , img('.qr', { attrs: { src: qr } })
   , small('.d-block.text-muted.break-word', inv.bolt11)
   , a('.btn.btn-lg.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
-  //, json(inv)
+  //, yaml(inv)
   ]))
 
 const recvSuccess = inv => div([
-  json(inv)
+  yaml(inv)
 , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Return home')
 ])
 
-const logs = json
+const logs = yaml
 
 module.exports = { alertBox, loading, navbar, home, scan, confirmPay, paySuccess, recv, recvInv, recvSuccess, logs }

@@ -45,7 +45,7 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   , expert$ = togExpert$.startWith(false).scan(x => !x)
-  , logs$   = reply('getlog').map(r => r.log)
+  , logs$   = reply('getlog').map(r => r.body.log)
 
   , goto$  = O.merge(
       incoming$.filter(inv => inv.active).mapTo('/')
