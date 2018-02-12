@@ -1,5 +1,7 @@
 import { Observable as O } from 'rxjs'
-import { Scanner, Camera } from 'instascan/src'
+//import { Scanner, Camera } from 'instascan'
+
+const { Scanner, Camera } = window.Instascan
 
 require('webrtc-adapter')
 

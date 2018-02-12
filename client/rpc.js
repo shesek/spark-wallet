@@ -8,7 +8,7 @@ module.exports = ({ scanPay$, confPay$, newInv$, goLogs$ }) => O.merge(
 , confPay$.map(pay    => [ 'pay', pay, pay.bolt11 ])
 , newInv$.map(inv     => [ 'invoice', inv, inv.msatoshi, nanoid(), inv.description ])
 , goLogs$.mapTo(         [ 'getlog', {} ] )
-, O.timer(0, 5000).mapTo([ 'listinvoices', {} ])
+, O.timer(0, 500000).mapTo([ 'listinvoices', {} ])
 , O.timer(500, 5000000).mapTo([ 'listpayments', {} ])
 , O.timer(1000, 5000000).mapTo([ 'listpeers', {} ])
 , O.timer(1500, 5000000).mapTo([ 'listfunds', {} ])

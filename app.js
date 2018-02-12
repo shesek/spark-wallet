@@ -25,8 +25,7 @@ app.use(require('body-parser').urlencoded({ extended: true }))
 app.use(require('morgan')('dev'))
 app.use(require('csurf')({ cookie: true }))
 
-app.get('/script.js', require('browserify-middleware')(rel('client.js')))
-app.get('/app.js', require('browserify-middleware')(rel('client/app.js')))
+app.get('/app.js', require('browserify-middleware')(rel('client/app.js'), { noParse: require.resolve('./client/node_modules/instascan/lib/vendor/zxing.js') }))
 app.use('/assets', require('stylus').middleware({ src: rel('www'), serve: true }))
 app.use('/assets', require('express').static(rel('www')))
 
