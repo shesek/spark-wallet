@@ -16,5 +16,5 @@ const content = ({  goHome$, goScan$, goRecv$, state$, payreq$, outgoing$, invoi
 ).switchMap(x => x instanceof O ? x : O.of(x))
 
 module.exports = S =>
-  O.combineLatest(S.state$.startWith({}).map(views.navbar), S.alert$.map(views.alertBox).startWith(''), content(S).startWith(''), S.loading$.map(views.loading)
-  , (nav, alert, body, loading) => div([ nav, div('.container', [ alert, body ]), loading ]))
+  O.combineLatest(S.state$.startWith({}).map(views.navbar), S.alert$.map(views.alertBox).startWith(''), content(S).startWith('')
+  , (nav, alert, body, loading) => div([ nav, div('.container', [ alert, body ]) ]))

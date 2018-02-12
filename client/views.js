@@ -44,7 +44,7 @@ const home = ({ history, expert }) => div([
     li('.list-group-item.d-flex.justify-content-between.align-items-center', [
       //h.type === 'in' ? span('.text-success', `Received ${ sat(h.msatoshi_received) }`)
       //                : span('.text-warning', `Sent ${ sat(h.msatoshi) } to ${ h.destination.substr(0, 6) }`)
-      h.type === 'in' ? span('.badge.badge-success.badge-pill', `+${ sat(h.msatoshi_received) }`)
+      h.type === 'in' ? span('.badge.badge-success.badge-pill', `+${ sat(h.msatoshi) }`)
                       : span('.badge.badge-danger.badge-pill', `-${ sat(h.msatoshi) }`)
     , span('.badge.badge-secondary.badge-pill', ago(h.ts))
     ])))

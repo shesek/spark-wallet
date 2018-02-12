@@ -11,7 +11,7 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
     reply    = category => HTTP.select(category).flatMap(r$ => r$.catch(_ => O.empty())).map(r => ({ ...r, state: r.request.state, params: r.request.send.params }))
 
   , payreq$   = reply('decodepay').map(r => ({ ...r.body, ...r.state }))
-  , invoice$  = reply('invoice').map(({ body, state, params }) => console.log({body,state,params}) || ({ ...body, ...state, label: params[1], status: 'unpaid' }))
+  , invoice$  = reply('invoice').map(({ body, state, params }) => ({ ...body, ...state, label: params[1], status: 'unpaid' }))
   , outgoing$ = reply('pay').map(({ body, state }) => ({ ...body, ...state }))
   , incoming$ = SSE('waitany').map(r => r.data).map(JSON.parse)
       .withLatestFrom(invoice$.startWith({}), (pay, inv) =>
@@ -19,7 +19,11 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
 
   , peers$    = reply('listpeers').map(r => r.body.peers)
   , outputs$  = reply('listfunds').map(r => r.body.outputs)
-  , payments$ = reply('listpayments').map(r => r.body.payments)
+
+  , payments$ = O.merge(
+      reply('listpayments').map(r => _ => r.body.payments)
+    , outgoing$.map(pay => payments => [ ...payments, { msatoshi: pay.msatoshi, created_at: Date.now()/1000|0 } ])
+    ).startWith([]).scan((payments, mod) => mod(payments))
 
   , invoices$ = O.merge(
       reply('listinvoices').map(r => _ => r.body.invoices)
@@ -28,8 +32,8 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
     ).startWith([]).scan((invs, mod) => mod(invs))
 
   , history$ = O.combineLatest(payments$, invoices$, (payments, invoices) => [
-      ...payments.map(p => ({ ...p, type: 'out', ts: p.created_at }))
-    , ...invoices.filter(inv => inv.status === 'paid').map(inv => ({ ...inv, type: 'in', ts: inv.paid_at }))
+      ...payments.map(pay => ({ type: 'out', ts: pay.created_at, msatoshi: pay.msatoshi }))
+    , ...invoices.filter(inv => inv.status === 'paid').map(inv => ({ type: 'in', ts: inv.paid_at, msatoshi: inv.msatoshi_received }))
     ].sort((a, b) => b.ts - a.ts))
 
   , obalance$ = outputs$.map(sumOuts)
@@ -48,7 +52,12 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
     , outgoing$.mapTo('/')
     )
 
-  , state$ = combine({ history$, peers$, cbalance$, obalance$, expert$ }).shareReplay(1)
+  , loading$ = O.merge(
+      HTTP.select().mapTo(N => N+1)
+    , HTTP.select().flatMap(r$ => r$.catch(_ => null)).mapTo(N => N-1)
+    ).startWith(0).scan((N, mod) => mod(N))
+
+  , state$ = combine({ history$, peers$, cbalance$, obalance$, expert$, loading$ }).shareReplay(1)
   , error$ = extractErrors(HTTP.select())
 
   , alert$ = O.merge(
@@ -58,16 +67,11 @@ module.exports = ({ HTTP, SSE, dismiss$, togExpert$ }) => {
     , dismiss$.mapTo(null)
     )
 
-  , loading$ = O.merge(
-      HTTP.select().mapTo(N => N+1)
-    , HTTP.select().flatMap(r$ => r$.catch(_ => null)).mapTo(N => N-1)
-    ).startWith(0).scan((N, mod) => mod(N))
-
   dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
   dbg({ payreq$, invoice$, outgoing$, incoming$, state$, goto$, loading$, alert$ }, 'flash:model')
   dbg({ error$ }, 'flash:error')
 
   return { payreq$, invoice$, outgoing$, incoming$, logs$
-         , state$, goto$, loading$, error$, alert$ }
+         , state$, goto$, error$, alert$ }
 }
 

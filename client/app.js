@@ -40,7 +40,7 @@ run(main, {
   DOM:   makeDOMDriver('#app')
 , HTTP:  makeHTTPDriver()
 , SSE:   makeSSEDriver('stream')
-, scan$: makeScanDriver({ mirror: false, backgroundScan: false, cameraIndex: 0 })
+, scan$: makeScanDriver({ mirror: false, backgroundScan: false, scanPeriod: 5, cameraIndex: 0 })
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 })
 

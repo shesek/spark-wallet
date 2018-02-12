@@ -17,14 +17,15 @@
     "eventsource": "^1.0.5",
     "form-serialize": "^0.7.2",
     "format-number": "^3.0.0",
-    "instascan": "^1.0.0",
+    "instascan": "github:PallasKatze/instascan#1c1b5974a4a4fead2ef5fe489f375fae6e822002",
     "js-yaml": "^3.10.0",
     "move-decimal-point": "0.0.4",
     "nanoid": "^1.0.1",
     "path-to-regexp": "^2.1.0",
     "qrcode": "^1.2.0",
     "rxjs": "^5.5.6",
-    "vague-time": "^2.4.1"
+    "vague-time": "^2.4.1",
+    "webrtc-adapter": "^6.1.1"
   },
   "browserify": {
     "transform": [

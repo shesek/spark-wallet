@@ -1,5 +1,7 @@
 import { Observable as O } from 'rxjs'
-import { Scanner, Camera } from 'instascan'
+import { Scanner, Camera } from 'instascan/src'
+
+require('webrtc-adapter')
 
 const makeScanDriver = (opt={}) => {
   const video   = document.createElement('video')

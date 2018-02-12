@@ -20,7 +20,7 @@ module.exports = ({ DOM, HTTP, SSE, route, scan$ }) => {
   , newInv$  = submit('[data-do=newinv]').map(r =>
       ({ ...r, msatoshi: r.satoshi ? r.satoshi*1000 : 'any', description: r.description || 'Lightning' }))
 
-  , dismiss$ = click('[data-dismiss=alert]')
+  , dismiss$ = click('[data-dismiss=alert], a')
 
   //, fetchInv$  = route('/inv/:label').map(l => l.params[1])
 
