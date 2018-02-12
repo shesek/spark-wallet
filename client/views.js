@@ -70,7 +70,8 @@ const recv = form({ dataset: { do: 'newinv' } }, [
   h2('Request payment')
 , formGroup('Payment amount'
   , div('.input-group', [
-      input('.form-control.form-control-lg', { attrs: { type: 'number', min: '0.001', step: '0.001', name: 'satoshi', placeholder: '(optional)' } })
+      input('.form-control.form-control-lg'
+      , { attrs: { type: 'number', min: '0.001', step: '0.001', name: 'satoshi', placeholder: '(optional)', autofocus: true } })
     , div('.input-group-append', span('.input-group-text', 'sat'))
     ]))
 

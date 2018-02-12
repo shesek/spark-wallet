@@ -24,7 +24,7 @@ module.exports = ({ DOM, HTTP, SSE, route, scan$ }) => {
 
   //, fetchInv$  = route('/inv/:label').map(l => l.params[1])
 
-  , click$ = click(':root')
+  , click$ = click('document')
   , togExpert$ = click$.buffer(click$.debounceTime(250)).filter(xs => xs.length === 3)
 
   on('form', 'submit').subscribe(e => e.preventDefault())
