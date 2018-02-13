@@ -1,5 +1,5 @@
 import { Observable as O } from 'rxjs'
-import { h, link, nav, small, strong, ul, li, pre, div, p, h2, h3, h4, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
+import { h, link, nav, small, strong, ul, li, pre, div, p, h2, h3, h4, textarea, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
 
 import YAML from 'js-yaml'
 import qrcode from 'qrcode'
@@ -11,6 +11,7 @@ const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
 const numItems = 100
 
+
 const formGroup = (labelText, control, help) => div('.form-group', [
   label(labelText)
 , control
@@ -21,6 +22,9 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
   button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
 , ''+alert[1]
 ])
+
+const layout = ({ head, body, foot }) =>
+  div('.d-flex.flex-column', [ ...head, div('.container.flex-grow', body), foot ])
 
 const header = ({ unitf, cbalance, alert, conf: { expert, theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
@@ -44,7 +48,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 
 , expert ? div('.row.mb-2', [
     div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs'))
-  , div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'RPC'))
+  , div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console'))
   ]) : ''
 
 , ul('.list-group.payments', moves.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
@@ -104,8 +108,14 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
   , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
   , img('.qr', { attrs: { src: qr } })
   , small('.d-block.text-muted.break-word', inv.bolt11)
-  //, a('.btn.btn-lg.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
   , expert ? yaml(inv) : ''
   ]))
 
-module.exports = { header, footer, home, scan, confirmPay, recv, invoice, logs: yaml }
+const rpc = ({ rpcRes }) => form({ attrs: { do: 'exec-rpc' } }, [
+  h2('RPC Console')
+, input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc' } })
+, button('.btn.btn-lg.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
+, rpcRes ? yaml(rpcRes) : ''
+])
+
+module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs: yaml, rpc }

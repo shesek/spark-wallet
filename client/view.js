@@ -1,10 +1,11 @@
 import { Observable as O } from 'rxjs'
 import { div, hr } from '@cycle/dom'
 import views  from './views'
+import { dbg, combine } from './util'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = ({ state$, goHome$, goScan$, goRecv$, payreq$, invoice$, logs$ }) => {
+module.exports = ({ state$, goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
   const
     head$ = state$.map(views.header)
   , foot$ = state$.map(views.footer)
@@ -12,6 +13,7 @@ module.exports = ({ state$, goHome$, goScan$, goRecv$, payreq$, invoice$, logs$ 
       goHome$.startWith(1).mapTo(views.home)
     , goScan$.mapTo(views.scan)
     , goRecv$.mapTo(views.recv)
+    , goRpc$.mapTo(views.rpc).do(x=>console.log('goRpc', x))
 
     , payreq$.map(views.confirmPay)
     , invoice$.flatMap(views.invoice)
@@ -20,8 +22,7 @@ module.exports = ({ state$, goHome$, goScan$, goRecv$, payreq$, invoice$, logs$ 
 
     ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
 
-  return O.combineLatest(head$, body$, foot$, (head, body, foot) =>
-    div('.d-flex.flex-column', [ ...head, div('.container.flex-grow', body), foot ]) )
-}
+  dbg({ body$ }, 'flash:view')
 
-const addQR = inv => O.from(qruri(inv)).map(qr => ({ ...inv, qr }))
+  return combine({ head$, body$, foot$ }).map(views.layout)
+}

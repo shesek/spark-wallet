@@ -21,8 +21,8 @@ import rpc    from './rpc'
 
 const _csrf = document.querySelector('meta[name=csrf]').content
 
-const http = rpc$ => rpc$.map(([ method, state={}, ...params ]) =>
-    ({ category: method, method: 'POST', url: './rpc', send: { _csrf, method, params }, state }))
+const http = rpc$ => rpc$.map(([ method, opt={}, ...params ]) =>
+    ({ category: opt.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, state: opt.state }))
 
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
   const actions = intent({ DOM, route, scan$, conf$ })

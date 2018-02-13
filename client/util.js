@@ -4,16 +4,13 @@ import numbro from 'numbro'
 import moveDec from 'move-decimal-point'
 import { Observable as O } from 'rxjs'
 
-console.log({ big })
-const log = (label, x) => (console.log(label, x), x)
-
 const
 
   trim      = num => num.replace(/(\d)\1\1+$|0000+\d$/, '$1$1').replace(/\.?0+$/, '')
 
-, formatAmt = (amt, rate, step) => console.log('flash:rate formatAmt',{amt,rate,step}) || log('flash:rate formatAmt result',
-    amt && rate && trim(numbro(big(amt).times(rate).toFixed(10))
-      .format(log('flash:rate num format',`0,${step.toFixed(15).replace(/10*$/, '0')}`))) || '')
+, formatAmt = (amt, rate, step) =>
+    amt != null && rate && trim(numbro(big(amt).times(rate).toFixed(10))
+      .format(`0,${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
 
 , combine = obj => {
     const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))
