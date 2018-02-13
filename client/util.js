@@ -1,21 +1,27 @@
-import debug               from 'debug'
+import { Big as big } from 'big.js'
+import debug        from 'debug'
 import numbro from 'numbro'
 import moveDec from 'move-decimal-point'
 import { Observable as O } from 'rxjs'
 
+console.log({ big })
+const log = (label, x) => (console.log(label, x), x)
+
 const
 
-  btcUnit   = { sat: -3, bits: -5, milli: -8, btc: -11 }
-, trim      = num => num.replace(/(\d)\1\1+$|0000+\d$/, '$1$1').replace(/\.?0+$/, '')
-, formatUSD = (msat, rate) => trim(numbro(moveDec(msat, -11)*rate).format('0,0.0000'))
-, formatBTC = (msat, unit) => trim(numbro(moveDec(msat, btcUnit[unit])).format('0,0.00000000000'))
+  trim      = num => num.replace(/(\d)\1\1+$|0000+\d$/, '$1$1').replace(/\.?0+$/, '')
 
+, formatAmt = (amt, rate, step) => console.log('flash:rate formatAmt',{amt,rate,step}) || log('flash:rate formatAmt result',
+    amt && rate && trim(numbro(big(amt).times(rate).toFixed(10))
+      .format(log('flash:rate num format',`0,${step.toFixed(15).replace(/10*$/, '0')}`))) || '')
 
 , combine = obj => {
     const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))
     return O.combineLatest(...Object.values(obj), (...xs) =>
       xs.reduce((o, x, i) => (o[keys[i]] = x, o), {}))
   }
+
+, dropErrors = r$$ => r$$.flatMap(r$ => r$.catch(_ => O.empty()))
 
 , extractErrors = r$$ =>
     r$$.flatMap(r$ => r$.flatMap(_ => O.empty()).catch(err => O.of(err)))
@@ -27,5 +33,5 @@ const
       err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err),
       _   => dbg(`${k} completed`)))
 
-module.exports = { combine, extractErrors, dbg
-                 , formatUSD, formatBTC }
+module.exports = { combine, dropErrors, extractErrors, dbg
+                 , formatAmt }

@@ -38,7 +38,7 @@ module.exports = lnPath => {
     const onPay = inv => res.write(`event:waitany\ndata:${ JSON.stringify(inv) }\n\n`)
     em.on('waitany', onPay)
 
-    const onRate = rate => res.write(`event:rate\ndata:${ JSON.stringify(rate) }\n\n`)
+    const onRate = rate => res.write(`event:btcusd\ndata:${ JSON.stringify(rate) }\n\n`)
     em.on('rate', onRate)
     lastRate && onRate(lastRate)
 

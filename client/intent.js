@@ -19,9 +19,10 @@ module.exports = ({ DOM, HTTP, SSE, route, scan$ }) => {
   , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
   , confPay$ = click('[do=confirm-pay]')
 
+  , newInvAmt$ = on('[name=amount]', 'input').map(e => e.target.value)
   , newInv$  = submit('[data-do=newinv]').map(r => ({
       label:       nanoid()
-    , msatoshi:    r.satoshi ? r.satoshi*1000 : 'any'
+    , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
 
   , dismiss$ = click('[data-dismiss=alert], a, button')
@@ -35,7 +36,7 @@ module.exports = ({ DOM, HTTP, SSE, route, scan$ }) => {
   on('form', 'submit').subscribe(e => e.preventDefault())
 
   return { goHome$, goScan$, goRecv$, goLogs$, goRpc$
-         , scanPay$, confPay$, newInv$
+         , scanPay$, confPay$, newInv$, newInvAmt$
          , dismiss$, togExp$, togTheme$, togUnit$ }
 }
 

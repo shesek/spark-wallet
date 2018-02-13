@@ -2,7 +2,7 @@ import { Observable as O } from 'rxjs'
 
 const timer = (ms, val) => O.timer(Math.random()*10000, ms).startWith(-1).mapTo(val)
 
-module.exports = ({ scanPay$, confPay$, newInv$, goLogs$ }) => O.merge(
+module.exports = ({ scanPay$, confPay$, newInv$, goLogs$, unitf$ }) => O.merge(
   scanPay$.map(bolt11 => [ 'decodepay', { bolt11 }, bolt11])
 , confPay$.map(pay    => [ 'pay', pay, pay.bolt11 ])
 , newInv$.map(inv     => [ 'invoice', inv, inv.msatoshi, inv.label, inv.description ])

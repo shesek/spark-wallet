@@ -22,7 +22,7 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
 , ''+alert[1]
 ])
 
-const header = ({ theme, unitf, cbalance, expert, alert }) => [
+const header = ({ unitf, cbalance, alert, conf: { expert, theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
 , nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
     a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay' + (expert ? ' 🔧' : ''))
@@ -31,12 +31,12 @@ const header = ({ theme, unitf, cbalance, expert, alert }) => [
 , alert ? div('.container', alertBox(alert)) : ''
 ]
 
-const footer = ({ theme, info }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
+const footer = ({ info, conf: { theme } }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
   p('.info.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
 , p('.theme.float-right.mb-0', theme)
 ])
 
-const home = ({ info, rate, moves, peers, expert, unitf }) => div([
+const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
@@ -47,18 +47,18 @@ const home = ({ info, rate, moves, peers, expert, unitf }) => div([
   , div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'RPC'))
   ]) : ''
 
-, ul('.list-group.payments', moves.slice(0, numItems).map(m =>
+, ul('.list-group.payments', moves.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
     li('.list-group-item', [
       div('.d-flex.justify-content-between.align-items-center', [
-        m.type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(m.msatoshi) }`)
-                        : span('.badge.badge-danger.badge-pill', `-${ unitf(m.msatoshi) }`)
-      , span('.badge.badge-secondary.badge-pill', ago(m.ts))
+        type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
+                      : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
+      , span('.badge.badge-secondary.badge-pill', ago(ts))
       ])
-    , expert ? yaml(m.pay||m.inv) : ''
+    , expert ? yaml(obj) : ''
     ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items`) ] : []))
     // @TODO paging
 
-, expert ? yaml({ info, rate, peers }) : ''
+, expert ? yaml({ info: info||null, rate: rate||null, peers: peers||null }) : ''
 ])
 
 const scan = div('.text-center.text-md-left', [
@@ -66,7 +66,7 @@ const scan = div('.text-center.text-md-left', [
 //, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
-const confirmPay = payreq => ({ expert, unitf }) => div('.confirm', [
+const confirmPay = payreq => ({ unitf, conf: { expert } }) => div('.confirm', [
   h2('Confirm payment')
 , p([ 'Are you sure you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
 , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
@@ -76,26 +76,29 @@ const confirmPay = payreq => ({ expert, unitf }) => div('.confirm', [
 , expert ? yaml(payreq) : ''
 ])
 
-const recv = ({ unit }) => form({ dataset: { do: 'newinv' } }, [
-  h2('Request payment')
-, formGroup('Payment amount'
-  , div('.input-group', [
-      input('.form-control.form-control-lg'
-        // @TODO update min/step according to unit
-      , { attrs: { type: 'number', min: '0.001', step: '0.001', name: 'satoshi', placeholder: '(optional)', autofocus: true } })
-    , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
-    ]))
+const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =>
+  form({ dataset: { do: 'newinv' } }, [
+    h2('Request payment')
+  , formGroup('Payment amount'
+    , div('.input-group', [
+        input({ attrs: { type: 'hidden', name: 'msatoshi' }, props: { value: msatoshi } })
+      , input('.form-control.form-control-lg'
+          // @TODO update min/step according to unit
+        , { attrs: { type: 'number', step, min: step, name: 'amount', placeholder: '(optional)', autofocus: true }
+          , props: { value: amount } })
+      , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
+      ]))
 
-, formGroup('Description'
-  , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
-  , 'Embedded in the QR and presented to the payer.')
+  , formGroup('Description'
+    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
+    , 'Embedded in the QR and presented to the payer.')
 
-, button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')
-, ' '
-, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
-])
+  , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')
+  , ' '
+  , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+  ])
 
-const invoice = inv => qruri(inv).then(qr => ({ expert, unitf }) =>
+const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
   div('.text-center.text-md-left', [
     h2('Waiting for payment')
   , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
