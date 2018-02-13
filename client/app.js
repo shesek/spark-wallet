@@ -18,8 +18,8 @@ import rpc    from './rpc'
 
 const _csrf = document.querySelector('meta[name=csrf]').content
 
-const http = rpc$ => rpc$.map(([ method, state, ...params ]) =>
-  ({ category: method, method: 'POST', url: 'rpc', send: { _csrf, method, params }, state }))
+const http = rpc$ => rpc$.map(([ method, state={}, ...params ]) =>
+    ({ category: method, method: 'POST', url: './rpc', send: { _csrf, method, params }, state }))
 
 const main = ({ DOM, HTTP, SSE, route, scan$ }) => {
   const actions = intent({ DOM, route, scan$ })
@@ -39,8 +39,8 @@ const main = ({ DOM, HTTP, SSE, route, scan$ }) => {
 run(main, {
   DOM:   makeDOMDriver('#app')
 , HTTP:  makeHTTPDriver()
-, SSE:   makeSSEDriver('stream')
-, scan$: makeScanDriver({ mirror: false, backgroundScan: false, scanPeriod: 5, cameraIndex: 0 })
+, SSE:   makeSSEDriver('./stream')
+, scan$: makeScanDriver({ mirror: false, backgroundScan: false, /*scanPeriod: 5,*/ })
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 })
 

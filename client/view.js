@@ -1,20 +1,27 @@
 import { Observable as O } from 'rxjs'
-import { div } from '@cycle/dom'
+import { div, hr } from '@cycle/dom'
 import views  from './views'
 
-const content = ({  goHome$, goScan$, goRecv$, state$, payreq$, outgoing$, invoice$, logs$ }) => O.merge(
-  goHome$.startWith(1).mapTo(state$.map(views.home))
-, goScan$.mapTo(views.scan)
-, goRecv$.mapTo(views.recv)
+const isFunc = x => typeof x == 'function'
 
-, payreq$.map(views.confirmPay)
-//, outgoing$.map(views.paySuccess)
-, invoice$.flatMap(views.recvInv)
+module.exports = ({ state$, goHome$, goScan$, goRecv$, payreq$, invoice$, logs$ }) => {
+  const
+    head$ = state$.map(views.header)
+  , foot$ = state$.map(views.footer)
+  , body$ = O.merge(
+      goHome$.startWith(1).mapTo(views.home)
+    , goScan$.mapTo(views.scan)
+    , goRecv$.mapTo(views.recv)
 
-, logs$.map(views.logs)
+    , payreq$.map(views.confirmPay)
+    , invoice$.flatMap(views.invoice)
 
-).switchMap(x => x instanceof O ? x : O.of(x))
+    , logs$.map(views.logs)
 
-module.exports = S =>
-  O.combineLatest(S.state$.startWith({}).map(views.navbar), S.alert$.map(views.alertBox).startWith(''), content(S).startWith('')
-  , (nav, alert, body, loading) => div([ nav, div('.container', [ alert, body ]) ]))
+    ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
+
+  return O.combineLatest(head$, body$, foot$, (head, body, foot) =>
+    div('.d-flex.flex-column', [ ...head, div('.container.flex-grow', body), foot ]) )
+}
+
+const addQR = inv => O.from(qruri(inv)).map(qr => ({ ...inv, qr }))

@@ -1,5 +1,15 @@
 body
-  padding-bottom 1rem
+  // avoid FOUC before bootstrap loads
+  font-size 0px
+
+html, body, #app
+  height 100%
+
+#app > .flex-column
+  min-height 100%
+
+.flex-grow
+  flex 1
 
 .break-word
   word-break break-word
@@ -8,13 +18,11 @@ body
   width 100%
 
 .payments .badge
-  font-size 120%
+  font-size 100%
 
 .alert
   font-size 0.9rem
-
-  .close
-    color #fff
+  font-weight 400
 
 img.qr
   width 100%

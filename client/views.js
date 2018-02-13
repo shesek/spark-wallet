@@ -1,14 +1,15 @@
 import { Observable as O } from 'rxjs'
-import { nav, small, ul, li, pre, div, p, h2, h3, h4, table, thead, tr, td, tbody, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
+import { h, link, nav, small, strong, ul, li, pre, div, p, h2, h3, h4, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
 
+import YAML from 'js-yaml'
 import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
 
-const formatNum = require('format-number')({ round: 3 })
-const yaml = data => pre(require('js-yaml').safeDump(data))
+const yaml = data => pre('.mt-4.text-left.text-muted', YAML.safeDump(data))
 const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
-const sat = msat => `${ formatNum(msat/1000) } sat`
+
+const numItems = 100
 
 const formGroup = (labelText, control, help) => div('.form-group', [
   label(labelText)
@@ -16,63 +17,73 @@ const formGroup = (labelText, control, help) => div('.form-group', [
 , help ? small('.form-text.text-muted', help) : ''
 ])
 
-const loading = isLoading => !isLoading ? '' : div('.mt-3.text-center', h3('LOADING'))
-
-const alertBox = alert => !alert ? '' : div('.alert.alert-dismissable.alert-'+alert[0], [
-  button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' }, props: { innerHTML: '&times;' } })
-, alert[1]
+const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
+  button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
+, ''+alert[1]
 ])
 
-const navbar = ({ cbalance }) =>
-  nav('.navbar.navbar-dark.bg-primary.mb-3', div('.container', [
-    a('.navbar-brand', { attrs: { href: '#/' } }, 'FlashWallet')
-  , cbalance != null ? span('.navbar-brand.mr-0', sat(cbalance)) : ''
+const header = ({ theme, unitf, cbalance, expert, alert }) => [
+  link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
+, nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
+    a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay' + (expert ? ' 🔧' : ''))
+  , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
+, alert ? div('.container', alertBox(alert)) : ''
+]
 
-const home = ({ history, peers, expert }) => div([
-  div('.row', [
-    div('.col-sm-6', a('.btn.btn-lg.btn-primary.btn-block.mb-2', { attrs: { href: '#/scan' } }, 'Pay'))
-  , div('.col-sm-6', a('.btn.btn-lg.btn-secondary.btn-block.mb-2', { attrs: { href: '#/recv' } }, 'Request'))
+const footer = ({ theme, info }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
+  p('.info.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
+, p('.theme.float-right.mb-0', theme)
+])
+
+const home = ({ info, rate, moves, peers, expert, unitf }) => div([
+  div('.row.mb-2', [
+    div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
+  , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
   ])
 
-, !expert ? '' : div('.row', [
+, expert ? div('.row.mb-2', [
     div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs'))
   , div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'RPC'))
-  ])
+  ]) : ''
 
-, ul('.list-group.payments', history.map(h =>
-    li('.list-group-item.d-flex.justify-content-between.align-items-center', [
-      //h.type === 'in' ? span('.text-success', `Received ${ sat(h.msatoshi_received) }`)
-      //                : span('.text-warning', `Sent ${ sat(h.msatoshi) } to ${ h.destination.substr(0, 6) }`)
-      h.type === 'in' ? span('.badge.badge-success.badge-pill', `+${ sat(h.msatoshi) }`)
-                      : span('.badge.badge-danger.badge-pill', `-${ sat(h.msatoshi) }`)
-    , span('.badge.badge-secondary.badge-pill', ago(h.ts))
-    ])))
+, ul('.list-group.payments', moves.slice(0, numItems).map(m =>
+    li('.list-group-item', [
+      div('.d-flex.justify-content-between.align-items-center', [
+        m.type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(m.msatoshi) }`)
+                        : span('.badge.badge-danger.badge-pill', `-${ unitf(m.msatoshi) }`)
+      , span('.badge.badge-secondary.badge-pill', ago(m.ts))
+      ])
+    , expert ? yaml(m.pay||m.inv) : ''
+    ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items`) ] : []))
+    // @TODO paging
 
-, !expert ? '' : div('.mt-4', yaml({ peers }))
+, expert ? yaml({ info, rate, peers }) : ''
 ])
 
 const scan = div('.text-center.text-md-left', [
 , div('.scanqr')
-, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+//, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
-const confirmPay = payreq => div('.confirm', [
-  yaml(payreq)
-, button('.btn.btn-lg.btn-primary', { dataset: { do: 'confirm-pay', bolt11: payreq.bolt11, msatoshi: payreq.msatoshi } }, `Pay ${sat(payreq.msatoshi)}`)
+const confirmPay = payreq => ({ expert, unitf }) => div('.confirm', [
+  h2('Confirm payment')
+, p([ 'Are you sure you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
+, payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
+, button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
 , ' '
 , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+, expert ? yaml(payreq) : ''
 ])
 
-const paySuccess = yaml
-
-const recv = form({ dataset: { do: 'newinv' } }, [
+const recv = ({ unit }) => form({ dataset: { do: 'newinv' } }, [
   h2('Request payment')
 , formGroup('Payment amount'
   , div('.input-group', [
       input('.form-control.form-control-lg'
+        // @TODO update min/step according to unit
       , { attrs: { type: 'number', min: '0.001', step: '0.001', name: 'satoshi', placeholder: '(optional)', autofocus: true } })
-    , div('.input-group-append', span('.input-group-text', 'sat'))
+    , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
     ]))
 
 , formGroup('Description'
@@ -84,21 +95,14 @@ const recv = form({ dataset: { do: 'newinv' } }, [
 , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
-const recvInv = inv => O.from(qruri(inv)).map(qr =>
+const invoice = inv => qruri(inv).then(qr => ({ expert, unitf }) =>
   div('.text-center.text-md-left', [
     h2('Waiting for payment')
-  , inv.msatoshi !== 'any' ? h3(sat(inv.msatoshi)) : ''
+  , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
   , img('.qr', { attrs: { src: qr } })
   , small('.d-block.text-muted.break-word', inv.bolt11)
-  , a('.btn.btn-lg.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
-  //, yaml(inv)
+  //, a('.btn.btn-lg.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
+  , expert ? yaml(inv) : ''
   ]))
 
-const recvSuccess = inv => div([
-  yaml(inv)
-, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Return home')
-])
-
-const logs = yaml
-
-module.exports = { alertBox, loading, navbar, home, scan, confirmPay, paySuccess, recv, recvInv, recvSuccess, logs }
+module.exports = { header, footer, home, scan, confirmPay, recv, invoice, logs: yaml }

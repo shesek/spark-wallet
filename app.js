@@ -36,6 +36,11 @@ app.post('/rpc', pwrap(async (req, res) =>
 
 app.get('/stream', require('./stream')(lnPath))
 
+app.use((err, req, res, next) => {
+  console.error(err.stack || err.toString())
+  res.status(err.status || 500).send(err.type && err || err.stack || err)
+})
+
 const sslOpt = { key: fs.readFileSync(rel('key.pem')), cert: fs.readFileSync(rel('cert.pem')) }
 require('https').createServer(sslOpt, app).listen(app.settings.port, app.settings.host, _ =>
   console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
