@@ -6,11 +6,11 @@ import { Observable as O } from 'rxjs'
 
 const
 
-  trim      = num => num.replace(/(\d)\1\1+$|0000+\d$/, '$1$1').replace(/\.?0+$/, '')
+  trim = num => num/*.replace(/(\d)\1\1+$|0000+\d$/, '$1$1')*/.replace(/\.?0+$/, '')
 
-, formatAmt = (amt, rate, step) =>
+, formatAmt = (amt, rate, step, comma=true) =>
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(10))
-      .format(`0,${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
+      .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
 
 , combine = obj => {
     const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))

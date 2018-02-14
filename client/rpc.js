@@ -23,7 +23,7 @@ exports.rpcIntent = ({ HTTP, SSE }) => {
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
   , incoming$: SSE('waitany')
   , execRes$:  reply('console').map(({ body, request: { send } }) => ({ ...send, res: body  }))
-  , logs$:     reply('getlog').map(r => r.log)
+  , logs$:     reply('getlog').map(r => r.body.log.slice().reverse())
   }
 }
 

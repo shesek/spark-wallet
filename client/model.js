@@ -2,7 +2,7 @@ import big from 'big.js'
 import { Observable as O } from 'rxjs'
 import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
-const reFormat = /@\{\{(\d+)\}\}/
+const reFormat = /@\{\{(\d+)\}\}/g
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
@@ -16,20 +16,16 @@ const
 
 const
   themes   = 'cerulean cosmo cyborg darkly flatly journal litera lumen lux materia minty pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
-, units    = [ 'sat', 'bits', 'milli', 'btc', 'usd' ]
+, units    = 'sat bits milli btc usd'.split(' ')
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
                   , HTTP, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
-    conf  = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-
-  // Events
-
 
   // periodically re-sync from listpayments, continuously patch with known outgoing payments
-  , freshPays$ = O.merge(
+    freshPays$ = O.merge(
       payments$.map(payments => _ => payments)
     , outgoing$.map(pay => payments => [ ...payments, { ...pay, status: 'complete', created_at: Date.now()/1000|0 } ])
     ).startWith([]).scan((payments, mod) => mod(payments))
@@ -60,6 +56,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
     ].sort((a, b) => b[1] - a[1]))
 
   // config options
+  , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan(n => (n+1) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan(n => (n+1) % units.length) .map(n => units[n])
@@ -74,7 +71,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '').startWith(null)
   , recvForm$ = combine({
       msatoshi: recvMsat$
-    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit]).replace(/,/g, '') || '')
+    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit], false))
                      .merge(goRecv$.mapTo(''))
     , step:     unit$.map(unit => unitstep[unit])
     })
@@ -87,15 +84,14 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   // user-visible alerts
   , alert$   = O.merge(
       error$.map(err  => [ 'danger', err ])
-    , incoming$.map(i => [ 'success', `Received @{{${i.msatoshi_received}}}` ])
-    , outgoing$.map(i => [ 'success', `Sent @{{${i.msatoshi}}}` ])
+    , incoming$.map(i => [ 'success', `Received incoming payment of @{{${i.msatoshi_received}}}` ])
+    , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
     , dismiss$.mapTo(null).startWith(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])
 
-  // RPC console response
+  // RPC console history
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x == 'clear' ? [] : [ x, ...xs ].slice(0, 20))
-
 
   dbg({ reply$: HTTP.select().flatMap(r$ => r$.catch(_ => O.empty())).map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
   dbg({ loading$, alert$, rpcHist$ }, 'flash:model')

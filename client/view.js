@@ -1,5 +1,4 @@
 import { Observable as O } from 'rxjs'
-import { div, hr } from '@cycle/dom'
 import views  from './views'
 import { dbg, combine } from './util'
 
@@ -22,7 +21,7 @@ module.exports = (state$, { goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$
 
     ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
 
-  dbg({ head$, body$, foot$ }, 'flash:view')
+  dbg({ head$, body$, foot$, logs$ }, 'flash:view')
 
   return combine({ head$, body$, foot$ }).map(views.layout)
 }

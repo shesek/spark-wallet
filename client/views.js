@@ -1,5 +1,5 @@
 import { Observable as O } from 'rxjs'
-import { h, link, nav, small, strong, ul, li, pre, div, p, h2, h3, h4, textarea, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
+import { h, link, nav, small, strong, ul, li, pre, code, div, p, h2, h3, h4, textarea, select, option, button, optgroup, label, span, input, form, img, a, video } from '@cycle/dom'
 
 import YAML from 'js-yaml'
 import qrcode from 'qrcode'
@@ -10,7 +10,6 @@ const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
 const numItems = 100
-
 
 const formGroup = (labelText, control, help) => div('.form-group', [
   label(labelText)
@@ -121,4 +120,11 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
     li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', r.params.join(' ') ]), yaml(r.res) ])))
 ])
 
-module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs: yaml, rpc }
+const logs = items => div([
+  h2('Log entries')
+, code([].concat(...items.map(i => [
+    i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
+                         : `${i.time} [${i.type}] ${i.source} ${i.log}`, h('br')]
+  )))
+])
+module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs, rpc }
