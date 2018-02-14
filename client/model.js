@@ -100,5 +100,5 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
 
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
 
-  return combine({ conf$, info$, alert$, loading$, moves$, peers$, cbalance$, obalance$, unitf$, recvForm$, rpcHist$ }).shareReplay(1)
+  return combine({ conf$, info$, alert$, loading$, moves$, peers$, cbalance$, obalance$, rate$, unitf$, recvForm$, rpcHist$ }).shareReplay(1)
 }

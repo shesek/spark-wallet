@@ -61,7 +61,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
     ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items`) ] : []))
     // @TODO paging
 
-, expert ? yaml({ info: info||null, rate: rate||null, peers: peers||null }) : ''
+, expert ? yaml({ info, rate: rate && rate.toFixed(10), peers }) : ''
 ])
 
 const scan = div('.text-center.text-md-left', [

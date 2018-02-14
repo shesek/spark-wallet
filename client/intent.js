@@ -29,7 +29,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
 
-  , togExp$   = nthClick(click('.info'), 3)
+  , togExp$   = nthClick(click('footer'), 3)
   , togTheme$ = click('.theme')
   , togUnit$  = click('.toggle-unit')
   , dismiss$  = click('[data-dismiss=alert], a, button').merge(submit('form'))
