@@ -11,6 +11,7 @@ module.exports = lnPath => {
 
   async function waitany(last_index) {
     const inv = await ln.waitanyinvoice(last_index)
+    console.log('waitany():', inv)
     em.emit('waitany', inv)
     waitany(inv.pay_index)
   }
