@@ -19,8 +19,9 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
   , confPay$ = click('[do=confirm-pay]')
 
-  , execRpc$ = submit('[do=exec-rpc]').map(r => stringArgv(r.cmd))
   , clrHist$ = click('[do=clear-console-history]')
+  , execRpc$ = submit('[do=exec-rpc]').map(r => stringArgv(r.cmd))
+      .merge(click('[do=rpc-help]').mapTo([ 'help' ]))
 
   , recvAmt$ = on('[name=amount]', 'input').map(e => e.target.value)
   , newInv$  = submit('[data-do=newinv]').map(r => ({

@@ -25,17 +25,17 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
 const layout = ({ head, body, foot }) =>
   div('.d-flex.flex-column', [ ...head, div('.container.flex-grow', body), foot ])
 
-const header = ({ unitf, cbalance, alert, conf: { expert, theme } }) => [
+const header = ({ unitf, cbalance, alert, conf: { theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
 , nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
-    a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay' + (expert ? ' 🔧' : ''))
+    a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay')
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
 , alert ? div('.container', alertBox(alert)) : ''
 ]
 
-const footer = ({ info, conf: { theme } }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
-  p('.info.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
+const footer = ({ info, conf: { theme, expert } }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
+  p('.info.float-left.mb-0', `${expert ? '🔧 ' : ''}${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
 , p('.theme.float-right.mb-0', theme)
 ])
 
@@ -116,6 +116,8 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 , button('.btn.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
 , ' '
 , button('.btn.btn-secondary.mt-2', { attrs: { type: 'button', do: 'clear-console-history' }}, 'Clear history')
+, ' '
+, button('.btn.btn-info.mt-2', { attrs: { type: 'button', do: 'rpc-help' }}, 'Help')
 , !rpcHist.length ? '' : ul('.list-group.mt-4', rpcHist.map(r =>
     li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', r.params.join(' ') ]), yaml(r.res) ])))
 ])

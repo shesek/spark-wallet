@@ -22,8 +22,8 @@ exports.rpcIntent = ({ HTTP, SSE }) => {
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
   , incoming$: SSE('waitany')
-  , execRes$:  reply('console').map(({ body, request: { send } }) => ({ ...send, res: body  }))
-  , logs$:     reply('getlog').map(r => r.body.log.slice().reverse())
+  , execRes$:  reply('console').map(({ body, request: { send } }) => ({ ...send, res: body.help || body }))
+  , logs$:     reply('getlog').map(r => r.body.log)
   }
 }
 
