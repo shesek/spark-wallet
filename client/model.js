@@ -41,13 +41,13 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
 
   // periodically re-sync channel balance from "listfunds", continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
-      funds$.map(funds  => _ => sumChans(funds.channels))
+      funds$.map(funds  => _ => sumChans(funds.channels || []))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // on-chain output balance (not currently used for anything, but seems useful?)
-  , obalance$ = funds$.map(funds => sumOuts(funds.outputs))
+  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || []))
 
   // chronologically sorted feed of incoming and outgoing payments
   , moves$    = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
