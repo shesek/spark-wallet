@@ -121,7 +121,7 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 ])
 
 const logs = items => div([
-  h2('Log entries')
+  h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
 , code([].concat(...items.map(i => [
     i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
                          : `${i.time} [${i.type}] ${i.source} ${i.log}`, h('br')]

@@ -13,7 +13,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , goHome$ = route('/')
   , goScan$ = route('/scan')
   , goRecv$ = route('/recv')
-  , goLogs$ = route('/logs')
+  , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
   , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
