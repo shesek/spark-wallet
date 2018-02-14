@@ -23,7 +23,8 @@ module.exports = lnPath => {
   let lastRate
   ;(async function getrate() {
     // @XXX check if anybody is listening?
-    em.emit('rate', lastRate = await request(rateUrl).then(r => r.body.BTCUSD.last))
+    try { em.emit('rate', lastRate = await request(rateUrl).then(r => r.body.BTCUSD.last)) }
+    catch (err) { console.error(err.stack || err.toString()) }
     setTimeout(getrate, rateInterval)
   })()
 
