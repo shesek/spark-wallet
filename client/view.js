@@ -5,7 +5,7 @@ import { dbg, combine } from './util'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = ({ state$, goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
+module.exports = (state$, { goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
   const
     head$ = state$.map(views.header)
   , foot$ = state$.map(views.footer)
@@ -13,7 +13,7 @@ module.exports = ({ state$, goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$
       goHome$.startWith(1).mapTo(views.home)
     , goScan$.mapTo(views.scan)
     , goRecv$.mapTo(views.recv)
-    , goRpc$.mapTo(views.rpc).do(x=>console.log('goRpc', x))
+    , goRpc$.mapTo(views.rpc)
 
     , payreq$.map(views.confirmPay)
     , invoice$.flatMap(views.invoice)
@@ -22,7 +22,7 @@ module.exports = ({ state$, goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$
 
     ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
 
-  dbg({ body$ }, 'flash:view')
+  dbg({ head$, body$, foot$ }, 'flash:view')
 
   return combine({ head$, body$, foot$ }).map(views.layout)
 }

@@ -17,25 +17,36 @@ import { dbg } from './util'
 import intent from './intent'
 import model  from './model'
 import view   from './view'
-import rpc    from './rpc'
+import { rpcCalls, rpcResp } from './rpc'
+
+const isObj = x => ({}).toString.call(x) == '[object Object]'
 
 const _csrf = document.querySelector('meta[name=csrf]').content
 
-const http = rpc$ => rpc$.map(([ method, opt={}, ...params ]) =>
-    ({ category: opt.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, state: opt.state }))
+const http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
+    ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))
 
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
-  const actions = intent({ DOM, route, scan$, conf$ })
-      , state   = model({ HTTP, SSE, ...actions, savedConf$: conf$ })
-      , rpc$    = rpc({ ...actions, ...state })
 
-  dbg({ ...actions, ...state, rpc$ }, 'flash')
+  const actions = intent({ DOM, route, conf$, scan$ })
+      , resps   = rpcResp({ HTTP, SSE })
+      , state$  = model({ HTTP, ...actions, ...resps })
+
+      , rpc$    = rpcCalls(actions)
+
+      , currPaid$ = resps.incoming$.withLatestFrom(resps.invoice$).filter(([ pay, inv ]) => pay.label === inv.label)
+      , goto$     = O.merge(currPaid$, resps.outgoing$).mapTo('/')
+
+  dbg(actions, 'flash:actions')
+  dbg(resps, 'flash:rpc-resps')
+  dbg({ state$ }, 'flash:state')
+  dbg({ rpc$ }, 'flash:rpc-reqs')
 
   return {
-    DOM:   view({ ...actions, ...state })
+    DOM:   view(state$, { ...actions, ...resps })
   , HTTP:  http(rpc$)
-  , route: state.goto$
-  , conf$: state.state$.map(s => s.conf)
+  , route: goto$
+  , conf$: state$.map(s => s.conf)
   , scan$: DOM.select('.scanqr').elements()
   }
 }

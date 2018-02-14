@@ -5,7 +5,7 @@ import YAML from 'js-yaml'
 import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
 
-const yaml = data => pre('.mt-4.text-left.text-muted', YAML.safeDump(data))
+const yaml = data => pre('.mt-3.text-left.text-muted', YAML.safeDump(data))
 const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
@@ -111,11 +111,14 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
   , expert ? yaml(inv) : ''
   ]))
 
-const rpc = ({ rpcRes }) => form({ attrs: { do: 'exec-rpc' } }, [
+const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
   h2('RPC Console')
 , input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc' } })
-, button('.btn.btn-lg.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
-, rpcRes ? yaml(rpcRes) : ''
+, button('.btn.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
+, ' '
+, button('.btn.btn-secondary.mt-2', { attrs: { type: 'button', do: 'clear-console-history' }}, 'Clear history')
+, !rpcHist.length ? '' : ul('.list-group.mt-4', rpcHist.map(r =>
+    li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', r.params.join(' ') ]), yaml(r.res) ])))
 ])
 
 module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs: yaml, rpc }

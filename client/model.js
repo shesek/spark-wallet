@@ -7,50 +7,34 @@ const
 , sumChans = chans => chans.reduce((T, c) => T + c.channel_sat, 0) * 1000
 , updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
-, parseRes = r => r.request.state ? { ...r.body, ...r.request.state } : r.body
-
 , add = x => xs => [ ...xs, x ]
 , rem = x => xs => xs.filter(_x => _x !== x)
 , idx = xs => x => xs.indexOf(x)
 , idn = x => x
 
-const themes   = 'cerulean cosmo cyborg darkly flatly journal litera lumen lux materia minty pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
-    , units    = [ 'sat', 'bits', 'milli', 'btc', 'usd' ]
-    , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
-    , unitstep = { ...unitrate, usd: 0.00001 }
+const
+  themes   = 'cerulean cosmo cyborg darkly flatly journal litera lumen lux materia minty pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
+, units    = [ 'sat', 'bits', 'milli', 'btc', 'usd' ]
+, unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
+, unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ HTTP, SSE, dismiss$, togExp$, togTheme$, togUnit$, newInvAmt$, execRpc$, savedConf$ }) => {
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
+                  , HTTP, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
     conf  = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-  , reply = category => dropErrors(HTTP.select(category)).map(parseRes)
 
   // Events
 
-  , payreq$   = reply('decodepay')
-  , invoice$  = reply('invoice').map(inv => ({ ...inv, status: 'unpaid' }))
-  , logs$     = reply('getlog').map(r => r.log)
-  , outgoing$ = reply('pay')
-  , incoming$ = SSE('waitany')
-
-  , currPaid$ = incoming$.withLatestFrom(invoice$).filter(([ pay, inv ]) => pay.label === inv.label)
-  , goto$     = O.merge(currPaid$, outgoing$).mapTo('/')
-
-  // State
-
-  , error$    = extractErrors(HTTP.select())
-  , peers$    = reply('listpeers').map(r => r.peers).startWith(null)
-  , funds$    = reply('listfunds')
-  , info$     = reply('getinfo')
 
   // periodically re-sync from listpayments, continuously patch with known outgoing payments
-  , payments$ = O.merge(
-      reply('listpayments').map(r => _ => r.payments)
+  , freshPays$ = O.merge(
+      payments$.map(payments => _ => payments)
     , outgoing$.map(pay => payments => [ ...payments, { ...pay, status: 'complete', created_at: Date.now()/1000|0 } ])
     ).startWith([]).scan((payments, mod) => mod(payments))
 
   // periodically re-sync from listinvoices, continuously patch with known invoices (paid only)
-  , invoices$ = O.merge(
-      reply('listinvoices').map(r => _ => r.invoices)
+  , freshInvs$ = O.merge(
+      invoices$.map(invs => _ => invs)
     , invoice$.map(inv  => invs => [ ...invs, inv ])
     , incoming$.map(inv => invs => updPaid(invs, inv))
     )
@@ -68,7 +52,7 @@ module.exports = ({ HTTP, SSE, dismiss$, togExp$, togTheme$, togUnit$, newInvAmt
   , obalance$ = funds$.map(funds => sumOuts(funds.outputs))
 
   // chronologically sorted feed of incoming and outgoing payments
-  , moves$    = O.combineLatest(invoices$, payments$, (invoices, payments) => [
+  , moves$    = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(inv => [ 'in',  inv.paid_at,    inv.msatoshi_received, inv ])
     , ...payments.map(pay => [ 'out', pay.created_at, pay.msatoshi,          pay ])
     ].sort((a, b) => b[1] - a[1]))
@@ -80,15 +64,16 @@ module.exports = ({ HTTP, SSE, dismiss$, togExp$, togTheme$, togUnit$, newInvAmt
   , conf$    = combine({ expert$, theme$, unit$ })
 
   // currency & unit conversion handling
-  , msatusd$ = SSE('btcusd').map(rate => big(rate).div(100000000000)).startWith(null)
+  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unit == 'usd' ? msatusd : unitrate[unit])
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
   // dynamic currency conversion for payment request form
-  , recvMsat$ = newInvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).round(0).toString() || '').startWith(null)
+  , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '').startWith(null)
   , recvForm$ = combine({
       msatoshi: recvMsat$
-    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit]).replace(/,/g, '') || '')
+    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => console.log('recv amt', { unit, msat, rate }) || formatAmt(msat, rate, unitstep[unit]).replace(/,/g, '') || '')
+                     .merge(goRecv$.mapTo(''))
     , step:     unit$.map(unit => unitstep[unit])
     })
 
@@ -106,17 +91,16 @@ module.exports = ({ HTTP, SSE, dismiss$, togExp$, togTheme$, togUnit$, newInvAmt
     )
 
   // RPC console response
-  , rpcRes$  = reply('console').startWith(null).merge(execRpc$.mapTo(null))
+  , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
+      .scan((xs, x) => x == 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
-  , state$   = combine({ conf$, info$, alert$, loading$, moves$, peers$, cbalance$, obalance$, unitf$, recvForm$, rpcRes$ }).shareReplay(1)
 
   dbg({ reply$: HTTP.select().flatMap(r$ => r$.catch(_ => O.empty())).map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
-  dbg({ payreq$, invoice$, outgoing$, incoming$, state$, goto$, loading$, alert$, rpcRes$ }, 'flash:model')
+  dbg({ loading$, alert$, rpcHist$ }, 'flash:model')
   dbg({ error$ }, 'flash:error')
-  dbg({ unit$, rate$, newInvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
+  dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
 
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
 
-  return { payreq$, invoice$, outgoing$, incoming$, logs$
-         , state$, goto$, alert$ }
+  return combine({ conf$, info$, alert$, loading$, moves$, peers$, cbalance$, obalance$, unitf$, recvForm$, rpcHist$ }).shareReplay(1)
 }
