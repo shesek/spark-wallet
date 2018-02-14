@@ -3,7 +3,7 @@ import { dropErrors, extractErrors } from './util'
 
 const timer = (ms, val) => O.timer(Math.random()*10000, ms).startWith(-1).mapTo(val)
 
-exports.rpcResp = ({ HTTP, SSE }) => {
+exports.rpcIntent = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
   return {

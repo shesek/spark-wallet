@@ -17,25 +17,26 @@ import { dbg } from './util'
 import intent from './intent'
 import model  from './model'
 import view   from './view'
-import { rpcCalls, rpcResp } from './rpc'
-
-const isObj = x => ({}).toString.call(x) == '[object Object]'
+import { rpcCalls, rpcIntent } from './rpc'
 
 const _csrf = document.querySelector('meta[name=csrf]').content
 
 const http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
     ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))
 
+const goto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$ }) =>
+  out$.merge(in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label)).mapTo('/')
+
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
   const actions = intent({ DOM, route, conf$, scan$ })
-      , resps   = rpcResp({ HTTP, SSE })
+      , resps   = rpcIntent({ HTTP, SSE })
+
       , state$  = model({ HTTP, ...actions, ...resps })
 
+      , vdom$   = view(state$, { ...actions, ...resps })
       , rpc$    = rpcCalls(actions)
-
-      , currPaid$ = resps.incoming$.withLatestFrom(resps.invoice$).filter(([ pay, inv ]) => pay.label === inv.label)
-      , goto$     = O.merge(currPaid$, resps.outgoing$).mapTo('/')
+      , goto$   = goto(resps)
 
   dbg(actions, 'flash:actions')
   dbg(resps, 'flash:rpc-resps')
@@ -43,7 +44,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
   dbg({ rpc$ }, 'flash:rpc-reqs')
 
   return {
-    DOM:   view(state$, { ...actions, ...resps })
+    DOM:   vdom$
   , HTTP:  http(rpc$)
   , route: goto$
   , conf$: state$.map(s => s.conf)
@@ -59,5 +60,3 @@ run(main, {
 , conf$: makeConfDriver(storageDriver)
 , scan$: makeScanDriver({ mirror: false, backgroundScan: false, /*scanPeriod: 5,*/ })
 })
-
-

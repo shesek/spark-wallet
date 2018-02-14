@@ -2,6 +2,8 @@ import big from 'big.js'
 import { Observable as O } from 'rxjs'
 import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
+const reFormat = /@\{\{(\d+)\}\}/
+
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
 , sumChans = chans => chans.reduce((T, c) => T + c.channel_sat, 0) * 1000
@@ -72,7 +74,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '').startWith(null)
   , recvForm$ = combine({
       msatoshi: recvMsat$
-    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => console.log('recv amt', { unit, msat, rate }) || formatAmt(msat, rate, unitstep[unit]).replace(/,/g, '') || '')
+    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit]).replace(/,/g, '') || '')
                      .merge(goRecv$.mapTo(''))
     , step:     unit$.map(unit => unitstep[unit])
     })
@@ -85,10 +87,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   // user-visible alerts
   , alert$   = O.merge(
       error$.map(err  => [ 'danger', err ])
-    , incoming$.withLatestFrom(unitf$, (i, unitf) => [ 'success', `Received ${ unitf(i.msatoshi_received) }` ])
-    , outgoing$.withLatestFrom(unitf$, (i, unitf) => [ 'success', `Sent ${ unitf(i.msatoshi) }` ])
+    , incoming$.map(i => [ 'success', `Received @{{${i.msatoshi_received}}}` ])
+    , outgoing$.map(i => [ 'success', `Sent @{{${i.msatoshi}}}` ])
     , dismiss$.mapTo(null).startWith(null)
-    )
+    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])
 
   // RPC console response
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
