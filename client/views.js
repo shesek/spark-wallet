@@ -112,7 +112,7 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
 
 const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
   h2('RPC Console')
-, input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc' } })
+, input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc', required: true } })
 , button('.btn.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
 , ' '
 , button('.btn.btn-secondary.mt-2', { attrs: { type: 'button', do: 'clear-console-history' }}, 'Clear history')
@@ -124,9 +124,10 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 
 const logs = items => div([
   h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
-, code([].concat(...items.map(i => [
+, pre('.logs.mt-3',code(items.map(i =>
     i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
-                         : `${i.time} [${i.type}] ${i.source} ${i.log}`, h('br')]
-  )))
+                         : `${i.time} [${i.type}] ${i.source} ${i.log}`
+  ).join('\n')))
 ])
+
 module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs, rpc }
