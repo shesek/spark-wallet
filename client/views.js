@@ -64,7 +64,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
       , span('.badge.badge-secondary.badge-pill.float-right', ago(ts))
       ])
     , expert ? yaml(obj) : ''
-    ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items`) ] : []))
+    ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items)`) ] : []))
     // @TODO paging
 
 , expert ? yaml({ info, rate: rate && rate.toFixed(10), peers }) : ''
@@ -129,7 +129,7 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 
 const logs = items => div([
   h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
-, pre('.logs.mt-3',code(items.map(i =>
+, pre('.logs.mt-3', code(items.map(i =>
     i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
                          : `${i.time} [${i.type}] ${i.source} ${i.log}`
   ).join('\n')))
