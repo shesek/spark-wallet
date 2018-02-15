@@ -33,13 +33,13 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , togExp$   = nthClick(click('footer'), 3)
   , togTheme$ = click('.theme')
   , togUnit$  = click('.toggle-unit')
-  , togFull$  = click('.full-screen')
-  , dismiss$  = click('[data-dismiss=alert], a, button').merge(submit('form'))
+  , togFull$  = on('.full-screen', 'dblclick')
+  , dismiss$  = click('[data-dismiss=alert], .content a, .content button').merge(submit('form'))
 
   on('form', 'submit').subscribe(e => e.preventDefault())
 
   // @xxx this should not be here
-  togFull$.subscribe(_ => fscreen.fullscreenEnabled ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
+  togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { goHome$, goScan$, goRecv$, goLogs$, goRpc$
          , scanPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$

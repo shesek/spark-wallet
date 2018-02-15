@@ -25,7 +25,7 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
 const layout = ({ state, body }) =>
   div('.d-flex.flex-column', [
     ...header(state)
-  , div('.container.flex-grow'+(state.loading?'.disabled':''), body)
+  , div('.content.container.flex-grow'+(state.loading?'.disabled':''), body)
   , footer(state)
   ])
 
@@ -58,10 +58,10 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 
 , ul('.list-group.payments', moves.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
     li('.list-group-item', [
-      div('.d-flex.justify-content-between.align-items-center', [
+      div('.clearfix', [
         type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                       : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-      , span('.badge.badge-secondary.badge-pill', ago(ts))
+      , span('.badge.badge-secondary.badge-pill.float-right', ago(ts))
       ])
     , expert ? yaml(obj) : ''
     ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items`) ] : []))
