@@ -1,4 +1,4 @@
 {
   "name": "Flash Wallet",
-  "display": "fullscreen"
+  "display": "standalone"
 }

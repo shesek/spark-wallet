@@ -36,7 +36,6 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
       , vdom$   = view(state$, { ...actions, ...resps })
       , rpc$    = rpcCalls(actions)
-      , goto$   = goto(resps)
 
   dbg(actions, 'flash:actions')
   dbg(resps, 'flash:rpc-resps')
@@ -46,7 +45,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
   return {
     DOM:   vdom$
   , HTTP:  http(rpc$)
-  , route: goto$
+  , route: goto(resps)
   , conf$: state$.map(s => s.conf)
   , scan$: DOM.select('.scanqr').elements()
   }
@@ -58,5 +57,5 @@ run(main, {
 , SSE:   makeSSEDriver('./stream')
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 , conf$: makeConfDriver(storageDriver)
-, scan$: makeScanDriver({ mirror: false, backgroundScan: false, /*scanPeriod: 5,*/ })
+, scan$: makeScanDriver({ mirror: false, backgroundScan: false })
 })

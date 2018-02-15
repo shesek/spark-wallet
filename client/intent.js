@@ -2,6 +2,7 @@ import { Observable as O } from 'rxjs'
 import serialize from 'form-serialize'
 import stringArgv from 'string-argv'
 import nanoid from 'nanoid'
+import fscreen from 'fscreen'
 import { dbg } from './util'
 
 module.exports = ({ DOM, route, scan$, conf$ }) => {
@@ -24,7 +25,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
       .merge(click('[do=rpc-help]').mapTo([ 'help' ]))
 
   , recvAmt$ = on('[name=amount]', 'input').map(e => e.target.value)
-  , newInv$  = submit('[data-do=newinv]').map(r => ({
+  , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
@@ -32,14 +33,18 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , togExp$   = nthClick(click('footer'), 3)
   , togTheme$ = click('.theme')
   , togUnit$  = click('.toggle-unit')
+  , togFull$  = click('.full-screen')
   , dismiss$  = click('[data-dismiss=alert], a, button').merge(submit('form'))
 
   on('form', 'submit').subscribe(e => e.preventDefault())
 
+  // @xxx this should not be here
+  togFull$.subscribe(_ => fscreen.fullscreenEnabled ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
+
   return { goHome$, goScan$, goRecv$, goLogs$, goRpc$
          , scanPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
          , dismiss$, togExp$, togTheme$, togUnit$
-         , conf$ /* pass through */ }
+         , conf$ }
 }
 
 const nthClick = (click$, nth) =>

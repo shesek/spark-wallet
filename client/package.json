@@ -18,6 +18,7 @@
     "bootswatch": "^4.0.0",
     "eventsource": "^1.0.5",
     "form-serialize": "^0.7.2",
+    "fscreen": "^1.0.2",
     "instascan": "github:shesek/instascan#packaged-lib",
     "js-yaml": "^3.10.0",
     "move-decimal-point": "0.0.4",

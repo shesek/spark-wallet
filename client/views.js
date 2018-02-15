@@ -32,7 +32,7 @@ const layout = ({ state, body }) =>
 const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
 , nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
-    a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay')
+    a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, 'NanoPay')
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
 , loading ? div('#loader') :''
@@ -40,8 +40,8 @@ const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
 ]
 
 const footer = ({ info, conf: { theme, expert } }) =>
-  h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
-    p('.info.float-left.mb-0', `${expert ? '🔧 ' : ''}${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
+  h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
+    info ? p('.info.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id: ${info.id.substr(0,10)}${expert ? ' 🔧' : ''}`) : ''
   , p('.theme.float-right.mb-0', theme)
   ])
 
@@ -86,14 +86,13 @@ const confirmPay = payreq => ({ unitf, conf: { expert } }) => div('.confirm', [
 ])
 
 const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =>
-  form({ dataset: { do: 'newinv' } }, [
+  form({ attrs: { do: 'new-invoice' } }, [
     h2('Request payment')
   , formGroup('Payment amount'
     , div('.input-group', [
         input({ attrs: { type: 'hidden', name: 'msatoshi' }, props: { value: msatoshi } })
       , input('.form-control.form-control-lg'
-          // @TODO update min/step according to unit
-        , { attrs: { type: 'number', step, min: step, name: 'amount', placeholder: '(optional)', autofocus: true }
+        , { attrs: { type: 'number', step, min: step, name: 'amount', placeholder: '(optional)' }
           , props: { value: amount } })
       , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
       ]))

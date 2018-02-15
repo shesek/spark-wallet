@@ -44,7 +44,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // on-chain output balance (not currently used for anything, but seems useful?)
-  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || []))
+  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || [])).startWith(null)
 
   // chronologically sorted feed of incoming and outgoing payments
   , moves$    = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
@@ -65,7 +65,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
   // dynamic currency conversion for payment request form
-  , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '').startWith(null)
+  , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
+                        .merge(goRecv$.mapTo(null)).startWith(null)
   , recvForm$ = combine({
       msatoshi: recvMsat$
     , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit], false))
@@ -98,5 +99,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
 
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
 
-  return combine({ conf$, info$, alert$, loading$, moves$, peers$, cbalance$, obalance$, rate$, unitf$, recvForm$, rpcHist$ }).shareReplay(1)
+  return combine({
+    conf$, info$: info$.startWith(null), peers$: peers$.startWith(null)
+  , alert$, loading$, rate$, unitf$, cbalance$, obalance$, moves$
+  , recvForm$, rpcHist$
+  }).shareReplay(1)
 }

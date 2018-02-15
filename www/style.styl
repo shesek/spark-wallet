@@ -1,8 +1,14 @@
 @import('loader.css')
 
 body
-  // avoid FOUC before bootstrap loads
+  margin 0
+
+// avoid FOUC before bootstrap loads
+// (this is later overridden by bootstrap's css)
+body
   font-size 0px
+.btn, .form-control
+  display none
 
 html, body, #app
   height 100%
@@ -10,6 +16,9 @@ html, body, #app
 #app > .flex-column
   min-height 100%
 
+
+footer
+  font-size 65%
 
 .flex-grow
   flex 1
