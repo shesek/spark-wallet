@@ -12,7 +12,7 @@ const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 const numItems = 100
 
 const formGroup = (labelText, control, help) => div('.form-group', [
-  label(labelText)
+  label('.col-form-label.col-form-label-lg', labelText)
 , control
 , help ? small('.form-text.text-muted', help) : ''
 ])
@@ -49,12 +49,9 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
+  , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs')) : ''
+  , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
-
-, expert ? div('.row.mb-2', [
-    div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs'))
-  , div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console'))
-  ]) : ''
 
 , ul('.list-group.payments', moves.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
     li('.list-group-item', [
