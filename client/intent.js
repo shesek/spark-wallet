@@ -32,11 +32,12 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
 
-  , togExp$   = nthClick(click('footer'), 3)
   , togTheme$ = click('.theme')
   , togUnit$  = click('.toggle-unit')
   , togFull$  = on('.full-screen', 'dblclick')
-  , dismiss$  = click('[data-dismiss=alert], .content a, .content button').merge(submit('form'))
+  , togExp$   = on('.info', 'dblclick')
+
+  , dismiss$  = O.merge(route('*'), submit('form'), click('[data-dismiss], .content a, .content button'))
 
   on('form', 'submit').subscribe(e => e.preventDefault())
 
@@ -46,10 +47,6 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   return { goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
          , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
          , dismiss$, togExp$, togTheme$, togUnit$
+         , scanner$: DOM.select('.scanqr').elements()
          , conf$ }
 }
-
-const nthClick = (click$, nth) =>
-  O.merge(click$.mapTo(N => N+1), click$.debounceTime(250).mapTo(N => 0))
-    .startWith(0).scan((N, mod) => mod(N))
-    .filter(N => N == nth)

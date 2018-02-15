@@ -68,14 +68,12 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 ])
 
 const scanReq = div('.text-center.text-md-left', [
-  div('.d-flex.justify-content-between.align-items-center', [
-    a('.btn.btn-l.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-  , ' '
-  , a('.btn.btn-l.btn-info.mb-3', { attrs: { href: '#/' } }, 'Switch cam')
-  , ' '
-  , a('.btn.btn-l.btn-secondary.mb-3', { attrs: { href: '#/' } }, 'Cancel')
+  div('.scanqr')
+, div('.d-flex.justify-content-between.align-items-center', [
+    a('.btn.btn-l.btn-primary.mt-3', { attrs: { href: '#/payreq' } }, 'Paste request')
+  , a('.btn.btn-l.btn-info.mt-3', { attrs: { href: '#/' } }, 'Switch cam')
+  , a('.btn.btn-l.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
   ])
-, div('.scanqr')
 ])
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
@@ -122,7 +120,7 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
     h2('Waiting for payment')
   , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
   , img('.qr', { attrs: { src: qr } })
-  , small('.d-block.text-muted.break-word.mt-3', inv.bolt11)
+  , small('.d-block.text-muted.break-all.mt-3', inv.bolt11)
   , expert ? yaml(inv) : ''
   ]))
 

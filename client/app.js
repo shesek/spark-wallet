@@ -47,7 +47,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
   , HTTP:  http(rpc$)
   , route: goto(resps)
   , conf$: state$.map(s => s.conf)
-  , scan$: DOM.select('.scanqr').elements()
+  , scan$: actions.scanner$
   }
 }
 

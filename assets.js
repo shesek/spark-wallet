@@ -15,5 +15,5 @@ module.exports = app => {
 
   app.get('/app.js', browserify(join(__dirname, 'client/app.js')))
   app.use('/assets', stylus.middleware({ src: join(__dirname, 'www'), serve: true, compile: compileStyl }))
-  app.use('/assets', express.static(join(__dirname, 'www')))
+  app.use('/assets', express.static(join(__dirname, 'www'), { /* maxAge: '30d', immutable: true */ }))
 }
