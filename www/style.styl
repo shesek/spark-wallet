@@ -1,3 +1,5 @@
+@import('loader.css')
+
 body
   // avoid FOUC before bootstrap loads
   font-size 0px
@@ -8,15 +10,22 @@ html, body, #app
 #app > .flex-column
   min-height 100%
 
+
 .flex-grow
   flex 1
 
 .break-word
   word-break break-word
 
+.disabled
+  opacity 0.5
+  pointer-events none
+
+
 .alert
   font-size 0.9rem
   font-weight 400
+
 
 .scanqr video
   width 100%

@@ -22,22 +22,28 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
 , ''+alert[1]
 ])
 
-const layout = ({ head, body, foot }) =>
-  div('.d-flex.flex-column', [ ...head, div('.container.flex-grow', body), foot ])
+const layout = ({ state, body }) =>
+  div('.d-flex.flex-column', [
+    ...header(state)
+  , div('.container.flex-grow'+(state.loading?'.disabled':''), body)
+  , footer(state)
+  ])
 
-const header = ({ unitf, cbalance, alert, conf: { theme } }) => [
+const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
 , nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
     a('.navbar-brand', { attrs: { href: '#/' } }, 'NanoPay')
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
+, loading ? div('#loader') :''
 , alert ? div('.container', alertBox(alert)) : ''
 ]
 
-const footer = ({ info, conf: { theme, expert } }) => h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
-  p('.info.float-left.mb-0', `${expert ? '🔧 ' : ''}${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
-, p('.theme.float-right.mb-0', theme)
-])
+const footer = ({ info, conf: { theme, expert } }) =>
+  h('footer.container.clearfix.small.text-muted.border-top.pt-2.my-2', [
+    p('.info.float-left.mb-0', `${expert ? '🔧 ' : ''}${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id:${info.id.substr(0,10)}`)
+  , p('.theme.float-right.mb-0', theme)
+  ])
 
 const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
   div('.row.mb-2', [
