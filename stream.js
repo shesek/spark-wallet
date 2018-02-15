@@ -10,10 +10,14 @@ module.exports = lnPath => {
       , em = new EventEmitter
 
   async function waitany(last_index) {
-    const inv = await ln.waitanyinvoice(last_index)
-    console.log('waitany():', inv)
-    em.emit('waitany', inv)
-    waitany(inv.pay_index)
+    try {
+      const inv = await ln.waitanyinvoice(last_index)
+      em.emit('waitany', inv)
+      waitany(inv.pay_index)
+    } catch (err) {
+      console.error(err.stack || err.toString())
+      setTimeout(_ => waitany(last_index), 10000)
+    }
   }
 
   ln.listinvoices()
@@ -30,9 +34,10 @@ module.exports = lnPath => {
 
   return (req, res) => {
     res.set({
-      'Content-Type':  'text/event-stream'
+      'X-Accel-Bufferin': 'no'
     , 'Cache-Control': 'no-cache'
-    , 'Connection':    'keep-alive'
+    , 'Content-Type': 'text/event-stream'
+    , 'Connection': 'keep-alive'
     }).flushHeaders()
 
     const keepAlive = setInterval(_ => res.write(': keepalive\n\n'), 25000)

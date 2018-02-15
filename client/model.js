@@ -2,15 +2,12 @@ import big from 'big.js'
 import { Observable as O } from 'rxjs'
 import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
-const reFormat = /@\{\{(\d+)\}\}/g
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
 , sumChans = chans => chans.reduce((T, c) => T + c.channel_sat, 0) * 1000
 , updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
-, add = x => xs => [ ...xs, x ]
-, rem = x => xs => xs.filter(_x => _x !== x)
 , idx = xs => x => xs.indexOf(x)
 , idn = x => x
 
@@ -21,7 +18,7 @@ const
 , unitstep = { ...unitrate, usd: 0.00001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
-                  , HTTP, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
+                  , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
 
   // periodically re-sync from listpayments, continuously patch with known outgoing payments
@@ -76,10 +73,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
     , step:     unit$.map(unit => unitstep[unit])
     })
 
-  // keep track of in-flight requests
-  , loading$ = HTTP.select().flatMap(r$ =>
-      O.of(add(r$.request)).merge(r$.catch(_ => O.of(null)).mapTo(rem(r$.request)))
-    ).startWith([]).scan((xs, mod) => mod(xs))
+  // keep track of the number of non-bg in-flight requests
+  , loading$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
+      .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
+      .startWith(0).scan((N, a) => N+a)
 
   // user-visible alerts
   , alert$   = O.merge(
@@ -89,11 +86,12 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
     , dismiss$.mapTo(null).startWith(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])
 
+  , reFormat = /@\{\{(\d+)\}\}/g
+
   // RPC console history
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
-      .scan((xs, x) => x == 'clear' ? [] : [ x, ...xs ].slice(0, 20))
+      .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
-  dbg({ reply$: HTTP.select().flatMap(r$ => r$.catch(_ => O.empty())).map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
   dbg({ loading$, alert$, rpcHist$ }, 'flash:model')
   dbg({ error$ }, 'flash:error')
   dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')

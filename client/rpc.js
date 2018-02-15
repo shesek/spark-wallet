@@ -1,13 +1,16 @@
 import { Observable as O } from 'rxjs'
-import { dropErrors, extractErrors } from './util'
+import { dropErrors, extractErrors, dbg } from './util'
 
 const timer = (ms, val) => O.timer(Math.random()*10000, ms).startWith(-1).mapTo(val)
 
 exports.rpcIntent = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
+  dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
+
   return {
-    error$:    extractErrors(HTTP.select())
+    req$$:     HTTP.select()
+  , error$:    extractErrors(HTTP.select())
 
   // periodic updates
   , info$:     reply('getinfo').map(r => r.body)
@@ -35,11 +38,12 @@ exports.rpcCalls = ({ scanPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 
-, timer(150000,          [ 'listinvoices' ])
-, timer(150000,          [ 'listpayments' ])
-, timer(150000,          [ 'listpeers'    ]) // @xxx currently unused
-, timer(150000,          [ 'listfunds'    ])
-, timer(150000,          [ 'getinfo'      ])
+, timer(150000,          [ 'listinvoices', [], { bg: true } ])
+, timer(150000,          [ 'listinvoices', [], { bg: true } ])
+, timer(150000,          [ 'listpayments', [], { bg: true } ])
+, timer(150000,          [ 'listpeers',    [], { bg: true } ]) // @xxx currently unused
+, timer(150000,          [ 'listfunds',    [], { bg: true } ])
+, timer(150000,          [ 'getinfo',      [], { bg: true } ])
 
 // @TODO on page focus, on homepage load, on refresh button click
 )
