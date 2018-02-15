@@ -1,0 +1,41 @@
+#loader
+  position fixed
+  left 50%
+  top 50%
+  z-index 1001
+  width 150px
+  height 150px
+  margin -75px 0 0 -75px
+  border-radius 50%
+  border 3px solid transparent
+  border-top-color #3498db
+  animation spin 2s linear infinite
+
+  &:before, &:after
+
+    content ""
+    position absolute
+    border-radius 50%
+    border 3px solid transparent
+
+  &:before
+    top 5px
+    left 5px
+    right 5px
+    bottom 5px
+    border-top-color #e74c3c
+    animation spin 3s linear infinite
+
+  &:after
+    top 15px
+    left 15px
+    right 15px
+    bottom 15px
+    border-top-color #f9c922
+    animation spin 1.5s linear infinite
+
+@keyframes spin
+  0%
+    transform rotate(0deg)
+  100%
+    transform rotate(360deg)
