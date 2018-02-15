@@ -32,7 +32,7 @@ const layout = ({ state, body }) =>
 const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
   link({ attrs: { rel: 'stylesheet', href: `assets/bootswatch/${theme}/bootstrap.min.css` } })
 , nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
-    a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, 'NanoPay')
+    a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, 'nanopay')
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
 , loading ? div('#loader') :''
