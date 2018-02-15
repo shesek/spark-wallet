@@ -30,8 +30,8 @@ exports.rpcIntent = ({ HTTP, SSE }) => {
   }
 }
 
-exports.rpcCalls = ({ scanPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
-  scanPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
+exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
+  viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11 ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )

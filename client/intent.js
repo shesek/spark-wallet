@@ -13,11 +13,13 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
 
   , goHome$ = route('/')
   , goScan$ = route('/scan')
+  , goSend$ = route('/payreq')
   , goRecv$ = route('/recv')
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
   , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
+  , viewPay$ = O.merge(scanPay$, submit('[do=decode-pay]').map(r => r.bolt11))
   , confPay$ = click('[do=confirm-pay]')
 
   , clrHist$ = click('[do=clear-console-history]')
@@ -41,8 +43,8 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   // @xxx this should not be here
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
-  return { goHome$, goScan$, goRecv$, goLogs$, goRpc$
-         , scanPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
+  return { goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
+         , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
          , dismiss$, togExp$, togTheme$, togUnit$
          , conf$ }
 }

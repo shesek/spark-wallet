@@ -4,10 +4,11 @@ import { dbg, combine } from './util'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = (state$, { goHome$, goScan$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
+module.exports = (state$, { goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     goHome$.startWith(1).mapTo(views.home)
-  , goScan$.mapTo(views.scan)
+  , goScan$.mapTo(views.scanReq)
+  , goSend$.mapTo(views.pasteReq)
   , goRecv$.mapTo(views.recv)
   , goRpc$.mapTo(views.rpc)
 

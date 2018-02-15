@@ -70,9 +70,23 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 , expert ? yaml({ info, rate: rate && rate.toFixed(10), peers }) : ''
 ])
 
-const scan = div('.text-center.text-md-left', [
+const scanReq = div('.text-center.text-md-left', [
+  div('.d-flex.justify-content-between.align-items-center', [
+    a('.btn.btn-l.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
+  , ' '
+  , a('.btn.btn-l.btn-info.mb-3', { attrs: { href: '#/' } }, 'Switch cam')
+  , ' '
+  , a('.btn.btn-l.btn-secondary.mb-3', { attrs: { href: '#/' } }, 'Cancel')
+  ])
 , div('.scanqr')
-//, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+])
+
+const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
+  formGroup('Payment request'
+  , textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true } }))
+, button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Decode request')
+, ' '
+, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
 const confirmPay = payreq => ({ unitf, conf: { expert } }) => div('.confirm', [
@@ -135,4 +149,4 @@ const logs = items => div([
   ).join('\n')))
 ])
 
-module.exports = { layout, header, footer, home, scan, confirmPay, recv, invoice, logs, rpc }
+module.exports = { layout, header, footer, home, scanReq, pasteReq, confirmPay, recv, invoice, logs, rpc }
