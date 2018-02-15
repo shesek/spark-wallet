@@ -23,8 +23,8 @@ const makeScanDriver = (opt={}) => {
 
     const scan$ = O.fromEvent(scanner, 'scan')
 
-    // stop scanning whenever the DOM element disappears
-    els$.filter(x => !x.length).subscribe(_ => scanner.stop())
+    // stop scanning whenever a QR is scanned or when the DOM element disappears
+    els$.filter(x => !x.length).merge(scan$).subscribe(_ => scanner.stop())
 
     return scan$
   }

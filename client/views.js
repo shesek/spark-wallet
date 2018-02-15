@@ -25,7 +25,7 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
 const layout = ({ state, body }) =>
   div('.d-flex.flex-column', [
     ...header(state)
-  , div('.content.container.flex-grow'+(state.loading?'.disabled':''), body)
+  , div({ props: { className: `content container flex-grow${state.loading?' disabled':'' }` } }, body)
   , footer(state)
   ])
 

@@ -21,6 +21,7 @@ app.get('/', (req, res) => res.render('index.pug', { req }))
 
 app.post('/rpc', (req, res, next) =>
   ln.call(req.body.method, req.body.params)
+  //.then(r => new Promise(resolve => setTimeout(_ => resolve(r), 3000)))
   .then(r => res.send(r)).catch(next))
 
 app.get('/stream', require('./stream')(lnPath))
