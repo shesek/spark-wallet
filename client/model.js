@@ -82,7 +82,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   // user-visible alerts
   , alert$   = O.merge(
       error$.map(err  => [ 'danger', err ])
-    , incoming$.map(i => [ 'success', `Received incoming payment of @{{${i.msatoshi_received}}}` ])
+    , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
     , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
     , dismiss$.mapTo(null).startWith(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])

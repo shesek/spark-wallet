@@ -111,7 +111,7 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
     h2('Waiting for payment')
   , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
   , img('.qr', { attrs: { src: qr } })
-  , small('.d-block.text-muted.break-word', inv.bolt11)
+  , small('.d-block.text-muted.break-word.mt-3', inv.bolt11)
   , expert ? yaml(inv) : ''
   ]))
 
