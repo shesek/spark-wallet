@@ -9,7 +9,7 @@ const yaml = data => pre('.mt-3.text-left.text-muted', YAML.safeDump(data))
 const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
-const numItems = 100
+const numItems = 25
 
 const formGroup = (labelText, control, help) => div('.form-group', [
   label('.col-form-label.col-form-label-lg', labelText)
