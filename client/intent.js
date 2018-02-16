@@ -9,6 +9,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   const
     on     = (sel, ev) => DOM.select(sel).events(ev)
   , click  = sel => on(sel, 'click').map(e => e.target.dataset)
+  , dclick = sel => on(sel, 'dblclick').map(e => e.target.dataset)
   , submit = sel => on(sel, 'submit').map(e => serialize(e.target, { hash: true }))
 
   , goHome$ = route('/')
@@ -32,11 +33,11 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
 
-  , togTheme$ = click('.theme')
-  , togUnit$  = click('.toggle-unit')
+  , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1), dclick('.theme').mapTo(-1))
+  , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1), dclick('.toggle-unit').mapTo(-1))
   , togCam$   = click('.toggle-cam')
-  , togFull$  = on('.full-screen', 'dblclick')
-  , togExp$   = on('.info', 'dblclick')
+  , togFull$  = dclick('.full-screen')
+  , togExp$   = dclick('.toggle-exp')
 
   , dismiss$  = O.merge(route('*'), submit('form'), click('[data-dismiss], .content a, .content button'))
 

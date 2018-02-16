@@ -41,8 +41,8 @@ const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
 
 const footer = ({ info, conf: { theme, expert } }) =>
   h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
-    info ? p('.info.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id: ${info.id.substr(0,10)}${expert ? ' 🔧' : ''}`) : ''
-  , p('.theme.float-right.mb-0', theme)
+    info ? p('.info.toggle-exp.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id: ${info.id.substr(0,10)}${expert ? ' 🔧' : ''}`) : ''
+  , p('.toggle-theme.float-right.mb-0', theme)
   ])
 
 const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
