@@ -5,7 +5,7 @@ import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
-, sumChans = peers => peers.reduce((T, r) => T + (r.channels||[]).reduce((T, c) => T + c.msatoshi_to_us || 0, 0) * 1000, 0)
+, sumChans = peers => peers.reduce((T, r) => T + (r.channels||[]).reduce((T, c) => T + c.msatoshi_to_us || 0, 0), 0)
 , updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
 , idx = xs => x => xs.indexOf(x)
