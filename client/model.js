@@ -5,7 +5,7 @@ import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
-, sumChans = chans => chans.reduce((T, c) => T + c.channel_sat, 0) * 1000
+, sumChans = peers => peers.reduce((T, r) => T + r.channels.reduce((T, c) => T + c.msatoshi_to_us, 0) * 1000, 0)
 , updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
 , idx = xs => x => xs.indexOf(x)
@@ -17,7 +17,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
 
@@ -36,9 +36,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
     .startWith([]).scan((invs, mod) => mod(invs))
     .map(invs => invs.filter(inv => inv.status === 'paid'))
 
-  // periodically re-sync channel balance from "listfunds", continuously patch with known incoming & outgoing payments
+  // periodically re-sync channel balance from "listpeers", continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
-      funds$.map(funds  => _ => sumChans(funds.channels || []))
+      peers$.map(peers  => _ => sumChans(peers))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
@@ -57,7 +57,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan(n => (n+1) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan(n => (n+1) % units.length) .map(n => units[n])
-  , conf$    = combine({ expert$, theme$, unit$ })
+  , camIdx$  = conf('camera', 0)            .concat(togCam$)  .scan(n => (n+1) % 2)
+  , conf$    = combine({ expert$, theme$, unit$, camIdx$ })
 
   // currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
@@ -97,7 +98,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, goRecv$, recvAmt$, e
   dbg({ error$ }, 'flash:error')
   dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
 
-  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
+  dbg({ savedConf$, conf$, expert$, theme$, unit$, camIdx$, conf$ }, 'flash:config')
 
   return combine({
     conf$, info$: info$.startWith(null), peers$: peers$.startWith(null)

@@ -67,11 +67,11 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 , expert ? yaml({ info, rate: rate && rate.toFixed(10), peers }) : ''
 ])
 
-const scanReq = div('.text-center.text-md-left', [
-  div('.scanqr')
+const scanReq = ({ conf: { camIdx } }) => div('.text-center.text-md-left', [
+  div('.scanqr', { dataset: { camIdx: ''+camIdx } })
 , div('.d-flex.justify-content-between.align-items-center', [
     a('.btn.btn-l.btn-primary.mt-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-  , a('.btn.btn-l.btn-info.mt-3', { attrs: { href: '#/' } }, 'Switch cam')
+  , button('.toggle-cam.btn.btn-l.btn-info.mt-3', 'Switch cam')
   , a('.btn.btn-l.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
   ])
 ])
@@ -86,7 +86,7 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 
 const confirmPay = payreq => ({ unitf, conf: { expert } }) => div('.confirm', [
   h2('Confirm payment')
-, p([ 'Are you sure you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
+, p([ 'Do you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
 , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
 , button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
 , ' '

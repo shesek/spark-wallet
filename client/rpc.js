@@ -41,7 +41,7 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 , timer(150000,          [ 'listinvoices', [], { bg: true } ])
 , timer(150000,          [ 'listinvoices', [], { bg: true } ])
 , timer(150000,          [ 'listpayments', [], { bg: true } ])
-, timer(150000,          [ 'listpeers',    [], { bg: true } ]) // @xxx currently unused
+, timer(150000,          [ 'listpeers',    [], { bg: true } ])
 , timer(150000,          [ 'listfunds',    [], { bg: true } ])
 , timer(150000,          [ 'getinfo',      [], { bg: true } ])
 

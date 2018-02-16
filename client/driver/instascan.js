@@ -14,12 +14,17 @@ const makeScanDriver = (opt={}) => {
     const els$ = O.from(_els$)
 
     // start scanning whenever a matching element appears in DOM
-    els$.filter(x => !!x.length).map(x => x[0]).subscribe(el => {
-      if (video.parentNode != el) {
-        el.appendChild(video)
-        getCams().then(cams => console.log({cams,opt}) || scanner.start(cams[cams.length-1]))
-      }
-    })
+    els$.filter(x => !!x.length).map(x => x[0]).subscribe(el =>
+      getCams().then(cams => {
+        const camIdx = +el.dataset.camIdx || 0
+        if (video.parentNode != el || scanner._camIdx !== camIdx) {
+          const cam = cams[camIdx || 0] || cams[0]
+          scanner._camIdx = camIdx
+          el.appendChild(video)
+          scanner.start(cam)
+        }
+      })
+    )
 
     const scan$ = O.fromEvent(scanner, 'scan')
 

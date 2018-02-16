@@ -9,7 +9,7 @@ const
   trim = num => num/*.replace(/(\d)\1\1+$|0000+\d$/, '$1$1')*/.replace(/\.?0+$/, '')
 
 , formatAmt = (amt, rate, step, comma=true) =>
-    amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(10))
+    amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
       .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
 
 , combine = obj => {

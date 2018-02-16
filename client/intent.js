@@ -34,6 +34,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
 
   , togTheme$ = click('.theme')
   , togUnit$  = click('.toggle-unit')
+  , togCam$   = click('.toggle-cam')
   , togFull$  = on('.full-screen', 'dblclick')
   , togExp$   = on('.info', 'dblclick')
 
@@ -46,7 +47,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
 
   return { goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
          , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
-         , dismiss$, togExp$, togTheme$, togUnit$
+         , dismiss$, togExp$, togTheme$, togUnit$, togCam$
          , scanner$: DOM.select('.scanqr').elements()
          , conf$ }
 }
