@@ -33,13 +33,13 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning' }))
 
-  , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1), dclick('.theme').mapTo(-1))
-  , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1), dclick('.toggle-unit').mapTo(-1))
+  , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))//, dclick('.theme').mapTo(-3))
+  , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))//, dclick('.toggle-unit').mapTo(-3))
   , togCam$   = click('.toggle-cam')
   , togFull$  = dclick('.full-screen')
   , togExp$   = dclick('.toggle-exp')
 
-  , dismiss$  = O.merge(route('*'), submit('form'), click('[data-dismiss], .content a, .content button'))
+  , dismiss$  = O.merge(route('*'), submit('form'), click('[data-dismiss=alert], .content a, .content button'))
 
   on('form', 'submit').subscribe(e => e.preventDefault())
 

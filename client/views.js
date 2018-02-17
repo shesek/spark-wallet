@@ -68,12 +68,12 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
 ])
 
 const scanReq = ({ conf: { camIdx } }) => div('.text-center.text-md-left', [
-  div('.scanqr', { dataset: { camIdx: ''+camIdx } })
-, div('.d-flex.justify-content-between.align-items-center', [
-    a('.btn.btn-l.btn-primary.mt-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-  , button('.toggle-cam.btn.btn-l.btn-info.mt-3', 'Switch cam')
-  , a('.btn.btn-l.btn-secondary.mt-3', { attrs: { href: '#/' } }, 'Cancel')
+  div('.d-flex.justify-content-between.align-items-center', [
+    a('.btn.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
+  , button('.toggle-cam.btn.btn-info.mb-3', 'Switch cam')
+  , a('.btn.btn-secondary.mb-3', { attrs: { href: '#/' } }, 'Cancel')
   ])
+, div('.scanqr', { dataset: { camIdx: ''+camIdx } })
 ])
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [

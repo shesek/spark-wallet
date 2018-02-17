@@ -57,7 +57,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, goRecv$, re
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
-  , camIdx$  = conf('camera', 0)            .concat(togCam$)  .scan(n => (n+1) % 2)
+  , camIdx$  = conf('camera', 0)            .concat(togCam$)  .scan(n => (n+1) % 2) // @todo get actual number of cameras
   , conf$    = combine({ expert$, theme$, unit$, camIdx$ })
 
   // currency & unit conversion handling

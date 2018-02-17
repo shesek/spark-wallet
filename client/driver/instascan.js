@@ -16,9 +16,9 @@ const makeScanDriver = (opt={}) => {
     // start scanning whenever a matching element appears in DOM
     els$.filter(x => !!x.length).map(x => x[0]).subscribe(el =>
       getCams().then(cams => {
-        const camIdx = +el.dataset.camIdx || 0
+        const camIdx = (+el.dataset.camIdx || 0) % cams.length
         if (video.parentNode != el || scanner._camIdx !== camIdx) {
-          const cam = cams[camIdx || 0] || cams[0]
+          const cam = cams[camIdx]
           scanner._camIdx = camIdx
           el.appendChild(video)
           scanner.start(cam)
