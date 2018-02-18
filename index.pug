@@ -10,11 +10,10 @@ meta(name='csrf', content=req.csrfToken())
 //-link(rel='manifest', href='assets/manifest.json')
 link(rel='stylesheet', href='assets/style.css')
 
-script document.write('<link rel="stylesheet" href="assets/bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
-
 #app
   nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay
   #loader
 
+script document.write('<link rel="stylesheet" href="assets/bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
 script(src='assets/instascan.js', defer)
 script(src='app.js', defer)
