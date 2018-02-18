@@ -3,7 +3,7 @@ import { yaml } from './util'
 
 const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
   h2('RPC Console')
-, input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc', required: true } })
+, input('.form-control.d-block', { attrs: { type: 'text', name: 'cmd', placeholder: 'e.g. invoice 10000 mylabel mydesc', required: true, autocapitalize: 'off' } })
 , button('.btn.btn-primary.mt-2', { attrs: { type: 'submit' } }, 'Execute')
 , ' '
 , button('.btn.btn-secondary.mt-2', { attrs: { type: 'button', do: 'clear-console-history' }}, 'Clear history')
