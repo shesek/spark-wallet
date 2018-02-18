@@ -34,7 +34,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
       , state$  = model({ HTTP, ...actions, ...resps })
 
-      , vdom$   = view(state$, { ...actions, ...resps })
+      , vdom$   = view({ state$, ...actions, ...resps })
       , rpc$    = rpcCalls(actions)
 
   dbg(actions, 'flash:actions')
