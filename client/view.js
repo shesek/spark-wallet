@@ -19,5 +19,11 @@ module.exports = (state$, { goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$,
 
   ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
 
+  // managed outside of cycle.js due to odd cache invalidation behaviour
+  // exhibited by chrome that was causing slower pageloads.
+  const themeLink = document.querySelector('link[href*=bootstrap]')
+  state$.map(S => S.conf.theme).distinctUntilChanged()
+    .subscribe(theme => themeLink.href = `assets/bootswatch/${theme}/bootstrap.min.css`)
+
   return combine({ state$, body$ }).map(views.layout)
 }
