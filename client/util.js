@@ -6,7 +6,7 @@ import { Observable as O } from 'rxjs'
 
 const
 
-  trim = num => num/*.replace(/(\d)\1\1+$|0000+\d$/, '$1$1')*/.replace(/\.?0+$/, '')
+  trim = num => num.replace(/\.?0+$/, '')
 
 , formatAmt = (amt, rate, step, comma=true) =>
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))

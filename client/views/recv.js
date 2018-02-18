@@ -1,5 +1,5 @@
-import { div, form, input, button, a, span, p, h2 } from '@cycle/dom'
-import { formGroup, yaml } from './util'
+import { div, form, input, button, a, span, p, img, h2, h3, small } from '@cycle/dom'
+import { formGroup, yaml, qruri } from './util'
 
 const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =>
   form({ attrs: { do: 'new-invoice' } }, [

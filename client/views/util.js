@@ -1,7 +1,7 @@
 import YAML from 'js-yaml'
 import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
-import { pre, div, label, small } from '@cycle/dom'
+import { div, span, pre, label, small } from '@cycle/dom'
 
 const yaml = data => pre('.mt-3.text-left.text-muted', YAML.safeDump(data))
 const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
