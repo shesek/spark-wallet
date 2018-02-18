@@ -16,7 +16,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
       div('.clearfix', [
         type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                       : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-      , span('.badge.badge-secondary.badge-pill.float-right', ago(ts))
+      , ago('.badge.badge-secondary.badge-pill.float-right', ts)
       ])
     , expert ? yaml(obj) : ''
     ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items)`) ] : []))

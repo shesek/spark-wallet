@@ -48,3 +48,28 @@ footer
 img.qr
   width 100%
   max-width 300px
+
+.withtip
+  position relative
+
+  .tooltip
+    position absolute
+    bottom 100%
+    left 50%
+    transform translate(-50%, 10px)
+    transform-origin top
+    margin-bottom 1px
+    transition all 0.18s ease-out 0.18s
+    white-space nowrap
+    z-index -1
+
+    .arrow
+      left 50%
+      margin-left -0.4rem
+
+  &:hover, &:focus
+    .tooltip
+      transform translate(-50%, 0)
+      display inherit
+      opacity 1
+      z-index 1070
