@@ -17,7 +17,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
 
@@ -101,8 +101,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, goRecv$, re
   dbg({ savedConf$, conf$, expert$, theme$, unit$, camIdx$, conf$ }, 'flash:config')
 
   return combine({
-    conf$, info$: info$.startWith(null), peers$: peers$.startWith(null)
-  , alert$, loading$, rate$, unitf$, cbalance$, obalance$, moves$
+    conf$, page$, loading$, alert$
+  , info$: info$.startWith(null), peers$: peers$.startWith(null)
+  , rate$, unitf$, cbalance$, obalance$, moves$
   , recvForm$, rpcHist$
   }).shareReplay(1)
 }

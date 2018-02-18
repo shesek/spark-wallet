@@ -12,6 +12,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , dclick = sel => on(sel, 'dblclick').map(e => e.target.dataset)
   , submit = sel => on(sel, 'submit').map(e => serialize(e.target, { hash: true }))
 
+  , page$   = route()
   , goHome$ = route('/')
   , goScan$ = route('/scan')
   , goSend$ = route('/payreq')
@@ -39,16 +40,16 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , togFull$  = dclick('.full-screen')
   , togExp$   = dclick('.toggle-exp')
 
-  , dismiss$  = O.merge(route('*'), submit('form'), click('[data-dismiss=alert], .content a, .content button'))
+  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button'))
 
+  // @xxx these two should not be here
   on('form', 'submit').subscribe(e => e.preventDefault())
-
-  // @xxx this should not be here
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
-  return { goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
+  return { conf$, page$
+         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
          , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
          , dismiss$, togExp$, togTheme$, togUnit$, togCam$
          , scanner$: DOM.select('.scanqr').elements()
-         , conf$ }
+         }
 }

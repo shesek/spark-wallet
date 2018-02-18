@@ -1,20 +1,22 @@
 import { h, div, link, nav, a, span, p, button } from '@cycle/dom'
 
-const layout = ({ state, body }) =>
-  div('.d-flex.flex-column', [
-    ...header(state)
-  , div({ props: { className: `content container flex-grow${state.loading?' disabled':'' }` } }, body)
-  , footer(state)
+const layout = ({ state: S, body }) =>
+  div({ props: { className: `d-flex flex-column theme-${S.conf.theme}${S.loading?' disabled':'' }` } }, [
+    navbar(S)
+  , S.loading ? div('#loader') :''
+  , S.alert ? div('.container', alertBox(S.alert)) : ''
+  , div('.content.container.flex-grow', body)
+  , footer(S)
   ])
 
-const header = ({ loading, unitf, cbalance, alert, conf: { theme } }) => [
+const navbar = ({ unitf, cbalance, alert, page }) =>
   nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
-    a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, 'nanopay')
+    a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, [
+      page.pathname != '/' ? span('.icon.icon-left-open') : ''
+    , 'nanopay'
+    ])
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
-, loading ? div('#loader') :''
-, alert ? div('.container', alertBox(alert)) : ''
-]
 
 const footer = ({ info, conf: { theme, expert } }) =>
   h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [

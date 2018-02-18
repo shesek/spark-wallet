@@ -1,7 +1,5 @@
 @import('loader.styl')
-
-body
-  margin 0
+@import('icons.styl')
 
 // avoid FOUC before bootstrap loads
 // (this is later overridden by bootstrap's css)
@@ -13,9 +11,21 @@ body
 html, body, #app
   height 100%
 
+body
+  margin 0
+
 #app > .flex-column
   min-height 100%
 
+.navbar-brand
+  position relative
+
+  .icon
+    position absolute
+    left -20px
+
+    &:before
+      vertical-align middle
 
 footer
   font-size 65%
@@ -73,3 +83,10 @@ img.qr
       display inherit
       opacity 1
       z-index 1070
+
+// theme touch-ups
+.theme-slate   .navbar-brand .icon { left: -2px }
+.theme-materia .navbar-brand .icon { left: -23px }
+.theme-lux     .navbar-brand .icon:before { vertical-align: text-top }
+.theme-cosmo   .navbar-brand .icon:before { vertical-align: text-top }
+.theme-journal .navbar-brand .icon:before { vertical-align: baseline }
