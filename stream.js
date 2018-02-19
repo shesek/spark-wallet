@@ -20,9 +20,10 @@ module.exports = lnPath => {
     }
   }
 
-  ln.listinvoices()
-    .then(r => Math.max(...r.invoices.map(inv => inv.pay_index || 0)))
-    .then(waitany)
+  ln.client.on('connect', _ =>
+    ln.listinvoices()
+      .then(r => Math.max(...r.invoices.map(inv => inv.pay_index || 0)))
+      .then(waitany))
 
   let lastRate
   ;(async function getrate() {
