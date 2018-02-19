@@ -35,7 +35,7 @@ module.exports = lnPath => {
 
   return (req, res) => {
     res.set({
-      'X-Accel-Bufferin': 'no'
+      'X-Accel-Buffering': 'no'
     , 'Cache-Control': 'no-cache'
     , 'Content-Type': 'text/event-stream'
     , 'Connection': 'keep-alive'
