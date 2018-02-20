@@ -42,13 +42,15 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
 
   , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button'))
 
+  , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
+
   // @xxx these two should not be here
   on('form', 'submit').subscribe(e => e.preventDefault())
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
-         , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$
+         , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$, feedStart$
          , dismiss$, togExp$, togTheme$, togUnit$, togCam$
          , scanner$: DOM.select('.scanqr').elements()
          }

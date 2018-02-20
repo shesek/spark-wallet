@@ -18,7 +18,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$, recvAmt$, execRpc$, clrHist$, conf$: savedConf$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$, recvAmt$, execRpc$, clrHist$, feedStart$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
 
@@ -104,7 +104,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
   return combine({
     conf$, page$, loading$, alert$
   , info$, peers$, funds$
-  , btcusd$, unitf$, cbalance$, obalance$, feed$
+  , btcusd$, unitf$, cbalance$, obalance$
+  , feed$, feedStart$
   , recvForm$, rpcHist$
   }).shareReplay(1)
 }

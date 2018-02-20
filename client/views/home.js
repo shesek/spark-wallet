@@ -1,9 +1,9 @@
-import { div, ul, li, a, span } from '@cycle/dom'
+import { div, ul, li, a, span, button, small } from '@cycle/dom'
 import { yaml, ago } from './util'
 
-const numItems = 10
+const perPage = 10
 
-const home = ({ feed, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
+const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
@@ -11,7 +11,7 @@ const home = ({ feed, unitf, info, btcusd, peers, funds, conf: { expert } }) => 
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
 
-, ul('.list-group.payments', feed.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
+, ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj ]) =>
     li('.list-group-item', [
       div('.clearfix', [
         type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
@@ -19,11 +19,23 @@ const home = ({ feed, unitf, info, btcusd, peers, funds, conf: { expert } }) => 
       , ago('.badge.badge-secondary.badge-pill.float-right', ts)
       ])
     , expert ? yaml(obj) : ''
-    ])).concat(feed.length > numItems ? [ li('.list-group-item.disabled', `(${feed.length-numItems} more older items)`) ] : []))
-    // @TODO paging
+    ])
+  ))
 
-, expert ? yaml({ info, btcusd, peers, funds }) : ''
+, paging(feed.length, feedStart)
+
+, expert ? yaml({ info, btcusd, funds, peers }) : ''
 ])
 
+const paging = (total, start) => total <= perPage ? '' :
+  div('.d-flex.justify-content-between.mt-3', [
+    pageLink('newer', start > 0 ? ''+(start-perPage) : null)
+  , small('.align-self-center.text-muted', `showing ${+start+1} to ${Math.min(total, +start+perPage)} of ${total}`)
+  , pageLink('older', start+perPage < total ? start+perPage : null)
+  ])
+
+const pageLink = (label, start, active) =>
+  start == null ? button('.btn.btn-sm.btn-link.invisible', label)
+                : button('.btn.btn-sm.btn-link', { dataset: { feedStart: ''+start } }, label)
 
 module.exports = { home }
