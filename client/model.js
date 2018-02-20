@@ -62,7 +62,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   // currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
-  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unit == 'usd' ? msatusd : unitrate[unit])
+  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
   // dynamic currency conversion for payment request form
