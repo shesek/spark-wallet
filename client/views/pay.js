@@ -20,14 +20,17 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 
 // @TODO show expiry
 // @TODO input amount for 'any' invoice
-const confirmPay = payreq => ({ unitf, conf: { expert } }) => div([
-  h2('Confirm payment')
-, p([ 'Do you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
-, payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-, button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
-, ' '
-, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
-, expert ? yaml(payreq) : ''
-])
+const confirmPay = payreq => ({ unitf, conf: { expert } }) =>
+  payreq.msatoshi
+  ? div([
+      h2('Confirm payment')
+    , p([ 'Do you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
+    , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
+    , button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
+    , ' '
+    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+    , expert ? yaml(payreq) : ''
+    ])
+  : p('Custom invoice amounts are currently unsupported.')
 
 module.exports = { scanReq, pasteReq, confirmPay }

@@ -8,7 +8,7 @@ const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =
     , div('.input-group', [
         input({ attrs: { type: 'hidden', name: 'msatoshi' }, props: { value: msatoshi } })
       , input('.form-control.form-control-lg'
-        , { attrs: { type: 'number', step, min: step, name: 'amount', placeholder: '(optional)' }
+        , { attrs: { type: 'number', step, min: step, name: 'amount', required: true }
           , props: { value: amount } })
       , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
       ]))
