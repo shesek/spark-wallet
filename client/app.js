@@ -17,12 +17,8 @@ import { dbg } from './util'
 import intent from './intent'
 import model  from './model'
 import view   from './view'
-import { rpcCalls, rpcIntent } from './rpc'
+import { rpcCalls, rpcIntent, rpc2http } from './rpc'
 
-const _csrf = document.querySelector('meta[name=csrf]').content
-
-const http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
-    ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))
 
 const goto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$ }) =>
   out$.merge(in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label)).mapTo('/')
@@ -44,7 +40,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
   return {
     DOM:   vdom$
-  , HTTP:  http(rpc$)
+  , HTTP:  rpc2http(rpc$)
   , route: goto(resps)
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$

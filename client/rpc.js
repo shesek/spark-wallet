@@ -47,3 +47,8 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
+
+const _csrf = document.querySelector('meta[name=csrf]').content
+
+exports.rpc2http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
+  ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))
