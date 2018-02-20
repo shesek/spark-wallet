@@ -36,6 +36,12 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
     .startWith([]).scan((invs, mod) => mod(invs))
     .map(invs => invs.filter(inv => inv.status === 'paid'))
 
+  // chronologically sorted feed of incoming and outgoing payments
+  , feed$     = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
+      ...invoices.map(inv => [ 'in',  inv.paid_at,    inv.msatoshi_received, inv ])
+    , ...payments.map(pay => [ 'out', pay.created_at, pay.msatoshi,          pay ])
+    ].sort((a, b) => b[1] - a[1]))
+
   // periodically re-sync channel balance from "listpeers", continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
       peers$.map(peers  => _ => sumChans(peers))
@@ -45,12 +51,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   // on-chain output balance (not currently used for anything, but seems useful?)
   , obalance$ = funds$.map(funds => sumOuts(funds.outputs || [])).startWith(null)
-
-  // chronologically sorted feed of incoming and outgoing payments
-  , moves$    = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
-      ...invoices.map(inv => [ 'in',  inv.paid_at,    inv.msatoshi_received, inv ])
-    , ...payments.map(pay => [ 'out', pay.created_at, pay.msatoshi,          pay ])
-    ].sort((a, b) => b[1] - a[1]))
 
   // config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
@@ -103,7 +103,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
   return combine({
     conf$, page$, loading$, alert$
   , info$, peers$, funds$
-  , btcusd$, unitf$, cbalance$, obalance$, moves$
+  , btcusd$, unitf$, cbalance$, obalance$, feed$
   , recvForm$, rpcHist$
   }).shareReplay(1)
 }

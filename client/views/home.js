@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const numItems = 10
 
-const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
+const home = ({ info, rate, feed, peers, unitf, conf: { expert } }) => div([
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
@@ -11,7 +11,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
 
-, ul('.list-group.payments', moves.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
+, ul('.list-group.payments', feed.slice(0, numItems).map(([ type, ts, msat, obj ]) =>
     li('.list-group-item', [
       div('.clearfix', [
         type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
@@ -19,7 +19,7 @@ const home = ({ info, rate, moves, peers, unitf, conf: { expert } }) => div([
       , ago('.badge.badge-secondary.badge-pill.float-right', ts)
       ])
     , expert ? yaml(obj) : ''
-    ])).concat(moves.length > numItems ? [ li('.list-group-item.disabled', `(${moves.length-numItems} more older items)`) ] : []))
+    ])).concat(feed.length > numItems ? [ li('.list-group-item.disabled', `(${feed.length-numItems} more older items)`) ] : []))
     // @TODO paging
 
 , expert ? yaml({ info, btcusd, peers, funds }) : ''
