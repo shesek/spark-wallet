@@ -1,0 +1,70 @@
+@import('loader.styl')
+@import('icons.styl')
+@import('tooltip.styl')
+@import('theme-touchups.styl')
+
+
+// avoid FOUC before bootstrap loads
+// (this is later overridden by bootstrap's css)
+body
+  font-size 0px
+.btn, .form-control
+  display none
+
+// Layout
+html, body, #app
+  height 100%
+
+body
+  margin 0
+
+#app > .flex-column
+  min-height 100%
+
+// Header
+.navbar-brand
+  position relative
+
+  .icon
+    position absolute
+    left -20px
+
+    &:before
+      vertical-align middle
+
+// Footer
+footer
+  font-size 65%
+
+// Helpers
+.flex-grow
+  flex 1
+
+.break-all
+  word-break break-all
+
+.disabled
+  opacity 0.5
+  pointer-events none
+
+// Component
+.alert
+  font-size 0.9rem
+  font-weight 400
+
+// Homepage
+.payments .badge
+  font-size 100%
+
+// Pay
+.scanqr video
+  width 100%
+
+// Recv
+img.qr
+  width 100%
+  max-width 300px
+
+// Logs
+.logs
+  white-space pre-line

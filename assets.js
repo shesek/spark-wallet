@@ -1,9 +1,10 @@
-import { join } from 'path'
-
+import path from 'path'
 import stylus from 'stylus'
 import express from 'express'
 import browserify from 'browserify-middleware'
 import compression from 'compression'
+
+const rpath = p => path.join(__dirname, p)
 
 module.exports = app => {
 
@@ -17,7 +18,7 @@ module.exports = app => {
   if (app.settings.env == 'production' && !process.env.NO_GZIP)
     app.use('/assets', compression())
 
-  app.get('/app.js', browserify(join(__dirname, 'client/app.js')))
-  app.use('/assets', stylus.middleware({ src: join(__dirname, 'www'), serve: true, compile: compileStyl }))
-  app.use('/assets', express.static(join(__dirname, 'www'), { /* maxAge: '30d', immutable: true */ }))
+  app.get('/app.js', browserify(rpath('client/app.js')))
+  app.use('/assets', stylus.middleware({ src: rpath('styl'), dest: rpath('www'), compile: compileStyl }))
+  app.use('/assets', express.static(rpath('www'), { /* maxAge: '30d', immutable: true */ }))
 }
