@@ -1,7 +1,9 @@
 import { Observable as O } from './rxjs'
 import { dropErrors, extractErrors, dbg } from './util'
 
-const timer = (ms, val) => O.timer(Math.random()*10000, ms).startWith(-1).mapTo(val)
+// send the first requests out all at once, but make sure
+// the next one don't all hit the servers at once
+const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
 exports.rpcIntent = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
@@ -36,14 +38,12 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 
+, timer(60000,           [ 'listinvoices', [], { bg: true } ])
+, timer(60000,           [ 'listinvoices', [], { bg: true } ])
+, timer(60000,           [ 'listpayments', [], { bg: true } ])
+, timer(60000,           [ 'listpeers',    [], { bg: true } ])
+, timer(60000,           [ 'listfunds',    [], { bg: true } ])
+, timer(60000,           [ 'getinfo',      [], { bg: true } ])
+
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
-
-, timer(150000,          [ 'listinvoices', [], { bg: true } ])
-, timer(150000,          [ 'listinvoices', [], { bg: true } ])
-, timer(150000,          [ 'listpayments', [], { bg: true } ])
-, timer(150000,          [ 'listpeers',    [], { bg: true } ])
-, timer(150000,          [ 'listfunds',    [], { bg: true } ])
-, timer(150000,          [ 'getinfo',      [], { bg: true } ])
-
-// @TODO on page focus, on homepage load, on refresh button click
 )
