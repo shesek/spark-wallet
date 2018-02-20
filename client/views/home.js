@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const numItems = 10
 
-const home = ({ info, rate, feed, peers, unitf, conf: { expert } }) => div([
+const home = ({ feed, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
