@@ -3,7 +3,7 @@ import EventEmitter from 'events'
 import request from 'superagent'
 
 const rateUrl = 'https://apiv2.bitcoinaverage.com/indices/local/ticker/short?crypto=BTC&fiat=USD'
-    , rateInterval = 120000
+    , rateInterval = 300000
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)
