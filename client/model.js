@@ -102,7 +102,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   return combine({
     conf$, page$, loading$, alert$
-  , info$: info$.startWith(null), peers$: peers$.startWith(null)
+  , info$, peers$
   , rate$, unitf$, cbalance$, obalance$, moves$
   , recvForm$, rpcHist$
   }).shareReplay(1)
