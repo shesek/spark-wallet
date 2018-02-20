@@ -38,7 +38,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))//, dclick('.toggle-unit').mapTo(-3))
   , togCam$   = click('.toggle-cam')
   , togFull$  = dclick('.full-screen')
-  , togExp$   = dclick('.toggle-exp')
+  , togExp$   = click('.toggle-exp')
 
   , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button'))
 
