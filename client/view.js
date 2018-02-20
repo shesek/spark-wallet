@@ -1,4 +1,4 @@
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 import views  from './views'
 import { dbg, combine } from './util'
 

@@ -2,7 +2,7 @@ import { Big as big } from 'big.js'
 import debug        from 'debug'
 import numbro from 'numbro'
 import moveDec from 'move-decimal-point'
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 
 const
 

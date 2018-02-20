@@ -1,5 +1,5 @@
 import pathRegexp from 'path-to-regexp'
-import { Observable as O } from 'rxjs'
+import { Observable as O } from '../rxjs'
 
 const isStr = x => typeof x === 'string'
 

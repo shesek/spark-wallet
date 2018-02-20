@@ -1,5 +1,5 @@
 import big from 'big.js'
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
 

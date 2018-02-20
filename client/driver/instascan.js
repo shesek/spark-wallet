@@ -1,4 +1,4 @@
-import { Observable as O } from 'rxjs'
+import { Observable as O } from '../rxjs'
 //import { Scanner, Camera } from 'instascan'
 
 const { Scanner, Camera } = window.Instascan

@@ -1,4 +1,4 @@
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 import { dropErrors, extractErrors, dbg } from './util'
 
 const timer = (ms, val) => O.timer(Math.random()*10000, ms).startWith(-1).mapTo(val)

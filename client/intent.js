@@ -1,4 +1,4 @@
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 import serialize from 'form-serialize'
 import stringArgv from 'string-argv'
 import nanoid from 'nanoid'

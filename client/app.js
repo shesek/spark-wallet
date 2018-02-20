@@ -1,6 +1,6 @@
 import run from '@cycle/rxjs-run'
 
-import { Observable as O } from 'rxjs'
+import { Observable as O } from './rxjs'
 
 import storageDriver       from '@cycle/storage'
 import { makeDOMDriver }   from '@cycle/dom'

@@ -1,4 +1,4 @@
-import { Observable as O } from 'rxjs'
+import { Observable as O } from '../rxjs'
 import EventSource from 'eventsource'
 
 module.exports = url => {
