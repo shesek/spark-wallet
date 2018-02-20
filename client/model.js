@@ -5,7 +5,8 @@ import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
-, sumChans = peers => peers.reduce((T, r) => T + (r.channels||[]).reduce((T, c) => T + c.msatoshi_to_us || 0, 0), 0)
+, sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
+, sumPeers = peers => peers.filter(p => p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
 , updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 
 , idx = xs => x => xs.indexOf(x)
@@ -44,7 +45,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   // periodically re-sync channel balance from "listpeers", continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
-      peers$.map(peers  => _ => sumChans(peers))
+      peers$.map(peers  => _ => sumPeers(peers))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
