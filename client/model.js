@@ -102,8 +102,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   return combine({
     conf$, page$, loading$, alert$
-  , info$, peers$
-  , rate$, unitf$, cbalance$, obalance$, moves$
+  , info$, peers$, funds$
+  , btcusd$, unitf$, cbalance$, obalance$, moves$
   , recvForm$, rpcHist$
   }).shareReplay(1)
 }
