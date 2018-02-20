@@ -2,7 +2,7 @@ import LightningClient from 'lightning-client'
 import EventEmitter from 'events'
 import request from 'superagent'
 
-const rateUrl = 'https://apiv2.bitcoinaverage.com/indices/local/ticker/short?crypto=BTC&fiat=USD'
+const rateUrl = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
     , rateInterval = 300000
 
 module.exports = lnPath => {
@@ -28,7 +28,7 @@ module.exports = lnPath => {
   let lastRate
   ;(async function getrate() {
     // @XXX check if anybody is listening?
-    try { em.emit('rate', lastRate = await request(rateUrl).then(r => r.body.BTCUSD.last)) }
+    try { em.emit('rate', lastRate = await request(rateUrl).then(r => r.body.last)) }
     catch (err) { console.error(err.stack || err.toString()) }
     setTimeout(getrate, rateInterval)
   })()
