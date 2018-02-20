@@ -28,7 +28,7 @@ const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expe
 ])
 
 const paging = (total, start) => total <= perPage ? '' :
-  div('.d-flex.justify-content-between.mt-3', [
+  div('.d-flex.justify-content-between.mt-2', [
     pageLink('newer', start > 0 ? ''+(start-perPage) : null)
   , small('.align-self-center.text-muted', `showing ${+start+1} to ${Math.min(total, +start+perPage)} of ${total}`)
   , pageLink('older', start+perPage < total ? start+perPage : null)

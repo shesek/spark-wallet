@@ -13,8 +13,8 @@ const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =
       , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
       ]))
 
-  , formGroup('Description'
-    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
+  , formGroup('Description (optional)'
+    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description' } })
     , 'Embedded in the QR and presented to the payer.')
 
   , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')

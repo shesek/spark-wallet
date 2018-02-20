@@ -20,7 +20,12 @@ const navbar = ({ unitf, cbalance, alert, page }) =>
 
 const footer = ({ info, conf: { theme, expert } }) =>
   h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
-    info ? p('.info.toggle-exp.float-left.mb-0', `${info.version.replace(/-.*-g/, '-')} · ${info.network} #${info.blockheight} · id: ${info.id.substr(0,10)}${expert ? ' 🔧' : ''}`) : ''
+    info ? p('.info.toggle-exp.float-left.mb-0'
+    , [ info.version.replace(/-.*-g/, '-')
+      ,`${info.network} #${info.blockheight}`
+      , info.id.substr(0,14)
+      , ...(expert ? '🔧' : '')
+      ].join(' · ')) : ''
   , p('.toggle-theme.float-right.mb-0', theme)
   ])
 
