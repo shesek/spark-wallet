@@ -32,7 +32,7 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
     , msatoshi:    r.msatoshi || 'any'
-    , description: r.description || 'Lightning' }))
+    , description: r.description || 'Lightning Payment' }))
 
   , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))//, dclick('.theme').mapTo(-3))
   , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))//, dclick('.toggle-unit').mapTo(-3))
