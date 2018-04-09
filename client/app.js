@@ -20,8 +20,10 @@ import view   from './view'
 import { rpcCalls, rpcIntent, rpc2http } from './rpc'
 
 
+// jump to homepage when sending/receiving payments
 const goto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$ }) =>
-  out$.merge(in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label)).mapTo('/')
+  O.merge(out$, in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label))
+    .mapTo('/')
 
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
@@ -40,7 +42,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
   return {
     DOM:   vdom$
-  , HTTP:  rpc2http(rpc$)
+  , HTTP:  rpc2http(rpc$, state$.map(S => S.conf.server))
   , route: goto(resps)
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$

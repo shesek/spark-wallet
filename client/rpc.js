@@ -1,3 +1,4 @@
+import url from 'url'
 import { Observable as O } from './rxjs'
 import { dropErrors, extractErrors, dbg } from './util'
 
@@ -51,8 +52,13 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 
 localStorage.serverUrl = 'http://test.com/'
 
-const serverUrl = process.env.TARGET_CORDOVA ? localStorage.serverUrl : './'
-    , _csrf     = process.env.TARGET_CORDOVA ? null : document.querySelector('meta[name=csrf]').content
+const _csrf = process.env.BUILD_TARGET == 'cordova' ? null : document.querySelector('meta[name=csrf]').content
 
-exports.rpc2http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
-  ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))
+exports.rpc2http = (rpc$, server$) =>
+  rpc$.withLatestFrom(server$.startWith('./'), ([ method, params=[], ctx={} ], server) => ({
+    category: ctx.category || method
+  , method: 'POST'
+  , url: url.resolve(server, 'rpc')
+  , send: { _csrf, method, params }
+  , ctx
+  }))

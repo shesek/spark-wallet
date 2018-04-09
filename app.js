@@ -36,4 +36,4 @@ import fs from 'fs'
 const sslOpt = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') }
 
 require('https').createServer(sslOpt, app).listen(app.settings.port, app.settings.host, _ =>
-  console.log(`HTTP server running on ${ app.settings.host }:${ app.settings.port }`))
+  console.log(`Spark wallet running on https://${ app.settings.host }:${ app.settings.port }`))

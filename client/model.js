@@ -22,13 +22,15 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
   const
 
-  // periodically re-sync from listpayments, continuously patch with known outgoing payments
+  // Periodically re-sync from listpayments,
+  // continuously patch with known outgoing payments
     freshPays$ = O.merge(
       payments$.map(payments => _ => payments)
     , outgoing$.map(pay => payments => [ ...payments, { ...pay, status: 'complete', created_at: Date.now()/1000|0 } ])
     ).startWith([]).scan((payments, mod) => mod(payments))
 
-  // periodically re-sync from listinvoices, continuously patch with known invoices (paid only)
+  // Periodically re-sync from listinvoices,
+  // continuously patch with known invoices (paid only)
   , freshInvs$ = O.merge(
       invoices$.map(invs => _ => invs)
     , invoice$.map(inv  => invs => [ ...invs, inv ])
@@ -37,36 +39,38 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
     .startWith([]).scan((invs, mod) => mod(invs))
     .map(invs => invs.filter(inv => inv.status === 'paid'))
 
-  // chronologically sorted feed of incoming and outgoing payments
+  // Chronologically sorted feed of incoming and outgoing payments
   , feed$     = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(inv => [ 'in',  inv.paid_at,    inv.msatoshi_received, inv ])
     , ...payments.map(pay => [ 'out', pay.created_at, pay.msatoshi,          pay ])
     ].sort((a, b) => b[1] - a[1]))
 
-  // periodically re-sync channel balance from "listpeers", continuously patch with known incoming & outgoing payments
+  // Periodically re-sync channel balance from "listpeers",
+  // continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
       peers$.map(peers  => _ => sumPeers(peers))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
-    , outgoing$.map(pay => N => N - pay.msatoshi)
+    , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
-  // on-chain output balance (not currently used for anything, but seems useful?)
+  // On-chain outputs balance (not currently used for anything, but seems useful?)
   , obalance$ = funds$.map(funds => sumOuts(funds.outputs || [])).startWith(null)
 
-  // config options
+  // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
+  , server$  = conf('server', './')  //       .concat(changeServer$)
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
   , camIdx$  = conf('camera', 0)            .concat(togCam$)  .scan(n => (n+1) % 2) // @todo get actual number of cameras
-  , conf$    = combine({ expert$, theme$, unit$, camIdx$ })
+  , conf$    = combine({ server$, expert$, theme$, unit$, camIdx$ })
 
-  // currency & unit conversion handling
+  // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
-  // dynamic currency conversion for payment request form
+  // Payment request form
   , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
                         .merge(goRecv$.mapTo(null)).startWith(null)
   , recvForm$ = combine({
@@ -76,12 +80,12 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
     , step:     unit$.map(unit => unitstep[unit])
     })
 
-  // keep track of the number of non-bg in-flight requests
+  // Keep track of the number of non-backgground in-flight requests
   , loading$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
       .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
       .startWith(0).scan((N, a) => N+a)
 
-  // user-visible alerts
+  // User-visible alert messages
   , alert$   = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
@@ -98,7 +102,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
   dbg({ loading$, alert$, rpcHist$ }, 'flash:model')
   dbg({ error$ }, 'flash:error')
   dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
-
   dbg({ savedConf$, conf$, expert$, theme$, unit$, camIdx$, conf$ }, 'flash:config')
 
   return combine({
