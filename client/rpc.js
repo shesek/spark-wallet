@@ -5,6 +5,7 @@ import { dropErrors, extractErrors, dbg } from './util'
 // the next one don't all hit the servers at once
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
+
 exports.rpcIntent = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
@@ -48,7 +49,10 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 
-const _csrf = document.querySelector('meta[name=csrf]').content
+localStorage.serverUrl = 'http://test.com/'
+
+const serverUrl = process.env.TARGET_CORDOVA ? localStorage.serverUrl : './'
+    , _csrf     = process.env.TARGET_CORDOVA ? null : document.querySelector('meta[name=csrf]').content
 
 exports.rpc2http = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) =>
   ({ category: ctx.category || method, method: 'POST', url: './rpc', send: { _csrf, method, params }, ctx }))

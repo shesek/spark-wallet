@@ -16,6 +16,7 @@
     "@cycle/storage": "^5.0.3",
     "big.js": "^5.0.3",
     "bootswatch": "^4.0.0",
+    "envify": "^4.1.0",
     "eventsource": "^1.0.5",
     "form-serialize": "^0.7.2",
     "fscreen": "^1.0.2",
@@ -28,6 +29,7 @@
     "qrcode": "^1.2.0",
     "rxjs": "^5.5.6",
     "string-argv": "0.0.2",
+    "uglifyify": "^4.0.5",
     "vague-time": "^2.4.1",
     "webrtc-adapter": "^6.1.1",
     "xstream": "^11.2.0"
@@ -35,7 +37,9 @@
   "browserify": {
     "transform": [
       "babelify",
-      "pugify"
+      "pugify",
+      "envify",
+      "uglifyify"
     ]
   }
 }
