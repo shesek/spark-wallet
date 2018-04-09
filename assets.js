@@ -8,7 +8,8 @@ const rpath = p => path.join(__dirname, p)
 
 module.exports = app => {
 
-  const compileStyl = (str, filename) => stylus(str)
+  const compileStyl = (str, filename) =>
+    stylus(str)
     .set('filename', filename)
     .set('include css', true)
     .set('compress', app.settings.env == 'production')
