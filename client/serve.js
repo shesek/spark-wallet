@@ -6,11 +6,12 @@ import stylus from 'stylus'
 import express from 'express'
 import browserify from 'browserify-middleware'
 
-
 const compileStyl = (str, filename) => stylus(str).set('filename', filename).use(nib())
     , swatchPath  = path.resolve(require.resolve('bootswatch/package'), '..', 'dist')
     , scanPath    = require.resolve('instascan/dist/instascan.min.js')
     , rpath       = p => path.join(__dirname, p)
+
+process.env.BUILD_TARGET = 'web'
 
 module.exports = app => {
 
