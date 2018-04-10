@@ -1,0 +1,26 @@
+import fs from 'fs'
+import path from 'path'
+import pug from 'pug'
+import nib from 'nib'
+import stylus from 'stylus'
+import express from 'express'
+import browserify from 'browserify-middleware'
+
+
+const compileStyl = (str, filename) => stylus(str).set('filename', filename).use(nib())
+    , swatchPath  = path.resolve(require.resolve('bootswatch/package'), '..', 'dist')
+    , scanPath    = require.resolve('instascan/dist/instascan.min.js')
+    , rpath       = p => path.join(__dirname, p)
+
+module.exports = app => {
+
+  app.engine('pug', require('pug').__express)
+
+  app.get('/', (req, res) => res.render(rpath('index.pug'), { req }))
+  app.get('/app.js', browserify(rpath('app.js')))
+  app.get('/style.css', stylus.middleware({ src: rpath('styl'), dest: rpath('www'), compile: compileStyl }))
+  app.get('/lib/instascan.js', (req, res) => res.sendFile(scanPath))
+
+  app.use('/', express.static(rpath('www')))
+  app.use('/bootswatch', express.static(swatchPath))
+}

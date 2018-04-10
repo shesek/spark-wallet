@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "./dist.sh"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Nadav Ivgi",
+  "license": "MIT",
   "dependencies": {
     "@cycle/dom": "^20.1.0",
     "@cycle/history": "^6.10.0",
@@ -16,7 +16,6 @@
     "@cycle/storage": "^5.0.3",
     "big.js": "^5.0.3",
     "bootswatch": "^4.0.0",
-    "envify": "^4.1.0",
     "eventsource": "^1.0.5",
     "form-serialize": "^0.7.2",
     "fscreen": "^1.0.2",
@@ -29,7 +28,6 @@
     "qrcode": "^1.2.0",
     "rxjs": "^5.5.6",
     "string-argv": "0.0.2",
-    "uglifyify": "^4.0.5",
     "vague-time": "^2.4.1",
     "webrtc-adapter": "^6.1.1",
     "xstream": "^11.2.0"
@@ -41,5 +39,20 @@
       "envify",
       "uglifyify"
     ]
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.1.1",
+    "browserify-middleware": "^8.1.0",
+    "envify": "^4.1.0",
+    "nib": "^1.1.2",
+    "pug": "^2.0.3",
+    "pugify": "^2.2.0",
+    "stylus": "^0.54.5",
+    "uglifyify": "^4.0.5"
   }
 }

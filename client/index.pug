@@ -6,8 +6,8 @@ meta(charset='utf-8')
 meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no')
 meta(name='mobile-web-app-capable', content='yes')
 meta(name='apple-mobile-web-app-capable', content='yes')
-//-link(rel='manifest', href='assets/manifest.json')
-link(rel='stylesheet', href='assets/style.css')
+//-link(rel='manifest', href='manifest.json')
+link(rel='stylesheet', href='style.css')
 if req
   meta(name='csrf', content=req.csrfToken())
 
@@ -15,6 +15,6 @@ if req
   nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay
   #loader
 
-script document.write('<link rel="stylesheet" href="assets/bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
-script(src='assets/instascan.js', defer)
+script document.write('<link rel="stylesheet" href="bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
+script(src='lib/instascan.js', defer)
 script(src='app.js', defer)

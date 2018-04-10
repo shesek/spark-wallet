@@ -1,0 +1,24 @@
+#!/bin/bash
+set -eo pipefail
+
+: ${DEST:=dist}
+: ${BUILD_TARGET:=web}
+
+export BUILD_TARGET
+
+rm -rf $DEST/*
+mkdir -p $DEST $DEST/lib
+
+# Copy static assets
+cp -r www $DEST/
+cp -r node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
+cp -r node_modules/bootswatch/dist $DEST/bootswatch
+find $DEST/bootswatch -type f ! -name '*.min.css' -exec rm {} +
+
+# Transpile pug and stylus
+pug index.pug -o $DEST
+stylus -u nib -c styl/style.styl $DEST
+
+# Make browserify bundle
+browserify app.js | uglifyjs -c warnings=false -m > $DEST/app.js
+

@@ -1,1 +1,0 @@
-../client/node_modules/instascan/dist/instascan.min.js

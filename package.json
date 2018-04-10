@@ -19,29 +19,15 @@
     "cookie-parser": "^1.4.3",
     "csurf": "^1.9.0",
     "express": "^4.16.2",
-    "lightning-client": "github:shesek/lightning-client-js#e25ab8219e2297d5b3a433e19f2dedb74e57fc49",
+    "lightning-client": "github:shesek/lightning-client-js#e8910e367f4ce27732847886016c32f426044d94",
     "meow": "^4.0.0",
     "morgan": "^1.9.0",
-    "nib": "^1.1.2",
-    "only": "0.0.2",
-    "pug": "^2.0.0-rc.4",
-    "stylus": "^0.54.5",
     "superagent": "^3.8.2"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "browserify-middleware": "^8.0.0",
-    "babelify": "^8.0.0",
-    "pugify": "^2.2.0",
-    "js-yaml": "^3.10.0"
-  },
-  "browserify": {
-    "transform": [
-      "babelify",
-      "pugify"
-    ]
+    "babel-preset-env": "^1.6.1"
   }
 }

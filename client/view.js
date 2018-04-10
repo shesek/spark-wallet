@@ -25,7 +25,7 @@ module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$,
   // @xxx side effects outside of drivers!
   const themeLink = document.querySelector('link[href*=bootstrap]')
   state$.map(S => S.conf.theme).distinctUntilChanged()
-    .subscribe(theme => themeLink.href = `assets/bootswatch/${theme}/bootstrap.min.css`)
+    .subscribe(theme => themeLink.href = `bootswatch/${theme}/bootstrap.min.css`)
 
   return combine({ state$, body$ }).map(views.layout)
 }
