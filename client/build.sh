@@ -9,6 +9,8 @@ export BUILD_TARGET
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib
 
+[ -d node_modules ] || npm install
+
 # Copy static assets
 cp -r www/* $DEST/
 cp -r node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
