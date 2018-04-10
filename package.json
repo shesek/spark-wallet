@@ -2,6 +2,7 @@
   "name": "miniwallet",
   "version": "0.0.1",
   "description": "miniwallet",
+  "bin": "dist/cli.js",
   "scripts": {
     "start": "./start.sh",
     "dist": "./build.sh",
