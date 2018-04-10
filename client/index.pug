@@ -8,8 +8,6 @@ meta(name='mobile-web-app-capable', content='yes')
 meta(name='apple-mobile-web-app-capable', content='yes')
 //-link(rel='manifest', href='manifest.json')
 link(rel='stylesheet', href='style.css')
-if req
-  meta(name='csrf', content=req.csrfToken())
 
 #app
   nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay

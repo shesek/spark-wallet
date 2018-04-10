@@ -50,15 +50,12 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 
-localStorage.serverUrl = 'http://test.com/'
-
-const _csrf = process.env.BUILD_TARGET == 'cordova' ? null : document.querySelector('meta[name=csrf]').content
-
 exports.rpc2http = (rpc$, server$) =>
+  // @XXX startWith should not be needed here
   rpc$.withLatestFrom(server$.startWith('./'), ([ method, params=[], ctx={} ], server) => ({
     category: ctx.category || method
   , method: 'POST'
   , url: url.resolve(server, 'rpc')
-  , send: { _csrf, method, params }
+  , send: { method, params }
   , ctx
   }))

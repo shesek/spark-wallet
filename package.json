@@ -22,8 +22,6 @@
     "babel-polyfill": "^6.26.0",
     "body-parser": "^1.18.2",
     "compression": "^1.7.2",
-    "cookie-parser": "^1.4.3",
-    "csurf": "^1.9.0",
     "express": "^4.16.2",
     "lightning-client": "github:shesek/lightning-client-js#e8910e367f4ce27732847886016c32f426044d94",
     "meow": "^4.0.0",
