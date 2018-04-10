@@ -1,0 +1,23 @@
+{
+    "name": "com.spark.wallet",
+    "displayName": "SparkWallet",
+    "version": "0.1.0",
+    "description": "c-lightning wallet gui",
+    "scripts": {
+        "dist": "./build.sh"
+    },
+    "author": "Nadav Ivgi",
+    "license": "MIT",
+    "dependencies": {
+        "cordova-android": "7.1.0",
+        "cordova-plugin-whitelist": "^1.3.3"
+    },
+    "cordova": {
+        "plugins": {
+            "cordova-plugin-whitelist": {}
+        },
+        "platforms": [
+            "android"
+        ]
+    }
+}
