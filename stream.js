@@ -1,14 +1,15 @@
 import LightningClient from 'lightning-client'
 import EventEmitter from 'events'
-import request from 'superagent'
+import { get } from 'superagent'
 
 const rateUrl = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
-    , rateInterval = 300000
+    , rateInterval = 300000 // 5 minutes
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)
       , em = new EventEmitter
 
+  // Continuously long-poll invoice payment updates
   async function waitany(last_index) {
     try {
       const inv = await ln.waitanyinvoice(last_index)
@@ -20,19 +21,22 @@ module.exports = lnPath => {
     }
   }
 
+  // Start waitany() with the last known invoice
   ln.client.on('connect', _ =>
     ln.listinvoices()
       .then(r => Math.max(...r.invoices.map(inv => inv.pay_index || 0)))
       .then(waitany))
 
+  // Periodically pull BTC<->USD exchange rate
   let lastRate
   ;(async function getrate() {
-    // @XXX check if anybody is listening?
-    try { em.emit('rate', lastRate = await request(rateUrl).then(r => r.body.last)) }
+    // @xxx don't pull if no one is listening?
+    try { em.emit('rate', lastRate = await get(rateUrl).then(r => r.body.last)) }
     catch (err) { console.error(err.stack || err.toString()) }
     setTimeout(getrate, rateInterval)
   })()
 
+  // GET /stream middleware
   return (req, res) => {
     res.set({
       'X-Accel-Buffering': 'no'
