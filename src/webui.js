@@ -14,5 +14,5 @@ module.exports = app => {
     app.use('/*.(css|js)', compression())
 
   if (preBuilt) app.use('/', express.static(preBuilt))
-  else require('./client/serve')(app)
+  else require('../client/serve')(app)
 }

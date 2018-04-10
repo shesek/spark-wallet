@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "description": "miniwallet",
   "scripts": {
-    "start": "./start.sh"
+    "start": "./start.sh",
+    "dist": "./build.sh",
+    "prepublishOnly": "npm run dist"
   },
   "repository": "https://github.com/shesek/miniwallet.git",
+  "files": [ "dist" ]
   "keywords": [
     "bitcoin",
     "lightning"
