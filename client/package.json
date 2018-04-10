@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dist": "./dist.sh"
+    "dist": "./build.sh"
   },
   "author": "Nadav Ivgi",
   "license": "MIT",

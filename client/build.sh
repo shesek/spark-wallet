@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eo pipefail
+set -xeo pipefail
 
 : ${DEST:=dist}
 : ${BUILD_TARGET:=web}
@@ -10,7 +10,7 @@ rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib
 
 # Copy static assets
-cp -r www $DEST/
+cp -r www/* $DEST/
 cp -r node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
 cp -r node_modules/bootswatch/dist $DEST/bootswatch
 find $DEST/bootswatch -type f ! -name '*.min.css' -exec rm {} +
