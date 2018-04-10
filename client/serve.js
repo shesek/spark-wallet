@@ -17,7 +17,7 @@ module.exports = app => {
   app.engine('pug', require('pug').__express)
 
   app.get('/', (req, res) => res.render(rpath('index.pug'), { req }))
-  app.get('/app.js', browserify(rpath('app.js')))
+  app.get('/app.js', browserify(rpath('src/app.js')))
   app.get('/style.css', stylus.middleware({ src: rpath('styl'), dest: rpath('www'), compile: compileStyl }))
   app.get('/lib/instascan.js', (req, res) => res.sendFile(scanPath))
 
