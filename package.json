@@ -8,7 +8,9 @@
     "prepublishOnly": "npm run dist"
   },
   "repository": "https://github.com/shesek/miniwallet.git",
-  "files": [ "dist" ],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "bitcoin",
     "lightning"
@@ -31,6 +33,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "cordova": "^8.0.0"
   }
 }
