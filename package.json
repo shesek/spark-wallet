@@ -8,7 +8,7 @@
     "prepublishOnly": "npm run dist"
   },
   "repository": "https://github.com/shesek/miniwallet.git",
-  "files": [ "dist" ]
+  "files": [ "dist" ],
   "keywords": [
     "bitcoin",
     "lightning"
