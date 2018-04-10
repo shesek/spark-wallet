@@ -18,8 +18,9 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$, recvAmt$, execRpc$, clrHist$, feedStart$, conf$: savedConf$
-                  , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, execRes$, info$, peers$ }) => {
+module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$
+                  , recvAmt$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
+                  , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
 
   // Periodically re-sync from listpayments,
@@ -58,7 +59,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
 
   // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-  , server$  = conf('server', './')  //       .concat(changeServer$)
+  , server$  = conf('server', './')         .concat(saveConf$.map(C => C.server))
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
@@ -90,6 +91,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, togCam$, page$, goRe
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
     , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
+    , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
     , dismiss$.mapTo(null).startWith(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])
 

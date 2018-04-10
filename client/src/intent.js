@@ -20,8 +20,9 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , goRecv$ = route('/recv')
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
+  , goConf$ = route('/settings')
 
-  // Scan, view and confirm payments
+  // Scan, decode and confirm payments
   , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
   , viewPay$ = O.merge(scanPay$, submit('[do=decode-pay]').map(r => r.bolt11))
   , confPay$ = click('[do=confirm-pay]')
@@ -38,7 +39,8 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || 'Lightning Payment' }))
 
-  // Toggles
+  // Config page and toggle buttons
+  , saveConf$ = submit('[do=save-config]')
   , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))
   , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))
   , togCam$   = click('.toggle-cam')
@@ -56,9 +58,13 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$
-         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
-         , viewPay$, confPay$, execRpc$, clrHist$, newInv$, recvAmt$, feedStart$
-         , dismiss$, togExp$, togTheme$, togUnit$, togCam$
+         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$, goConf$
+         , viewPay$, confPay$
+         , execRpc$, clrHist$
+         , newInv$, recvAmt$
+         , saveConf$, togExp$, togTheme$, togUnit$, togCam$
+         , feedStart$
+         , dismiss$
          , scanner$: DOM.select('.scanqr').elements()
          }
 }
