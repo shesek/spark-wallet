@@ -6,7 +6,7 @@ const config = ({ conf: { server } }) =>
     h2('Settings')
   , formGroup('Server URL'
     , input('.form-control.form-control-lg', { attrs: {
-        type: 'text', name: 'server', value: server, placeholder: 'https://my-nanopay-server.com/' } })
+        type: 'text', name: 'server', value: server || '', placeholder: 'https://my-nanopay-server.com/' } })
     )
 
   , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save')
