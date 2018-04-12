@@ -18,6 +18,8 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
+const defaultServer = process.env.BUILD_TARGET === 'web' ? '.' : null
+
 module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$
                   , recvAmt$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
@@ -59,7 +61,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
 
   // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-  , server$  = conf('server', './')         .concat(saveConf$.map(C => C.server))
+  , server$  = conf('server', defaultServer).concat(saveConf$.map(C => C.server))
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
