@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, combine, extractErrors, dropErrors } from './util'
+import { dbg, formatAmt, combine, combineAvail, extractErrors, dropErrors } from './util'
 
 
 const
@@ -57,7 +57,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // On-chain outputs balance (not currently used for anything, but seems useful?)
-  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || [])).startWith(null)
+  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || []))
 
   // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
@@ -69,7 +69,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
   , conf$    = combine({ server$, expert$, theme$, unit$, camIdx$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
+  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000))
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
@@ -94,10 +94,10 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
     , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
     , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
     , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
-    , dismiss$.mapTo(null).startWith(null)
-    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], alert[1].replace(reFormat, (_, msat) => unitf(msat)) ])
+    , dismiss$.mapTo(null)
+    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1]) ])
 
-  , reFormat = /@\{\{(\d+)\}\}/g
+  , fmtAlert = s => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
   // RPC console history
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
@@ -108,7 +108,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
   dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
   dbg({ savedConf$, conf$, expert$, theme$, unit$, camIdx$, conf$ }, 'flash:config')
 
-  return combine({
+  return combineAvail({
     conf$, page$, loading$, alert$
   , info$, peers$, funds$
   , btcusd$, unitf$, cbalance$, obalance$

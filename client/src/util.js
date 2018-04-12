@@ -18,6 +18,8 @@ const
       xs.reduce((o, x, i) => (o[keys[i]] = x, o), {}))
   }
 
+, combineAvail = obj => combine(Object.entries(obj).reduce((o, [ k, v ]) => (o[k]=v.startWith(null), o), {}))
+
 , dropErrors = r$$ => r$$.flatMap(r$ => r$.catch(_ => O.empty()))
 
 , extractErrors = r$$ =>
@@ -30,5 +32,5 @@ const
       err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err),
       _   => dbg(`${k} completed`)))
 
-module.exports = { combine, dropErrors, extractErrors, dbg
+module.exports = { combine, combineAvail, dropErrors, extractErrors, dbg
                  , formatAmt }
