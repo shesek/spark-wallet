@@ -17,7 +17,7 @@ import { dbg } from './util'
 import intent from './intent'
 import model  from './model'
 import view   from './view'
-import { rpcCalls, rpcIntent, rpc2http } from './rpc'
+import rpc from './rpc'
 
 
 // jump to homepage when sending/receiving payments and when saving settings
@@ -28,12 +28,13 @@ const goto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, saveConf$ }) =>
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
   const actions = intent({ DOM, route, conf$, scan$ })
-      , resps   = rpcIntent({ HTTP, SSE })
+      , resps   = rpc.parseRes({ HTTP, SSE })
 
       , state$  = model({ HTTP, ...actions, ...resps })
 
       , vdom$   = view({ state$, ...actions, ...resps })
-      , rpc$    = rpcCalls(actions)
+      , rpc$    = rpc.makeReq(actions)
+      , goto$   = goto({ ...resps, ...actions })
 
   dbg(actions, 'flash:actions')
   dbg(resps, 'flash:rpc-resps')
@@ -42,8 +43,8 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
 
   return {
     DOM:   vdom$
-  , HTTP:  rpc2http(rpc$, state$.map(S => S.conf.server))
-  , route: goto({ ...resps, ...actions })
+  , HTTP:  rpc.toHttp(rpc$, state$.map(S => S.conf.server))
+  , route: goto$
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$
   }

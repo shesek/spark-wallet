@@ -7,7 +7,7 @@ import { dropErrors, extractErrors, dbg } from './util'
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
 
-exports.rpcIntent = ({ HTTP, SSE }) => {
+exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
   dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
@@ -34,7 +34,7 @@ exports.rpcIntent = ({ HTTP, SSE }) => {
   }
 }
 
-exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
+exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11 ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description ], inv ])
@@ -50,12 +50,13 @@ exports.rpcCalls = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.mer
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 
-exports.rpc2http = (rpc$, server$) =>
-  // @XXX startWith should not be needed here
-  rpc$.withLatestFrom(server$.startWith('./'), ([ method, params=[], ctx={} ], server) => ({
-    category: ctx.category || method
-  , method: 'POST'
-  , url: url.resolve(server, 'rpc')
-  , send: { method, params }
-  , ctx
-  }))
+exports.toHttp = (rpc$, server$) =>
+  rpc$.withLatestFrom(server$.filter(x => x != null)
+  , ([ method, params=[], ctx={} ], server) => ({
+      category: ctx.category || method
+    , method: 'POST'
+    , url: url.resolve(server, 'rpc')
+    , send: { method, params }
+    , ctx
+    })
+  )
