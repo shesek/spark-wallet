@@ -6,6 +6,7 @@
   "scripts": {
     "start": "./start.sh",
     "dist": "./build.sh",
+    "cordova:dist": "cd cordova && npm run dist",
     "prepublishOnly": "npm run dist"
   },
   "repository": "https://github.com/shesek/miniwallet.git",
