@@ -69,7 +69,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
   , conf$    = combine({ server$, expert$, theme$, unit$, camIdx$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000))
+  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 

@@ -15,7 +15,7 @@ const navbar = ({ unitf, cbalance, alert, page }) =>
       page.pathname != '/' ? span('.icon.icon-left-open') : ''
     , 'nanopay'
     ])
-  , cbalance != null && unitf ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
+  , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
 
 const footer = ({ info, conf: { theme, expert } }) =>

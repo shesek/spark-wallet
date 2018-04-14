@@ -64,7 +64,7 @@ run(main, {
 
 , ...(process.env.BUILD_TARGET == 'cordova' ? {
     urihandler$: require('./driver/cordova-urihandler')
-  , scan$: O.empty()
+  , scan$: _ => O.empty()
   } : process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
