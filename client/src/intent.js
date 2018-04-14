@@ -3,9 +3,9 @@ import serialize from 'form-serialize'
 import stringArgv from 'string-argv'
 import nanoid from 'nanoid'
 import fscreen from 'fscreen'
-import { dbg } from './util'
+import { dbg, parseUri } from './util'
 
-module.exports = ({ DOM, route, scan$, conf$ }) => {
+module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   const
     on     = (sel, ev) => DOM.select(sel).events(ev)
   , click  = sel => on(sel, 'click').map(e => e.target.dataset)
@@ -22,9 +22,13 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   , goRpc$  = route('/rpc')
   , goConf$ = route('/settings')
 
-  // Scan, decode and confirm payments
-  , scanPay$ = scan$.map(x => x.toLowerCase()).filter(x => x.substr(0, 10) === 'lightning:').map(x => x.substr(10))
-  , viewPay$ = O.merge(scanPay$, submit('[do=decode-pay]').map(r => r.bolt11))
+  // Start/stop QR scanner
+  , scanner$ = process.env.BUILD_TARGET == 'web' ? DOM.select('.scanqr').elements()
+             : O.of()
+
+  // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
+  , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
+                .merge(submit('[do=decode-pay]').map(r => r.bolt11))
   , confPay$ = click('[do=confirm-pay]')
 
   // RPC console actions
@@ -57,7 +61,9 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
   on('form', 'submit').subscribe(e => e.preventDefault())
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
-  return { conf$, page$
+  dbg({ urihandler$ })
+
+  return { conf$, page$, scanner$
          , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$, goConf$
          , viewPay$, confPay$
          , execRpc$, clrHist$
@@ -65,6 +71,5 @@ module.exports = ({ DOM, route, scan$, conf$ }) => {
          , saveConf$, togExp$, togTheme$, togUnit$, togCam$
          , feedStart$
          , dismiss$
-         , scanner$: DOM.select('.scanqr').elements()
          }
 }

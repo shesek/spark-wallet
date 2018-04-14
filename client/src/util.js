@@ -7,10 +7,15 @@ import { Observable as O } from './rxjs'
 const
 
   trim = num => num.replace(/\.?0+$/, '')
-
 , formatAmt = (amt, rate, step, comma=true) =>
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
       .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
+
+, reUri = /^lightning:([a-z0-9]+)|bitcoin:.*[?&]lightning=([a-z0-9]+)/i
+, parseUri = uri => {
+    const m = uri.match(reUri)
+    return m && (m[1] || m[2])
+  }
 
 , combine = obj => {
     const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))
@@ -33,4 +38,4 @@ const
       _   => dbg(`${k} completed`)))
 
 module.exports = { combine, combineAvail, dropErrors, extractErrors, dbg
-                 , formatAmt }
+                 , formatAmt, parseUri }

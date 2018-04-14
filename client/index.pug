@@ -14,5 +14,11 @@ link(rel='stylesheet', href='style.css')
   #loader
 
 script document.write('<link rel="stylesheet" href="bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
-script(src='lib/instascan.js', defer)
+
+if process.env.BUILD_TARGET == 'web'
+  script(src='lib/instascan.js', defer)
+
 script(src='app.js', defer)
+
+if process.env.BUILD_TARGET == 'cordova'
+  script(src='cordova.js', defer)

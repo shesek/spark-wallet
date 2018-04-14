@@ -7,7 +7,6 @@ import { makeDOMDriver }   from '@cycle/dom'
 import { makeHTTPDriver }  from '@cycle/http'
 import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
 
-import makeScanDriver  from './driver/instascan'
 import makeSSEDriver   from './driver/sse'
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
@@ -20,21 +19,27 @@ import view   from './view'
 import rpc from './rpc'
 
 
-// jump to homepage when sending/receiving payments and when saving settings
-const goto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, saveConf$ }) =>
-  O.merge(saveConf$, out$, in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label))
-    .mapTo('/')
+const navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, saveConf$, payreq$ }) => O.merge(
+  // navto '/' when receiving payments for the last invoice created by the user
+  in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
+  // navto '/' when sending payments
+, out$.mapTo('/')
+  // navto '/' when saving config
+, saveConf$.mapTo('/')
+  // navto '/confirm' when viewing a payment request
+, payreq$.mapTo('/confirm')
+)
 
-const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
+const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
-  const actions = intent({ DOM, route, conf$, scan$ })
+  const actions = intent({ DOM, route, conf$, scan$, urihandler$ })
       , resps   = rpc.parseRes({ HTTP, SSE })
 
       , state$  = model({ HTTP, ...actions, ...resps })
 
       , vdom$   = view({ state$, ...actions, ...resps })
       , rpc$    = rpc.makeReq(actions)
-      , goto$   = goto({ ...resps, ...actions })
+      , navto$  = navto({ ...resps, ...actions })
 
   dbg(actions, 'flash:actions')
   dbg(resps, 'flash:rpc-resps')
@@ -44,7 +49,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$ }) => {
   return {
     DOM:   vdom$
   , HTTP:  rpc.toHttp(rpc$, state$.map(S => S.conf.server))
-  , route: goto$
+  , route: navto$
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$
   }
@@ -56,5 +61,12 @@ run(main, {
 , SSE:   makeSSEDriver('./stream')
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 , conf$: makeConfDriver(storageDriver)
-, scan$: makeScanDriver({ mirror: false, backgroundScan: false })
+
+, ...(process.env.BUILD_TARGET == 'cordova' ? {
+    urihandler$: require('./driver/cordova-urihandler')
+  , scan$: O.empty()
+  } : process.env.BUILD_TARGET == 'web' ? {
+    urihandler$: _ => O.empty()
+  , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
+  } : {})
 })
