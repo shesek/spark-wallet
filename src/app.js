@@ -9,6 +9,7 @@ app.set('host', process.env.HOST || 'localhost')
 app.set('trust proxy', process.env.PROXIED || 'loopback')
 
 // Middlewares
+app.use(require('./auth')(app, process.env.PASSWORD))
 app.use(require('body-parser').json())
 app.use(require('morgan')('dev'))
 
@@ -31,12 +32,14 @@ app.use((err, req, res, next) => {
 
 // HTTPS Server
 require('./tls')(app, process.env.TLS_PATH).then(({ host, fingerprint, fpUrl }) => {
-  console.log(`HTTPS server running on https://${host} (TLS fingerprint: ${fingerprint})`)
-  qrterm.generate(`https://${host}#KP=${fpUrl}`, { small: true })
+  const url = `https://${app.settings.urlAuth}@${host}`
+  console.log(`HTTPS server running on ${url} (TLS fingerprint: ${fingerprint})`)
+  qrterm.generate(`${url}#?KP=${fpUrl}`, { small: true })
 })
 
 // Tor Onion Hidden Service
 process.env.ONION && require('./onion')(app, process.env.ONION_DIR).then(({ host, dir }) => {
-  console.log(`Tor Onion Hidden Service v3 running on http://${host}`)
-  qrterm.generate(`http://${host}`, { small: true })
+  const url = `http://${app.settings.urlAuth}@${host}`
+  console.log(`Tor Onion Hidden Service v3 running on ${url}`)
+  qrterm.generate(url, { small: true })
 })
