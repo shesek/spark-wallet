@@ -9,7 +9,11 @@ const args = require('meow')(`
       -p, --port <port>       http server port [default: 9115]
       -i, --host <host>       http server listen address [default: 127.0.0.1]
 
-      --no-webui              run API server without serving client assets
+      -o, --onion             start Tor Hidden Service [default: false]
+      -O, --onion-dir <path>  path to create/read hidden service data directory [default: ./nanopay-tor]
+      -s, --ssl-path <path>   path to read/store SSL key material [default: ./nanopay-ssl.json]
+      -Q, --print-qr          print QR codes for server access [default: false]
+      --no-webui              run API server without serving client assets [default: false]
 
       -h, --help              output usage information
       -v, --version           output version number
@@ -17,8 +21,11 @@ const args = require('meow')(`
     Example
       $ nanopay -l ~/.lightning
 
-`, { flags: { lnPath: {alias:'l'}, port: {alias:'p'}, host: {alias:'i'} } }
-).flags
+`, { flags: { lnPath: {alias:'l'}, port: {alias:'p'}, host: {alias:'i'}
+            , onion: {type:'boolean',alias:'o'}, onionDir: {alias:'O'}
+            , sslPath: {alias:'s'}
+            , printQr: {type:'boolean'}, noWebui: {type:'boolean'}
+} }).flags
 
 Object.keys(args).filter(k => k.length > 1)
   .forEach(k => process.env[k.replace(/([A-Z])/g, '_$1').toUpperCase()] = args[k])

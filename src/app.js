@@ -1,3 +1,5 @@
+import qrterm from 'qrcode-terminal'
+
 const app = require('express')()
     , ln  = require('lightning-client')(process.env.LN_PATH)
 
@@ -6,7 +8,7 @@ app.set('port', process.env.PORT || 9117)
 app.set('host', process.env.HOST || 'localhost')
 app.set('trust proxy', process.env.PROXIED || 'loopback')
 
-// Middleware
+// Middlewares
 app.use(require('body-parser').json())
 app.use(require('morgan')('dev'))
 
@@ -27,9 +29,14 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.type && err || err.stack || err)
 })
 
-import fs from 'fs'
+// HTTPS Server
+require('./tls')(app, process.env.TLS_PATH).then(({ host, fingerprint, fpUrl }) => {
+  console.log(`HTTPS server running on https://${host} (TLS fingerprint: ${fingerprint})`)
+  qrterm.generate(`https://${host}#KP=${fpUrl}`, { small: true })
+})
 
-const sslOpt = { key: fs.readFileSync('key.pem'), cert: fs.readFileSync('cert.pem') }
-
-require('https').createServer(sslOpt, app).listen(app.settings.port, app.settings.host, _ =>
-  console.log(`Spark wallet running on https://${ app.settings.host }:${ app.settings.port }`))
+// Tor Onion Hidden Service
+process.env.ONION && require('./onion')(app, process.env.ONION_DIR).then(({ host, dir }) => {
+  console.log(`Tor Onion Hidden Service v3 running on http://${host}`)
+  qrterm.generate(`http://${host}`, { small: true })
+})
