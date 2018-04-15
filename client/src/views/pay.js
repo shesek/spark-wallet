@@ -1,17 +1,10 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { formGroup, yaml } from './util'
 
-const scanReq = ({ conf: { camIdx } }) => div('.text-center.text-md-left',
-  process.env.BUILD_TARGET == 'web' ? [
-    div('.d-flex.justify-content-between.align-items-center', [
-      a('.btn.btn-lg.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-    , process.env.BUILD_TARGET == 'web' ? button('.toggle-cam.btn.btn-lg.btn-info.mb-3', 'Switch cam') : ''
-    ])
-  , div('.scanqr', { dataset: { camIdx: ''+camIdx } })
-  ] : [
-    a('.btn.btn-lg.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-  ]
-)
+const scanReq = div('.text-center.text-md-left', [
+  a('.btn.btn-lg.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
+, process.env.BUILD_TARGET == 'web' ? div('.scanqr') : ''
+])
 
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [

@@ -20,7 +20,7 @@ const
 
 const defaultServer = process.env.BUILD_TARGET === 'web' ? '.' : null
 
-module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, page$, goRecv$
+module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, goRecv$
                   , recvAmt$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
@@ -65,8 +65,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
-  , camIdx$  = conf('camera', 0)            .concat(togCam$)  .scan(n => (n+1) % 2) // @todo get actual number of cameras
-  , conf$    = combine({ server$, expert$, theme$, unit$, camIdx$ })
+  , conf$    = combine({ server$, expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
@@ -106,7 +105,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, togCam$, 
   dbg({ loading$, alert$, rpcHist$ }, 'flash:model')
   dbg({ error$ }, 'flash:error')
   dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
-  dbg({ savedConf$, conf$, expert$, theme$, unit$, camIdx$, conf$ }, 'flash:config')
+  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
 
   return combineAvail({
     conf$, page$, loading$, alert$

@@ -48,7 +48,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , saveConf$ = submit('[do=save-config]')
   , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))
   , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))
-  , togCam$   = click('.toggle-cam')
   , togFull$  = dclick('.full-screen')
   , togExp$   = dclick('.toggle-exp')
 
@@ -69,7 +68,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , viewPay$, confPay$
          , execRpc$, clrHist$
          , newInv$, recvAmt$
-         , saveConf$, togExp$, togTheme$, togUnit$, togCam$
+         , saveConf$, togExp$, togTheme$, togUnit$
          , feedStart$
          , dismiss$
          }
