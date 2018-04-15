@@ -3,14 +3,14 @@ import { Observable as O } from '../rxjs'
 
 const em = new EventEmitter
 
-em.on('handle', url => console.log('handle', url))
-
-window.handleOpenURL = url => { console.log('handle url', url);  em.emit('handle', url) }
+window.handleOpenURL = url => em.emit('handle', url)
 
 window.addEventListener('deviceready', _ =>
-  window.plugins.launchmyapp.getLastIntent(url => { console.log('get last', url); em.emit('handle', url) })
+  window.plugins.launchmyapp.getLastIntent(url => em.emit('handle', url))
 , false)
 
-const urihandler$ = O.fromEvent(em, 'handle').shareReplay(1)
+const urihandler$ = O.fromEvent(em, 'handle')
+  .windowTime(1000).switchMap(u$ => u$.distinctUntilChanged()) // ignore repetitions in 1s window
+  .shareReplay(1)
 
 module.exports = _ => urihandler$
