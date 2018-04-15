@@ -19,7 +19,7 @@ find $DEST/bootswatch -type f ! -name '*.min.css' -exec rm {} +
 
 # Transpile pug and stylus
 pug index.pug -o $DEST
-stylus -u nib -c styl/style.styl $DEST
+stylus -u nib -c styl/style.styl -o $DEST
 
 # Browserify bundle
 browserify src/app.js | uglifyjs -c warnings=false -m > $DEST/app.js
