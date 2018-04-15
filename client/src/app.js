@@ -64,7 +64,7 @@ run(main, {
   process.env.BUILD_TARGET == 'cordova' ? {
     urihandler$: require('./driver/cordova-urihandler')
   , scan$: require('./driver/cordova-qrscanner')
-  , SSE: _ => _ => O.of()
+  , SSE: _ => _ => O.empty()
   }
 
 : process.env.BUILD_TARGET == 'web' ? {
