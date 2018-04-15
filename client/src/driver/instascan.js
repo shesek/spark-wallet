@@ -8,20 +8,21 @@ require('webrtc-adapter')
 const makeScanDriver = (opt={}) => {
   const video   = document.createElement('video')
       , scanner = new Scanner({ ...opt, video })
-      , getCam = _ => getCam._cache || (getCam._cache = Camera.getCameras().then(pickCam))
+      , cam$ = O.fromPromise(Camera.getCameras()).map(pickCam).shareReplay(1)
 
   return _els$ => {
     const els$ = O.from(_els$)
 
-    // start scanning whenever a matching element appears in DOM
-    els$.filter(x => !!x.length).map(x => x[0]).subscribe(el =>
-      getCam().then(cam => {
+    // start scanning whenever a matching element appears in the DOM
+    els$.filter(x => !!x.length)
+      .combineLatest(cam$, (els, cam) => [ els[0], cam ])
+      .filter(([ el, cam ]) => !!cam)
+      .subscribe(([ el, cam ]) => {
         if (video.parentNode != el) {
           el.appendChild(video)
           scanner.start(cam)
         }
       })
-    )
 
     const scan$ = O.fromEvent(scanner, 'scan')
 
@@ -33,6 +34,7 @@ const makeScanDriver = (opt={}) => {
 }
 
 const pickCam = cams =>
-  cams.find(cam => !!~cam.name.indexOf('back')) || cams[0]
+  cams.find(cam => cam.name && !!~cam.name.indexOf('back'))
+  || cams[0]
 
 module.exports = makeScanDriver
