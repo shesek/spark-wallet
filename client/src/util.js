@@ -11,7 +11,7 @@ const
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
       .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
 
-, reUri = /^lightning:([a-z0-9]+)|bitcoin:.*[?&]lightning=([a-z0-9]+)/i
+, reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)/i
 , parseUri = uri => {
     const m = uri.match(reUri)
     return m && (m[1] || m[2])

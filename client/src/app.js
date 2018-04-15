@@ -7,7 +7,6 @@ import { makeDOMDriver }   from '@cycle/dom'
 import { makeHTTPDriver }  from '@cycle/http'
 import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
 
-import makeSSEDriver   from './driver/sse'
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
 
@@ -58,15 +57,21 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 run(main, {
   DOM:   makeDOMDriver('#app')
 , HTTP:  makeHTTPDriver()
-, SSE:   makeSSEDriver('./stream')
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 , conf$: makeConfDriver(storageDriver)
 
-, ...(process.env.BUILD_TARGET == 'cordova' ? {
+, ...(
+  process.env.BUILD_TARGET == 'cordova' ? {
     urihandler$: require('./driver/cordova-urihandler')
-  , scan$: _ => O.empty()
-  } : process.env.BUILD_TARGET == 'web' ? {
+  , scan$: require('./driver/cordova-qrscanner')
+  , SSE: _ => _ => O.of()
+  }
+
+: process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
-  } : {})
+  , SSE: require('./driver/sse')('./stream')
+  }
+
+: {})
 })

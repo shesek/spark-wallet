@@ -29,5 +29,6 @@
         <variable name="ANDROID_HOST" value=" " />
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
+    <plugin name="cordova-plugin-qrscanner" spec="^2.5.0" />
     <engine name="android" spec="7.1.0" />
 </widget>
