@@ -13,9 +13,12 @@ mkdir -p $DEST $DEST/lib
 
 # Copy static assets
 cp -r www/* $DEST/
-cp -r node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
 cp -r node_modules/bootswatch/dist $DEST/bootswatch
 find $DEST/bootswatch -type f ! -name '*.min.css' -exec rm {} +
+
+if [[ "$BUILD_TARGET" == "web" ]]; then
+  cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
+fi
 
 # Transpile pug and stylus
 pug index.pug -o $DEST
