@@ -13,7 +13,7 @@ const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expe
   ]) : ''
 
 
-, ...(!feed.length ? [ p('.text-muted', 'You have no incoming or outgoing payments.') ] : [
+, ...(!feed ? [] : !feed.length ? [ /*p('.text-muted', 'You have no incoming or outgoing payments.')*/ ] : [
     ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj ]) =>
       li('.list-group-item', [
         div('.clearfix', [
