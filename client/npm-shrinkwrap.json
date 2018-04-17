@@ -4034,6 +4034,18 @@
         "pug-runtime": "2.0.4"
       }
     },
+    "pug-cli": {
+      "version": "1.0.0-alpha6",
+      "resolved": "https://registry.npmjs.org/pug-cli/-/pug-cli-1.0.0-alpha6.tgz",
+      "integrity": "sha1-HKU56krA67ac5KroSu7V1k/+ZQE=",
+      "dev": true,
+      "requires": {
+        "chalk": "1.1.3",
+        "commander": "2.13.0",
+        "mkdirp": "0.5.1",
+        "pug": "2.0.3"
+      }
+    },
     "pug-code-gen": {
       "version": "2.0.1",
       "resolved": "https://registry.npmjs.org/pug-code-gen/-/pug-code-gen-2.0.1.tgz",
