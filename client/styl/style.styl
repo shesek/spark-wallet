@@ -50,13 +50,6 @@ footer
   opacity 0.5
   pointer-events none
 
-.abs-bottom-center
-  position absolute
-  bottom 0
-  left -26px
-  right -26px
-  text-align center
-
 // Component
 .alert
   font-size 0.9rem
@@ -74,3 +67,16 @@ img.qr
 // Logs
 .logs
   white-space pre-line
+
+// Pay
+.pastereq-btn-wrap
+  position absolute
+  bottom 0
+  left -26px
+  right -26px
+  text-align center
+
+  @media screen and (orientation: landscape)
+    left 0
+    right 0
+    background transparent !important

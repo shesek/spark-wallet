@@ -1,7 +1,7 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { formGroup, yaml } from './util'
 
-const scanReq = div('.abs-bottom-center.py-3.main-bg', [
+const scanReq = div('.pastereq-btn-wrap.py-3.main-bg', [
   // the camera itself is displayed by the driver in the background,
   // outside of cycle.js vdom management. here we just display the button to
   // switch to manual entry.
