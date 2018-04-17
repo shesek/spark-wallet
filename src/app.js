@@ -31,14 +31,16 @@ app.use((err, req, res, next) => {
 })
 
 // HTTPS Server
-require('./tls')(app, process.env.TLS_PATH).then(({ host, fingerprint, fpUrl }) => {
+require('./tls')(app, process.env.TLS_PATH).then(({ host, pems, fpUrl }) => {
+  app.get('/server.cer', (req, res) => res.type('cer').send(pems.cert))
+
   const url = `https://${app.settings.urlAuth}@${host}`
-  console.log(`HTTPS server running on ${url} (TLS fingerprint: ${fingerprint})`)
+  console.log(`HTTPS server running on ${url} (TLS fingerprint: ${pems.fingerprint})`)
   qrterm.generate(`${url}#?KP=${fpUrl}`, { small: true })
 })
 
 // Tor Onion Hidden Service
-process.env.ONION && require('./onion')(app, process.env.ONION_DIR).then(({ host, dir }) => {
+process.env.ONION && require('./onion')(app, process.env.ONION_DIR).then(host => {
   const url = `http://${app.settings.urlAuth}@${host}`
   console.log(`Tor Onion Hidden Service v3 running on ${url}`)
   qrterm.generate(url, { small: true })
