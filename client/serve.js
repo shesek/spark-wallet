@@ -7,7 +7,7 @@ import express from 'express'
 import browserify from 'browserify-middleware'
 
 const compileStyl = (str, filename) => stylus(str).set('filename', filename).use(nib())
-    , swatchPath  = path.resolve(require.resolve('bootswatch/package'), '..', 'dist')
+    , bswatchPath = path.resolve(require.resolve('bootswatch/package'), '..', 'dist')
     , scanPath    = require.resolve('instascan/dist/instascan.min.js')
     , rpath       = p => path.join(__dirname, p)
 
@@ -23,5 +23,5 @@ module.exports = app => {
   app.get('/lib/instascan.js', (req, res) => res.sendFile(scanPath))
 
   app.use('/', express.static(rpath('www')))
-  app.use('/bootswatch', express.static(swatchPath))
+  app.use('/swatch', express.static(bswatchPath), express.static(rpath('swatch')))
 }

@@ -13,8 +13,9 @@ mkdir -p $DEST $DEST/lib
 
 # Copy static assets
 cp -r www/* $DEST/
-cp -r node_modules/bootswatch/dist $DEST/bootswatch
-find $DEST/bootswatch -type f ! -name '*.min.css' -exec rm {} +
+cp -r node_modules/bootswatch/dist $DEST/swatch
+cp -r swatch/*/ $DEST/swatch/
+find $DEST/swatch -type f ! -name '*.min.css' -exec rm {} +
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js

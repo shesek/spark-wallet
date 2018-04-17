@@ -13,7 +13,7 @@ link(rel='stylesheet', href='style.css')
   nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay
   #loader
 
-script document.write('<link rel="stylesheet" href="bootswatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
+script document.write('<link rel="stylesheet" href="swatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
 
 if process.env.BUILD_TARGET == 'web'
   script(src='lib/instascan.js', defer)
