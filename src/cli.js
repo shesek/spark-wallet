@@ -29,7 +29,7 @@ const args = require('meow')(`
             , printQr: {type:'boolean'}, noWebui: {type:'boolean'}
 } }).flags
 
-Object.keys(args).filter(k => k.length > 1)
+Object.keys(args).filter(k => k.length > 1 && args[k] !== false)
   .forEach(k => process.env[k.replace(/([A-Z])/g, '_$1').toUpperCase()] = args[k])
 
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
