@@ -2,9 +2,11 @@
 set -xeo pipefail
 
 : ${DEST:=dist}
+: ${NODE_ENV=production}
 : ${BUILD_TARGET:=web}
 
 export BUILD_TARGET
+export NODE_ENV
 
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib
@@ -26,5 +28,7 @@ pug index.pug -o $DEST
 stylus -u nib -c styl/style.styl -o $DEST
 
 # Browserify bundle
-browserify src/app.js | uglifyjs -c warnings=false -m > $DEST/app.js
+browserify src/app.js \
+  | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs -c warnings=false -m || cat ) \
+  > $DEST/app.js
 
