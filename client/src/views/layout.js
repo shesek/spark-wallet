@@ -19,15 +19,17 @@ const navbar = ({ unitf, cbalance, alert, page }) =>
   ]))
 
 const footer = ({ info, conf: { theme, expert } }) =>
-  h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
-    info ? p('.info.toggle-exp.float-left.mb-0'
-    , [ info.version.replace(/-.*-g/, '-')
-      ,`${info.network} #${info.blockheight}`
-      , info.id.substr(0,14)
-      , ...(expert ? '🔧' : '')
-      ].join(' · ')) : ''
-  , p('.toggle-theme.float-right.mb-0', theme)
-  ])
+  div('.main-bg',
+    h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
+      info ? p('.info.toggle-exp.float-left.mb-0'
+      , [ info.version.replace(/-.*-g/, '-')
+        ,`${info.network} #${info.blockheight}`
+        , info.id.substr(0,14)
+        , ...(expert ? '🔧' : '')
+        ].join(' · ')) : ''
+    , p('.toggle-theme.float-right.mb-0', theme)
+    ])
+  )
 
 const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
   button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
