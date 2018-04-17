@@ -9,16 +9,18 @@ meta(name='apple-mobile-web-app-capable', content='yes')
 //-link(rel='manifest', href='manifest.json')
 link(rel='stylesheet', href='style.css')
 
-#app
-  nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay
-  #loader
+body(class='build-'+process.env.BUILD_TARGET)
 
-script document.write('<link rel="stylesheet" href="swatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
+  #app
+    nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand nanopay
+    #loader
 
-if process.env.BUILD_TARGET == 'web'
-  script(src='lib/instascan.js', defer)
+  script document.write('<link rel="stylesheet" href="swatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
 
-script(src='app.js', defer)
+  if process.env.BUILD_TARGET == 'web'
+    script(src='lib/instascan.js', defer)
 
-if process.env.BUILD_TARGET == 'cordova'
-  script(src='cordova.js', defer)
+  script(src='app.js', defer)
+
+  if process.env.BUILD_TARGET == 'cordova'
+    script(src='cordova.js', defer)
