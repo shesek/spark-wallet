@@ -1,17 +1,14 @@
-@import('nib')
-@import('loader.styl')
-@import('icons.styl')
-@import('tooltip.styl')
-@import('theme-touchups.styl')
-
+@import 'nib'
+@import 'loader'
+@import 'icons'
+@import 'tooltip'
+@import 'theme-touchups'
+@import 'qr'
 
 // avoid FOUC before bootstrap loads
 // (this is later overridden by bootstrap's css)
 body
   font-size 0px
-
-body.transparent
-  background none transparent !important
 
 .btn, .form-control
   display none
@@ -20,13 +17,10 @@ body.transparent
 html, body, #app
   height 100%
 
-body
-  margin 0
-
 #app > .flex-column
   min-height 100%
 
-// Header
+// Header, content & footer
 .navbar-brand
   position relative
 
@@ -37,7 +31,10 @@ body
     &:before
       vertical-align middle
 
-// Footer
+.content
+  flex 1
+  position relative
+
 footer
   font-size 65%
 
@@ -52,6 +49,13 @@ footer
   opacity 0.5
   pointer-events none
 
+.abs-bottom-center
+  position absolute
+  bottom 0
+  left 0
+  right 0
+  text-align center
+
 // Component
 .alert
   font-size 0.9rem
@@ -60,10 +64,6 @@ footer
 // Homepage
 .payments .badge
   font-size 100%
-
-// Pay
-.scanqr video
-  width 100%
 
 // Recv
 img.qr

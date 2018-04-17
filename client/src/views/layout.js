@@ -5,7 +5,7 @@ const layout = ({ state: S, body }) =>
     navbar(S)
   , S.loading ? div('#loader') : ''
   , S.alert ? div('.container', alertBox(S.alert)) : ''
-  , div('.content.container.flex-grow', body)
+  , div('.content.container', body)
   , footer(S)
   ])
 

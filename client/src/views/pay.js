@@ -1,9 +1,11 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { formGroup, yaml } from './util'
 
-const scanReq = div('.text-center.text-md-left', [
-  a('.btn.btn-lg.btn-primary.mb-3', { attrs: { href: '#/payreq' } }, 'Paste request')
-, process.env.BUILD_TARGET == 'web' ? div('.scanqr') : ''
+const scanReq = div('.abs-bottom-center.pb-3', [
+  // the camera itself is displayed by the driver in the background,
+  // outside of cycle.js vdom management. here we just display the button to
+  // switch to manual entry.
+  a('.btn.btn-lg.btn-primary', { attrs: { href: '#/payreq' } }, 'Paste request')
 ])
 
 

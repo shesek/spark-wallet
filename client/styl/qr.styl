@@ -1,0 +1,18 @@
+// Cordova's QR scanner is displayed behind the webview
+// and requires the body to be transparent
+body.build-cordova.qr-scanning
+  background none transparent !important
+
+// Instascan QR scanner (web only), displayed similarly to Cordova's
+video.qr-scanner
+  position fixed
+  top 0
+  left 0
+  width 100%
+  height 100%
+  z-index -1
+
+  display none
+
+  body.qr-scanning &
+    display block

@@ -8,27 +8,27 @@ require('webrtc-adapter')
 const makeScanDriver = (opt={}) => {
   const video   = document.createElement('video')
       , scanner = new Scanner({ ...opt, video })
-      , cam$ = O.fromPromise(Camera.getCameras()).map(pickCam).shareReplay(1)
 
-  return _els$ => {
-    const els$ = O.from(_els$)
+      , cam$    = O.fromPromise(Camera.getCameras()).map(pickCam).shareReplay(1)
+      , scan$   = O.fromEvent(scanner, 'scan')
 
-    // start scanning whenever a matching element appears in the DOM
-    els$.filter(x => !!x.length)
-      .combineLatest(cam$, (els, cam) => [ els[0], cam ])
-      .filter(([ el, cam ]) => !!cam)
-      .subscribe(([ el, cam ]) => {
-        if (video.parentNode != el) {
-          el.appendChild(video)
-          scanner.start(cam)
-        }
-      })
+  video.className = 'qr-scanner'
+  document.body.appendChild(video)
 
-    const scan$ = O.fromEvent(scanner, 'scan')
+  function startScan(cam) {
+    document.body.className += ' qr-scanning'
+    scanner.start(cam)
+  }
 
-    // stop scanning whenever a QR is scanned or when the DOM element disappears
-    els$.filter(x => !x.length).merge(scan$).subscribe(_ => scanner.stop())
+  function stopScan() {
+    document.body.className = document.body.className.replace(/\bqr-scanning\b/, '')
+    scanner.stop()
+  }
 
+  return _scanner$ => {
+    const scanner$ = O.from(_scanner$)
+    scanner$.filter(mode => !!mode).combineLatest(cam$, (_, cam) => cam).subscribe(startScan)
+    scanner$.filter(mode => !mode).subscribe(stopScan)
     return scan$
   }
 }

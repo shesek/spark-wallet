@@ -23,9 +23,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goConf$ = route('/settings')
 
   // Start/stop QR scanner
-  , scanner$ = process.env.BUILD_TARGET == 'web'     ? DOM.select('.scanqr').elements()
-             : process.env.BUILD_TARGET == 'cordova' ? page$.mapTo(false).merge(goScan$.mapTo(true))
-             : O.of()
+  , scanner$ = O.merge(scan$, page$.filter(p => p.pathname != '/scan')).mapTo(false)
+                .merge(goScan$.mapTo(true))
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
