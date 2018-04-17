@@ -7,7 +7,7 @@ const em    = new EventEmitter
     //, error$ = O.fromEvent(em, 'error')
 
 function handleScan(err, contents) {
-  if (err && err.code == 7) em.emit('cancel')
+  if (err && err.code == 6) em.emit('cancel')
   else if (err) em.emit('error', err)
   else em.emit('scan', contents)
 }
@@ -21,6 +21,7 @@ function startScan() {
 function stopScan() {
   document.body.className = document.body.className.replace(/\bqr-scanning\b/, '')
   QRScanner.cancelScan()
+  QRScanner.hide()
 }
 
 
@@ -29,7 +30,10 @@ function stopScan() {
 function scanDriver(_scanner$) {
   O.from(_scanner$)
     .filter(_ => !!window.QRScanner) // skip requests if QRScanner is not yet loaded
+    .distinctUntilChanged()
     .subscribe(mode => mode ? startScan() : stopScan())
+
+  // @todo destroy() QR scanner after some time of no activity
 
   return scan$
 }
