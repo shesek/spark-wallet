@@ -94,9 +94,9 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
     , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
     , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
     , dismiss$.mapTo(null)
-    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1]) ])
+    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
 
-  , fmtAlert = s => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
+  , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
   // RPC console history
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
