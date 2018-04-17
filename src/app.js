@@ -9,7 +9,7 @@ app.set('host', process.env.HOST || 'localhost')
 app.set('trust proxy', process.env.PROXIED || 'loopback')
 
 // Middlewares
-app.use(require('./auth')(app, process.env.PASSWORD))
+app.use(require('./auth')(app, process.env.LOGIN))
 app.use(require('body-parser').json())
 app.use(require('morgan')('dev'))
 

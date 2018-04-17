@@ -1,17 +1,26 @@
 import basicAuth from 'basic-auth'
 import nanoid from 'nanoid'
+import nanogen from 'nanoid/generate'
 
-module.exports = (app, password) => {
-  if (!password) {
+module.exports = (app, login) => {
+  let username, password
+
+  if (!login) {
+    username = nanogen('abcdefghijklmnopqrstuvwxyz', 3)
     password = nanoid()
-    console.log(`No --password specified, picked a random one: ${password}`)
+    console.log(`No --login specified, picked a random one: ${username}:${password}`)
+  } else {
+    [ username, password ] = login.split(':', 2)
+    password || ([ username, password ] = [ 'wallet', username ])
   }
 
-  app.set('urlAuth', `w:${encodeURIComponent(password)}`)
+  app.set('urlAuth', [ username, password ].map(encodeURIComponent).join(':'))
 
   return (req, res, next) => {
     const cred = basicAuth(req)
-    if (cred && cred.pass === password) return next()
+
+    if (cred && cred.name === username && cred.pass === password)
+      return next()
 
     res.set('WWW-Authenticate', 'Basic realm="Private Area"')
        .sendStatus(401)

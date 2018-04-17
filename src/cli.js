@@ -6,12 +6,14 @@ const args = require('meow')(`
 
     Options
       -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
+      -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
+
       -p, --port <port>       http server port [default: 9115]
       -i, --host <host>       http server listen address [default: 127.0.0.1]
-
+      -s, --ssl-path <path>   path to read/store SSL key material [default: ./nanopay-ssl.json]
       -o, --onion             start Tor Hidden Service [default: false]
       -O, --onion-dir <path>  path to create/read hidden service data directory [default: ./nanopay-tor]
-      -s, --ssl-path <path>   path to read/store SSL key material [default: ./nanopay-ssl.json]
+
       -Q, --print-qr          print QR codes for server access [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
@@ -21,9 +23,9 @@ const args = require('meow')(`
     Example
       $ nanopay -l ~/.lightning
 
-`, { flags: { lnPath: {alias:'l'}, port: {alias:'p'}, host: {alias:'i'}
+`, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
+            , port: {alias:'p'}, host: {alias:'i'}, sslPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionDir: {alias:'O'}
-            , sslPath: {alias:'s'}
             , printQr: {type:'boolean'}, noWebui: {type:'boolean'}
 } }).flags
 
