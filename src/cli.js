@@ -17,6 +17,7 @@ const args = require('meow')(`
       -Q, --print-qr          print QR codes for server access [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
+      -V, --verbose           display debugging information [default: false]
       -h, --help              output usage information
       -v, --version           output version number
 
@@ -27,12 +28,15 @@ const args = require('meow')(`
             , port: {alias:'p'}, host: {alias:'i'}, sslPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionDir: {alias:'O'}
             , printQr: {type:'boolean'}, noWebui: {type:'boolean'}
+            , verbose: {alias:'V', type:'boolean'}
 } }).flags
 
 Object.keys(args).filter(k => k.length > 1 && args[k] !== false)
   .forEach(k => process.env[k.replace(/([A-Z])/g, '_$1').toUpperCase()] = args[k])
 
-process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
+process.env.NODE_ENV  || (process.env.NODE_ENV = 'production')
+process.env.VERBOSE   && (process.env.DEBUG = 'lightning-client,nanopay')
+process.env.ONION_DIR && (process.env.ONION = true) // ONION_DIR implies ONION
 
 require('babel-polyfill')
 require('./app')
