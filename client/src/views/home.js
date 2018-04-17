@@ -1,4 +1,4 @@
-import { div, ul, li, a, span, button, small } from '@cycle/dom'
+import { div, ul, li, a, span, button, small, p } from '@cycle/dom'
 import { yaml, ago } from './util'
 
 const perPage = 10
@@ -12,18 +12,20 @@ const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expe
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ]) : ''
 
-, ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj ]) =>
-    li('.list-group-item', [
-      div('.clearfix', [
-        type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
-                      : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-      , ago('.badge.badge-secondary.badge-pill.float-right', ts)
-      ])
-    , expert ? yaml(obj) : ''
-    ])
-  ))
 
-, paging(feed.length, feedStart)
+, ...(!feed.length ? [ p('.text-muted', 'You have no incoming or outgoing payments.') ] : [
+    ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj ]) =>
+      li('.list-group-item', [
+        div('.clearfix', [
+          type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
+                        : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
+        , ago('.badge.badge-secondary.badge-pill.float-right', ts)
+        ])
+      , expert ? yaml(obj) : ''
+      ])
+    ))
+  , paging(feed.length, feedStart)
+  ])
 
 , expert ? yaml({ info, btcusd, funds, peers }) : ''
 ])
