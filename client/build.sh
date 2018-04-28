@@ -17,7 +17,7 @@ mkdir -p $DEST $DEST/lib
 cp -r www/* $DEST/
 cp -r node_modules/bootswatch/dist $DEST/swatch
 cp -r swatch/*/ $DEST/swatch/
-find $DEST/swatch -type f ! -name '*.min.css' -exec rm {} +
+find $DEST/swatch -type f ! -name '*.min.css' -delete
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
