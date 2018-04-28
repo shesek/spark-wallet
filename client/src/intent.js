@@ -51,7 +51,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togExp$   = dclick('.toggle-exp')
 
   // Dismiss alert message
-  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button'))
+  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button')
+                      , page$.filter(p => p.pathname != '/'))
 
   // Feed event page navigation
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
