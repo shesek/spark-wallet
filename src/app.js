@@ -1,5 +1,3 @@
-import qrterm from 'qrcode-terminal'
-
 const app = require('express')()
     , ln  = require('lightning-client')(process.env.LN_PATH)
 
@@ -31,17 +29,23 @@ app.use((err, req, res, next) => {
 })
 
 // HTTPS Server
-require('./tls')(app, process.env.TLS_PATH).then(({ host, pems, fpUrl }) => {
+process.env.NO_TLS || require('./tls')(app, process.env.TLS_PATH).then(({ host, pems, fpUrl }) => {
   app.get('/server.cer', (req, res) => res.type('cer').send(pems.cert))
-
-  const url = `https://${app.settings.urlAuth}@${host}`
-  console.log(`HTTPS server running on ${url} (TLS fingerprint: ${pems.fingerprint})`)
-  qrterm.generate(`${url}#?KP=${fpUrl}`, { small: true })
+  printService('HTTPS server', `https://${app.settings.urlAuth}@${host}/#/?KP=${fpUrl}`)
 })
+
+// HTTP Server
+process.env.NO_TLS && require('./http')(app).then(host =>
+  printService('HTTP server', `http://${app.settings.urlAuth}@${host}`))
 
 // Tor Onion Hidden Service
-process.env.ONION && require('./onion')(app, process.env.ONION_DIR).then(host => {
-  const url = `http://${app.settings.urlAuth}@${host}`
-  console.log(`Tor Onion Hidden Service v3 running on ${url}`)
-  qrterm.generate(url, { small: true })
-})
+process.env.ONION && require('./onion')(app, process.env.ONION_PATH).then(host =>
+  printService('Tor Onion Hidden Service v3', `http://${app.settings.urlAuth}@${host}`))
+
+
+const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
+
+function printService(name, url) {
+  console.log(`${name} running on ${url}`)
+  qrterm && qrterm.generate(url, { small: true })
+}
