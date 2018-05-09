@@ -1,14 +1,19 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { formGroup, yaml } from './util'
 
-const scanReq = div('.pastereq-btn-wrap.py-3.main-bg', [
+const scanReq = div('.qr-scanner', [
   // the camera itself is displayed by the driver in the background,
-  // outside of cycle.js vdom management. here we just display the button to
-  // switch to manual entry.
-  p('.text-muted', 'or')
-, a('.btn.btn-lg.btn-primary', { attrs: { href: '#/payreq' } }, 'Paste request')
-])
+  // outside of cycle.js vdom management. here we just display the scanning area indicator
+  // and the button to switch to manual entry.
 
+  div('.indicator', [div('.bordertop'), div('.borderbottom')])
+
+, div('.pastereq-wrap.py-3.main-bg', [
+    p('.text-muted', 'or')
+  , a('.btn.btn-lg.btn-primary', { attrs: { href: '#/payreq' } }, 'Paste request')
+  ])
+
+])
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
   formGroup('Payment request'

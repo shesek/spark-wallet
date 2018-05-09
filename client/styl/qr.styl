@@ -16,3 +16,74 @@ video.qr-scanner
 
   body.qr-scanning &
     display block
+
+body.qr-scanning .qr-scanner
+  .indicator
+    position absolute
+    width 200px
+    height 200px
+    top 10%
+    left 50%
+    margin-left -100px
+
+    // todo: replace with height-based query (here and below)
+    @media screen and (max-height: 540px)
+      display none
+
+    // scanner line
+    &:before
+      content ""
+      width 100%
+      //margin-left -25%
+      background-color tomato
+      height 1px
+      position absolute
+      top 50%
+      margin-top -100px
+      box-shadow 0 0 4px red
+      animation scanning 2s infinite, beam .01s infinite
+
+    .bordertop:before, .bordertop:after, .borderbottom:before, .borderbottom:after
+       content ''
+       position absolute
+       width 25%
+       height 25%
+       border-color #fff
+       border-width 2px
+
+    .bordertop:before
+       border-style solid none none solid
+       top 0
+       left 0
+    .bordertop:after
+       border-style solid solid none none
+       top 0
+       right 0
+    .borderbottom:before
+       border-style none none solid solid
+       bottom 0
+       left 0
+    .borderbottom:after
+       border-style none solid solid none
+       bottom 0
+       right 0
+
+  .pastereq-wrap
+    position absolute
+    bottom 0
+    left -26px
+    right -26px
+    text-align center
+
+    @media screen and (max-height 510px)
+      left 0
+      right 0
+      background transparent !important
+
+@keyframes beam
+  50%
+    opacity 0
+
+@keyframes scanning
+  50%
+    transform translateY(200px)
