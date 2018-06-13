@@ -18,15 +18,15 @@ const navbar = ({ unitf, cbalance, alert, page }) =>
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))
 
-const footer = ({ info, conf: { theme, expert } }) =>
+const footer = ({ info, btcusd, conf: { theme, expert } }) =>
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
-      info ? p('.info.toggle-exp.float-left.mb-0'
-      , [ info.version.replace(/-.*-g/, '-')
-        ,`${info.network} #${info.blockheight}`
-        , info.id.substr(0,14)
-        , ...(expert ? '🔧' : '')
-        ].join(' · ')) : ''
+      info ? p('.info.float-left.mb-0'
+      , [ span('.toggle-exp', info.version.replace(/-.*-g/, '-') + (expert ? ' 🔧' : ''))
+        , ` · ${info.network} #${info.blockheight}`
+        , ` · ${info.id.substr(0,10)}`
+        , btcusd ? ` · BTC = $${ Math.round(btcusd) }` : ''
+        ]) : ''
     , p('.toggle-theme.float-right.mb-0', theme)
     ])
   )
