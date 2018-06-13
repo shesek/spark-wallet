@@ -39,7 +39,7 @@ keys.filter(k => args[k] !== false).forEach(k => process.env[k.replace(/([A-Z])/
 keys.filter(k => args[k] === false).forEach(k => process.env['NO_' + k.replace(/([A-Z])/g, '_$1').toUpperCase()] = true)
 
 process.env.NODE_ENV   || (process.env.NODE_ENV = 'production')
-process.env.VERBOSE    && (process.env.DEBUG = 'lightning-client,nanopay')
+process.env.VERBOSE    && (process.env.DEBUG = `lightning-client,nanopay,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
 
 require('babel-polyfill')
