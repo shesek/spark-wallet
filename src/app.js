@@ -31,21 +31,21 @@ app.use((err, req, res, next) => {
 // HTTPS Server
 process.env.NO_TLS || require('./tls')(app, process.env.TLS_PATH).then(({ host, pems, fpUrl }) => {
   app.get('/server.cer', (req, res) => res.type('cer').send(pems.cert))
-  printService('HTTPS server', `https://${app.settings.urlAuth}@${host}/#/?KP=${fpUrl}`)
+  printService('HTTPS server', 'https', host, `/#/?KP=${fpUrl}`)
 })
 
 // HTTP Server
 process.env.NO_TLS && require('./http')(app).then(host =>
-  printService('HTTP server', `http://${app.settings.urlAuth}@${host}`))
+  printService('HTTP server', 'http', host))
 
 // Tor Onion Hidden Service
 process.env.ONION && require('./onion')(app, process.env.ONION_PATH).then(host =>
-  printService('Tor Onion Hidden Service v3', `http://${app.settings.urlAuth}@${host}`))
+  printService('Tor Onion Hidden Service v3', 'http', host))
 
 
 const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
 
-function printService(name, url) {
-  console.log(`${name} running on ${url}`)
-  qrterm && qrterm.generate(url, { small: true })
+function printService(name, proto, host, qr_data='') {
+  console.log(`${name} running on ${proto}://${host}`)
+  qrterm && qrterm.generate(`${proto}://${app.settings.urlAuth}@${host}${qr_data}`, { small: true })
 }

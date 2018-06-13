@@ -17,7 +17,7 @@ const args = require('meow')(`
       -o, --onion             start Tor Hidden Service [default: false]
       -O, --onion-path <path> path to create/read hidden service data directory [default: ./nanopay-tor]
 
-      -Q, --print-qr          print QR codes for server access [default: false]
+      -Q, --print-qr          print QR codes for server access, including password [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
       -V, --verbose           display debugging information [default: false]
