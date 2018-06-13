@@ -30,7 +30,7 @@ const args = require('meow')(`
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
-            , printQr: {type:'boolean'}
+            , printQr: {type:'boolean', alias:'Q'}
             , verbose: {alias:'V', type:'boolean'}
 } }).flags
 
