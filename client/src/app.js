@@ -9,6 +9,7 @@ import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
 
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
+import orientDriver    from './driver/screen-orient'
 
 import { dbg } from './util'
 
@@ -39,11 +40,14 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
       , vdom$   = view({ state$, ...actions, ...resps })
       , rpc$    = rpc.makeReq(actions)
       , navto$  = navto({ ...resps, ...actions })
+      , orient$ = actions.page$.map(p => p.pathname == '/scan' ? 'portrait' : 'unlock')
+
 
   dbg(actions, 'flash:actions')
   dbg(resps, 'flash:rpc-resps')
   dbg({ state$ }, 'flash:state')
   dbg({ rpc$ }, 'flash:rpc-reqs')
+  dbg({ orient$ }, 'flash:orient')
 
   return {
     DOM:   vdom$
@@ -51,6 +55,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
   , route: navto$
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$
+  , orient$: orient$
   }
 }
 
@@ -58,7 +63,9 @@ run(main, {
   DOM:   makeDOMDriver('#app')
 , HTTP:  makeHTTPDriver()
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
-, conf$: makeConfDriver(storageDriver)
+
+, conf$:   makeConfDriver(storageDriver)
+, orient$: orientDriver
 
 , ...(
   process.env.BUILD_TARGET == 'cordova' ? {
