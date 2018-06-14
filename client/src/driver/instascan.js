@@ -1,5 +1,4 @@
 import { Observable as O } from '../rxjs'
-//import { Scanner, Camera } from 'instascan'
 
 const { Scanner, Camera } = window.Instascan
 
@@ -8,16 +7,17 @@ require('webrtc-adapter')
 const makeScanDriver = (opt={}) => {
   const video   = document.createElement('video')
       , scanner = new Scanner({ ...opt, video })
-
-      , cam$    = O.fromPromise(Camera.getCameras()).map(pickCam).shareReplay(1)
       , scan$   = O.fromEvent(scanner, 'scan')
 
   video.className = 'qr-scanner'
   document.body.appendChild(video)
 
-  function startScan(cam) {
-    document.body.className += ' qr-scanning'
-    scanner.start(cam)
+  let _cam
+  function startScan() {
+    (_cam || (_cam = Camera.getCameras().then(pickCam))).then(cam => {
+      document.body.className += ' qr-scanning'
+      scanner.start(cam)
+    })
   }
 
   function stopScan() {
@@ -27,7 +27,7 @@ const makeScanDriver = (opt={}) => {
 
   return _scanner$ => {
     const scanner$ = O.from(_scanner$)
-    scanner$.filter(mode => !!mode).combineLatest(cam$, (_, cam) => cam).subscribe(startScan)
+    scanner$.filter(mode => !!mode).subscribe(startScan)
     scanner$.filter(mode => !mode).subscribe(stopScan)
     return scan$
   }
