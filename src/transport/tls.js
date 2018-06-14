@@ -12,7 +12,7 @@ const defaultExt = [
 ]
 
 
-module.exports = (app, name=app.settings.host, dir='spark-tls') => {
+module.exports = (app, name=app.settings.host, dir='./spark-tls') => {
   const pems   = makePems(name, dir)
       , tlsOpt = { key: pems.private, cert: pems.cert }
       , server = https.createServer(tlsOpt, app)
@@ -34,12 +34,9 @@ const makePems = (name, dir) => {
         , certDer = forge.asn1.toDer(forge.pki.certificateToAsn1(cert)).getBytes()
         , fprint  = forge.md.sha1.create().update(certDer).digest().toHex()
 
-    console.log(`Loaded TLS certificate with fingerprint ${fprint}`)
-
+    console.log(`Loaded TLS certificate with fingerprint ${hexColon(fprint)} from ${ dir }`)
     return { private: keyPem, cert: certPem, fingerprint: fprint }
   }
-
-  console.log(`Creating new TLS key and certificate in ${ dir }...`)
 
   const extensions = [ ...defaultExt, {
     name: 'subjectAltName'
@@ -53,7 +50,8 @@ const makePems = (name, dir) => {
   fs.writeFileSync(path.join(dir, 'key.pem'), pems.private)
   fs.writeFileSync(path.join(dir, 'cert.pem'), pems.cert)
 
-  console.log(`Created TLS certificate with fingerprint ${ pems.fingerprint }`)
-
+  console.log(`Created TLS certificate with fingerprint ${ pems.fingerprint } at ${ dir }`)
   return { ...pems, fingerprint: pems.fingerprint.replace(/:/g, '') }
 }
+
+const hexColon = hex => hex.match(/../g).join(':')

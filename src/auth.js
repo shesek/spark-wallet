@@ -10,7 +10,7 @@ module.exports = (app, login) => {
   if (!login) {
     username = nanogen('abcdefghijklmnopqrstuvwxyz', 3)
     password = nanoid()
-    console.log(`No --login specified, picked a random one: ${username}:${password}`)
+    console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
   } else {
     [ username, password ] = login.split(':', 2)
     password || ([ username, password ] = [ 'wallet', username ])
