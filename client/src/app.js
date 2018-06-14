@@ -22,9 +22,9 @@ import rpc from './rpc'
 const navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, saveConf$, payreq$ }) => O.merge(
   // navto '/' when receiving payments for the last invoice created by the user
   in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
-  // navto '/' when sending payments
+  // navto '/' after sending payments
 , out$.mapTo('/')
-  // navto '/' when saving config
+  // navto '/' after saving config
 , saveConf$.mapTo('/')
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo('/confirm')
