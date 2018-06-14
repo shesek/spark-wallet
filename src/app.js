@@ -47,5 +47,5 @@ const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
 
 function printService(name, proto, host, qr_data='') {
   console.log(`${name} running on ${proto}://${host}`)
-  qrterm && qrterm.generate(`${proto}://${app.settings.urlAuth}@${host}${qr_data}`, { small: true })
+  qrterm && qrterm.generate(`${proto}://${app.settings.encAuth}@${host}${qr_data}`, { small: true })
 }

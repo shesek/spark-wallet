@@ -14,7 +14,7 @@ module.exports = (app, login) => {
     password || ([ username, password ] = [ 'wallet', username ])
   }
 
-  app.set('urlAuth', [ username, password ].map(encodeURIComponent).join(':'))
+  app.settings.encAuth = [ username, password ].map(encodeURIComponent).join(':')
 
   return (req, res, next) => {
     const cred = basicAuth(req)
