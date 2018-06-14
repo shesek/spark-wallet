@@ -2,5 +2,10 @@
   "name": "nanopay",
   "short_name": "nanopay",
   "start_url": ".",
-  "display": "standalone"
+  "display": "standalone",
+  "protocol_handlers": [ {
+    "protocol": "lightning",
+    "name": "Lightning Payment",
+    "uriTemplate": "./#/webappuri?%s"
+  } ]
 }

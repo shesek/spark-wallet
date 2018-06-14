@@ -22,12 +22,15 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goRpc$  = route('/rpc')
   , goConf$ = route('/settings')
 
+  // manifest.json-enabled URI handling, similar to cordova's urihandler$
+  , weburi$ = route('/webappuri').map(p => p.search.substr(1))
+
   // Start/stop QR scanner
   , scanner$ = O.merge(scan$, page$.filter(p => p.pathname != '/scan')).mapTo(false)
                 .merge(goScan$.mapTo(true))
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
-  , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
+  , viewPay$ = O.merge(scan$, urihandler$, weburi$).map(parseUri).filter(x => !!x)
                 .merge(submit('[do=decode-pay]').map(r => r.bolt11))
   , confPay$ = click('[do=confirm-pay]')
 
@@ -60,8 +63,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   // @xxx side effects outside of drivers!
   on('form', 'submit').subscribe(e => e.preventDefault())
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
-
-  dbg({ urihandler$ })
 
   return { conf$, page$, scanner$
          , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$, goConf$
