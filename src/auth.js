@@ -9,7 +9,7 @@ module.exports = (app, login) => {
 
   if (!login) {
     username = nanogen('abcdefghijklmnopqrstuvwxyz', 3)
-    password = nanoid()
+    password = nanoid(15)
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
   } else {
     [ username, password ] = login.split(':', 2)
