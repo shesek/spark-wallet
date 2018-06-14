@@ -1,4 +1,6 @@
 {
   "name": "nanopay",
+  "short_name": "nanopay",
+  "start_url": ".",
   "display": "standalone"
 }
