@@ -8,12 +8,11 @@ module.exports = (app, login) => {
   let username, password
 
   if (!login) {
-    username = nanogen('abcdefghijklmnopqrstuvwxyz', 3)
-    password = nanoid(15)
+    username = nanogen('abcdefghijklmnopqrstuvwxyz', 5)
+    password = nanoid(10)
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
   } else {
     [ username, password ] = login.split(':', 2)
-    password || ([ username, password ] = [ 'wallet', username ])
   }
 
   app.settings.encAuth = [ username, password ].map(encodeURIComponent).join(':')
