@@ -28,19 +28,20 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).send(err.type && err || err.stack || err)
 })
 
+const { NO_TLS, TLS_NAME, TLS_PATH, ONION, ONION_PATH } = process.env
+
 // HTTPS Server
-const { TLS_NAME, TLS_PATH } = process.env
-process.env.NO_TLS || require('./tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert, fpEnc }) => {
+NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert, fpEnc }) => {
   app.get('/server.cer', (req, res) => res.type('cer').send(cert))
   printService('HTTPS server', 'https', host, `/#/?KFP=${fpEnc}`)
 })
 
 // HTTP Server
-process.env.NO_TLS && require('./http')(app).then(host =>
+NO_TLS && require('./transport/http')(app).then(host =>
   printService('HTTP server', 'http', host))
 
 // Tor Onion Hidden Service
-process.env.ONION && require('./onion')(app, process.env.ONION_PATH).then(host =>
+ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
   printService('Tor Onion Hidden Service v3', 'http', host))
 
 

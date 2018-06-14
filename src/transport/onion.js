@@ -1,7 +1,7 @@
 import hsv3 from 'hsv3'
 import path from 'path'
 import http from 'http'
-import fs from 'fs'
+import fs   from 'fs'
 
 module.exports = (app, dir=path.resolve('spark-tor')) =>
   new Promise(resolve => {
