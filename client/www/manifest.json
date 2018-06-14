@@ -1,6 +1,6 @@
 {
-  "name": "nanopay",
-  "short_name": "nanopay",
+  "name": "Spark",
+  "short_name": "Spark",
   "start_url": ".",
   "display": "standalone",
   "protocol_handlers": [ {

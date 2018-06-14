@@ -3,7 +3,7 @@ import path from 'path'
 import http from 'http'
 import fs from 'fs'
 
-module.exports = (app, dir=path.resolve('nanopay-tor')) =>
+module.exports = (app, dir=path.resolve('spark-tor')) =>
   new Promise(resolve => {
     // Start HTTP server (non TLS) on a random port
     const httpSrv = http.createServer(app).listen(0, '127.0.0.1', _ =>

@@ -12,7 +12,7 @@ const defaultExt = [
 ]
 
 
-module.exports = (app, name=app.settings.host, dir='nanopay-tls') => {
+module.exports = (app, name=app.settings.host, dir='spark-tls') => {
   const pems   = makePems(name, dir)
       , tlsOpt = { key: pems.private, cert: pems.cert }
       , server = https.createServer(tlsOpt, app)

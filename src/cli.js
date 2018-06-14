@@ -2,7 +2,7 @@
 
 const args = require('meow')(`
     Usage
-      $ nanopay [options]
+      $ spark [options]
 
     Options
       -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
@@ -11,12 +11,12 @@ const args = require('meow')(`
       -p, --port <port>       http(s) server port [default: 9117]
       -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
 
-      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./nanopay-tls/]
+      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
       --tls-name <name>       common name for the generated self-signed cert [default: {host}]
       --no-tls                disable TLS, start plain HTTP server instead [default: false]
 
       -o, --onion             start Tor Hidden Service [default: false]
-      -O, --onion-path <path> directory to read/store hidden service data [default: ./nanopay-tor/]
+      -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]
 
       -Q, --print-qr          print QR codes for server access, including password [default: false]
       --no-webui              run API server without serving client assets [default: false]
@@ -26,7 +26,7 @@ const args = require('meow')(`
       -v, --version           output version number
 
     Example
-      $ nanopay -l ~/.lightning
+      $ spark -l ~/.lightning
 
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
@@ -40,7 +40,7 @@ keys.filter(k => args[k] !== false).forEach(k => process.env[k.replace(/([A-Z])/
 keys.filter(k => args[k] === false).forEach(k => process.env['NO_' + k.replace(/([A-Z])/g, '_$1').toUpperCase()] = true)
 
 process.env.NODE_ENV   || (process.env.NODE_ENV = 'production')
-process.env.VERBOSE    && (process.env.DEBUG = `lightning-client,nanopay,${process.env.DEBUG||''}`)
+process.env.VERBOSE    && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
 
 require('babel-polyfill')

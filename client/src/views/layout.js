@@ -13,7 +13,7 @@ const navbar = ({ unitf, cbalance, alert, page }) =>
   nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
     a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, [
       page.pathname != '/' ? span('.icon.icon-left-open') : ''
-    , 'nanopay'
+    , 'Spark'
     ])
   , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
   ]))

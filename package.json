@@ -1,7 +1,7 @@
 {
-  "name": "miniwallet",
+  "name": "spark-wallet",
   "version": "0.0.1",
-  "description": "miniwallet",
+  "description": "A GUI web interface for c-lightning",
   "bin": "dist/cli.js",
   "scripts": {
     "start": "./start.sh",
@@ -9,7 +9,7 @@
     "cordova:dist": "cd cordova && npm run dist",
     "prepublishOnly": "npm run dist"
   },
-  "repository": "https://github.com/shesek/miniwallet.git",
+  "repository": "https://github.com/shesek/spark",
   "files": [
     "dist"
   ],

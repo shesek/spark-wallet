@@ -43,11 +43,11 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
       , orient$ = actions.page$.map(p => p.pathname == '/scan' ? 'portrait' : 'unlock')
 
 
-  dbg(actions, 'flash:actions')
-  dbg(resps, 'flash:rpc-resps')
-  dbg({ state$ }, 'flash:state')
-  dbg({ rpc$ }, 'flash:rpc-reqs')
-  dbg({ orient$ }, 'flash:orient')
+  dbg(actions, 'spark:actions')
+  dbg(resps, 'spark:rpc-resps')
+  dbg({ state$ }, 'spark:state')
+  dbg({ rpc$ }, 'spark:rpc-reqs')
+  dbg({ orient$ }, 'spark:orient')
 
   return {
     DOM:   vdom$

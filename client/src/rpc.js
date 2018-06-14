@@ -10,7 +10,7 @@ const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
-  dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'flash:reply')
+  dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'spark:reply')
 
   return {
     req$$:     HTTP.select()

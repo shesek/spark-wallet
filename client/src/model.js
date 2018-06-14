@@ -102,10 +102,10 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
-  dbg({ loading$, alert$, rpcHist$ }, 'flash:model')
-  dbg({ error$ }, 'flash:error')
-  dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'flash:rate')
-  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'flash:config')
+  dbg({ loading$, alert$, rpcHist$ }, 'spark:model')
+  dbg({ error$ }, 'spark:error')
+  dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'spark:rate')
+  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
 
   return combineAvail({
     conf$, page$, loading$, alert$
