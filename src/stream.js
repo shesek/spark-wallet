@@ -30,10 +30,15 @@ module.exports = lnPath => {
   // Periodically pull BTC<->USD exchange rate
   let lastRate
   ;(async function getrate() {
-    // @xxx don't pull if no one is listening?
-    try { em.emit('rate', lastRate = await get(rateUrl).then(r => r.body.last)) }
-    catch (err) { console.error(err.stack || err.toString()) }
-    setTimeout(getrate, rateInterval)
+    if (em.listenerCount('rate') || !lastRate) {
+      // only pull if someone is listening or if we don't have a rate yet
+      try { em.emit('rate', lastRate = await get(rateUrl).then(r => r.body.last)) }
+      catch (err) { console.error(err.stack || err.toString()) }
+      setTimeout(getrate, rateInterval)
+    } else {
+      // set a shorter interval for the next update check if we skipped this one
+      setTimeout(getrate, 10000)
+    }
   })()
 
   // GET /stream middleware
