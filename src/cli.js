@@ -11,11 +11,12 @@ const args = require('meow')(`
       -p, --port <port>       http(s) server port [default: 9117]
       -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
 
-      -s, --tls-path <path>   path to read/store TLS key material [default: ./nanopay-tls.json]
-      --no-tls                disable TLS, start plain HTTP server [default: false]
+      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./nanopay-tls/]
+      --tls-name <name>       common name for the generated self-signed cert [default: {host}]
+      --no-tls                disable TLS, start plain HTTP server instead [default: false]
 
       -o, --onion             start Tor Hidden Service [default: false]
-      -O, --onion-path <path> path to create/read hidden service data directory [default: ./nanopay-tor]
+      -O, --onion-path <path> directory to read/store hidden service data [default: ./nanopay-tor/]
 
       -Q, --print-qr          print QR codes for server access, including password [default: false]
       --no-webui              run API server without serving client assets [default: false]

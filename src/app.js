@@ -29,9 +29,10 @@ app.use((err, req, res, next) => {
 })
 
 // HTTPS Server
-process.env.NO_TLS || require('./tls')(app, process.env.TLS_PATH).then(({ host, pems, fpUrl }) => {
-  app.get('/server.cer', (req, res) => res.type('cer').send(pems.cert))
-  printService('HTTPS server', 'https', host, `/#/?KP=${fpUrl}`)
+const { TLS_NAME, TLS_PATH } = process.env
+process.env.NO_TLS || require('./tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert, fpEnc }) => {
+  app.get('/server.cer', (req, res) => res.type('cer').send(cert))
+  printService('HTTPS server', 'https', host, `/#/?KFP=${fpEnc}`)
 })
 
 // HTTP Server

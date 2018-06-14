@@ -3961,6 +3961,11 @@
         "loose-envify": "1.3.1"
       }
     },
+    "ip-regex": {
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/ip-regex/-/ip-regex-2.1.0.tgz",
+      "integrity": "sha1-+ni/XS5pE8kRzp+BnuUUa7bYROk="
+    },
     "ipaddr.js": {
       "version": "1.5.2",
       "resolved": "https://registry.npmjs.org/ipaddr.js/-/ipaddr.js-1.5.2.tgz",
@@ -4050,6 +4055,14 @@
       "dev": true,
       "requires": {
         "is-extglob": "1.0.0"
+      }
+    },
+    "is-ip": {
+      "version": "2.0.0",
+      "resolved": "https://registry.npmjs.org/is-ip/-/is-ip-2.0.0.tgz",
+      "integrity": "sha1-aO6gfooKCpTC0IDdZ0xzGrKkYas=",
+      "requires": {
+        "ip-regex": "2.1.0"
       }
     },
     "is-my-ip-valid": {
@@ -4651,9 +4664,9 @@
       }
     },
     "node-forge": {
-      "version": "0.7.1",
-      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.1.tgz",
-      "integrity": "sha1-naYR6giYL0uUIGs760zJZl8gwwA="
+      "version": "0.7.5",
+      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.5.tgz",
+      "integrity": "sha512-MmbQJ2MTESTjt3Gi/3yG1wGpIMhUfcIypUCGtTizFR9IiccFwxSpfp0vtIZlkFclEqERemxfnSdZEMR9VqqEFQ=="
     },
     "nopt": {
       "version": "3.0.1",
@@ -5111,7 +5124,8 @@
     "qrcode-terminal": {
       "version": "0.12.0",
       "resolved": "https://registry.npmjs.org/qrcode-terminal/-/qrcode-terminal-0.12.0.tgz",
-      "integrity": "sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ=="
+      "integrity": "sha512-EXtzRZmC+YGmGlDFbXKxQiMZNwCLEO6BANKXG4iCtSIM0yqc/pappSx3RIKr4r0uh5JsBckOXeKrB3Iz7mdQpQ==",
+      "optional": true
     },
     "qs": {
       "version": "6.5.1",
@@ -5575,8 +5589,17 @@
       "version": "1.10.2",
       "resolved": "https://registry.npmjs.org/selfsigned/-/selfsigned-1.10.2.tgz",
       "integrity": "sha1-tESVgNmZKbZbEKSDiTAaZZIIh1g=",
+      "optional": true,
       "requires": {
         "node-forge": "0.7.1"
+      },
+      "dependencies": {
+        "node-forge": {
+          "version": "0.7.1",
+          "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.1.tgz",
+          "integrity": "sha1-naYR6giYL0uUIGs760zJZl8gwwA=",
+          "optional": true
+        }
       }
     },
     "semver": {
