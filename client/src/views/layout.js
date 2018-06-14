@@ -22,8 +22,8 @@ const footer = ({ info, btcusd, conf: { theme, expert } }) =>
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
       info ? p('.info.float-left.mb-0'
-      , [ span('.toggle-exp', info.version.replace(/-.*-g/, '-') + (expert ? ' 🔧' : ''))
-        , ` · ${info.network} #${info.blockheight}`
+      , [ span('.toggle-exp', info.version.replace(/-.*-/, '-') + (expert ? ' 🔧' : ''))
+        , ` · ${info.network}`
         , ` · ${info.id.substr(0,10)}`
         , btcusd ? ` · BTC = $${ Math.round(btcusd) }` : ''
         ]) : ''
