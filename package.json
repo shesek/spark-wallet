@@ -2,7 +2,9 @@
   "name": "spark-wallet",
   "version": "0.0.1",
   "description": "A GUI web interface for c-lightning",
-  "bin": "dist/cli.js",
+  "bin": {
+    "spark": "dist/cli.js"
+  },
   "scripts": {
     "start": "./start.sh",
     "dist": "./build.sh",
@@ -15,7 +17,8 @@
   ],
   "keywords": [
     "bitcoin",
-    "lightning"
+    "lightning",
+    "wallet"
   ],
   "author": "Nadav Ivgi",
   "license": "MIT",
