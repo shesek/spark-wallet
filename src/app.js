@@ -31,9 +31,9 @@ app.use((err, req, res, next) => {
 const { NO_TLS, TLS_NAME, TLS_PATH, ONION, ONION_PATH } = process.env
 
 // HTTPS Server
-NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert, fpEnc }) => {
+NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert }) => {
   app.get('/server.cer', (req, res) => res.type('cer').send(cert))
-  printService('HTTPS server', 'https', host, `/#/?KFP=${fpEnc}`)
+  printService('HTTPS server', 'https', host)
 })
 
 // HTTP Server
@@ -47,7 +47,7 @@ ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
 
 const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
 
-function printService(name, proto, host, qr_data='') {
+function printService(name, proto, host) {
   console.log(`${name} running on ${proto}://${host}/`)
-  qrterm && qrterm.generate(`${proto}://${app.settings.encAuth}@${host}${qr_data}`, { small: true })
+  qrterm && qrterm.generate(`${proto}://${app.settings.encAuth}@${host}/`, { small: true })
 }

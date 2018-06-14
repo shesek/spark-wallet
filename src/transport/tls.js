@@ -1,7 +1,6 @@
 import selfsigned from 'selfsigned'
 import forge      from 'node-forge'
 import path       from 'path'
-import base64u    from 'base64-url'
 import https      from 'https'
 import isIp       from 'is-ip'
 import fs         from 'fs'
@@ -19,9 +18,7 @@ module.exports = (app, name=app.settings.host, dir='./spark-tls') => {
 
   return new Promise(resolve =>
     server.listen(app.settings.port, app.settings.host, _ =>
-      resolve({ cert: pems.cert
-              , fpEnc: base64u.encode(pems.fingerprint, 'hex')
-              , host: `${server.address().address}:${server.address().port}` })
+      resolve({ cert: pems.cert, host: `${server.address().address}:${server.address().port}` })
     )
   )
 }
