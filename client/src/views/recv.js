@@ -22,13 +22,20 @@ const recv = ({ unitf, conf: { unit }, recvForm: { msatoshi, amount, step } }) =
   , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
   ])
 
-const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) =>
-  div('.text-center.text-md-left', [
-    h2('Waiting for payment')
-  , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
-  , img('.qr', { attrs: { src: qr } })
-  , small('.d-block.text-muted.break-all.mt-3', inv.bolt11)
-  , expert ? yaml(inv) : ''
-  ]))
+const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) => div('.waiting-payment', [
+  div('.row', [
+    div('.col-sm-6.text-center', [
+      h2('Waiting for payment')
+    , inv.msatoshi !== 'any' ? h3('.toggle-unit', unitf(inv.msatoshi)) : ''
+    , small('.d-none.d-sm-block.text-muted.break-all.mt-3', inv.bolt11)
+    ])
+  , div('.col-sm-6.text-center.text-sm-right', [
+      img('.qr', { attrs: { src: qr } })
+    , small('.d-block.d-sm-none.text-center.text-muted.break-all.mt-3', inv.bolt11)
+    ])
+
+  ])
+, expert ? yaml(inv) : ''
+]))
 
 module.exports = { recv, invoice }
