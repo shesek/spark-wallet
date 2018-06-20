@@ -1,5 +1,5 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
-import { formGroup, yaml } from './util'
+import { formGroup, yaml, amountField } from './util'
 
 const scanReq = div('.qr-scanner', [
   // the camera itself is displayed by the driver in the background,
@@ -25,17 +25,20 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 
 // @TODO show expiry
 // @TODO input amount for 'any' invoice
-const confirmPay = payreq => ({ unitf, conf: { expert } }) =>
-  payreq.msatoshi
-  ? div([
-      h2('Confirm payment')
-    , p([ 'Do you want to pay ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
+const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
+  form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
+    h2('Confirm payment')
+  , ...(payreq.msatoshi ? [
+      p([ 'Do you want to pay ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-    , button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
-    , ' '
-    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
-    , expert ? yaml(payreq) : ''
+    , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, `Pay ${unitf(payreq.msatoshi)}`)
+    ] : [
+      formGroup('Amount to pay', amountField(amtData, 'custom_msat'))
+    , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
+    , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Confirm Payment')
     ])
-  : p('Custom invoice amounts are currently unsupported.')
+  , ' ', a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+  , expert ? yaml(payreq) : ''
+  ])
 
 module.exports = { scanReq, pasteReq, confirmPay }

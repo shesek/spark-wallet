@@ -10,7 +10,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
     on     = (sel, ev) => DOM.select(sel).events(ev)
   , click  = sel => on(sel, 'click').map(e => e.target.dataset)
   , dclick = sel => on(sel, 'dblclick').map(e => e.target.dataset) // @xxx doesn't seem to work on iOS, do manual dblclick detection?
-  , submit = sel => on(sel, 'submit').map(e => serialize(e.target, { hash: true }))
+  , submit = sel => on(sel, 'submit').map(e => ({ ...e.target.dataset, ...serialize(e.target, { hash: true }) }))
 
   // Page routes
   , page$   = route()
@@ -32,7 +32,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$, weburi$).map(parseUri).filter(x => !!x)
                 .merge(submit('[do=decode-pay]').map(r => r.bolt11))
-  , confPay$ = click('[do=confirm-pay]')
+  , confPay$ = submit('[do=confirm-pay]')
 
   // RPC console actions
   , clrHist$ = click('[do=clear-console-history]')
@@ -40,11 +40,13 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .merge(click('[do=rpc-help]').mapTo([ 'help' ]))
 
   // New invoice actions
-  , recvAmt$ = on('[name=amount]', 'input').map(e => e.target.value)
   , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
     , msatoshi:    r.msatoshi || 'any'
     , description: r.description || '⚡' }))
+
+  // Payment amount field, shared for creating new invoices and for paying custom amounts
+  , amtVal$ = on('[name=amount]', 'input').map(e => e.target.value)
 
   // Config page and toggle buttons
   , saveConf$ = submit('[do=save-config]')
@@ -68,7 +70,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$, goConf$
          , viewPay$, confPay$
          , execRpc$, clrHist$
-         , newInv$, recvAmt$
+         , newInv$, amtVal$
          , saveConf$, togExp$, togTheme$, togUnit$
          , feedStart$
          , dismiss$

@@ -36,7 +36,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
 exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
-, confPay$.map(pay    => [ 'pay',       [ pay.bolt11 ], pay ])
+, confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 

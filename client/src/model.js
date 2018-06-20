@@ -21,7 +21,7 @@ const
 const defaultServer = process.env.BUILD_TARGET === 'web' ? '.' : null
 
 module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, goRecv$
-                  , recvAmt$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
+                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
 
@@ -72,13 +72,14 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
 
-  // Payment request form
-  , recvMsat$ = recvAmt$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
-                        .merge(goRecv$.mapTo(null)).startWith(null)
-  , recvForm$ = combine({
-      msatoshi: recvMsat$
-    , amount:   unit$.withLatestFrom(recvMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit], false))
+  // Payment amount field handling, shared for creating new invoices and paying custom amounts
+  , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
+                      .merge(page$.mapTo(null)).startWith(null)
+  , amtData$ = combine({
+      msatoshi: amtMsat$
+    , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit], false))
                      .merge(goRecv$.mapTo(''))
+    , unit:     unit$
     , step:     unit$.map(unit => unitstep[unit])
     })
 
@@ -88,7 +89,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
       .startWith(0).scan((N, a) => N+a)
 
   // User-visible alert messages
-  , alert$   = O.merge(
+  , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
     , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
@@ -99,12 +100,12 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
   // RPC console history
-  , rpcHist$  = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
+  , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
   dbg({ loading$, alert$, rpcHist$ }, 'spark:model')
   dbg({ error$ }, 'spark:error')
-  dbg({ unit$, rate$, recvAmt$, recvMsat$, recvForm$, msatusd$ }, 'spark:rate')
+  dbg({ unit$, rate$, amtVal$, amtMsat$, amtData$, msatusd$ }, 'spark:rate')
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
 
   return combineAvail({
@@ -112,6 +113,6 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   , info$, peers$, funds$
   , btcusd$, unitf$, cbalance$, obalance$
   , feed$, feedStart$
-  , recvForm$, rpcHist$
+  , amtData$, rpcHist$
   }).shareReplay(1)
 }
