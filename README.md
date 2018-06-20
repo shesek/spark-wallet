@@ -66,11 +66,11 @@ To start Spark as a Tor hidden service (v3), set `--onion`. Tor data files will 
 Spark comes bundled with Tor (via [granax](https://github.com/bookchin/granax));
 You don't have to pre-install anything for this to work.
 
-Running Spark as a Tor hidden service has the following benfits:
+Running Spark as a Tor hidden service has the following benefits:
 
 - Tor onion URLs are self-authenticating and are pinned to your server's public key.
 
-- In addition to authenticating the server, they also serve as a mean to authenticate the user - you can't acceses the server without knowing the `.onion` hostname.
+- In addition to authenticating the server, they also serve as a mean to authenticate the user - you can't access the server without knowing the `.onion` hostname.
 
 - You don't have to setup port forwarding, everything is done with outbound connections.
 
@@ -103,7 +103,7 @@ The advantages of using the native app are:
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate (see above). (*TODO: TLS key pinning*)
 
-The native app is currently not published to the app store and has to be manually installed.
+The native app is currently not published to the app store and has to be manually built and installed.
 
 ## Mobile "Add to homescreen"
 
