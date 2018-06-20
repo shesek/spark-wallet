@@ -44,7 +44,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
     , msatoshi:    r.msatoshi || 'any'
-    , description: r.description || 'Lightning Payment' }))
+    , description: r.description || '⚡' }))
 
   // Config page and toggle buttons
   , saveConf$ = submit('[do=save-config]')
