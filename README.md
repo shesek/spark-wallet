@@ -1,6 +1,11 @@
 # Spark
 
-A web GUI for c-lightning, with a simple and lightweight interface for day-to-day spending.
+[![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
+[![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark-wallet/blob/master/LICENSE)
+[![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+[![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
+
+A web GUI for c-lightning, with a simple and lightweight interface for day-to-day usage.
 Optimized for use by mobile and tablets.
 
 ## Setup
@@ -27,7 +32,7 @@ See `$ spark --help` for the full list of available options (also available belo
 
 Supports the core functions of a lightning wallet: sending, receiving and history.
 
-Does not (yet) support peers and channels management, which is expected to be managed using the RPC.
+Does not (yet) support peers and channels management, which are expected to be managed using the RPC for now.
 
 TODO: screenshots, explain currency/theme/expert controls, etc
 
@@ -41,8 +46,6 @@ To set a custom "common name" for the generated certificate, set `--tls-name`.
 To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files in the `--tls-path` directory.
 
 To disable TLS and start a plaintext HTTP server instead, set `--no-tls`.
-
-(*TODO: automagically get CA-signed certificates via LetsEncrypt!*)
 
 ### Add as Trusted Certificate to Android
 
@@ -61,7 +64,7 @@ by following these steps:
 
 ## Tor Onion Hidden Service
 
-To start Spark as a Tor hidden service (v3), set `--onion`. Tor data files will be saved to `./spark-tor` (can override with `--onion-path`).
+To start Spark as a Tor hidden service (v3), set `--onion`. Tor data files will be saved to `./spark-tor` (can be overriden with `--onion-path`).
 
 Spark comes bundled with Tor (via [granax](https://github.com/bookchin/granax));
 You don't have to pre-install anything for this to work.
@@ -114,7 +117,7 @@ This will add a home launcher that opens up in full screen.
 With recent Firefox Mobile, this also allows the website to register as an handler for `lightning:` URIs!
 (see [compatibility table](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers#Browser_compatibility))
 
-Note that a trusted certificate is required for full-screen to function.
+Note that a trusted certificate is required in order for "Add to homepage" to work.
 
 ## CLI options
 
