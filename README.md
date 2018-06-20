@@ -54,7 +54,7 @@ by following these steps:
 2. Click the red TLS warning in the URL bar to view the certificate and ensure it matches the expected one
    (the certificate's SHA1 fingerprint is printed to the console during Spark's startup).
 
-3. Navigate to `/server.cer` to download the certificate file from the server, and open it.
+3. Navigate to `/cert.pem` to download the certificate file from the server, and open it.
 
 4. You should now see [this screen](https://i.imgur.com/f2DMWdL.png), allowing you to add a user trusted certificate.
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
