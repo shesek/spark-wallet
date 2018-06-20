@@ -29,7 +29,7 @@ const confirmPay = payreq => ({ unitf, conf: { expert } }) =>
   payreq.msatoshi
   ? div([
       h2('Confirm payment')
-    , p([ 'Do you want to pay ', strong(unitf(payreq.msatoshi)), '?'])
+    , p([ 'Do you want to pay ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
     , button('.btn.btn-lg.btn-primary', { attrs: { do: 'confirm-pay' }, dataset: payreq }, `Pay ${unitf(payreq.msatoshi)}`)
     , ' '
