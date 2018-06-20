@@ -11,7 +11,7 @@
     "cordova:dist": "cd cordova && npm run dist",
     "prepublishOnly": "npm run dist"
   },
-  "repository": "https://github.com/shesek/spark",
+  "repository": "https://github.com/ElementsProject/spark",
   "files": [
     "dist"
   ],

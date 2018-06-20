@@ -82,7 +82,7 @@ the URL as a QR to the console.
 To start a development environment with live compilation for babel, browserify and stylus, run:
 
 ```bash
-$ git clone https://github.com/shesek/spark && cd spark
+$ git clone https://github.com/ElementsProject/spark && cd spark
 $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
