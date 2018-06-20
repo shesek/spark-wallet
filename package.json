@@ -26,22 +26,22 @@
     "babel-polyfill": "^6.26.0",
     "base64-url": "^2.2.0",
     "basic-auth": "^2.0.0",
-    "body-parser": "^1.18.2",
+    "body-parser": "^1.18.3",
     "compression": "^1.7.2",
-    "express": "^4.16.2",
+    "express": "^4.16.3",
     "is-ip": "^2.0.0",
     "lightning-client": "github:shesek/lightning-client-js#e8910e367f4ce27732847886016c32f426044d94",
-    "meow": "^4.0.0",
+    "meow": "^4.0.1",
     "morgan": "^1.9.0",
-    "nanoid": "^1.0.2",
+    "nanoid": "^1.0.3",
     "node-forge": "^0.7.5",
-    "superagent": "^3.8.2"
+    "superagent": "^3.8.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-syntax-object-rest-spread": "^6.13.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "cordova": "^8.0.0"
   },
   "optionalDependencies": {
