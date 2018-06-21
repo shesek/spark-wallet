@@ -7,7 +7,9 @@ const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
 , sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
 , sumPeers = peers => peers.filter(p => p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
-, updPaid  = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
+
+, updPaidInv = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
+, appendPay  = (payments, pay) => [ ...payments.filter(p => p.id !== pay.id), pay ]
 
 , idx = xs => x => xs.indexOf(x)
 , idn = x => x
@@ -26,18 +28,20 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   const
 
   // Periodically re-sync from listpayments,
-  // continuously patch with known outgoing payments
+  // continuously patch with known outgoing payments (completed only)
     freshPays$ = O.merge(
       payments$.map(payments => _ => payments)
-    , outgoing$.map(pay => payments => [ ...payments, { ...pay, status: 'complete', created_at: Date.now()/1000|0 } ])
-    ).startWith([]).scan((payments, mod) => mod(payments))
+    , outgoing$.map(pay => payments => appendPay(payments, pay))
+    )
+    .startWith([]).scan((payments, mod) => mod(payments))
+    .map(payments => payments.filter(p => p.status === 'complete'))
 
   // Periodically re-sync from listinvoices,
   // continuously patch with known invoices (paid only)
   , freshInvs$ = O.merge(
       invoices$.map(invs => _ => invs)
     , invoice$.map(inv  => invs => [ ...invs, inv ])
-    , incoming$.map(inv => invs => updPaid(invs, inv))
+    , incoming$.map(inv => invs => updPaidInv(invs, inv))
     )
     .startWith([]).scan((invs, mod) => mod(invs))
     .map(invs => invs.filter(inv => inv.status === 'paid'))
