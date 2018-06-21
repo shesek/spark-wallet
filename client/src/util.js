@@ -7,16 +7,22 @@ import { Observable as O } from './rxjs'
 
 const
 
-  trim = num => num.replace(/\.?0+$/, '')
-, formatAmt = (amt, rate, step, comma=true) =>
+  formatAmt = (amt, rate, step, comma=true) =>
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
       .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
+, trim = num => num.replace(/\.?0+$/, '')
 
-, reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)/i
 , parseUri = uri => {
     const m = uri.match(reUri)
     return m && (m[1] || m[2])
   }
+, reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)/i
+
+// returns the expected invoice amount when its <0.5% different from the actual amount paid,
+// or the actual amount paid otherwise. this is done to make the UX less confusing when the
+// sender uses overpayment randomization (https://github.com/ElementsProject/lightning/issues/1089)
+, recvAmt = ({ msatoshi: expected, msatoshi_received: actual }) =>
+    (expected && (actual-expected)/expected<0.005) ? expected : actual
 
 , combine = obj => {
     const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))
@@ -39,4 +45,4 @@ const
       _   => dbg(`${k} completed`)))
 
 module.exports = { combine, combineAvail, dropErrors, extractErrors, dbg
-                 , formatAmt, parseUri }
+                 , formatAmt, parseUri, recvAmt }

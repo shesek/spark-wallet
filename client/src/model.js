@@ -1,7 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, combine, combineAvail, extractErrors, dropErrors } from './util'
-
+import { dbg, formatAmt, recvAmt, combine, combineAvail } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
@@ -48,7 +47,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
 
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$     = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
-      ...invoices.map(i => [ 'in',  i.paid_at,    i.msatoshi || i.msatoshi_received, i ])
+      ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
 
@@ -95,7 +94,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   // User-visible alert messages
   , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
-    , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi || i.msatoshi_received}}}` ])
+    , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
     , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
     , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
     , dismiss$.mapTo(null)
