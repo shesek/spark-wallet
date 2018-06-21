@@ -44,10 +44,9 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
 
   dbg(actions, 'spark:actions')
-  dbg(resps, 'spark:rpc-resps')
   dbg({ state$ }, 'spark:state')
-  dbg({ rpc$ }, 'spark:rpc-reqs')
-  dbg({ orient$ }, 'spark:orient')
+  dbg(resps, 'spark:rpc-res')
+  dbg({ rpc$ }, 'spark:rpc-req')
 
   return {
     DOM:   vdom$

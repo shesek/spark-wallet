@@ -1,6 +1,6 @@
 import { Observable as O } from './rxjs'
+import { combine } from './util'
 import views from './views'
-import { dbg, combine } from './util'
 
 const isFunc = x => typeof x == 'function'
 
@@ -21,8 +21,8 @@ module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, goConf$,
 
   ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
 
-  // managed outside of cycle.js due to odd cache invalidation behaviour
-  // exhibited by chrome that was causing slower pageloads
+  // managed outside of cycle.js's vdom due to odd cache invalidation
+  // behaviour exhibited by chrome that was causing slower pageloads
   // @xxx side effects outside of drivers!
   const themeLink = document.querySelector('link[href*=bootstrap]')
   state$.map(S => S.conf.theme).distinctUntilChanged()

@@ -105,7 +105,6 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
 
   dbg({ loading$, alert$, rpcHist$ }, 'spark:model')
   dbg({ error$ }, 'spark:error')
-  dbg({ unit$, rate$, amtVal$, amtMsat$, amtData$, msatusd$ }, 'spark:rate')
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
 
   return combineAvail({

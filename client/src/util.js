@@ -1,7 +1,8 @@
-import { Big as big } from 'big.js'
-import debug        from 'debug'
-import numbro from 'numbro'
+import debug   from 'debug'
+import numbro  from 'numbro'
 import moveDec from 'move-decimal-point'
+
+import { Big as big }      from 'big.js'
 import { Observable as O } from './rxjs'
 
 const
