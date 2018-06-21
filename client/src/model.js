@@ -44,8 +44,8 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
 
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$     = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
-      ...invoices.map(inv => [ 'in',  inv.paid_at,    inv.msatoshi_received, inv ])
-    , ...payments.map(pay => [ 'out', pay.created_at, pay.msatoshi,          pay ])
+      ...invoices.map(i => [ 'in',  i.paid_at,    i.msatoshi || i.msatoshi_received, i ])
+    , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
 
   // Periodically re-sync channel balance from "listpeers",
@@ -91,8 +91,8 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
   // User-visible alert messages
   , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
-    , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi_received}}}` ])
-    , outgoing$.map(i => [ 'success', `Sent payment of @{{${i.msatoshi}}}` ])
+    , incoming$.map(i => [ 'success', `Received payment of @{{${i.msatoshi || i.msatoshi_received}}}` ])
+    , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
     , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
     , dismiss$.mapTo(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
