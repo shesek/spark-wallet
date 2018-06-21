@@ -6,7 +6,6 @@ import { dropErrors, extractErrors, dbg } from './util'
 // the next one don't all hit the servers at once
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
-
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
@@ -50,13 +49,12 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 
-exports.toHttp = (rpc$, server$) =>
-  rpc$.withLatestFrom(server$.filter(x => x != null)
-  , ([ method, params=[], ctx={} ], server) => ({
-      category: ctx.category || method
-    , method: 'POST'
-    , url: url.resolve(server, 'rpc')
-    , send: { method, params }
-    , ctx
-    })
-  )
+const serverUrl = process.env.BUILD_TARGET === 'web' ? '.' : localStorage.serverUrl
+
+exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
+  category: ctx.category || method
+, method: 'POST'
+, url: url.resolve(serverUrl, 'rpc')
+, send: { method, params }
+, ctx
+}))

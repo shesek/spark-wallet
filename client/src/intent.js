@@ -20,7 +20,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goRecv$ = route('/recv')
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
-  , goConf$ = route('/settings')
 
   // manifest.json-enabled URI handling, similar to cordova's urihandler$
   , weburi$ = route('/webappuri').map(p => p.search.substr(1))
@@ -49,7 +48,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , amtVal$ = on('[name=amount]', 'input').map(e => e.target.value)
 
   // Config page and toggle buttons
-  , saveConf$ = submit('[do=save-config]')
   , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))
   , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))
   , togFull$  = dclick('.full-screen')
@@ -67,11 +65,11 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$, scanner$
-         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$, goConf$
+         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
          , viewPay$, confPay$
          , execRpc$, clrHist$
          , newInv$, amtVal$
-         , saveConf$, togExp$, togTheme$, togUnit$
+         , togExp$, togTheme$, togUnit$
          , feedStart$
          , dismiss$
          }

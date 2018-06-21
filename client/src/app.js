@@ -19,13 +19,11 @@ import view   from './view'
 import rpc from './rpc'
 
 
-const navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, saveConf$, payreq$ }) => O.merge(
+const navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) => O.merge(
   // navto '/' when receiving payments for the last invoice created by the user
   in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
   // navto '/' after sending payments
 , out$.mapTo('/')
-  // navto '/' after saving config
-, saveConf$.mapTo('/')
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo('/confirm')
 )
@@ -50,7 +48,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
   return {
     DOM:   vdom$
-  , HTTP:  rpc.toHttp(rpc$, state$.map(S => S.conf.server))
+  , HTTP:  rpc.toHttp(rpc$)
   , route: navto$
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$

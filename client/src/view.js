@@ -4,7 +4,7 @@ import views from './views'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, goConf$, payreq$, invoice$, logs$ }) => {
+module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -12,7 +12,6 @@ module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, goConf$,
   , goSend$.mapTo(views.pasteReq)
   , goRecv$.mapTo(views.recv)
   , goRpc$.mapTo(views.rpc)
-  , goConf$.mapTo(views.config)
 
   // server responses
   , payreq$.map(views.confirmPay)

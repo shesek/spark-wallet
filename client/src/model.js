@@ -19,9 +19,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-const defaultServer = process.env.BUILD_TARGET === 'web' ? '.' : null
-
-module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, goRecv$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
@@ -46,7 +44,7 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
     .map(invs => invs.filter(inv => inv.status === 'paid'))
 
   // Chronologically sorted feed of incoming and outgoing payments
-  , feed$     = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
+  , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
@@ -64,11 +62,10 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
 
   // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-  , server$  = conf('server', defaultServer).concat(saveConf$.map(C => C.server))
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
   , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan((n, a) => (n+a) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan((n, a) => (n+a) % units.length) .map(n => units[n])
-  , conf$    = combine({ server$, expert$, theme$, unit$ })
+  , conf$    = combine({ expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
@@ -96,7 +93,6 @@ module.exports = ({ dismiss$, saveConf$, togExp$, togTheme$, togUnit$, page$, go
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
     , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
-    , saveConf$.switchMap(_ => O.timer(1)).mapTo([ 'success', 'Settings saved successfully' ])
     , dismiss$.mapTo(null)
     ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
 
