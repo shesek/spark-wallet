@@ -2,7 +2,7 @@ const app = require('express')()
     , ln  = require('lightning-client')(process.env.LN_PATH)
 
 // Settings
-app.set('port', process.env.PORT || 9117)
+app.set('port', process.env.PORT || 9737)
 app.set('host', process.env.HOST || 'localhost')
 app.set('trust proxy', process.env.PROXIED || 'loopback')
 

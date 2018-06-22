@@ -8,7 +8,7 @@ const args = require('meow')(`
       -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
       -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
 
-      -p, --port <port>       http(s) server port [default: 9117]
+      -p, --port <port>       http(s) server port [default: 9737]
       -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
 
       -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]

@@ -24,7 +24,8 @@ $ spark --ln-path ~/.lightning
 Spark will generate and print a random username and password that'll be used to login into the wallet.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
 
-To access the wallet, open `https://localhost:9117/` in your browser, skip the self-signed TLS certificate warning (see more below on TLS), and login with the username/password.
+To access the wallet, open `https://localhost:9737/` in your browser (preferably on mobile),
+skip the self-signed TLS certificate warning (see more below on TLS), and login with the username/password.
 
 See `$ spark --help` for the full list of available options (also available below).
 
@@ -133,7 +134,7 @@ $ spark --help
     -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
     -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
 
-    -p, --port <port>       http(s) server port [default: 9117]
+    -p, --port <port>       http(s) server port [default: 9737]
     -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
 
     -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
