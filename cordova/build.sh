@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
+export PATH=../node_modules/.bin:$PATH
 
 mkdir -p www
 rm -rf www/*
