@@ -6,6 +6,11 @@ import { dropErrors, extractErrors, dbg } from './util'
 // the next one don't all hit the servers at once
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
+// @xxx side-effect outside of drivers
+if (process.env.BUILD_TARGET == 'cordova' && !localStorage.serverUrl) {
+  location.href = 'settings.html'
+}
+
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 

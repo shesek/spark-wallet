@@ -27,8 +27,18 @@ fi
 pug index.pug -o $DEST
 stylus -u nib -c styl/style.styl -o $DEST
 
-# Browserify bundle
-browserify src/app.js \
-  | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs -c warnings=false -m || cat ) \
-  > $DEST/app.js
+# Browserify bundles
 
+bundle() {
+  browserify $1 \
+    | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs -c warnings=false -m || cat )
+}
+
+# Primary wallet application bundle
+bundle src/app.js > $DEST/app.js
+
+# Settings page for Cordova
+if [[ "$BUILD_TARGET" == "cordova" ]]; then
+  bundle src/cordova-settings.js > $DEST/settings.js
+  pug -O '{"bundle":"settings.js"}' < index.pug > $DEST/settings.html
+fi

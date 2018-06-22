@@ -21,7 +21,7 @@ body(class='build-'+process.env.BUILD_TARGET)
   if process.env.BUILD_TARGET == 'web'
     script(src='lib/instascan.js', defer)
 
-  script(src='app.js', defer)
+  script(src=bundle || 'app.js', defer)
 
   if process.env.BUILD_TARGET == 'cordova'
     script(src='cordova.js', defer)
