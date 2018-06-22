@@ -1,3 +1,4 @@
+import url from 'url'
 import run from '@cycle/rxjs-run'
 
 import { Observable as O } from './rxjs'
@@ -7,6 +8,7 @@ import { makeDOMDriver }   from '@cycle/dom'
 import { makeHTTPDriver }  from '@cycle/http'
 import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
 
+import makeSSEDriver   from './driver/sse'
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
 import orientDriver    from './driver/screen-orient'
@@ -58,6 +60,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
 run(main, {
   DOM:   makeDOMDriver('#app')
+, SSE:   makeSSEDriver(url.resolve(rpc.serverUrl, 'stream'))
 , HTTP:  makeHTTPDriver()
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 
@@ -68,13 +71,11 @@ run(main, {
   process.env.BUILD_TARGET == 'cordova' ? {
     urihandler$: require('./driver/cordova-urihandler')
   , scan$: require('./driver/cordova-qrscanner')
-  , SSE: _ => _ => O.empty()
   }
 
 : process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
-  , SSE: require('./driver/sse')('./stream')
   }
 
 : {})

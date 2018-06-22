@@ -63,3 +63,5 @@ exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
 , send: { method, params }
 , ctx
 }))
+
+exports.serverUrl = serverUrl
