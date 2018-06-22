@@ -9,7 +9,7 @@ const layout = ({ state: S, body }) =>
   , footer(S)
   ])
 
-const navbar = ({ unitf, cbalance, alert, page }) =>
+const navbar = ({ unitf, cbalance, page }) =>
   nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
     a('.navbar-brand.full-screen', { attrs: { href: '#/' } }, [
       page.pathname != '/' ? span('.icon.icon-left-open') : ''
