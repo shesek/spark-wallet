@@ -9,7 +9,7 @@ const makeScanDriver = (opt={}) => {
       , scanner = new Scanner({ ...opt, video })
       , scan$   = O.fromEvent(scanner, 'scan')
 
-  video.className = 'qr-scanner'
+  video.className = 'qr-video'
   document.body.appendChild(video)
 
   let _cam

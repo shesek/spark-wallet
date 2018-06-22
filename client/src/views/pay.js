@@ -8,7 +8,7 @@ const scanReq = div('.qr-scanner', [
 
   div('.indicator', [div('.bordertop'), div('.borderbottom')])
 
-, div('.pastereq-wrap.py-3.main-bg', [
+, div('.buttons-wrap.py-3.main-bg', [
     p('.text-muted', 'or')
   , a('.btn.btn-lg.btn-primary', { attrs: { href: '#/payreq' } }, 'Paste request')
   ])
