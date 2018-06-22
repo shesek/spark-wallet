@@ -47,6 +47,7 @@ To set a custom "common name" for the generated certificate, set `--tls-name`.
 To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files in the `--tls-path` directory.
 
 To disable TLS and start a plaintext HTTP server instead, set `--no-tls`.
+Note that without TLS, Chrome will not allow camera access (for QR scanning).
 
 ### Add as Trusted Certificate to Android
 
@@ -62,6 +63,8 @@ by following these steps:
 
 4. You should now see [this screen](https://i.imgur.com/f2DMWdL.png), allowing you to add a user trusted certificate.
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
+
+Note that adding a user trusted certificate causes android to display a "Network may be monitored" notification.
 
 ## Tor Onion Hidden Service
 
@@ -90,6 +93,8 @@ $ git clone https://github.com/ElementsProject/spark && cd spark
 $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
+
+To get more verbose output in the browser developer console, set `localStorage.debug = '*'`.
 
 ## Cordova App
 

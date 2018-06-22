@@ -2,8 +2,8 @@ import url from 'url'
 import { Observable as O } from './rxjs'
 import { dropErrors, extractErrors, dbg } from './util'
 
-// send the first requests out all at once, but make sure
-// the next one don't all hit the servers at once
+// send the 1st tick immediately, randomize the 2nd, then send every `ms`
+// (so that requests won't hit the server all at once)
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
 // @xxx side-effect outside of drivers
