@@ -22,7 +22,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goRpc$  = route('/rpc')
 
   // manifest.json-enabled URI handling, similar to cordova's urihandler$
-  , weburi$ = route('/webappuri').map(p => p.search.substr(1))
+  // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers
+  , weburi$ = route('/webappuri/:q').map(p => p.params[1])
 
   // Start/stop QR scanner
   , scanner$ = O.merge(scan$, page$.filter(p => p.pathname != '/scan')).mapTo(false)

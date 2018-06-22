@@ -6,6 +6,6 @@
   "protocol_handlers": [ {
     "protocol": "lightning",
     "name": "Lightning Payment",
-    "uriTemplate": "./#/webappuri?%s"
+    "uriTemplate": "./#/webappuri/%s"
   } ]
 }
