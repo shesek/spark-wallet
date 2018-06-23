@@ -14,7 +14,7 @@ const home = ({ feed, feedStart, feedShow, unitf, info, btcusd, peers, funds, co
 
 
 , ...(!feed ? [] : !feed.length ? [ /*p('.text-muted', 'You have no incoming or outgoing payments.')*/ ] : [
-    ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, fid, ts, msat, obj ]) =>
+    ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
       li('.list-group-item'+(expert?'.list-group-item-action':''), { dataset: { feedId: fid } }, [
         div('.clearfix', [
           type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
@@ -28,6 +28,8 @@ const home = ({ feed, feedStart, feedShow, unitf, info, btcusd, peers, funds, co
   ])
 
 ])
+
+const makeId = (type, obj) => `${type}-${obj.id || obj.pay_index}`
 
 const paging = (total, start) => total <= perPage ? '' :
   div('.d-flex.justify-content-between.mt-2', [

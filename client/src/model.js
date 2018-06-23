@@ -45,8 +45,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
 
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
-      ...invoices.map(i => [ 'in',  `in-${i.payment_hash}`, i.paid_at,    recvAmt(i), i ])
-    , ...payments.map(p => [ 'out', `out-${p.id}`,          p.created_at, p.msatoshi, p ])
+      ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
+    , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
 
   // Periodically re-sync channel balance from "listpeers",
