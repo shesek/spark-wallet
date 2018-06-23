@@ -11,8 +11,10 @@ app.use(require('./auth')(app, process.env.LOGIN))
 app.use(require('body-parser').json())
 app.use(require('morgan')('dev'))
 app.use(require('helmet')({ contentSecurityPolicy: { directives: {
-  defaultSrc: ["'self'", 'data:' ]
-, scriptSrc:[ "'self'", "'unsafe-eval'" ]
+  defaultSrc: ["'self'" ]
+, scriptSrc:  [ "'self'", "'unsafe-eval'" ]
+, fontSrc:    [ "'self'", 'data:' ]
+, imgSrc:     [ "'self'", 'data:' ]
 } } }))
 
 // CSRF protection, block POST requests without the X-Requested-With header
