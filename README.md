@@ -18,7 +18,7 @@ Once c-lightning is running, install and start Spark with:
 ```bash
 $ npm install -g spark-wallet
 
-$ spark --ln-path ~/.lightning
+$ spark # defaults: --ln-path ~/.lightning --port 9737
 ```
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
@@ -33,13 +33,13 @@ See `$ spark --help` for the full list of available options (also available belo
 
 Supports the core functions of a lightning wallet: sending, receiving and history.
 
-Does not (yet) support peers and channels management, which are expected to be managed using the RPC for now.
+Does not support peers and channels management, which are expected to be managed using the RPC for now.
 
 TODO: screenshots, explain currency/theme/expert controls, etc
 
 ## TLS
 
-Spark will by default generate a self-signed TLS certificate and save it to `./spark-tls`.
+Spark will by default generate a self-signed TLS certificate and save it to `./spark-tls/`.
 
 To save the self-signed certificate to another location, set `--tls-path`.
 To set a custom "common name" for the generated certificate, set `--tls-name`.
@@ -49,7 +49,7 @@ To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files
 To disable TLS and start a plaintext HTTP server instead, set `--no-tls` (not recommended).
 Note that without TLS, Chrome will not allow accessing the camera.
 
-### Add as Trusted Certificate to Android
+#### Add as Trusted Certificate to Android
 
 To avoid the self-signed certificate warnings, you can add the certificate to Android's "user trusted certificates"
 by following these steps:
@@ -68,10 +68,9 @@ Note that adding a user trusted certificate causes android to display a "Network
 
 ## Tor Onion Hidden Service
 
-To start Spark as a Tor hidden service (v3), set `--onion`. Tor data files will be saved to `./spark-tor` (can be overriden with `--onion-path`).
-
+To start Spark as a Tor hidden service (v3), set `--onion`.
 Spark comes bundled with Tor (via [granax](https://github.com/bookchin/granax));
-You don't have to pre-install anything for this to work.
+you don't have to pre-install anything for this to work.
 
 Running Spark as a Tor hidden service has the following benefits:
 
@@ -81,7 +80,18 @@ Running Spark as a Tor hidden service has the following benefits:
 
 - You don't have to setup port forwarding, everything is done with outbound connections.
 
-Rather than manually copying the `.onion` URL, you may want to specify `--print-qr` (shorthand `-Q`) to print
+Tor data files (including secret key material for the hidden service) will be saved to `./spark-tor/`. This can be overridden with `--onion-path`.
+
+#### Connecting from Android
+
+To connect to your hidden service using a web browser, install the
+[Orbot](https://guardianproject.info/apps/orbot/) and [Orfox](https://guardianproject.info/apps/orfox/)
+applications, open the `.onion` URL in Orfox, and enable JavaScript under `⋮` -> `NoScript`.
+
+To connect using the Cordova app, configure Orbot to route Spark's traffic over the Tor VPN
+(under "Tor-Enabled Apps"), then configure Spark to use the `.onion` server URL.
+
+Rather than manually copying the `.onion` URLs, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
 
 ## Developing
@@ -109,8 +119,11 @@ The advantages of using the native app are:
 
 - More stable, albeit somewhat slower, QR scanner.
 
+When the app starts for the first time, you'll need to configure the server URL (formatted as `http(s)://[user]:[pwd]@[host]:[port]/`).
+You can scan this information from a QR, which you can get by starting Spark with `--print-qr/-Q`.
+
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
-or manually added as a user trusted certificate (see above). (*TODO: TLS key pinning*)
+or manually added as a user trusted certificate (see above).
 
 The native app is currently not published to the app store and has to be manually built and installed.
 
