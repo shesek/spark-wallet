@@ -1,13 +1,8 @@
 {
   "name": "spark-fonts",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "version": "0.0.1",
+  "author": "Nadav Ivgi",
+  "license": "MIT",
   "dependencies": {
     "typeface-cabin-sketch": "0.0.54",
     "typeface-lato": "0.0.54",
