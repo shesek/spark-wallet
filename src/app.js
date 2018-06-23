@@ -15,6 +15,9 @@ app.use(require('helmet')({ contentSecurityPolicy: { directives: {
 , scriptSrc:[ "'self'", "'unsafe-eval'" ]
 } } }))
 
+// CSRF protection, block POST requests without the X-Requested-With header
+app.post('*', (req, res, next) => !req.get('x-requested-with') ? res.sendStatus(403) : next())
+
 // RPC API
 app.post('/rpc', (req, res, next) =>
   ln.call(req.body.method, req.body.params)

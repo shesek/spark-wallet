@@ -61,6 +61,7 @@ exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
 , method: 'POST'
 , url: url.resolve(serverUrl, 'rpc')
 , send: { method, params }
+, headers: { 'X-Requested-With': 'spark-rpc' }
 , ctx
 }))
 
