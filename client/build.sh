@@ -20,6 +20,7 @@ cp -r fonts/node_modules/typeface-* $DEST/fonts/
 cp -r node_modules/bootswatch/dist $DEST/swatch
 cp -r swatch/*/ $DEST/swatch/
 find $DEST/swatch -type f ! -name '*.min.css' -delete
+find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
 ./fonts/rewrite-css.sh $DEST/swatch/*/*.css
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
