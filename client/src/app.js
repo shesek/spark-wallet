@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import url from 'url'
 import run from '@cycle/rxjs-run'
 

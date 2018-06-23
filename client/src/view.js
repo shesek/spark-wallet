@@ -1,16 +1,17 @@
 import { Observable as O } from './rxjs'
-import { combine } from './util'
+import { combine, toObs } from './util'
 import views from './views'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$, invoice$, logs$ }) => {
+module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
   , goScan$.mapTo(views.scanReq)
   , goSend$.mapTo(views.pasteReq)
   , goRecv$.mapTo(views.recv)
+  , goNode$.mapTo(views.nodeInfo)
   , goRpc$.mapTo(views.rpc)
 
   // server responses
@@ -18,7 +19,8 @@ module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goRpc$, payreq$,
   , invoice$.flatMap(views.invoice)
   , logs$.map(views.logs)
 
-  ).switchMap(view => isFunc(view) ? state$.map(view) : O.of(view))
+  ).switchMap(view => isFunc(view) ? state$.map(view).flatMap(toObs) : O.of(view))
+
 
   // managed outside of cycle.js's vdom due to odd cache invalidation
   // behaviour exhibited by chrome that was causing slower pageloads

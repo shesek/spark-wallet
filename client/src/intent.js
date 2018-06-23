@@ -18,6 +18,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goScan$ = route('/scan')
   , goSend$ = route('/payreq')
   , goRecv$ = route('/recv')
+  , goNode$ = route('/node')
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
@@ -67,7 +68,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$, scanner$
-         , goHome$, goScan$, goSend$, goRecv$, goLogs$, goRpc$
+         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
          , viewPay$, confPay$
          , execRpc$, clrHist$
          , newInv$, amtVal$

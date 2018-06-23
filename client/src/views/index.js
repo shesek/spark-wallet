@@ -3,5 +3,6 @@ module.exports = {
 , ...require('./home')
 , ...require('./pay')
 , ...require('./recv')
+, ...require('./node')
 , ...require('./expert')
 }
