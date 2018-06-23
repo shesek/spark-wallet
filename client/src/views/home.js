@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const perPage = 10
 
-const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
+const home = ({ feed, feedStart, feedShow, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
 
   info ? div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
@@ -14,20 +14,19 @@ const home = ({ feed, feedStart, unitf, info, btcusd, peers, funds, conf: { expe
 
 
 , ...(!feed ? [] : !feed.length ? [ /*p('.text-muted', 'You have no incoming or outgoing payments.')*/ ] : [
-    ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj ]) =>
-      li('.list-group-item', [
+    ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, fid, ts, msat, obj ]) =>
+      li('.list-group-item'+(expert?'.list-group-item-action':''), { dataset: { feedId: fid } }, [
         div('.clearfix', [
           type === 'in' ? span('.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                         : span('.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
         , ago('.badge.badge-secondary.badge-pill.float-right', ts)
         ])
-      , expert ? yaml(obj) : ''
+      , (expert && feedShow == fid) ? yaml(obj) : ''
       ])
     ))
   , paging(feed.length, feedStart)
   ])
 
-, expert ? yaml({ info, btcusd, funds, peers }) : ''
 ])
 
 const paging = (total, start) => total <= perPage ? '' :

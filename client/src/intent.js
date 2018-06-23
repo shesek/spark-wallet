@@ -8,7 +8,7 @@ import { dbg, parseUri } from './util'
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   const
     on     = (sel, ev) => DOM.select(sel).events(ev)
-  , click  = sel => on(sel, 'click').map(e => e.target.dataset)
+  , click  = sel => on(sel, 'click').map(e => e.ownerTarget.dataset)
   , dclick = sel => on(sel, 'dblclick').map(e => e.target.dataset) // @xxx doesn't seem to work on iOS, do manual dblclick detection?
   , submit = sel => on(sel, 'submit').map(e => ({ ...e.target.dataset, ...serialize(e.target, { hash: true }) }))
 
@@ -60,6 +60,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   // Feed event page navigation
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
+  , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
 
   // @xxx side effects outside of drivers!
   on('form', 'submit').subscribe(e => e.preventDefault())
@@ -71,7 +72,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
-         , feedStart$
+         , feedStart$, feedShow$
          , dismiss$
          }
 }
