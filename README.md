@@ -91,6 +91,7 @@ To start a development environment with live compilation for babel, browserify a
 ```bash
 $ git clone https://github.com/ElementsProject/spark && cd spark
 $ npm install
+$ (cd client && npm install)
 $ npm start -- --ln-path /data/lightning
 ```
 

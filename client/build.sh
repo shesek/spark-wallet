@@ -9,15 +9,18 @@ export BUILD_TARGET
 export NODE_ENV
 
 rm -rf $DEST/*
-mkdir -p $DEST $DEST/lib
+mkdir -p $DEST $DEST/lib $DEST/fonts
 
 [[ -d node_modules ]] || npm install
+[[ -d fonts/node_modules ]] || (cd fonts && npm install)
 
-# Copy static assets
+# Static assets
 cp -r www/* $DEST/
+cp -r fonts/node_modules/typeface-* $DEST/fonts/
 cp -r node_modules/bootswatch/dist $DEST/swatch
 cp -r swatch/*/ $DEST/swatch/
 find $DEST/swatch -type f ! -name '*.min.css' -delete
+./fonts/rewrite-css.sh $DEST/swatch/*/*.css
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js

@@ -2,7 +2,8 @@
   "name": "spark-client",
   "version": "0.0.1",
   "scripts": {
-    "dist": "./build.sh"
+    "dist": "./build.sh",
+    "install": "./fonts/rewrite-css.sh node_modules/bootswatch/dist/*/*.min.css"
   },
   "author": "Nadav Ivgi",
   "license": "MIT",

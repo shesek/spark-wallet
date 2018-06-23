@@ -24,4 +24,5 @@ module.exports = app => {
 
   app.use('/', express.static(rpath('www')))
   app.use('/swatch', express.static(bswatchPath), express.static(rpath('swatch')))
+  app.use('/fonts', express.static(rpath('fonts/node_modules')))
 }
