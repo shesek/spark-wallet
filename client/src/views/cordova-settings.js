@@ -1,5 +1,5 @@
 import { div, form, input, button, a, span, p, img, h2, h3, small } from '@cycle/dom'
-import { formGroup, yaml, qruri } from './util'
+import { formGroup } from './util'
 
 const settings = ({ server }) =>
   form({ attrs: { do: 'save-settings' } }, [

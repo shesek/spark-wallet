@@ -1,6 +1,5 @@
 import fs from 'fs'
 import path from 'path'
-import pug from 'pug'
 import nib from 'nib'
 import stylus from 'stylus'
 import express from 'express'
