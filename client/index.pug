@@ -16,7 +16,7 @@ body(class='build-'+process.env.BUILD_TARGET)
     nav.navbar.navbar-dark.bg-primary.mb-3: .container: span.navbar-brand Spark
     #loader
 
-  script document.write('<link rel="stylesheet" href="swatch/'+(JSON.parse(localStorage.conf||'{}').theme||'yeti')+'/bootstrap.min.css">')
+  script(src='load-theme.js')
 
   if process.env.BUILD_TARGET == 'web'
     script(src='lib/instascan.js', defer)

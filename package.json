@@ -29,6 +29,7 @@
     "body-parser": "^1.18.3",
     "compression": "^1.7.2",
     "express": "^4.16.3",
+    "helmet": "^3.12.1",
     "is-ip": "^2.0.0",
     "lightning-client": "github:shesek/lightning-client-js#e8910e367f4ce27732847886016c32f426044d94",
     "meow": "^4.0.1",
