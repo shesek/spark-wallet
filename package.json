@@ -36,6 +36,7 @@
     "morgan": "^1.9.0",
     "nanoid": "^1.0.3",
     "node-forge": "^0.7.5",
+    "qrcode": "^1.2.0",
     "superagent": "^3.8.3"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import qrcode from 'qrcode'
 import express from 'express'
 import compression from 'compression'
 
@@ -12,6 +13,9 @@ const preBuilt = fs.existsSync(rpath('www')) && rpath('www')
 module.exports = app => {
   if (!process.env.NO_GZIP)
     app.use('/*.(css|js)', compression())
+
+  app.get('/qr/:data', (req, res) =>
+    qrcode.toFileStream(res.type('png'), req.params.data))
 
   if (preBuilt) app.use('/', express.static(preBuilt))
   else require('../client/serve')(app)

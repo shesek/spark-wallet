@@ -3,8 +3,17 @@ import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
 import { div, span, pre, label, small, input } from '@cycle/dom'
 
+const isOnion = global.location && /\.onion$/.test(location.hostname)
+
 const yaml = data => pre('.mt-3.text-left.text-muted', YAML.safeDump(data))
-const qruri = inv => qrcode.toDataURL(`lightning:${ inv.bolt11  }`.toUpperCase()/*, { margin: 0, width: 300 }*/)
+
+// use server-generated QRs when browsed over .onion
+// (the canvas fingerprint protection in Tor Browser breaks client-side generation)
+const qruri = process.env.BUILD_TARGET == 'web' && isOnion
+  ? data => Promise.resolve(`qr/${ encodeURIComponent(data) }`)
+  : data => qrcode.toDataURL(data)
+
+const qrinv = inv => qruri(`lightning:${ inv.bolt11  }`.toUpperCase())
 
 const ago = (sel, ts) => span(sel+'.withtip', [
   vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
@@ -29,4 +38,4 @@ const amountField = ({ msatoshi, amount, step, unit }, msatField='msatoshi') =>
   , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
   ])
 
-module.exports = { yaml, qruri, ago, formGroup, amountField }
+module.exports = { yaml, qruri, qrinv, ago, formGroup, amountField }

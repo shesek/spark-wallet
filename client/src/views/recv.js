@@ -1,5 +1,5 @@
 import { div, form, input, button, a, span, p, img, h2, h3, small } from '@cycle/dom'
-import { formGroup, yaml, qruri, amountField } from './util'
+import { formGroup, yaml, qrinv, amountField } from './util'
 
 const recv = ({ amtData }) =>
   form({ attrs: { do: 'new-invoice' } }, [
@@ -15,7 +15,7 @@ const recv = ({ amtData }) =>
   , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
   ])
 
-const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) => div('.waiting-payment', [
+const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) => div('.waiting-payment', [
   div('.row', [
     div('.col-sm-6.text-center', [
       h2('Waiting for payment')
