@@ -46,8 +46,8 @@ To set a custom "common name" for the generated certificate, set `--tls-name`.
 
 To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files in the `--tls-path` directory.
 
-To disable TLS and start a plaintext HTTP server instead, set `--no-tls`.
-Note that without TLS, Chrome will not allow camera access (for QR scanning).
+To disable TLS and start a plaintext HTTP server instead, set `--no-tls` (not recommended).
+Note that without TLS, Chrome will not allow accessing the camera.
 
 ### Add as Trusted Certificate to Android
 
