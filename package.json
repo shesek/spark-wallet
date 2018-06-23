@@ -8,6 +8,7 @@
   "scripts": {
     "start": "./start.sh",
     "dist": "./build.sh",
+    "postinstall": "test ! -d client || (cd client && npm install)",
     "prepublishOnly": "npm run dist",
     "cordova:dist": "cd cordova && npm run dist"
   },
