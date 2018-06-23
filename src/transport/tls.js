@@ -16,9 +16,11 @@ module.exports = (app, name=app.settings.host, dir='./spark-tls') => {
       , tlsOpt = { key: pems.private, cert: pems.cert }
       , server = https.createServer(tlsOpt, app)
 
+  app.get('/cert.pem', (req, res) => res.type('pem').send(pems.cert))
+
   return new Promise(resolve =>
     server.listen(app.settings.port, app.settings.host, _ =>
-      resolve({ cert: pems.cert, host: `${server.address().address}:${server.address().port}` })
+      resolve(`${server.address().address}:${server.address().port}`)
     )
   )
 }

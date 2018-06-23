@@ -38,10 +38,8 @@ app.use((err, req, res, next) => {
 const { NO_TLS, TLS_NAME, TLS_PATH, ONION, ONION_PATH } = process.env
 
 // HTTPS Server
-NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(({ host, cert }) => {
-  app.get('/cert.pem', (req, res) => res.type('pem').send(cert))
-  printService('HTTPS server', 'https', host)
-})
+NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(host =>
+  printService('HTTPS server', 'https', host))
 
 // HTTP Server
 NO_TLS && require('./transport/http')(app).then(host =>
