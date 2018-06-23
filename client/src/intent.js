@@ -7,10 +7,9 @@ import { dbg, parseUri } from './util'
 
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   const
-    on     = (sel, ev) => DOM.select(sel).events(ev)
+    on     = (sel, ev, pd=false) => DOM.select(sel).events(ev, { preventDefault: pd })
   , click  = sel => on(sel, 'click').map(e => e.ownerTarget.dataset)
-  , dclick = sel => on(sel, 'dblclick').map(e => e.target.dataset) // @xxx doesn't seem to work on iOS, do manual dblclick detection?
-  , submit = sel => on(sel, 'submit').map(e => ({ ...e.target.dataset, ...serialize(e.target, { hash: true }) }))
+  , submit = sel => on(sel, 'submit', true).map(e => ({ ...e.target.dataset, ...serialize(e.target, { hash: true }) }))
 
   // Page routes
   , page$   = route()
@@ -50,10 +49,10 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , amtVal$ = on('[name=amount]', 'input').map(e => e.target.value)
 
   // Config page and toggle buttons
-  , togTheme$ = O.merge(click('.toggle-theme').mapTo(+1))
-  , togUnit$  = O.merge(click('.toggle-unit').mapTo(+1))
-  , togFull$  = dclick('.full-screen')
-  , togExp$   = dclick('.toggle-exp')
+  , togTheme$ = click('.toggle-theme')
+  , togUnit$  = click('.toggle-unit')
+  , togExp$   = click('.toggle-exp')
+  , togFull$  = DOM.select('.full-screen').events('dblclick', { preventDefault: true, useCapture: true })
 
   // Dismiss alert message
   , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button')
@@ -64,7 +63,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
 
   // @xxx side effects outside of drivers!
-  on('form', 'submit').subscribe(e => e.preventDefault())
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$, scanner$
