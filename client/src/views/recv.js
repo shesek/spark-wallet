@@ -28,7 +28,9 @@ const invoice = inv => qruri(inv).then(qr => ({ unitf, conf: { expert } }) => di
     ])
 
   ])
-, expert ? yaml(inv) : ''
+, expert ? yaml(omitKey('bolt11', inv)) : ''
 ]))
+
+const omitKey = (k, { [k]: _, ...rest }) => rest
 
 module.exports = { recv, invoice }
