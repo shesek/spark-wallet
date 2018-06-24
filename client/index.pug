@@ -10,6 +10,10 @@ link(rel='stylesheet', href='style.css')
 
 link(rel='manifest', href='manifest.json?key='+(settings && settings.manifestKey))
 
+if process.env.BUILD_TARGET == 'cordova'
+  //- configured via HTTP header on web builds
+  meta(http-equiv='Content-Security-Policy', content="default-src 'self' gap:; font-src 'self' data:; img-src 'self' data:; connect-src *")
+
 body(class='build-'+process.env.BUILD_TARGET)
 
   #app
