@@ -55,12 +55,9 @@ To avoid the self-signed certificate warnings, you can add the certificate to An
 by following these steps:
 
 1. Open Spark in your mobile web browser (skipping the warning).
-
 2. Click the red TLS warning in the URL bar to view the certificate and ensure it matches the expected one
    (the certificate's SHA1 fingerprint is printed to the console during Spark's startup).
-
 3. Navigate to `/cert.pem` to download the certificate file from the server, and open it.
-
 4. You should now see [this screen](https://i.imgur.com/f2DMWdL.png), allowing you to add a user trusted certificate.
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
 
@@ -75,9 +72,7 @@ you don't have to pre-install anything for this to work.
 Running Spark as a Tor hidden service has the following benefits:
 
 - Tor onion URLs are self-authenticating and are pinned to your server's public key.
-
 - In addition to authenticating the server, they also serve as a mean to authenticate the user - you can't access the server without knowing the `.onion` hostname.
-
 - You don't have to setup port forwarding, everything is done with outbound connections.
 
 Tor data files (including secret key material for the hidden service) will be saved to `./spark-tor/`. This can be overridden with `--onion-path`.
@@ -91,32 +86,19 @@ applications, open the `.onion` URL in Orfox, and enable JavaScript under `⋮` 
 To connect using the Cordova app, configure Orbot to route Spark's traffic over the Tor VPN
 (under "Tor-Enabled Apps"), then configure Spark to use the `.onion` server URL.
 
-Rather than manually copying the `.onion` URLs, you may want to specify `--print-qr/-Q` to print
+Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
-
-## Developing
-
-To start a development environment with live compilation for babel, browserify and stylus, run:
-
-```bash
-$ git clone https://github.com/ElementsProject/spark && cd spark
-$ npm install
-$ npm start -- --ln-path /data/lightning
-```
-
-To get more verbose output in the browser developer console, set `localStorage.debug = '*'`.
 
 ## Cordova App
 
-A Cordova-based native app for Android can be built by running `npm run cordova:dist`.
-The `.apk` file will be created in `cordova/platforms/android/app/build/outputs/apk/debug/`.
+A Cordova-based native app for Android is available for download from the
+[releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
+It is not currently published to the app store.
 
 The advantages of using the native app are:
 
 - Ability to register as an handler for `lightning:` URIs.
-
 - Home launcher button and a full-screen with no navigation bars.
-
 - More stable, albeit somewhat slower, QR scanner.
 
 When the app starts for the first time, you'll need to configure the server URL (formatted as `http(s)://[user]:[pwd]@[host]:[port]/`).
@@ -124,8 +106,6 @@ You can scan this information from a QR, which you can get by starting Spark wit
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate (see above).
-
-The native app is currently not published to the app store and has to be manually built and installed.
 
 ## Mobile "Add to homescreen"
 
@@ -137,6 +117,21 @@ With recent Firefox Mobile, this also allows the website to register as an handl
 (see [compatibility table](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers#Browser_compatibility))
 
 Note that a trusted certificate is required in order for "Add to homepage" to work.
+
+## Developing
+
+To start a development server with live compilation for babel, browserify, pug and stylus, run:
+
+```bash
+$ git clone https://github.com/ElementsProject/spark && cd spark
+$ npm install
+$ npm start -- --ln-path /data/lightning
+```
+
+The Cordova android app can be built by running `npm run cordova:dist`.
+The `.apk` file will be created in `cordova/platforms/android/app/build/outputs/apk/debug/`.
+
+To get more verbose output in the browser developer console, set `localStorage.debug = '*'`.
 
 ## CLI options
 
