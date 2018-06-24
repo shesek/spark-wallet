@@ -1,17 +1,17 @@
 {
   "name": "Spark",
   "short_name": "Spark",
-  "start_url": ".",
+  "start_url": "..",
   "display": "standalone",
   "background_color": "#008cba",
   "icons": [{
-    "src": "img/icon.png",
+    "src": "icon.png",
     "sizes": "192x192",
     "type": "image/png"
   }],
   "protocol_handlers": [ {
     "protocol": "lightning",
     "name": "Lightning Payment",
-    "uriTemplate": "./#/webappuri/%s"
+    "uriTemplate": "../#/webappuri/%s"
   } ]
 }

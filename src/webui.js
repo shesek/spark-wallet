@@ -17,6 +17,12 @@ module.exports = app => {
   app.get('/qr/:data', (req, res) =>
     qrcode.toFileStream(res.type('png'), req.params.data))
 
-  if (preBuilt) app.use('/', express.static(preBuilt))
+  if (preBuilt) {
+    const html = fs.readFileSync(path.join(preBuilt, 'index.html'))
+      .toString().replace(/\{\{manifestKey\}\}/, app.settings.manifestKey)
+
+    app.get('/', (req, res) => res.send(html))
+    app.use('/', express.static(preBuilt))
+  }
   else require('../client/serve')(app)
 }

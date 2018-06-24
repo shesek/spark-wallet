@@ -25,6 +25,8 @@ find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
+else
+  rm -r $DEST/manifest
 fi
 
 # Transpile pug and stylus
