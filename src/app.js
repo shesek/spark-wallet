@@ -7,9 +7,9 @@ app.set('host', process.env.HOST || 'localhost')
 app.set('trust proxy', process.env.PROXIED || 'loopback')
 
 // Middlewares
+app.use(require('morgan')('dev'))
 app.use(require('./auth')(app, process.env.LOGIN))
 app.use(require('body-parser').json())
-app.use(require('morgan')('dev'))
 app.use(require('helmet')({ contentSecurityPolicy: { directives: {
   defaultSrc: ["'self'" ]
 , scriptSrc:  [ "'self'", "'unsafe-eval'" ]
