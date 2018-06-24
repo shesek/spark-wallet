@@ -5,12 +5,12 @@ const perPage = 10
 
 const home = ({ feed, feedStart, feedShow, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
 
-  info ? div('.row.mb-2', [
+  div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs')) : ''
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
-  ]) : ''
+  ])
 
 
 , ...(!feed ? [] : !feed.length ? [ /*p('.text-muted', 'You have no incoming or outgoing payments.')*/ ] : [
