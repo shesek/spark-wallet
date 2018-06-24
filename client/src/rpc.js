@@ -1,6 +1,6 @@
 import url from 'url'
 import { Observable as O } from './rxjs'
-import { dropErrors, extractErrors, dbg } from './util'
+import { dropErrors, extractErrors, formatError, dbg } from './util'
 
 // send the 1st tick immediately, randomize the 2nd, then send every `ms`
 // (so that requests won't hit the server all at once)
@@ -18,7 +18,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
   return {
     req$$:     HTTP.select()
-  , error$:    extractErrors(HTTP.select())
+  , error$:    extractErrors(HTTP.select()).map(formatError)
 
   // periodic updates
   , info$:     reply('getinfo').map(r => r.body)
@@ -55,6 +55,7 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 )
 
 const serverUrl = process.env.BUILD_TARGET === 'web' ? '.' : localStorage.serverUrl
+exports.serverUrl = serverUrl
 
 exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
   category: ctx.category || method
@@ -64,5 +65,3 @@ exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
 , headers: { 'X-Requested-With': 'spark-rpc' }
 , ctx
 }))
-
-exports.serverUrl = serverUrl

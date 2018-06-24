@@ -40,11 +40,16 @@ const
     r$$.flatMap(r$ => r$.flatMap(_ => O.empty()).catch(err => O.of(err)))
       .map(e => e.response && (e.response.body && e.response.body.message || e.response.body) || e)
 
+, formatError = err => (err.message && err.message.indexOf('Request has been terminated') == 0)
+    ? new Error('Connection to server lost.')
+    : err
+
 , dbg = (obj, label='stream', dbg=debug(label)) =>
     Object.keys(obj).forEach(k => obj[k] && obj[k].subscribe(
       x   => dbg(`${k} ->`, x),
       err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err),
       _   => dbg(`${k} completed`)))
 
-module.exports = { combine, combineAvail, toObs, dropErrors, extractErrors, dbg
+module.exports = { combine, combineAvail, toObs, dbg
+                 , dropErrors, extractErrors, formatError
                  , formatAmt, parseUri, recvAmt }
