@@ -10,7 +10,7 @@
     "dist": "./build.sh",
     "postinstall": "test ! -d client || (cd client && npm install)",
     "prepublishOnly": "npm run dist",
-    "cordova:dist": "cd cordova && npm run dist"
+    "cordova:dist": "cd cordova && cordova build"
   },
   "repository": "https://github.com/ElementsProject/spark",
   "files": [

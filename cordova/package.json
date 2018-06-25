@@ -3,9 +3,6 @@
     "displayName": "SparkWallet",
     "version": "0.1.0",
     "description": "c-lightning wallet gui",
-    "scripts": {
-        "dist": "./build.sh"
-    },
     "author": "Nadav Ivgi",
     "license": "MIT",
     "dependencies": {

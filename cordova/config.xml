@@ -4,8 +4,9 @@
     <description>A wallet GUI for c-lightning</description>
     <author email="nadav@shesek.info" href="https://github.com/shesek">Nadav Ivgi</author>
     <content src="index.html" />
-    <plugin name="cordova-plugin-whitelist" spec="1" />
     <access origin="*" />
+    <hook src="build.sh" type="before_build" />
+    <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="lightning" />
         <variable name="ANDROID_SCHEME" value=" " />
