@@ -4,7 +4,7 @@ import views from './views'
 
 const isFunc = x => typeof x == 'function'
 
-module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
+exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -31,3 +31,14 @@ module.exports = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$,
 
   return combine({ state$, body$ }).map(views.layout)
 }
+
+exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) => O.merge(
+  // navto '/' when receiving payments for the last invoice created by the user
+  in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
+  // navto '/' after sending payments
+, out$.mapTo('/')
+  // navto '/confirm' when viewing a payment request
+, payreq$.mapTo('/confirm')
+)
+
+exports.orient = page$ => page$.map(p => p.pathname == '/scan' ? 'portrait' : 'unlock')
