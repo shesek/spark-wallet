@@ -1,6 +1,5 @@
-import debug   from 'debug'
-import numbro  from 'numbro'
-import moveDec from 'move-decimal-point'
+import debug  from 'debug'
+import numbro from 'numbro'
 
 import { Big as big }      from 'big.js'
 import { Observable as O } from './rxjs'
@@ -10,6 +9,7 @@ const
   formatAmt = (amt, rate, step, comma=true) =>
     amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
       .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
+
 , trim = num => num.replace(/\.?0+$/, '')
 
 , parseUri = uri => {
