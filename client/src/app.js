@@ -30,12 +30,13 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
       , rpc$    = rpc.makeReq(actions)
       , vdom$   = view.vdom({ state$, ...actions, ...resps })
       , navto$  = view.navto({ ...resps, ...actions })
+      , notif$  = view.notif({ state$, ...resps })
       , orient$ = view.orient(actions.page$)
 
   dbg(actions, 'spark:intent:actions')
   dbg(resps, 'spark:intent:rpc')
   dbg({ state$ }, 'spark:model')
-  dbg({ rpc$, vdom$, navto$, orient$ }, 'spark:sinks')
+  dbg({ rpc$, vdom$, navto$, notif$, orient$ }, 'spark:sinks')
 
   return {
     DOM:   vdom$
@@ -43,7 +44,8 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
   , route: navto$
   , conf$: state$.map(s => s.conf)
   , scan$: actions.scanner$
-  , orient$: orient$
+  , orient$
+  , notif$
   }
 }
 
@@ -60,11 +62,13 @@ run(main, {
   process.env.BUILD_TARGET == 'cordova' ? {
     urihandler$: require('./driver/cordova-urihandler')
   , scan$: require('./driver/cordova-qrscanner')
+  , notif$: require('./driver/cordova-notification')
   }
 
 : process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
+  , notif$: _ => O.empty()
   }
 
 : {})

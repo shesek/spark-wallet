@@ -98,8 +98,9 @@ It is not currently published to the app store.
 The advantages of using the native app are:
 
 - Ability to register as an handler for `lightning:` URIs.
-- Home launcher button and a full-screen with no navigation bars.
+- Home launcher button and full-screen mode.
 - More stable, albeit somewhat slower, QR scanner.
+- Push notifications for incoming payments.
 
 When the app starts for the first time, you'll need to configure the server URL (formatted as `http(s)://[user]:[pwd]@[host]:[port]/`).
 You can scan this information from a QR, which you can get by starting Spark with `--print-qr/-Q`.
@@ -107,9 +108,9 @@ You can scan this information from a QR, which you can get by starting Spark wit
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate (see above).
 
-## Mobile "Add to homescreen"
+## Progressive Web App
 
-Alternatively, thanks to the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
+Alternatively, thanks to PWA and the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
 you can get some of the benefits of a native app using the ["Add to homescreen"](https://i.imgur.com/zVe1sOH.png) feature.
 
 This will add a home launcher that opens up in full screen.

@@ -1,5 +1,5 @@
 import { Observable as O } from './rxjs'
-import { combine, toObs } from './util'
+import { combine, toObs, recvAmt } from './util'
 import views from './views'
 
 const isFunc = x => typeof x == 'function'
@@ -40,5 +40,8 @@ exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) =
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo('/confirm')
 )
+
+exports.notif = ({ incoming$, state$ }) =>
+  incoming$.withLatestFrom(state$, (inv, { unitf }) => `Received payment of ${ unitf(recvAmt(inv)) }`)
 
 exports.orient = page$ => page$.map(p => p.pathname == '/scan' ? 'portrait' : 'unlock')
