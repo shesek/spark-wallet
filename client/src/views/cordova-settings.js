@@ -15,7 +15,7 @@ const settings = ({ server }) =>
 
   , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save')
   , ' '
-  , a('.btn.btn-lg.btn-secondary', { attrs: { href: '.' } }, 'Cancel')
+  , a('.btn.btn-lg.btn-secondary', { attrs: { href: 'index.html' } }, 'Cancel')
   ])
 
 const scan = div('.qr-scanner', [ div('.indicator', [div('.bordertop'), div('.borderbottom')]) ])
