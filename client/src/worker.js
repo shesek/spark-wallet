@@ -22,7 +22,7 @@ self.addEventListener('activate', e => e.waitUntil(
   ))
 ))
 
-const reqOpt = req => req.mode == 'navigate' ? null : { mode: 'same-origin' }
+const reqOpt = req => req.mode == 'navigate' ? null : { mode: 'same-origin', credentials: 'same-origin' }
 
 const shouldCache = (req, res) =>
   (req.method == 'GET' && cacheRegex.test(req.url)
