@@ -117,11 +117,8 @@ or manually added as a user trusted certificate ([instructions above](#add-as-tr
 Alternatively, thanks to [PWA](https://developer.mozilla.org/en-US/Apps/Progressive) and
 the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
 you can get some of the benefits of a native app by using the
-["Add to homescreen"](https://developer.mozilla.org/en-US/Apps/Progressive/Add_to_home_screen) feature.
-
-This will add a home launcher that opens up in full screen, enable system notifications and improve page load times.
-With recent Firefox Mobile, this even allows the website to register as an handler for `lightning:` URIs!
-(see [compatibility table](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers#Browser_compatibility))
+["Add to homescreen"](https://developer.mozilla.org/en-US/Apps/Progressive/Add_to_home_screen) feature,
+including: home launcher that opens up in full screen, system notifications and improved page load times.
 
 Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https://imgur.com/zVe1sOH)),
 in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))

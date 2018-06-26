@@ -21,16 +21,12 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
-  // manifest.json-enabled URI handling, similar to cordova's urihandler$
-  // https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers
-  , weburi$ = route('/webappuri/:q').map(p => p.params[1])
-
   // Start/stop QR scanner
   , scanner$ = O.merge(scan$, page$.filter(p => p.pathname != '/scan')).mapTo(false)
                 .merge(goScan$.mapTo(true))
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
-  , viewPay$ = O.merge(scan$, urihandler$, weburi$).map(parseUri).filter(x => !!x)
+  , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
                 .merge(submit('[do=decode-pay]').map(r => r.bolt11))
   , confPay$ = submit('[do=confirm-pay]')
 
