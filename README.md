@@ -16,9 +16,13 @@ See [setup instructions here](https://blockstream.com/2018/02/02/lightning-insta
 Once c-lightning is running, install and start Spark with:
 
 ```bash
-$ npm install -g spark-wallet
+# $ npm install -g spark-wallet
+
+# Spark is not on the npm repo yet. For now, it can be installed from github using:
+$ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
 $ spark # defaults: --ln-path ~/.lightning --port 9737
+
 ```
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
