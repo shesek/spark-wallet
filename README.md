@@ -6,7 +6,7 @@
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
 
 A web GUI for c-lightning, with a simple and lightweight interface for day-to-day usage.
-Optimized for use by mobile and tablets.
+Optimized for mobile and tablets.
 
 ## Setup
 
@@ -57,7 +57,7 @@ by following these steps:
 1. Open Spark in your mobile web browser (skipping the warning).
 2. Click the red TLS warning in the URL bar to view the certificate and ensure it matches the expected one
    (the certificate's SHA1 fingerprint is printed to the console during Spark's startup).
-3. Navigate to `/cert.pem` to download the certificate file from the server, and open it.
+3. Navigate to `/cert.pem` to download the certificate file from the server and open it.
 4. You should now see [this screen](https://i.imgur.com/f2DMWdL.png), allowing you to add a user trusted certificate.
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
 
@@ -100,24 +100,30 @@ The advantages of using the native app are:
 - Ability to register as an handler for `lightning:` URIs.
 - Home launcher button and full-screen mode.
 - More stable, albeit somewhat slower, QR scanner.
-- Push notifications for incoming payments.
+- System notifications for incoming payments.
 
 When the app starts for the first time, you'll need to configure the server URL (formatted as `http(s)://[user]:[pwd]@[host]:[port]/`).
 You can scan this information from a QR, which you can get by starting Spark with `--print-qr/-Q`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
-or manually added as a user trusted certificate (see above).
+or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).
 
 ## Progressive Web App
 
-Alternatively, thanks to PWA and the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
-you can get some of the benefits of a native app using the ["Add to homescreen"](https://i.imgur.com/zVe1sOH.png) feature.
+Alternatively, thanks to [PWA](https://developer.mozilla.org/en-US/Apps/Progressive) and
+the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
+you can get some of the benefits of a native app by using the
+["Add to homescreen"](https://developer.mozilla.org/en-US/Apps/Progressive/Add_to_home_screen) feature.
 
-This will add a home launcher that opens up in full screen.
-With recent Firefox Mobile, this also allows the website to register as an handler for `lightning:` URIs!
+This will add a home launcher that opens up in full screen, enable system notifications and improve page load times.
+With recent Firefox Mobile, this even allows the website to register as an handler for `lightning:` URIs!
 (see [compatibility table](https://developer.mozilla.org/en-US/Add-ons/WebExtensions/manifest.json/protocol_handlers#Browser_compatibility))
 
-Note that a trusted certificate is required in order for "Add to homepage" to work.
+Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https://imgur.com/zVe1sOH)),
+in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
+and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
+
+Note that a trusted certificate is required for PWAs ([instructions above](#add-as-trusted-certificate-to-android)).
 
 ## Developing
 
