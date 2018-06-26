@@ -70,7 +70,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : '⌛'} ${unit}`)
+  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : 'n/a'} ${unit}`)
 
   // Payment amount field handling, shared for creating new invoices and paying custom amounts
   , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
