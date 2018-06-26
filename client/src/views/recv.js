@@ -10,9 +10,9 @@ const recv = ({ amtData }) =>
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
     , 'Embedded in the QR and presented to the payer.')
 
-  , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')
+  , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Request')
   , ' '
-  , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+  , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
   ])
 
 const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) => div('.waiting-payment', [

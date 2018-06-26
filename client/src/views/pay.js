@@ -17,10 +17,10 @@ const scanReq = div('.qr-scanner', [
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
   formGroup('Payment request'
-  , textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true, rows: 5 } }))
-, button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Decode request')
+, textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true, rows: 5 } }))
+, button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Decode request')
 , ' '
-, a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+, a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
 ])
 
 // @TODO show expiry
@@ -30,13 +30,13 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
   , ...(payreq.msatoshi ? [
       p([ 'Do you want to pay ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-    , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, `Pay ${unitf(payreq.msatoshi)}`)
+    , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, `Pay ${unitf(payreq.msatoshi)}`)
     ] : [
       formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-    , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Confirm Payment')
+    , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Confirm Payment')
     ])
-  , ' ', a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+  , ' ', a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
   , expert ? yaml(payreq) : ''
   ])
 
