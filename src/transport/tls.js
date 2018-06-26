@@ -43,7 +43,8 @@ const makePems = (name, dir) => {
                            : { type: 2, value: name } ]
   } ]
 
-  const pems = selfsigned.generate([ { name: 'commonName', value: name } ], { extensions })
+  const pems = selfsigned.generate([ { name: 'commonName', value: name } ]
+                                 , { extensions, keySize: 2048, algorithm: 'sha256' })
 
   !fs.existsSync(dir) && fs.mkdirSync(dir)
   fs.writeFileSync(path.join(dir, 'key.pem'), pems.private)
