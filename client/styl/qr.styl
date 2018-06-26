@@ -3,6 +3,10 @@
 body.build-cordova.qr-scanning
   background none transparent !important
 
+// allow button-wrap to stretch outside of .content.container
+body.qr-scanning .content
+  overflow-x visible
+
 // Instascan QR scanner (web only), displayed similarly to Cordova's
 video.qr-video
   position fixed
@@ -22,18 +26,18 @@ video.qr-video
     position absolute
     width 200px
     height 200px
-    top 10%
+    top 50%
     left 50%
     margin-left -100px
+    margin-top -150px
 
     display none
 
     body.qr-scanning &
       display block
 
-    // todo: replace with height-based query (here and below)
-    @media screen and (max-height: 540px)
-      display none
+      @media screen and (max-height: 540px)
+        display none
 
     // scanner line
     &:before
@@ -74,15 +78,14 @@ video.qr-video
        right 0
 
   .buttons-wrap
+    // fullscreen width, stretch out of .container
     position absolute
+    width 100vw
+    left calc(-1 * (100vw - 100%) / 2)
     bottom 0
-    left -26px
-    right -26px
     text-align center
 
     @media screen and (max-height 510px)
-      left 0
-      right 0
       background transparent !important
 
 @keyframes beam
