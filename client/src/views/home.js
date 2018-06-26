@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const perPage = 10
 
-const home = ({ feed, feedStart, feedShow, unitf, info, btcusd, peers, funds, conf: { expert } }) => div([
+const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
 
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
