@@ -28,23 +28,23 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   // continuously patch with known outgoing payments (completed only)
     freshPays$ = O.merge(
       payments$.map(payments => _ => payments)
-    , outgoing$.map(pay => payments => appendPay(payments, pay))
+    , outgoing$.map(pay => payments => payments && appendPay(payments, pay))
     )
-    .startWith([]).scan((payments, mod) => mod(payments))
-    .map(payments => payments.filter(p => p.status === 'complete'))
+    .startWith(null).scan((payments, mod) => mod(payments))
+    .map(payments => payments && payments.filter(p => p.status === 'complete'))
 
   // Periodically re-sync from listinvoices,
   // continuously patch with known invoices (paid only)
   , freshInvs$ = O.merge(
       invoices$.map(invs => _ => invs)
     , invoice$.map(inv  => invs => [ ...invs, inv ])
-    , incoming$.map(inv => invs => updPaidInv(invs, inv))
+    , incoming$.map(inv => invs => invs && updPaidInv(invs, inv))
     )
-    .startWith([]).scan((invs, mod) => mod(invs))
-    .map(invs => invs.filter(inv => inv.status === 'paid'))
+    .startWith(null).scan((invs, mod) => mod(invs))
+    .map(invs => invs && invs.filter(inv => inv.status === 'paid'))
 
   // Chronologically sorted feed of incoming and outgoing payments
-  , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
+  , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => (invoices && payments) && [
       ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
