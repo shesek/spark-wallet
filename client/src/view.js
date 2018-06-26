@@ -27,7 +27,8 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, p
   // @xxx side effects outside of drivers!
   const themeLink = document.querySelector('link[href*=bootstrap]')
   state$.map(S => S.conf.theme).distinctUntilChanged()
-    .subscribe(theme => themeLink.href = `swatch/${theme}/bootstrap.min.css`)
+    .map(theme => `swatch/${theme}/bootstrap.min.css`)
+    .subscribe(path => themeLink.getAttribute('href') != path && (themeLink.href = path))
 
   return combine({ state$, body$ }).map(views.layout)
 }
