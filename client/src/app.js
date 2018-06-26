@@ -68,8 +68,12 @@ run(main, {
 : process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
-  , notif$: _ => O.empty()
+  , notif$: require('./driver/web-notification')
   }
 
 : {})
 })
+
+if (process.env.BUILD_TARGET == 'web')
+  window.addEventListener('load', _ => navigator.serviceWorker.register('worker.js'))
+
