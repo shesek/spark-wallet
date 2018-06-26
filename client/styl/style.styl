@@ -56,8 +56,16 @@ html, body, #app
   font-weight 400
 
 // Homepage
-.payments .badge
-  font-size 100%
+.feed
+  .list-group-item
+    // originally 0.75rem, some is removed to make room for the badge margin
+    padding-bottom 0.25rem
+  .badge
+    margin-bottom 0.5rem
+  .badge.amt
+    font-size 100%
+  .badge.ts
+    margin-top 0.19rem
 
 // Confirm outgoing payments
 .conf-pay
