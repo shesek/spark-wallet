@@ -11,6 +11,7 @@ const compileStyl = (str, filename) => stylus(str).set('filename', filename).use
     , rpath       = p => path.join(__dirname, p)
 
 process.env.BUILD_TARGET = 'web'
+process.env.VERSION = require('../package').version
 
 module.exports = app => {
 

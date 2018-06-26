@@ -2,11 +2,12 @@
 set -xeo pipefail
 
 : ${DEST:=dist}
-: ${NODE_ENV=production}
+: ${NODE_ENV:=production}
 : ${BUILD_TARGET:=web}
 
 export BUILD_TARGET
 export NODE_ENV
+export VERSION=`node -p 'require("../package").version'`
 
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts

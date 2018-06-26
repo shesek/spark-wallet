@@ -1,5 +1,4 @@
-// @TODO versioned cache
-const cacheName = 'spark-static-v1'
+const cacheName = 'spark-assets-' + process.env.VERSION
 
 const cachePath = [ '', 'style.css', 'app.js', 'load-theme.js'
                   , 'lib/instascan.js'
@@ -14,6 +13,13 @@ const cacheRegex = /\.(js|css|woff2?)$/
 self.addEventListener('install', e => e.waitUntil(
   caches.open(cacheName).then(cache =>
     cache.addAll(cachePath.map(p => new Request(p, { credentials: 'same-origin' }))))
+))
+
+self.addEventListener('activate', e => e.waitUntil(
+  caches.keys().then(names => Promise.all(
+    names.filter(name => name !== cacheName)
+         .map   (name => caches.delete(name))
+  ))
 ))
 
 const reqOpt = req => req.mode == 'navigate' ? null : { mode: 'same-origin' }
