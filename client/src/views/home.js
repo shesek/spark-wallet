@@ -13,7 +13,7 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
   ])
 
 
-, ...(!feed ? [] : !feed.length ? [ /*p('.text-muted', 'You have no incoming or outgoing payments.')*/ ] : [
+, ...(!feed ? [] : !feed.length ? [ p('.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.payments', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
       li('.list-group-item'+(expert?'.list-group-item-action':''), { dataset: { feedId: fid } }, [
         div('.clearfix', [
