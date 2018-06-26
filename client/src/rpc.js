@@ -45,11 +45,10 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , timer(60000,           [ 'listinvoices', [], { bg: true } ])
-, timer(60000,           [ 'listinvoices', [], { bg: true } ])
 , timer(60000,           [ 'listpayments', [], { bg: true } ])
 , timer(60000,           [ 'listpeers',    [], { bg: true } ])
-, timer(60000,           [ 'listfunds',    [], { bg: true } ])
-, timer(60000,           [ 'getinfo',      [], { bg: true } ])
+, timer(600000,          [ 'listfunds',    [], { bg: true } ])
+, timer(600000,          [ 'getinfo',      [], { bg: true } ])
 
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
