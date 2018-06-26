@@ -25,8 +25,6 @@ find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
 
 if [[ "$BUILD_TARGET" == "web" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
-else
-  rm -r $DEST/manifest $DEST/worker.js
 fi
 
 # Transpile pug and stylus
@@ -42,6 +40,11 @@ bundle() {
 
 # Primary wallet application bundle
 bundle src/app.js > $DEST/app.js
+
+# Service worker
+if [[ "$BUILD_TARGET" == "web" ]]; then
+  bundle src/worker.js > $DEST/worker.js
+fi
 
 # Settings page for Cordova
 if [[ "$BUILD_TARGET" == "cordova" ]]; then

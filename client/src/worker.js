@@ -1,5 +1,3 @@
-// served as-is (not browserified/babelified)
-
 // @TODO versioned cache
 const cacheName = 'spark-static-v1'
 
@@ -21,12 +19,12 @@ self.addEventListener('install', e => e.waitUntil(
 const reqOpt = req => req.mode == 'navigate' ? null : { mode: 'same-origin' }
 
 const shouldCache = (req, res) =>
-  (e.request.method == 'GET' && cacheRegex.test(e.request.url)
+  (req.method == 'GET' && cacheRegex.test(req.url)
     && res && res.type == 'basic' && res.status == 200)
 
 self.addEventListener('fetch', e => e.respondWith(
   caches.match(e.request).then(res =>
-    res || fetch(e.request.clone(), reqOpt(req)).then(res =>
+    res || fetch(e.request.clone(), reqOpt(e.request)).then(res =>
       shouldCache(e.request, res)
         ? caches.open(cacheName).then(cache => cache.put(e.request, res.clone())).then(_ => res)
         : res
