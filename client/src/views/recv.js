@@ -4,10 +4,10 @@ import { formGroup, yaml, qrinv, amountField } from './util'
 const recv = ({ amtData }) =>
   form({ attrs: { do: 'new-invoice' } }, [
     h2('Request payment')
-  , formGroup('Payment amount', amountField(amtData))
+  , formGroup('Payment amount', amountField(amtData, 'msatoshi', false))
 
-  , formGroup('Description (optional)'
-    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description' } })
+  , formGroup('Description'
+    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
     , 'Embedded in the QR and presented to the payer.')
 
   , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')

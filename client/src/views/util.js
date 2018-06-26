@@ -29,11 +29,11 @@ const formGroup = (labelText, control, help) => div('.form-group', [
 , help ? small('.form-text.text-muted', help) : ''
 ])
 
-const amountField = ({ msatoshi, amount, step, unit }, msatField='msatoshi') =>
+const amountField = ({ msatoshi, amount, step, unit }, msatField, required) =>
   div('.input-group', [
     input({ attrs: { type: 'hidden', name: msatField }, props: { value: msatoshi } })
   , input('.form-control.form-control-lg'
-    , { attrs: { type: 'number', step, min: step, name: 'amount', required: true }
+    , { attrs: { type: 'number', step, min: step, name: 'amount', required, placeholder: (required?'':'(optional)') }
       , props: { value: amount } })
   , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
   ])

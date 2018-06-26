@@ -24,7 +24,6 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 ])
 
 // @TODO show expiry
-// @TODO input amount for 'any' invoice
 const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
   form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
     h2('Confirm payment')
@@ -33,7 +32,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
     , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, `Pay ${unitf(payreq.msatoshi)}`)
     ] : [
-      formGroup('Amount to pay', amountField(amtData, 'custom_msat'))
+      formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
     , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
     , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Confirm Payment')
     ])
