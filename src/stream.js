@@ -50,6 +50,8 @@ module.exports = lnPath => {
     , 'Connection': 'keep-alive'
     }).flushHeaders()
 
+    res.write('retry: 15000\n\n')
+
     const keepAlive = setInterval(_ => res.write(': keepalive\n\n'), 25000)
 
     const onPay = inv => res.write(`event:waitany\ndata:${ JSON.stringify(inv) }\n\n`)
