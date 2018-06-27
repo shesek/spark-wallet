@@ -24,10 +24,10 @@ const footer = ({ info, btcusd, conf: { theme, expert } }) =>
       info ? p('.info.float-left.mb-0'
       , [ span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
         , ` · ${info.network}`
-        , ` · `, a('.text-muted', { attrs: { href: '/node' } }, info.id.substr(0,10))
+        , ` · `, a({ attrs: { href: '/node' } }, info.id.substr(0,10))
         , btcusd ? ` · BTC = $${ Math.round(btcusd) }` : ''
         ]) : ''
-    , p('.toggle-theme.float-right.mb-0', theme)
+    , p('.toggle-theme.float-right.btn-link.mb-0', theme)
     ])
   )
 
