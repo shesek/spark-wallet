@@ -7,10 +7,17 @@ exports.nodeInfo = async ({ info, funds, peers, conf: { expert } }) => {
   const uri = info.binding[0] && `${info.id}@${info.binding[0].address}:${info.binding[0].port}`
       , qr  = await qruri(uri || info.id)
 
-  return div('.text-center.text-sm-left', [
-    h2('.mt-4.mb-0', 'Node address')
-  , img('.my-4', { attrs: { src: qr } })
-  , p('.text-muted.break-all', uri || `${info.id} (address/port unavilable)`)
-  , expert ? div('.text-left.mt-3', yaml({ info, funds, peers })) : ''
+  return div([
+    div('.row', [
+      div('.col-sm-6.text-center', [
+        h2('.my-4', 'Node address')
+      , p('.d-none.d-sm-block.text-muted.break-all.mt-3', uri)
+      ])
+    , div('.col-sm-6.text-center.text-sm-right', [
+        img({ attrs: { src: qr } })
+      , p('.d-block.d-sm-none.text-center.text-muted.break-all.mt-4', uri)
+      ])
+    ])
+  , expert ? yaml({ info, funds, peers }) : ''
   ])
 }

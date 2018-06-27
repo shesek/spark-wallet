@@ -27,7 +27,6 @@ const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) =>
         img('.qr', { attrs: { src: qr } })
       , small('.d-block.d-sm-none.text-center.text-muted.break-all.mt-3', inv.bolt11)
       ])
-
     ])
   , expert ? yaml(omitKey('bolt11', inv)) : ''
   ]))
