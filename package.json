@@ -25,10 +25,10 @@
   "license": "MIT",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "base64-url": "^2.2.0",
     "basic-auth": "^2.0.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.2",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "is-ip": "^2.0.0",
