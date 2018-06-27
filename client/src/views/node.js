@@ -8,9 +8,9 @@ exports.nodeInfo = async ({ info, funds, peers, conf: { expert } }) => {
       , qr  = await qruri(uri || info.id)
 
   return div('.text-center.text-sm-left', [
-    h2('Node info')
-  , img({ attrs: { src: qr } })
-  , p('.text-muted.break-all.mt-3', uri || `${info.id} (address/port unavilable)`)
-  , expert ? div('.text-left', yaml({ info, funds, peers })) : ''
+    h2('.mt-4.mb-0', 'Node address')
+  , img('.my-4', { attrs: { src: qr } })
+  , p('.text-muted.break-all', uri || `${info.id} (address/port unavilable)`)
+  , expert ? div('.text-left.mt-3', yaml({ info, funds, peers })) : ''
   ])
 }
