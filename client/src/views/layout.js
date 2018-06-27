@@ -35,9 +35,11 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
   button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
 , ''+alert[1]
 
-, ' ', process.env.BUILD_TARGET == 'cordova' && alert[1] == 'Error: Connection to server lost.'
+, ' ', process.env.BUILD_TARGET == 'cordova' && serverErrors.includes(alert[1])
   ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
   : ''
 ])
+
+const serverErrors = [ 'Error: Connection to server lost.', 'Error: Unauthorized' ]
 
 module.exports = { layout }
