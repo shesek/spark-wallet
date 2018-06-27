@@ -22,7 +22,6 @@ Once c-lightning is running, install and start Spark with:
 $ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
 $ spark # defaults: --ln-path ~/.lightning --port 9737
-
 ```
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
@@ -106,8 +105,8 @@ The advantages of using the native app are:
 - More stable, albeit somewhat slower, QR scanner.
 - System notifications for incoming payments.
 
-When the app starts for the first time, you'll need to configure the server URL (formatted as `http(s)://[user]:[pwd]@[host]:[port]/`).
-You can scan this information from a QR, which you can get by starting Spark with `--print-qr/-Q`.
+When the app starts for the first time, you'll need to configure the server URL formatted as `http(s)://[user]:[pwd]@[host]:[port]/`.
+You can scan this information from a QR, which you can get by starting Spark with `--qr-with-cred`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).

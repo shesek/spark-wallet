@@ -53,8 +53,9 @@ ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
 
 
 const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
+    , pwdUrl = process.env.QR_WITH_CRED ? `${app.settings.encAuth}@` : ''
 
 function printService(name, proto, host) {
   console.log(`${name} running on ${proto}://${host}/`)
-  qrterm && qrterm.generate(`${proto}://${app.settings.encAuth}@${host}/`, { small: true })
+  qrterm && qrterm.generate(`${proto}://${pwdUrl}${host}/`, { small: true })
 }
