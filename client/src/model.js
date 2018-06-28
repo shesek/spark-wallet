@@ -83,10 +83,17 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , step:     unit$.map(unit => unitstep[unit])
     })
 
-  // Keep track of the number of non-backgground in-flight requests
+  // Keep track of the number of non-background in-flight requests
   , loading$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
       .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
       .startWith(0).scan((N, a) => N+a)
+
+  // Keep track of the connection status
+  , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
+      .merge(error$.filter(err => err.toString() == connLost).mapTo(false))
+      .distinctUntilChanged()
+
+  , connLost = 'Error: Connection to server lost.'
 
   // User-visible alert messages
   , alert$ = O.merge(
@@ -94,7 +101,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
     , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
     , dismiss$.mapTo(null)
-    ).combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
+    )
+    // hide "connection lost" errors when we get back online
+    .combineLatest(connected$, (alert, conn) => alert && (alert[1] == connLost && conn ? null : alert))
+    .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
 
   , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -102,7 +112,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
-  dbg({ loading$, alert$, rpcHist$ }, 'spark:model')
+  dbg({ loading$, connected$, alert$, rpcHist$ }, 'spark:model')
   dbg({ error$ }, 'spark:error')
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
 
