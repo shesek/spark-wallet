@@ -15,7 +15,6 @@
     "@cycle/storage": "^5.0.3",
     "big.js": "^5.1.2",
     "bootswatch": "^4.1.1",
-    "eventsource": "^1.0.5",
     "form-serialize": "^0.7.2",
     "fscreen": "^1.0.2",
     "instascan": "github:shesek/instascan#packaged-lib",

@@ -1,5 +1,4 @@
 import { Observable as O } from '../rxjs'
-import EventSource from 'eventsource'
 
 module.exports = url => {
   // Only start SSE after the page loads, so that we don't get an infinite loading indicator spinner

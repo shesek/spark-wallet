@@ -1859,14 +1859,6 @@
       "integrity": "sha512-3Zmiobend8P9DjmKAty0Era4jV8oJ0yGYe2nJJAxgymF9+N8F2m0hhZiMoWtcfepExzNKZumFU3ksdQbInGWCg==",
       "dev": true
     },
-    "eventsource": {
-      "version": "1.0.5",
-      "resolved": "https://registry.npmjs.org/eventsource/-/eventsource-1.0.5.tgz",
-      "integrity": "sha512-IzjLaND9GBK3+fBPhmvG/Yq3FhSDGHnucJCDWhNsneLlN+HX5jeaSpl3Folr2PipGmyUsd/T2Vrua+s6I2aTgQ==",
-      "requires": {
-        "original": "1.0.0"
-      }
-    },
     "evp_bytestokey": {
       "version": "1.0.3",
       "resolved": "https://registry.npmjs.org/evp_bytestokey/-/evp_bytestokey-1.0.3.tgz",
@@ -3354,14 +3346,6 @@
         "wrappy": "1.0.2"
       }
     },
-    "original": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/original/-/original-1.0.0.tgz",
-      "integrity": "sha1-kUf5P6FpbQS+YeAb1QuurKZWvTs=",
-      "requires": {
-        "url-parse": "1.0.5"
-      }
-    },
     "os-browserify": {
       "version": "0.3.0",
       "resolved": "https://registry.npmjs.org/os-browserify/-/os-browserify-0.3.0.tgz",
@@ -3875,11 +3859,6 @@
       "integrity": "sha1-nsYfeQSYdXB9aUFFlv2Qek1xHnM=",
       "dev": true
     },
-    "querystringify": {
-      "version": "0.0.4",
-      "resolved": "https://registry.npmjs.org/querystringify/-/querystringify-0.0.4.tgz",
-      "integrity": "sha1-DPf4T5Rj/wrlHExLFC2VvjdyTZw="
-    },
     "randomatic": {
       "version": "1.1.7",
       "resolved": "https://registry.npmjs.org/randomatic/-/randomatic-1.1.7.tgz",
@@ -4095,11 +4074,6 @@
       "version": "1.0.1",
       "resolved": "https://registry.npmjs.org/require-main-filename/-/require-main-filename-1.0.1.tgz",
       "integrity": "sha1-l/cXtp1IeE9fUmpsWqj/3aBVpNE="
-    },
-    "requires-port": {
-      "version": "1.0.0",
-      "resolved": "https://registry.npmjs.org/requires-port/-/requires-port-1.0.0.tgz",
-      "integrity": "sha1-kl0mAdOaxIXgkc8NpcbmlNw9yv8="
     },
     "resolve": {
       "version": "1.7.0",
@@ -4667,15 +4641,6 @@
           "integrity": "sha1-llOgNvt8HuQjQvIyXM7v6jkmxI0=",
           "dev": true
         }
-      }
-    },
-    "url-parse": {
-      "version": "1.0.5",
-      "resolved": "https://registry.npmjs.org/url-parse/-/url-parse-1.0.5.tgz",
-      "integrity": "sha1-CFSGBCKv3P7+tsllxmLUgAFpkns=",
-      "requires": {
-        "querystringify": "0.0.4",
-        "requires-port": "1.0.0"
       }
     },
     "user-home": {
