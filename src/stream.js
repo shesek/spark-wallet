@@ -50,7 +50,7 @@ module.exports = lnPath => {
     , 'Connection': 'keep-alive'
     }).flushHeaders()
 
-    res.write('retry: 15000\n\n')
+    res.write('retry: 3000\n\n')
 
     const keepAlive = setInterval(_ => res.write(': keepalive\n\n'), 25000)
 
