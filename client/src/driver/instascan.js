@@ -12,9 +12,8 @@ const makeScanDriver = (opt={}) => {
   video.className = 'qr-video'
   document.body.appendChild(video)
 
-  let _cam
   function startScan() {
-    (_cam || (_cam = Camera.getCameras().then(pickCam))).then(cam => {
+    Camera.getCameras().then(pickCam).then(cam => {
       document.body.className += ' qr-scanning'
       scanner.start(cam)
     })
