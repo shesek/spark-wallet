@@ -14,9 +14,9 @@ const
 
 , parseUri = uri => {
     const m = uri.match(reUri)
-    return m && (m[1] || m[2])
+    return m && (m[1] || m[2] || m[3])
   }
-, reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)/i
+, reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)|^(ln[a-z0-9]+)$/i
 
 // returns the expected invoice amount when its <0.5% different from the actual amount paid,
 // or the actual amount paid otherwise. this is done to make the UX less confusing when the

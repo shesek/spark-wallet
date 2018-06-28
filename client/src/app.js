@@ -34,6 +34,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
       , orient$  = view.orient(actions.page$)
       , scanner$ = view.scanner(actions)
 
+  dbg({ conf$, scan$, urihandler$ }, 'spark:source')
   dbg(actions, 'spark:intent')
   dbg(resps, 'spark:rpc')
   dbg({ state$ }, 'spark:model')
