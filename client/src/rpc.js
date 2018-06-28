@@ -47,8 +47,8 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , timer(60000,           [ 'listinvoices', [], { bg: true } ])
 , timer(60000,           [ 'listpayments', [], { bg: true } ])
 , timer(60000,           [ 'listpeers',    [], { bg: true } ])
-, timer(600000,          [ 'listfunds',    [], { bg: true } ])
-, timer(600000,          [ 'getinfo',      [], { bg: true } ])
+, timer(60000,           [ 'listfunds',    [], { bg: true } ])
+, timer(60000,           [ 'getinfo',      [], { bg: true } ])
 
 // also send a "getinfo" ping whenever the window regains focus, to check
 // for server connectivity and quickly hide/show the "connection lost" message
