@@ -21,10 +21,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
-  // Start/stop QR scanner
-  , scanner$ = O.merge(scan$, page$.filter(p => p.pathname != '/scan')).mapTo(false)
-                .merge(goScan$.mapTo(true))
-
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
                 .merge(submit('[do=decode-pay]').map(r => r.bolt11.trim()))
@@ -54,14 +50,14 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button')
                       , page$.filter(p => p.pathname != '/'))
 
-  // Feed event page navigation
+  // Feed event page navigation and click-to-collapse
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
   , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
 
   // @xxx side effects outside of drivers!
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
-  return { conf$, page$, scanner$
+  return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
          , viewPay$, confPay$
          , execRpc$, clrHist$

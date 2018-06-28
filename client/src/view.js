@@ -4,6 +4,7 @@ import views from './views'
 
 const isFunc = x => typeof x == 'function'
 
+// DOM view
 exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     // user actions
@@ -33,6 +34,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, p
   return combine({ state$, body$ }).map(views.layout)
 }
 
+// Navigation
 exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) => O.merge(
   // navto '/' when receiving payments for the last invoice created by the user
   in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
@@ -42,7 +44,15 @@ exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) =
 , payreq$.mapTo('/confirm')
 )
 
+// HTML5 notifications
 exports.notif = ({ incoming$, state$ }) =>
   incoming$.withLatestFrom(state$, (inv, { unitf }) => `Received payment of ${ unitf(recvAmt(inv)) }`)
 
+// Start/stop QR scanner
+exports.scanner = ({ goScan$, viewPay$, page$ }) => O.merge(
+  goScan$.mapTo(true)
+, O.merge(viewPay$, page$.filter(p => p.pathname != '/scan')).mapTo(false)
+)
+
+// Lock page orientation
 exports.orient = page$ => page$.map(p => p.pathname == '/scan' ? 'portrait' : 'unlock')

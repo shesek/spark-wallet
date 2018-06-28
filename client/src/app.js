@@ -27,23 +27,24 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
       , state$  = model({ HTTP, ...actions, ...resps })
 
-      , rpc$    = rpc.makeReq(actions)
-      , vdom$   = view.vdom({ state$, ...actions, ...resps })
-      , navto$  = view.navto({ ...resps, ...actions })
-      , notif$  = view.notif({ state$, ...resps })
-      , orient$ = view.orient(actions.page$)
+      , rpc$     = rpc.makeReq(actions)
+      , vdom$    = view.vdom({ state$, ...actions, ...resps })
+      , navto$   = view.navto({ ...resps, ...actions })
+      , notif$   = view.notif({ state$, ...resps })
+      , orient$  = view.orient(actions.page$)
+      , scanner$ = view.scanner(actions)
 
   dbg(actions, 'spark:intent')
   dbg(resps, 'spark:rpc')
   dbg({ state$ }, 'spark:model')
-  dbg({ rpc$, vdom$, navto$, notif$, orient$ }, 'spark:sinks')
+  dbg({ rpc$, vdom$, navto$, notif$, orient$, scanner$ }, 'spark:sinks')
 
   return {
     DOM:   vdom$
   , HTTP:  rpc.toHttp(rpc$)
   , route: navto$
   , conf$: state$.map(s => s.conf)
-  , scan$: actions.scanner$
+  , scan$: scanner$
   , orient$
   , notif$
   }
