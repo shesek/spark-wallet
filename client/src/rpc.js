@@ -50,6 +50,11 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , timer(600000,          [ 'listfunds',    [], { bg: true } ])
 , timer(600000,          [ 'getinfo',      [], { bg: true } ])
 
+// also send a "getinfo" ping whenever the window regains focus, to check
+// for server connectivity and quickly hide/show the "connection lost" message
+// @XXX mobile chrome fails with "ERR_NETWORK_CHANGED" w/o the delay()
+, O.fromEvent(window, 'focus').delay(100).mapTo([ 'getinfo', [], { bg: true } ])
+
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 

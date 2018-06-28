@@ -27,5 +27,6 @@ import 'rxjs/add/operator/shareReplay'
 import 'rxjs/add/operator/scan'
 import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/windowTime'
+import 'rxjs/add/operator/delay'
 
 module.exports = { Observable }
