@@ -7,7 +7,7 @@ set -xeo pipefail
 
 export BUILD_TARGET
 export NODE_ENV
-export VERSION=`node -p 'require("../package").version'`
+export VERSION=`node -p 'require("../package").version'`-`git describe --always --abbrev=7`
 
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts
