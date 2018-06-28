@@ -40,6 +40,18 @@ Does not support peers and channels management, which are expected to be managed
 
 TODO: screenshots, explain currency/theme/expert controls, etc
 
+## Progressive Web App
+
+You can install Spark as a [PWA](https://developer.mozilla.org/en-US/Apps/Progressive) to get a more native-app-like experience,
+including an home launcher that opens up in full screen, system notifications and improved page load times.
+
+Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https://imgur.com/zVe1sOH)),
+in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
+and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
+
+Note that installing the PWA requires the TLS certificate to be signed by a CA
+or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
+
 ## TLS
 
 Spark will by default generate a self-signed TLS certificate and save it to `./spark-tls/`.
@@ -65,6 +77,7 @@ by following these steps:
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
 
 Note that adding a user trusted certificate causes android to display a "Network may be monitored" notification.
+It goes away after awhile.
 
 ## Tor Onion Hidden Service
 
@@ -92,38 +105,19 @@ To connect using the Cordova app, configure Orbot to route Spark's traffic over 
 Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
 
-## Cordova App
+## Native Cordova App
 
 A Cordova-based native app for Android is available for download from the
 [releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
 It is not currently published to the app store.
 
-The advantages of using the native app are:
+The main advantage of the native app compared to the PWA is the ability to handle `lightning:` URIs.
 
-- Ability to register as an handler for `lightning:` URIs.
-- Home launcher button and full-screen mode.
-- More stable, albeit somewhat slower, QR scanner.
-- System notifications for incoming payments.
-
-When the app starts for the first time, you'll need to configure the server URL formatted as `http(s)://[user]:[pwd]@[host]:[port]/`.
+When the app starts for the first time, you'll need to configure the server URL in a `http(s)://[user]:[pwd]@[host]:[port]/` format.
 You can scan this information from a QR, which you can get by starting Spark with `--qr-with-cred`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).
-
-## Progressive Web App
-
-Alternatively, thanks to [PWA](https://developer.mozilla.org/en-US/Apps/Progressive) and
-the [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest),
-you can get some of the benefits of a native app by using the
-["Add to homescreen"](https://developer.mozilla.org/en-US/Apps/Progressive/Add_to_home_screen) feature,
-including: home launcher that opens up in full screen, system notifications and improved page load times.
-
-Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https://imgur.com/zVe1sOH)),
-in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
-and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
-
-Note that a trusted certificate is required for PWAs ([instructions above](#add-as-trusted-certificate-to-android)).
 
 ## Developing
 
@@ -138,7 +132,7 @@ $ npm start -- --ln-path /data/lightning
 The Cordova android app can be built by running `npm run cordova:dist`.
 The `.apk` file will be created in `cordova/platforms/android/app/build/outputs/apk/debug/`.
 
-To get more verbose output in the browser developer console, set `localStorage.debug = '*'`.
+To get more verbose output in the browser developer console, set `localStorage.debug = 'spark:*'`.
 
 ## CLI options
 
