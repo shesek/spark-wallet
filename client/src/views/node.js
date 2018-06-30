@@ -1,9 +1,7 @@
 import { div, h2, img, p } from '@cycle/dom'
 import { yaml, qruri } from './util'
 
-exports.nodeInfo = async ({ info, funds, peers, conf: { expert } }) => {
-  if (!info) return div()
-
+exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
   const uri = info.binding[0] && `${info.id}@${info.binding[0].address}:${info.binding[0].port}`
       , qr  = await qruri(uri || info.id)
 
@@ -18,6 +16,6 @@ exports.nodeInfo = async ({ info, funds, peers, conf: { expert } }) => {
       , p('.d-block.d-sm-none.text-center.text-muted.break-all.mt-4', uri)
       ])
     ])
-  , expert ? yaml({ info, funds, peers }) : ''
+  , expert ? yaml({ info, peers }) : ''
   ])
 }

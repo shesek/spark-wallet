@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, recvAmt, combine, combineAvail } from './util'
+import { dbg, formatAmt, recvAmt, combine } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
@@ -21,7 +21,7 @@ const
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$, feedShow$, conf$: savedConf$
-                  , req$$, error$, invoice$, incoming$, outgoing$, funds$, payments$, invoices$, btcusd$, info$, peers$ }) => {
+                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
 
   // Periodically re-sync from listpayments,
@@ -31,7 +31,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , outgoing$.map(pay => payments => payments && appendPay(payments, pay))
     )
     .startWith(null).scan((payments, mod) => mod(payments))
-    .map(payments => payments && payments.filter(p => p.status === 'complete'))
+    .filter(payments => !!payments)
+    .map   (payments => payments.filter(p => p.status === 'complete'))
 
   // Periodically re-sync from listinvoices,
   // continuously patch with known invoices (paid only)
@@ -41,10 +42,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , incoming$.map(inv => invs => invs && updPaidInv(invs, inv))
     )
     .startWith(null).scan((invs, mod) => mod(invs))
-    .map(invs => invs && invs.filter(inv => inv.status === 'paid'))
+    .filter(invs => !!invs)
+    .map(invs    => invs.filter(inv => inv.status === 'paid'))
 
   // Chronologically sorted feed of incoming and outgoing payments
-  , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => (invoices && payments) && [
+  , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
@@ -56,9 +58,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
-
-  // On-chain outputs balance (not currently used for anything, but seems useful?)
-  , obalance$ = funds$.map(funds => sumOuts(funds.outputs || []))
 
   // Config options
   , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
@@ -105,6 +104,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     // hide "connection lost" errors when we get back online
     .combineLatest(connected$, (alert, conn) => alert && (alert[1] == connLost && conn ? null : alert))
     .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
+    .startWith(null)
 
   , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -112,15 +112,16 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
 
-  dbg({ loading$, connected$, alert$, rpcHist$ }, 'spark:model')
+  dbg({ loading$, connected$, alert$, rpcHist$, freshPays$, freshInvs$, feed$ }, 'spark:model')
   dbg({ error$ }, 'spark:error')
   dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
 
-  return combineAvail({
+  return combine({
     conf$, page$, loading$, alert$
-  , info$, peers$, funds$
-  , btcusd$, unitf$, cbalance$, obalance$
+  , info$, peers$
+  , unitf$, cbalance$
   , feed$, feedStart$, feedShow$
   , amtData$, rpcHist$
+  , btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }
