@@ -27,8 +27,8 @@ function stopScan() {
 
 // Receives a stream of scan start/stop requests,
 // returns a stream of scanned QR texts
-function scanDriver(_scanner$) {
-  O.from(_scanner$)
+function scanDriver(_mode$) {
+  O.from(_mode$)
     .filter(_ => !!window.QRScanner) // skip requests if QRScanner is not yet loaded
     .distinctUntilChanged()
     .subscribe(mode => mode ? startScan() : stopScan())
