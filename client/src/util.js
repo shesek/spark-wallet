@@ -4,13 +4,15 @@ import numbro from 'numbro'
 import { Big as big }      from 'big.js'
 import { Observable as O } from './rxjs'
 
+big.RM = 3 // ROUND_UP, so that we never see tiny msat amounts as "0"
+
 const
 
-  formatAmt = (amt, rate, step, comma=true) =>
-    amt != null && ''+amt && rate && trim(numbro(big(amt).times(rate).toFixed(15))
-      .format(`${comma?'0,':''}${step.toFixed(15).replace(/10*$/, '0')}`)) || ''
-
-, trim = num => num.replace(/\.?0+$/, '')
+  formatAmt = (amt, rate, precision, comma=true) =>
+    (amt != null && ''+amt && rate)
+      ? numbro(big(amt).times(rate).toFixed(precision))
+          .format({ thousandSeparated: comma, mantissa: precision, trimMantissa: true, optionalMantissa: true })
+      : ''
 
 , parseUri = uri => {
     const m = uri.match(reUri)

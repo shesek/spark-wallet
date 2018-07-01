@@ -16,6 +16,7 @@ const
 const
   themes   = 'cerulean cosmo cyborg dark darkly flatly journal litera lumen lux materia minty pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
 , units    = 'sat bits milli btc usd'.split(' ')
+, unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 5 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
@@ -69,14 +70,14 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitstep[unit]) : 'n/a'} ${unit}`)
+  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
 
   // Payment amount field handling, shared for creating new invoices and paying custom amounts
   , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
                       .merge(page$.mapTo(null)).startWith(null)
   , amtData$ = combine({
       msatoshi: amtMsat$
-    , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitstep[unit], false))
+    , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitprec[unit], false))
                      .merge(goRecv$.mapTo(''))
     , unit:     unit$
     , step:     unit$.map(unit => unitstep[unit])
