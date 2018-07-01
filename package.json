@@ -35,7 +35,7 @@
     "lightning-client": "github:shesek/lightning-client-js#e8910e367f4ce27732847886016c32f426044d94",
     "meow": "^4.0.1",
     "morgan": "^1.9.0",
-    "nanoid": "^1.0.3",
+    "nanoid": "^1.0.4",
     "node-forge": "^0.7.5",
     "qrcode": "^1.2.0",
     "superagent": "^3.8.3"

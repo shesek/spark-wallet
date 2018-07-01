@@ -19,15 +19,15 @@
     "fscreen": "^1.0.2",
     "instascan": "github:shesek/instascan#packaged-lib",
     "js-yaml": "^3.12.0",
-    "nanoid": "^1.0.3",
+    "nanoid": "^1.0.4",
     "numbro": "^2.1.0",
     "path-to-regexp": "^2.2.1",
     "qrcode": "^1.2.0",
     "rxjs": "^5.5.11",
     "string-argv": "0.0.2",
-    "vague-time": "^2.4.1",
+    "vague-time": "^2.4.2",
     "webrtc-adapter": "^6.2.1",
-    "xstream": "^11.4.0"
+    "xstream": "^11.7.0"
   },
   "browserify": {
     "transform": [
@@ -51,6 +51,6 @@
     "pug-cli": "^1.0.0-alpha6",
     "pugify": "^2.2.0",
     "stylus": "^0.54.5",
-    "uglifyify": "^5.0.0"
+    "uglifyify": "^5.0.1"
   }
 }

@@ -4549,9 +4549,9 @@
       "dev": true
     },
     "nanoid": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.0.3.tgz",
-      "integrity": "sha512-l5PWjXxZa6DTMzCO3uXNnnNxuqSUeTxNEMWsSr+5QUbC7g00Z4d6tSp8r0RQpY5h49KjwsMxmehLIfmuLv+6CQ=="
+      "version": "1.0.4",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.0.4.tgz",
+      "integrity": "sha512-zWPAK2WibMbVda1DvhYbahj7DAXLMvSI4Ik7553nPyJ2p8I5qJr4/j/6kgHJalrOx4FRbbme2Oa6utdzr6I/tA=="
     },
     "ncp": {
       "version": "2.0.0",
