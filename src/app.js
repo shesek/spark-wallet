@@ -15,7 +15,7 @@ app.use(require('helmet')({ contentSecurityPolicy: { directives: {
 , scriptSrc:  [ "'self'", "'unsafe-eval'" ]
 , fontSrc:    [ "'self'", 'data:' ]
 , imgSrc:     [ "'self'", 'data:' ]
-} } }))
+} }, ieNoOpen: false }))
 
 // CSRF protection. Require the X-Access header for POST requests, with exemption for requests
 // originating from file://, where HTTP basic auth and setting a custom header is sufficient.
