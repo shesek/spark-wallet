@@ -11,14 +11,19 @@ app.use(require('morgan')('dev'))
 app.use(require('./auth')(app, process.env.LOGIN))
 app.use(require('body-parser').json())
 app.use(require('helmet')({ contentSecurityPolicy: { directives: {
-  defaultSrc: ["'self'" ]
+  defaultSrc: [ "'self'" ]
 , scriptSrc:  [ "'self'", "'unsafe-eval'" ]
 , fontSrc:    [ "'self'", 'data:' ]
 , imgSrc:     [ "'self'", 'data:' ]
 } } }))
 
-// CSRF protection, block POST requests without the X-Requested-With header
-app.post('*', (req, res, next) => !req.get('x-requested-with') ? res.sendStatus(403) : next())
+// CSRF protection. Require the X-Access header for POST requests, with exemption for requests
+// originating from file://, where HTTP basic auth and setting a custom header is sufficient.
+// (these are requests coming from Cordova)
+app.post('*', (req, res, next) =>
+  (req.csrfSafe || (req.get('Origin') === 'file://' && req.get('X-Requested-With')))
+    ? next()
+    : res.sendStatus(403))
 
 // RPC API
 app.post('/rpc', (req, res, next) =>

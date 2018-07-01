@@ -20,6 +20,7 @@ module.exports = app => {
   if (preBuilt) {
     const html = fs.readFileSync(path.join(preBuilt, 'index.html'))
       .toString().replace(/\{\{manifestKey\}\}/, app.settings.manifestKey)
+                 .replace(/\{\{accessKey\}\}/, app.settings.accessKey)
 
     app.get('/', (req, res) => res.send(html))
     app.use('/', express.static(preBuilt))

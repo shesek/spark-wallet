@@ -57,13 +57,16 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 )
 
 const serverUrl = process.env.BUILD_TARGET === 'web' ? '.' : localStorage.serverUrl
-exports.serverUrl = serverUrl
+    , accessKey = process.env.BUILD_TARGET === 'web' ? document.querySelector('[name=access-key]').content : null
+    , rpcUrl    = url.resolve(serverUrl, 'rpc')
 
 exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
   category: ctx.category || method
 , method: 'POST'
-, url: url.resolve(serverUrl, 'rpc')
+, url: rpcUrl
 , send: { method, params }
-, headers: { 'X-Requested-With': 'spark-rpc' }
+, headers: { 'X-Requested-With': 'spark-rpc', 'X-Access': accessKey }
 , ctx
 }))
+
+exports.serverUrl = serverUrl

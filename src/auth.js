@@ -4,7 +4,8 @@ import nanogen from 'nanoid/generate'
 import cookieParser from 'cookie-parser'
 import {createHmac} from 'crypto'
 
-const cookieAge = 2592000000 // 1 month
+const cookieOpt = { signed: true, httpOnly: true, sameSite: true
+                  , maxAge: 2592000000/*1 month*/, secure: !process.env.NO_TLS }
 
 const hmac = (key, data, enc='base64') => createHmac('sha256', key).update(data).digest(enc)
 
@@ -19,29 +20,42 @@ module.exports = (app, login) => {
     [ username, password ] = login.split(':', 2)
   }
 
-  app.settings.encAuth = [ username, password ].map(encodeURIComponent).join(':')
-  app.settings.manifestKey = hmac(app.settings.encAuth, 'manifest-key').replace(/\W+/g, '').substr(0, 10)
+  const encAuth     = [ username, password ].map(encodeURIComponent).join(':')
+      , cookieKey   = hmac(encAuth, 'cookie-key')
+      , manifestKey = hmac(encAuth, 'manifest-key').replace(/\W+/g, '').substr(0, 10)
+      , accessKey   = hmac(encAuth, 'access-key').replace(/\W+/g, '')
+      , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
 
-  app.use(cookieParser(hmac(app.settings.encAuth, 'cookie-secret')))
+  Object.assign(app.settings, { encAuth, manifestKey, accessKey })
 
-  const reKey = new RegExp(`^/manifest-${app.settings.manifestKey}/`)
+  app.use(cookieParser(cookieKey))
 
   return (req, res, next) => {
     // The manifest.json file should be accessible without basic auth headers and without cookies.
     // this allow accessing the /manifest/ directory by including the `manifestKey` in the path.
-    if (req.method === 'GET' && reKey.test(req.url)) {
-      req.url = req.url.replace(reKey, '/manifest/')
+    if (req.method === 'GET' && manifestRe.test(req.url)) {
+      req.url = req.url.replace(manifestRe, '/manifest/')
       return next()
     }
 
+    function cookieAuth() { req.signedCookies.user || res.cookie('user', username, cookieOpt) }
+
+    // Authenticate via header (access key available in web builds as meta[name=access-token])
+    if (req.get('X-Access') === accessKey) {
+      req.csrfSafe = true
+      cookieAuth()
+      return next()
+    }
+
+    // Authenticate via cookie
     if (req.signedCookies.user) return next();
 
+    // Authenticate via HTTP basic auth
     const cred = basicAuth(req)
     if (cred && cred.name === username && cred.pass === password) {
-      // Once the user authenticates via basic auth, set a signed cookie to authenticate
-      // future requests. HTTP basic auth is quirky, this makes for a smoother experience.
-      res.cookie('user', username, { signed: true, httpOnly: true, sameSite: true
-                                   , maxAge: cookieAge, secure: !process.env.NO_TLS })
+      // Once the user authenticates with basic auth, set a signed cookie to authenticate future requests.
+      // HTTP basic auth is quirky, this makes for a smoother experience.
+      cookieAuth()
       return next()
     }
 

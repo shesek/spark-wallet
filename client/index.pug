@@ -9,6 +9,7 @@ link(rel='stylesheet', href='style.css')
 if process.env.BUILD_TARGET == 'web'
   meta(name='mobile-web-app-capable', content='yes')
   meta(name='apple-mobile-web-app-capable', content='yes')
+  meta(name='access-key', content=settings ? settings.accessKey : '{{accessKey}}')
   link(rel='manifest', href='manifest-'+(settings ? settings.manifestKey : '{{manifestKey}}')+'/manifest.json')
 
 if process.env.BUILD_TARGET == 'cordova'
