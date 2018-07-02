@@ -4,8 +4,6 @@ import numbro from 'numbro'
 import { Big as big }      from 'big.js'
 import { Observable as O } from './rxjs'
 
-big.RM = 3 // ROUND_UP, so that we never see tiny msat amounts as "0"
-
 const
 
   formatAmt = (amt, rate, digits, comma=true) =>
