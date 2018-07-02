@@ -47,7 +47,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togFull$  = DOM.select('.full-screen').events('dblclick', { preventDefault: true, useCapture: true })
 
   // Dismiss alert message
-  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], .content a, .content button')
+  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
                       , page$.filter(p => p.pathname != '/'))
 
   // Feed event page navigation and click-to-collapse
