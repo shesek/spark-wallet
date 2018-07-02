@@ -20,14 +20,14 @@ const navbar = ({ unitf, cbalance, page }) =>
 
 const footer = ({ info, btcusd, conf: { theme, expert } }) =>
   div('.main-bg',
-    h('footer.container.clearfix.text-muted.border-top.pt-2.my-2', [
-      info ? p('.info.float-left.mb-0'
+    h('footer.container.clearfix.text-muted.border-top', [
+      info ? p('.info.float-left'
       , [ span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
         , ` · ${info.network}`
         , ` · `, a({ attrs: { href: '#/node' } }, info.id.substr(0,10))
         , btcusd ? ` · BTC = $${ Math.round(btcusd) }` : ''
         ]) : ''
-    , p('.toggle-theme.float-right.btn-link.mb-0', theme)
+    , p('.toggle-theme.float-right.btn-link', theme)
     ])
   )
 
