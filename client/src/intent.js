@@ -53,6 +53,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   // Feed event page navigation and click-to-collapse
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
   , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
+      .merge(togExp$.mapTo(null))
 
   // @xxx side effects outside of drivers!
   togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
