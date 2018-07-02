@@ -8,10 +8,10 @@ big.RM = 3 // ROUND_UP, so that we never see tiny msat amounts as "0"
 
 const
 
-  formatAmt = (amt, rate, precision, comma=true) =>
+  formatAmt = (amt, rate, digits, comma=true) =>
     (amt != null && ''+amt && rate)
-      ? numbro(big(amt).times(rate).toFixed(precision))
-          .format({ thousandSeparated: comma, mantissa: precision, trimMantissa: true, optionalMantissa: true })
+      ? numbro(big(amt).times(rate).toFixed(digits))
+          .format({ thousandSeparated: comma, mantissa: digits, trimMantissa: true, optionalMantissa: true })
       : ''
 
 , parseUri = uri => {

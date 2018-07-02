@@ -120,9 +120,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   return combine({
     conf$, page$, loading$, alert$
   , info$, peers$
-  , unitf$, cbalance$
+  , unitf$, cbalance$, rate$
   , feed$, feedStart$, feedShow$
   , amtData$, rpcHist$
-  , btcusd$: btcusd$.startWith(null)
+  , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }
