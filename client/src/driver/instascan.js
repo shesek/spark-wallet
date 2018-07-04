@@ -13,8 +13,8 @@ const Scanner$ = Instascan$.map(Instascan => Instascan.Scanner)
 
 const makeScanDriver = (opt={}) => {
   const video    = document.createElement('video')
-      , scanner$ = Scanner$.map(Scanner => new Scanner({ ...opt, video }))
-      , scan$    = scanner$.flatMap(scanner => O.fromEvent(scanner, 'scan'))
+      , scanner$ = Scanner$.map(Scanner => new Scanner({ ...opt, video })).shareReplay(1)
+      , scan$    = scanner$.flatMap(scanner => O.fromEvent(scanner, 'scan')).share()
 
   video.className = 'qr-video'
   document.body.appendChild(video)
