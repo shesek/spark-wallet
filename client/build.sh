@@ -48,8 +48,7 @@ if [[ "$BUILD_TARGET" == "web" ]]; then
 fi
 
 # Settings page for Cordova/Electron
-# @FIXME rename files, its not just cordova
 if [[ "$BUILD_TARGET" == "cordova" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
-  bundle src/cordova-settings.js > $DEST/settings.js
+  bundle src/server-settings.js > $DEST/settings.js
   pug -O '{"bundle":"settings.js"}' < index.pug > $DEST/settings.html
 fi

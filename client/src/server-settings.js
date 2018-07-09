@@ -11,7 +11,7 @@ import storageDriver from '@cycle/storage'
 import { combine, dbg } from './util'
 
 import { layout } from './views/layout'
-import view from './views/cordova-settings'
+import view from './views/server-settings'
 
 // Settings manager for Cordova builds.
 // This is a standalone cycle app loaded using a separate HTML file (settings.html).
