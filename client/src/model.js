@@ -39,7 +39,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   // continuously patch with known invoices (paid only)
   , freshInvs$ = O.merge(
       invoices$.map(invs => _ => invs)
-    , invoice$.map(inv  => invs => [ ...invs, inv ])
+    , invoice$.map(inv  => invs => invs && [ ...invs, inv ])
     , incoming$.map(inv => invs => invs && updPaidInv(invs, inv))
     )
     .startWith(null).scan((invs, mod) => mod(invs))
