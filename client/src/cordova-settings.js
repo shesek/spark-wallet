@@ -1,3 +1,4 @@
+import urlutil from 'url'
 import run from '@cycle/rxjs-run'
 import serialize from 'form-serialize'
 import { Observable as O } from './rxjs'
@@ -14,29 +15,42 @@ import { layout } from './views/layout'
 import view from './views/cordova-settings'
 
 // Settings manager for Cordova builds.
-// This currently includes a single setting: the server URL, including authentication data.
 // This is a standalone cycle app loaded using a separate HTML file (settings.html).
+
 
 const main = ({ DOM, storage, route, conf$, scan$ }) => {
   const
   // intent
+
     page$ = route()
+
+  , doScan$ = DOM.select('.scan-qr').events('click')
 
   , save$ = DOM.select('form').events('submit', { preventDefault: true })
       .map(e => serialize(e.target, { hash: true }))
 
-  , scanner$ = page$.map(p => p.pathname === '/scan').merge(scan$.mapTo(false))
+  , scanner$ = O.merge(doScan$.mapTo(true), scan$.mapTo(false)).startWith(false)
 
   // model
-  , server$ = storage.local.getItem('serverUrl').merge(scan$).startWith(null)
-  , state$  = combine({ conf$, page$, server$, scanner$ })
+  , scanParse$ = scan$.map(parseQR)
+  , scanValid$ = scanParse$.filter(x => !!x)
+
+  , server$ = storage.local.getItem('serverUrl').merge(scanValid$.map(x => x.server))
+  , acckey$ = storage.local.getItem('serverAccessKey').merge(scanValid$.map(x => x.acckey))
+
+  , error$ = scanParse$.filter(x => !x).mapTo('Scanned QR is not a valid URL.')
+      .merge(scanValid$.mapTo(null))
+      .merge(DOM.select('[dismiss=alert]').events('click').mapTo(null))
+      .startWith(null)
+
+  , state$  = combine({ conf$, page$, server$, acckey$, error$, scanner$ })
 
   // sinks
   , body$    = state$.map(S => S.scanner ? view.scan : view.settings(S))
-  , storage$ = save$.map(d => ({ key: 'serverUrl', value: d.server }))
+  , storage$ = save$.flatMap(d => O.of({ key: 'serverUrl', value: d.server }
+                                     , { key: 'serverAccessKey', value: d.acckey }))
 
-  // @TODO check URL validty
-  dbg({ scan$, save$, server$, state$, scanner$ })
+  dbg({ scan$, save$, server$, error$, state$, scanner$ })
 
   // redirect back to wallet after saving
   save$.subscribe(_ => location.href = 'index.html')
@@ -46,6 +60,19 @@ const main = ({ DOM, storage, route, conf$, scan$ }) => {
   , storage: storage$
   , scan$: scanner$
   }
+}
+
+const keyMarker = '#access-key='
+
+function parseQR(url) {
+  const p = urlutil.parse(url)
+
+  return (p && p.host)
+  ? {
+      server: p.hash ? url.substr(0, url.indexOf('#')) : url
+    , acckey: p.hash && p.hash.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null
+    }
+  : null
 }
 
 run(main, {

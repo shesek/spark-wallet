@@ -17,13 +17,8 @@ app.use(require('helmet')({ contentSecurityPolicy: { directives: {
 , imgSrc:     [ "'self'", 'data:' ]
 } }, ieNoOpen: false }))
 
-// CSRF protection. Require the X-Access header for POST requests, with exemption for requests
-// originating from file://, where HTTP basic auth and setting a custom header is sufficient.
-// (these are requests coming from Cordova)
-app.post('*', (req, res, next) =>
-  (req.csrfSafe || (req.get('Origin') === 'file://' && req.get('X-Requested-With')))
-    ? next()
-    : res.sendStatus(403))
+// CSRF protection. Require the X-Access header or access-key query string arg for POST requests.
+app.post('*', (req, res, next) => !req.csrfSafe ? res.sendStatus(403) : next())
 
 // RPC API
 app.post('/rpc', (req, res, next) =>
@@ -57,10 +52,12 @@ ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
   printService('Tor Onion Hidden Service v3', 'http', host))
 
 
-const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
-    , pwdUrl = process.env.QR_WITH_CRED ? `${app.settings.encAuth}@` : ''
+const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
+    , hashKey = process.env.QR_WITH_KEY ? `#access-key=${app.settings.accessKey}` : ''
 
 function printService(name, proto, host) {
   console.log(`${name} running on ${proto}://${host}/`)
-  qrterm && qrterm.generate(`${proto}://${pwdUrl}${host}/`, { small: true })
+  qrterm && qrterm.generate(`${proto}://${host}/${hashKey}`, { small: true })
 }
+
+process.env.PRINT_KEY && console.log('Access key for remote API access:', app.settings.accessKey)

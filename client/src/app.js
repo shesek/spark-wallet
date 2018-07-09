@@ -1,5 +1,4 @@
 import 'babel-polyfill'
-import url from 'url'
 import run from '@cycle/rxjs-run'
 
 import storageDriver      from '@cycle/storage'
@@ -53,7 +52,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
 run(main, {
   DOM:   makeDOMDriver('#app')
-, SSE:   makeSSEDriver(url.resolve(rpc.serverUrl, 'stream'))
+, SSE:   makeSSEDriver()
 , HTTP:  makeHTTPDriver()
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 

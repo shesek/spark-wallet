@@ -18,8 +18,9 @@ const args = require('meow')(`
       -o, --onion             start Tor Hidden Service [default: false]
       -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]
 
+      -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
       -Q, --print-qr          print QR code with the server URL [default: false]
-      --qr-with-cred          print QR code with embedded login credentials [default: false]
+      --qr-with-key           print QR code with embedded access key [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
       -V, --verbose           display debugging information [default: false]
@@ -32,7 +33,7 @@ const args = require('meow')(`
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
-            , printQr: {type:'boolean', alias:'Q'}, qrWithCred: {type:'boolean'}
+            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, qrWithKey: {type:'boolean'}
             , verbose: {alias:'V', type:'boolean'}
 } }).flags
 
@@ -43,15 +44,7 @@ keys.filter(k => args[k] === false).forEach(k => process.env['NO_' + k.replace(/
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
-process.env.QR_WITH_CRED && (process.env.PRINT_QR = true) // --qr-with-cred implies --print-qr
-
-// https://medium.com/@lmakarov/say-goodbye-to-urls-with-embedded-credentials-b051f6c7b6a3
-if (process.env.QR_WITH_CRED) console.error(`
-  The QR below contains a URL with embedded credentials (--qr-with-cred).
-  Note that URLs with embedded credentials are being deprecated in modern browsers.
-  In particular, Chrome mobile will appear to work but break in subtle ways.
-  The QR is meant to be scanned by the Spark mobile app. To authenticate from a browser, login manually.
-`)
+process.env.QR_WITH_KEY && (process.env.PRINT_QR = true) // --qr-with-key implies --print-qr
 
 require('babel-polyfill')
 require('./app')

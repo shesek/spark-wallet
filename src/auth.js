@@ -26,36 +26,37 @@ module.exports = (app, login) => {
       , accessKey   = hmac(encAuth, 'access-key').replace(/\W+/g, '')
       , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
 
-  Object.assign(app.settings, { encAuth, manifestKey, accessKey })
+  Object.assign(app.settings, { manifestKey, accessKey })
 
   app.use(cookieParser(cookieKey))
 
   return (req, res, next) => {
-    // The manifest.json file should be accessible without basic auth headers and without cookies.
-    // this allow accessing the /manifest/ directory by including the `manifestKey` in the path.
+    // The manifest.json file has to be accessible without basic auth headers and without cookies.
+    // This allow accessing the /manifest/ directory by including the `manifestKey` in the path.
+    // Note that the manifestKey grants access _only_ to the manifest.
     if (req.method === 'GET' && manifestRe.test(req.url)) {
       req.url = req.url.replace(manifestRe, '/manifest/')
       return next()
     }
 
-    function cookieAuth() { req.signedCookies.user || res.cookie('user', username, cookieOpt) }
-
-    // Authenticate via header (access key available in web builds as meta[name=access-token])
-    if (req.get('X-Access') === accessKey) {
-      req.csrfSafe = true
-      cookieAuth()
+    // Authenticate using the access key token, via the X-Access header or access-key query string argument.
+    // This also marks the request as csrfSafe. Used for RPC API calls and for SSE requests.
+    if (req.get('X-Access') === accessKey || req.query['access-key'] === accessKey) {
+      req.csrfSafe =  true
       return next()
     }
 
-    // Authenticate via cookie
-    if (req.signedCookies.user) return next();
+    // Authenticate with HMAC-signed cookies
+    if (req.signedCookies.user) {
+      return next()
+    }
 
-    // Authenticate via HTTP basic auth
+    // HTTP basic authentication (username/password)
     const cred = basicAuth(req)
     if (cred && cred.name === username && cred.pass === password) {
       // Once the user authenticates with basic auth, set a signed cookie to authenticate future requests.
       // HTTP basic auth is quirky, this makes for a smoother experience.
-      cookieAuth()
+      res.cookie('user', username, cookieOpt)
       return next()
     }
 
