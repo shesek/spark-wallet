@@ -139,7 +139,7 @@ To get more verbose output in the browser developer console, set `localStorage.d
 ```bash
 $ spark --help
 
-  A GUI web interface for c-lightning
+  A GUI wallet for c-lightning
 
   Usage
     $ spark [options]
