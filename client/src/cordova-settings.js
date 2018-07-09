@@ -7,7 +7,6 @@ import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
 import storageDriver from '@cycle/storage'
-import scanDriver from './driver/cordova-qrscanner'
 
 import { combine, dbg } from './util'
 
@@ -80,5 +79,7 @@ run(main, {
 , storage: storageDriver
 , route: makeRouteDriver(makeHashHistoryDriver())
 , conf$: makeConfDriver(storageDriver)
-, scan$: scanDriver
+, scan$: process.env.BUILD_TARGET === 'cordova'
+  ? require('./driver/cordova-qrscanner')
+  : require('./driver/instascan')({ mirror: false, backgroundScan: false })
 })

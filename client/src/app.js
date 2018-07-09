@@ -66,6 +66,12 @@ run(main, {
   , notif$: require('./driver/cordova-notification')
   }
 
+: process.env.BUILD_TARGET == 'electron' ? {
+    urihandler$: _ => O.empty() // @TODO
+  , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
+  , notif$: _ => O.empty() // @TODO require('./driver/electron-notification')
+  }
+
 : process.env.BUILD_TARGET == 'web' ? {
     urihandler$: _ => O.empty()
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })

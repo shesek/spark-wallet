@@ -24,7 +24,7 @@ find $DEST/swatch -type f ! -name '*.min.css' -delete
 find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
 ./fonts/rewrite-css.sh $DEST/swatch/*/*.css
 
-if [[ "$BUILD_TARGET" == "web" ]]; then
+if [[ "$BUILD_TARGET" == "web" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
 fi
 
@@ -47,8 +47,9 @@ if [[ "$BUILD_TARGET" == "web" ]]; then
   bundle src/worker.js > $DEST/worker.js
 fi
 
-# Settings page for Cordova
-if [[ "$BUILD_TARGET" == "cordova" ]]; then
+# Settings page for Cordova/Electron
+# @FIXME rename files, its not just cordova
+if [[ "$BUILD_TARGET" == "cordova" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
   bundle src/cordova-settings.js > $DEST/settings.js
   pug -O '{"bundle":"settings.js"}' < index.pug > $DEST/settings.html
 fi

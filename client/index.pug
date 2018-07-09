@@ -12,9 +12,12 @@ if process.env.BUILD_TARGET == 'web'
   meta(name='access-key', content=settings ? settings.accessKey : '{{accessKey}}')
   link(rel='manifest', href='manifest-'+(settings ? settings.manifestKey : '{{manifestKey}}')+'/manifest.json')
 
-if process.env.BUILD_TARGET == 'cordova'
-  //- configured via HTTP header on web builds
-  meta(http-equiv='Content-Security-Policy', content="default-src 'self' gap:; font-src 'self' data:; img-src 'self' data:; connect-src *")
+if process.env.BUILD_TARGET != 'web'
+  //- unsafe-eval is required for instascan, which is not used in cordova builds
+  - unsafeEval = process.env.BUILD_TARGET !== 'cordova' ? "script-src 'self' 'unsafe-eval'; " : ''
+  meta(http-equiv='Content-Security-Policy', content=unsafeEval+"default-src 'self' gap:; font-src 'self' data:; img-src 'self' data:; connect-src *")
+
+  //- when served over the web, this is set using an HTTP header instead of meta tag
 
 body(class='build-'+process.env.BUILD_TARGET)
 
@@ -26,7 +29,7 @@ body(class='build-'+process.env.BUILD_TARGET)
 
   script(src=bundle || 'app.js', defer)
 
-  if process.env.BUILD_TARGET == 'web'
+  if process.env.BUILD_TARGET == 'web' || process.env.BUILD_TARGET == 'electron'
     script(src='lib/instascan.js', async)
 
   if process.env.BUILD_TARGET == 'cordova'

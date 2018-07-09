@@ -1,0 +1,13 @@
+{
+  "name": "spark-electron",
+  "version": "0.0.1",
+  "main": "main.js",
+  "scripts": {
+    "dist": "./build.sh"
+  },
+  "author": "Nadav Ivgi",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^3.0.0-beta.1"
+  }
+}

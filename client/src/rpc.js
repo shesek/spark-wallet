@@ -7,7 +7,7 @@ import { dropErrors, extractErrors, formatError, dbg } from './util'
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
 // @xxx side-effect outside of drivers
-if (process.env.BUILD_TARGET == 'cordova' && !localStorage.serverUrl) {
+if (process.env.BUILD_TARGET !== 'web' && !localStorage.serverUrl) {
   location.href = 'settings.html'
 }
 
