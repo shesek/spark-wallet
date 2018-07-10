@@ -67,7 +67,7 @@ run(main, {
   }
 
 : process.env.BUILD_TARGET == 'electron' ? {
-    urihandler$: _ => O.empty() // @TODO
+    urihandler$: require('./driver/electron-urihandler')
   , scan$: require('./driver/instascan')({ mirror: false, backgroundScan: false })
   , notif$: _ => O.empty() // @TODO require('./driver/electron-notification')
   }
