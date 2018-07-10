@@ -12,7 +12,11 @@ if (!app.requestSingleInstanceLock()) {
 let mainWindow, loaded=false, initUri
 
 function createWindow () {
-  mainWindow = new BrowserWindow({width: 630, height: 900})
+  mainWindow = new BrowserWindow({
+    width: 500, height: 960
+  , webPreferences: { zoomFactor: 1.3 }
+  })
+
   mainWindow.loadFile('www/index.html')
   mainWindow.on('closed', _ => mainWindow = null)
 
