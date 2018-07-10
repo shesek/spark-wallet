@@ -1,14 +1,23 @@
-# Spark
+# Spark Lightning Wallet
 
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
 [![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark-wallet/blob/master/LICENSE)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
 
-A web GUI for c-lightning, with a simple and lightweight interface for day-to-day usage.
-Optimized for mobile and tablets.
+A wallet GUI for c-lightning,
+accessible over the web or through mobile and desktop apps.
 
-## Setup
+:zap: Simple & intuitive UI
+:zap: Near-zero configuration
+:zap: Progressive Web App
+:zap: Cordova and Electron builds
+:zap: Personalize looks & feel
+:zap: Automatic self-signed certs
+:zap: Built-in Tor hidden service support
+:zap:
+
+## Installation
 
 Spark requires a running [c-lightning](https://github.com/ElementsProject/lightning) node, at home (preferably) or on the cloud.
 See [setup instructions here](https://blockstream.com/2018/02/02/lightning-instant-bitcoin-transacting-tutorial.html).
@@ -18,27 +27,51 @@ Once c-lightning is running, install and start Spark with:
 ```bash
 # $ npm install -g spark-wallet
 
-# Spark is not on the npm repo yet. For now, it can be installed from github using:
 $ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
 $ spark # defaults: --ln-path ~/.lightning --port 9737
 ```
 
+(Or simply `$ npx spark-wallet`, which will install and start Spark in one go.)
+
 Spark will generate and print a random username and password that'll be used to login into the wallet.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
 
-To access the wallet, open `https://localhost:9737/` in your browser (preferably on mobile),
-skip the self-signed TLS certificate warning (see more below on TLS), and login with the username/password.
+To access the wallet, open `https://localhost:9737/` in your browser,
+skip the self-signed TLS certificate warning (see [more below on TLS](#tls)), and login with the username/password.
 
-See `$ spark --help` for the full list of available options (also available below).
+To accept remote connections, set `--host <listen-address>` (shorthand `-i`, e.g. `-i 0.0.0.0`).
 
-## Features
+Spark can also be accessed using mobile and desktop apps instead of through the browser.
+See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
+for more details.
 
-Supports the core functions of a lightning wallet: sending, receiving and history.
+See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
-Does not support peers and channels management, which are expected to be managed using the RPC for now.
 
-TODO: screenshots, explain currency/theme/expert controls, etc
+## Using the wallet
+
+<img src="https://i.imgur.com/pgnJKCk.png" width="25%" align="right"></img>
+
+Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
+For now, peers and channels are expected to be managed using the RPC.
+Spark is purely an off-chain wallet, with no on-chain payments.
+
+Recommended for use on a mobile device.
+
+GUI controls:
+
+- Click the balance on the top-right to toggle the currency display unit.
+  The available options are sat, bits, milli, btc and usd.
+
+- Click the theme name on the bottom-right to change themes (over 15 [bootswatch](https://bootswatch.com) themes are available).
+
+- Click the estimated times to see exact timestamps.
+
+- Click the version number on the bottom-left to toggle *expert mode*.
+  This will add two new menu items, "Logs" and "RPC Console",
+  display yaml dumps with additional information throughout the app,
+  and make payments collapsible.
 
 ## Progressive Web App
 
@@ -49,8 +82,34 @@ Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https:
 in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
 and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
 
-Note that installing the PWA requires the TLS certificate to be signed by a CA
+Note that installing the PWA on Android requires the TLS certificate to be signed by a CA
 or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
+
+## Mobile app (Cordova)
+
+A Cordova-based native app for Android is available for download from the
+[releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
+It is not currently published to the app store.
+
+The main advantage of the native app compared to the PWA is the ability to handle `lightning:` URIs.
+
+When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
+You can print your access key to the console by starting Spark with `--print-key/-k`.
+You can also scan this information from a QR, which you can get with `--qr-with-key`.
+
+For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
+or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
+
+## Desktop app (Electron)
+
+Electron-based desktop builds for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
+OS X and Windows are available for download from the
+[releases page](https://github.com/ElementsProject/spark/releases).
+
+The main advantage of the desktop app compared to the PWA is the ability to handle `lightning:` URIs.
+
+Similarly to the mobile app, the server URL and access key will need to be configured when starting
+the app for the first time. See more details above.
 
 ## TLS
 
@@ -105,33 +164,10 @@ To connect using the Cordova app, configure Orbot to route Spark's traffic over 
 Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
 
-## Mobile app (Cordova)
-
-A Cordova-based native app for Android is available for download from the
-[releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
-It is not currently published to the app store.
-
-The main advantage of the native app compared to the PWA is the ability to handle `lightning:` URIs.
-
-When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
-You can print your access key to the console by starting Spark with `--print-key/-k`.
-You can also scan this information from a QR, which you can get with `--qr-with-key`.
-
-For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
-or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).
-
-## Desktop app (Electron)
-
-Electorn-based desktop builds for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
-OS X and Windows are available for download from the
-[releases page](https://github.com/ElementsProject/spark/releases).
-
-The main advantage of the desktop app compared to the PWA is the ability to handle `lightning:` URIs.
-
-Similarly to the mobile app, the server URL and access key will need to be configured when starting
-the app for the first time. See more details above.
-
 ## Developing
+
+Spark is written in a reactive-functional style using [rxjs](https://github.com/ReactiveX/rxjs) and [cycle.js](https://cycle.js.org),
+with a nodejs/express server as the backend.
 
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
 
@@ -148,6 +184,8 @@ Electron builds can be prepared with `npm run electron:dist`.
 They will be available under `electron/dist`.
 
 To get more verbose output in the browser developer console, set `localStorage.debug = 'spark:*'`.
+
+Pull requests, suggestions and comments and welcome!
 
 ## CLI options
 
