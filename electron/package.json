@@ -1,11 +1,12 @@
 {
-  "name": "spark-electron",
+  "name": "spark-wallet",
   "description": "A GUI wallet for c-lightning",
   "version": "0.0.1",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "./build.sh"
+    "dist": "./build.sh",
+    "shipit": "./build.sh --publish always"
   },
   "author": "Nadav Ivgi <nadav@shesek.info>",
   "repository": "https://github.com/ElementsProject/spark",
@@ -17,6 +18,7 @@
   "build": {
     "appId": "com.spark.wallet",
     "productName": "Spark",
+    "files": [ "**/*", "!build.sh" ],
     "protocols": {
       "name": "Lightning Payment",
       "schemes": [

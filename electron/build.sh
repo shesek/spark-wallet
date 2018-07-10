@@ -15,6 +15,4 @@ export BROWSERIFY_OPT='--ignore-missing --no-builtins --insert-global-vars __fil
 
 [[ -n "$SKIP_CLIENT_DIST" ]] || (cd ../client && npm run dist)
 
-electron-builder -c.extraMetadata.name=spark \
-                 -c.extraMetadata.version=`node -p 'require("../package").version'` \
-                 "$@"
+electron-builder "$@" -c.extraMetadata.version=`node -p 'require("../package").version'`
