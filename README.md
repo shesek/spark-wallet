@@ -61,8 +61,8 @@ To set a custom "common name" for the generated certificate, set `--tls-name`.
 
 To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files in the `--tls-path` directory.
 
-To disable TLS and start a plaintext HTTP server instead, set `--no-tls` (not recommended).
-Note that without TLS, Chrome will not allow accessing the camera.
+To disable TLS and start a plaintext HTTP server instead, set `--no-tls` (not recommended unless you're listening on `localhost` only).
+Note that without TLS, Chrome will not allow accessing the camera on non-`localhost` hosts.
 
 #### Add as Trusted Certificate to Android
 
@@ -113,8 +113,9 @@ It is not currently published to the app store.
 
 The main advantage of the native app compared to the PWA is the ability to handle `lightning:` URIs.
 
-When the app starts for the first time, you'll need to configure the server URL in a `http(s)://[user]:[pwd]@[host]:[port]/` format.
-You can scan this information from a QR, which you can get by starting Spark with `--qr-with-cred`.
+When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
+You can print your access key to the console by starting Spark with `--print-key/-k`.
+You can also scan this information from a QR, which you can get with `--qr-with-key`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).
