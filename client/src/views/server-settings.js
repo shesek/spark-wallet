@@ -11,23 +11,26 @@ const settings = ({ server, acckey, error }) =>
 
   , formGroup('Server URL'
     , input('.form-control', { attrs: {
-        type: 'url', name: 'server', value: server || '', placeholder: 'https://my.spark-server.com:9113/'
-      , required: true } })
+        type: 'url', name: 'server', required: true, value: server || ''
+      , placeholder: 'https://localhost:9737/'
+      } })
     )
 
   , formGroup('Access Key'
     , input('.form-control', { attrs: {
-        type: 'text', name: 'acckey', value: acckey || '', pattern: '[a-zA-Z0-9]+'
-      , required: true } })
+        type: 'text', name: 'acckey', required: true, value: acckey || ''
+      , pattern: '[a-zA-Z0-9]+', placeholder: '(string of a-z, A-Z and 0-9)'
+      } })
     )
 
-  , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save')
+  , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save settings')
   , ' '
-  , button('.btn.btn-lg.btn-info.scan-qr', 'Scan QR')
-  , ' '
-  , a('.btn.btn-lg.btn-secondary', { attrs: { href: 'index.html' } }, 'Cancel')
+  , button('.btn.btn-lg.btn-secondary.scan-qr', 'Scan QR')
   ])
 
-const scan = div('.qr-scanner', [ div('.indicator', [div('.bordertop'), div('.borderbottom')]) ])
+const scan = div('.qr-scanner', [
+  div('.indicator', [div('.bordertop'), div('.borderbottom')])
+, div('.buttons-wrap.py-3.main-bg', button('.btn.btn-lg.btn-primary.stop-scan', 'Cancel'))
+])
 
 module.exports = { settings, scan }

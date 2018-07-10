@@ -23,12 +23,13 @@ const main = ({ DOM, storage, route, conf$, scan$ }) => {
 
     page$ = route()
 
-  , doScan$ = DOM.select('.scan-qr').events('click')
+  , doScan$ = DOM.select('.scan-qr').events('click').mapTo(true)
+  , stopScan$ = DOM.select('.stop-scan').events('click').mapTo(false)
 
   , save$ = DOM.select('form').events('submit', { preventDefault: true })
       .map(e => serialize(e.target, { hash: true }))
 
-  , scanner$ = O.merge(doScan$.mapTo(true), scan$.mapTo(false)).startWith(false)
+  , scanner$ = O.merge(doScan$, stopScan$, scan$.mapTo(false)).startWith(false)
 
   // model
   , scanParse$ = scan$.map(parseQR)
