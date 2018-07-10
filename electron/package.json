@@ -12,8 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^3.0.0-beta.1",
-    "electron-builder": "^20.19.2",
-    "electron-debug": "^2.0.0"
+    "electron-builder": "^20.19.2"
   },
   "build": {
     "appId": "com.spark.wallet",
@@ -29,7 +28,15 @@
       "target": "zip"
     },
     "linux": {
-      "target": [ "AppImage", "deb", "snap", "tar.gz" ]
+      "target": [
+        "AppImage",
+        "deb",
+        "snap",
+        "tar.gz"
+      ]
     }
+  },
+  "dependencies": {
+    "electron-debug": "^2.0.0"
   }
 }
