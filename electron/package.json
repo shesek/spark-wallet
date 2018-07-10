@@ -8,6 +8,7 @@
   "author": "Nadav Ivgi",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^3.0.0-beta.1"
+    "electron": "^3.0.0-beta.1",
+    "electron-debug": "^2.0.0"
   }
 }
