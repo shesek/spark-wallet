@@ -1,14 +1,35 @@
 {
   "name": "spark-electron",
+  "description": "A GUI wallet for c-lightning",
   "version": "0.0.1",
   "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "dist": "./build.sh"
   },
-  "author": "Nadav Ivgi",
+  "author": "Nadav Ivgi <nadav@shesek.info>",
+  "repository": "https://github.com/ElementsProject/spark",
   "license": "MIT",
   "devDependencies": {
     "electron": "^3.0.0-beta.1",
+    "electron-builder": "^20.19.2",
     "electron-debug": "^2.0.0"
+  },
+  "build": {
+    "appId": "com.spark.wallet",
+    "productName": "Spark",
+    "protocols": {
+      "name": "Lightning Payment",
+      "schemes": [
+        "lightning"
+      ]
+    },
+    "mac": {
+      "category": "public.app-category.finance",
+      "target": "zip"
+    },
+    "linux": {
+      "target": [ "AppImage", "deb", "snap", "tar.gz" ]
+    }
   }
 }

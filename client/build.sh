@@ -35,7 +35,7 @@ stylus -u nib -c styl/style.styl -o $DEST
 # Browserify bundles
 
 bundle() {
-  browserify $1 \
+  browserify $BROWSERIFY_OPT $1 \
     | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs -c warnings=false -m || cat )
 }
 

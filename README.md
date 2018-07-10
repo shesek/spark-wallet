@@ -105,7 +105,7 @@ To connect using the Cordova app, configure Orbot to route Spark's traffic over 
 Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
 
-## Native Cordova App
+## Mobile app (Cordova)
 
 A Cordova-based native app for Android is available for download from the
 [releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
@@ -119,6 +119,17 @@ You can scan this information from a QR, which you can get by starting Spark wit
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions above](#add-as-trusted-certificate-to-android)).
 
+## Desktop app (Electron)
+
+Electorn-based desktop builds for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
+OS X and Windows are available for download from the
+[releases page](https://github.com/ElementsProject/spark/releases).
+
+The main advantage of the desktop app compared to the PWA is the ability to handle `lightning:` URIs.
+
+Similarly to the mobile app, the server URL and access key will need to be configured when starting
+the app for the first time. See more details above.
+
 ## Developing
 
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
@@ -131,6 +142,9 @@ $ npm start -- --ln-path /data/lightning
 
 The Cordova android app can be built by running `npm run cordova:dist`.
 The `.apk` file will be created in `cordova/platforms/android/app/build/outputs/apk/debug/`.
+
+Electron builds can be prepared with `npm run electron:dist`.
+They will be available under `electron/dist`.
 
 To get more verbose output in the browser developer console, set `localStorage.debug = 'spark:*'`.
 
