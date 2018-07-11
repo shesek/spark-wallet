@@ -8,7 +8,7 @@ rm -rf www/*
 
 export BUILD_TARGET=electron
 export DEST=`pwd`/www
-export BROWSERIFY_OPT='--ignore-missing --no-builtins --insert-global-vars __filename,__dirname'
+export BROWSERIFY_OPT='--exclude electron --no-builtins --insert-global-vars __filename,__dirname'
 
 # --ignore-missing lets require('electron') pass to the bundle as-is (required for accessing the ipcRenderer)
 # --no-builtins is used because electron runs the bundle in an environment with all the nodejs apis
