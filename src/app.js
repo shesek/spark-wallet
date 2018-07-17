@@ -66,7 +66,7 @@
     console.log(`${name} running on ${url}`)
     qrterm && qrterm.generate(`${url}${hashKey}`, { small: true })
 
-    process.send({ serverUrl: url })
+    process.send && process.send({ serverUrl: url })
   }
 
   process.env.PRINT_KEY && console.log('Access key for remote API access:', app.settings.accessKey)
