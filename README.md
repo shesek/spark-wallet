@@ -214,7 +214,7 @@ Pull requests, suggestions and comments and welcome!
 ```bash
 $ spark --help
 
-  A GUI wallet for c-lightning
+  A wallet GUI for c-lightning, accessible over the web or through mobile and desktop apps.
 
   Usage
     $ spark [options]
@@ -233,7 +233,9 @@ $ spark --help
     -o, --onion             start Tor Hidden Service [default: false]
     -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]
 
-    -Q, --print-qr          print QR codes for server access, including password [default: false]
+    -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
+    -Q, --print-qr          print QR code with the server URL [default: false]
+    --qr-with-key           print QR code with embedded access key [default: false]
     --no-webui              run API server without serving client assets [default: false]
 
     -V, --verbose           display debugging information [default: false]
@@ -242,6 +244,9 @@ $ spark --help
 
   Example
     $ spark -l ~/.lightning
+
+  All options may also be specified as environment variables:
+    $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark
 ```
 
 ## License
