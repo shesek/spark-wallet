@@ -46,8 +46,9 @@ Spark can also be accessed using mobile and desktop apps instead of through the 
 See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
 for more details.
 
-See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
+Note that the desktop app comes bundled with the Spark server and don't require the manual server setup described here.
 
+See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
 ## Using the wallet
 
@@ -102,14 +103,18 @@ or manually added as a user trusted certificate ([instructions below](#add-as-tr
 
 ## Desktop app (Electron)
 
-Electron-based desktop builds for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
+Electron-based desktop apps for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
 OS X and Windows are available for download from the
 [releases page](https://github.com/ElementsProject/spark/releases).
 
 The main advantage of the desktop app compared to the PWA is the ability to handle `lightning:` URIs.
 
-Similarly to the mobile app, the server URL and access key will need to be configured when starting
-the app for the first time. See more details above.
+The desktop app comes bundled with the Spark server-side component. If you're connecting to a local
+c-lightning instance, you can configure the client to connect to it directly without manually setting-up
+the Spark server.
+
+Connecting to a remote c-lightning instance requires setting up the Spark server on the same machine
+running c-lightning and connecting through it.
 
 ## TLS
 

@@ -1,12 +1,12 @@
 import url from 'url'
 import { Observable as O } from '../rxjs'
 
+const serverInfo = process.env.BUILD_TARGET === 'web'
+  ? { serverUrl: '.', accessKey: document.querySelector('[name=access-key]').content }
+  : JSON.parse(localStorage.serverInfo)
+
 module.exports = _ => {
-  // provide access key as a query string arg when connecting to a remote server.
-  // when using the local server, http basic auth or cookies are used instead,
-  const srcUrl = process.env.BUILD_TARGET === 'web'
-    ? './stream'
-    : url.resolve(localStorage.serverUrl, `stream?access-key=${localStorage.serverAccessKey}`)
+  const srcUrl = url.resolve(serverInfo.serverUrl, `stream?access-key=${serverInfo.accessKey}`)
 
   const es = new EventSource(srcUrl)
   return _ => (ev='message') => O.fromEvent(es, ev).map(r => r.data).map(JSON.parse)

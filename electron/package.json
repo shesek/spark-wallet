@@ -12,13 +12,20 @@
   "repository": "https://github.com/ElementsProject/spark",
   "license": "MIT",
   "devDependencies": {
+    "babelify": "^8.0.0",
+    "browserify": "^16.2.2",
     "electron": "^3.0.0-beta.1",
-    "electron-builder": "^20.19.2"
+    "electron-builder": "^20.19.2",
+    "terser": "^3.7.8",
+    "uglifyify": "^5.0.1"
   },
   "build": {
     "appId": "com.spark.wallet",
     "productName": "Spark",
-    "files": [ "**/*", "!build.sh" ],
+    "files": [
+      "**/*",
+      "!build.sh"
+    ],
     "protocols": {
       "name": "Lightning Payment",
       "schemes": [
@@ -39,6 +46,8 @@
     }
   },
   "dependencies": {
-    "electron-debug": "^2.0.0"
+    "electron-debug": "^2.0.0",
+    "electron-store": "^2.0.0",
+    "nanoid": "^1.0.7"
   }
 }

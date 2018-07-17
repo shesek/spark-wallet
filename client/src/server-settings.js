@@ -13,21 +13,22 @@ import { combine, dbg } from './util'
 import { layout } from './views/layout'
 import view from './views/server-settings'
 
-// Settings manager for Cordova builds.
+// Settings manager for Cordova/Electron builds.
 // This is a standalone cycle app loaded using a separate HTML file (settings.html).
 
 
-const main = ({ DOM, storage, route, conf$, scan$ }) => {
+const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   const
+    on = (sel, ev, pd=false) => DOM.select(sel).events(ev, { preventDefault: pd })
+
   // intent
 
-    page$ = route()
+  , page$ = route()
 
-  , doScan$ = DOM.select('.scan-qr').events('click').mapTo(true)
-  , stopScan$ = DOM.select('.stop-scan').events('click').mapTo(false)
+  , doScan$ = on('.scan-qr', 'click').mapTo(true)
+  , stopScan$ = on('.stop-scan', 'click').mapTo(false)
 
-  , save$ = DOM.select('form').events('submit', { preventDefault: true })
-      .map(e => serialize(e.target, { hash: true }))
+  , save$ = on('form', 'submit', true).map(e => serialize(e.target, { hash: true, disabled: true }))
 
   , scanner$ = O.merge(doScan$, stopScan$, scan$.mapTo(false)).startWith(false)
 
@@ -35,28 +36,42 @@ const main = ({ DOM, storage, route, conf$, scan$ }) => {
   , scanParse$ = scan$.map(parseQR)
   , scanValid$ = scanParse$.filter(x => !!x)
 
-  , server$ = storage.local.getItem('serverUrl').merge(scanValid$.map(x => x.server))
-  , acckey$ = storage.local.getItem('serverAccessKey').merge(scanValid$.map(x => x.acckey))
+  , serverInfo$ = O.merge(
+      storage.local.getItem('serverInfo').first().map(JSON.parse)
+    , IPC('serverInfo') // embedded electron spark server
+    , scanValid$
+    )
 
-  , error$ = scanParse$.filter(x => !x).mapTo('Scanned QR is not a valid URL.')
-      .merge(scanValid$.mapTo(null))
-      .merge(DOM.select('[dismiss=alert]').events('click').mapTo(null))
-      .startWith(null)
+  , mode$ = process.env.BUILD_TARGET == 'electron' ? O.merge(
+      serverInfo$.map(s => s.lnPath ? 'local' : 'remote')
+    , on('[name=mode]', 'input').map(e => e.target.value)
+    ).distinctUntilChanged() : O.of('remote') // non-electron builds are always remote
 
-  , state$  = combine({ conf$, page$, server$, acckey$, error$, scanner$ })
+  , error$ = O.merge(
+      scanParse$.filter(x => !x).mapTo('Scanned QR is not a valid URL.')
+    , on('[dismiss=alert]', 'click').mapTo(null)
+    , scanValid$.mapTo(null)
+    ).startWith(null)
+
+  , state$ = combine({ conf$, page$, mode$, serverInfo$, error$, scanner$ })
 
   // sinks
   , body$    = state$.map(S => S.scanner ? view.scan : view.settings(S))
-  , storage$ = save$.flatMap(d => O.of({ key: 'serverUrl', value: d.server }
-                                     , { key: 'serverAccessKey', value: d.acckey }))
+  , storage$ = save$.map(d => ({ key: 'serverInfo', value: JSON.stringify(d) }))
 
-  dbg({ scan$, save$, server$, error$, state$, scanner$ })
+  , ipc$ = process.env.BUILD_TARGET == 'electron' ? O.merge(
+      on('.enable-server', 'click').map(e => [ 'enableServer', e.target.closest('form').querySelector('[name=lnPath]').value ])
+    , mode$.filter(mode => mode == 'remote').mapTo([ 'disableServer' ])
+    ) : O.empty()
+
+  dbg({ scan$, save$, serverInfo$, error$, state$, scanner$, ipc$ })
 
   // redirect back to wallet after saving
   save$.subscribe(_ => location.href = 'index.html')
 
   return {
     DOM: combine({ state$, body$ }).map(layout)
+  , IPC: ipc$
   , storage: storage$
   , scan$: scanner$
   }
@@ -69,14 +84,17 @@ function parseQR(url) {
 
   return (p && p.host)
   ? {
-      server: p.hash ? url.substr(0, url.indexOf('#')) : url
-    , acckey: p.hash && p.hash.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null
+      serverUrl: p.hash ? url.substr(0, url.indexOf('#')) : url
+    , accessKey: p.hash && p.hash.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null
     }
   : null
 }
 
 run(main, {
   DOM: makeDOMDriver('#app')
+, IPC: process.env.BUILD_TARGET === 'electron'
+  ? require('./driver/electron-ipc')
+  : _ => _ => O.of() // noop driver
 , storage: storageDriver
 , route: makeRouteDriver(makeHashHistoryDriver())
 , conf$: makeConfDriver(storageDriver)

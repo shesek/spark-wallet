@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require('electron')
+    , control = require('./server-controller')
 
 require('electron-debug')({ enabled: true, showDevTools: false })
 
@@ -11,16 +12,24 @@ if (!app.requestSingleInstanceLock()) {
 // Init app window
 let mainWindow, loaded=false, initUri
 
-function createWindow () {
+async function createWindow () {
+  loaded = false
   mainWindow = new BrowserWindow({
     width: 500, height: 960
   , webPreferences: { zoomFactor: 1.3 }
   })
 
+  const sparkServer = await control.maybeStart()
+  if (sparkServer) {
+    // open a blank file to set serverInfo in the correct origin before opening the main app
+    // @XXX this causes slightly slower load times
+    mainWindow.loadFile('www/blank.html')
+    await mainWindow.webContents.executeJavaScript('localStorage.serverInfo = '+JSON.stringify(JSON.stringify(sparkServer)))
+  }
+
   mainWindow.loadFile('www/index.html')
   mainWindow.on('closed', _ => mainWindow = null)
 
-  loaded = false
   mainWindow.webContents.once('did-finish-load', _ => {
     loaded = true
     if (initUri) {

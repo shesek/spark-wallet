@@ -1,18 +1,33 @@
 #!/bin/bash
 set -xeo pipefail
 
-mkdir -p www
-rm -rf www/*
-
 [[ -d node_modules ]] || npm install
 
-export BUILD_TARGET=electron
-export DEST=`pwd`/www
-export BROWSERIFY_OPT='--exclude electron --no-builtins --insert-global-vars __filename,__dirname'
+# Build UI assets
+if [[ -z "$SKIP_CLIENT" ]]; then
+  export BUILD_TARGET=electron
+  export DEST=`pwd`/www
+  export BROWSERIFY_OPT='--exclude electron --no-builtins --insert-global-vars __filename,__dirname'
 
-# --ignore-missing lets require('electron') pass to the bundle as-is (required for accessing the ipcRenderer)
-# --no-builtins is used because electron runs the bundle in an environment with all the nodejs apis
+  mkdir -p $DEST && rm -rf $DEST/*
 
-[[ -n "$SKIP_CLIENT_DIST" ]] || (cd ../client && npm run dist)
+  (cd ../client && npm run dist)
+  touch $DEST/blank.html
+fi
 
-electron-builder "$@" -c.extraMetadata.version=`node -p 'require("../package").version'`
+# Build server bundle
+# TLS, Onion, QR and Web UI are not needed by Electron builds and removed to reduce bundle size.
+# Must be used with NO_TLS+NO_WEBUI and without ONION/PRINT_QR
+if [[ -z "$SKIP_SERVER" ]]; then
+  browserify --node -t babelify \
+             -x selfsigned -x qrcode-terminal -x hsv3 -x ../src/webui.js \
+             ../node_modules/babel-polyfill \
+             ../src/app.js \
+  | ( [[ "$NODE_ENV" != "development" ]] && terser --compress --mangle || cat ) \
+  > server.bundle.js
+fi
+
+# Build electron package
+if [[ -z "$SKIP_PACKAGE" ]]; then
+  electron-builder "$@" -c.extraMetadata.version=`node -p 'require("../package").version'`
+fi
