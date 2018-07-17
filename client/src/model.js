@@ -14,7 +14,7 @@ const
 , idn = x => x
 
 const
-  themes   = 'cerulean cosmo cyborg dark darkly flatly journal litera lumen lux materia minty pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
+  themes   = 'cerulean cosmo cyborg dark flatly journal lumen lux materia pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
 , units    = 'sat bits milli btc usd'.split(' ')
 , unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 5 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
