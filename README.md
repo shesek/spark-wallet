@@ -46,7 +46,6 @@ To accept remote connections, set `--host <listen-address>` (shorthand `-i`, e.g
 Spark can also be accessed using mobile and desktop apps instead of through the browser.
 See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
 for more details.
-
 Note that the desktop app comes bundled with the Spark server and don't require the manual server setup described here.
 
 See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
@@ -169,6 +168,22 @@ To connect using the Cordova app, configure Orbot to route Spark's traffic over 
 
 Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
 the URL as a QR to the console.
+
+## Adding to startup with `systemd`
+
+```bash
+# set config options in /etc/spark-wallet.conf, one KEY=VALUE per line
+$ echo LOGIN=bob:superSecretPass123 | sudo tee -a /etc/spark-wallet.conf
+$ echo LN_PATH=$HOME/.lightning | sudo tee -a /etc/spark-wallet.conf
+
+# create service file from template
+$ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/contrib/spark-wallet.service |
+  sed "s~{cmd}~`which spark-wallet`~;s~{user}~`whoami`~" |
+  sudo tee /etc/systemd/system/spark-wallet.service
+
+# inspect the generated service file, then start the service with:
+$ systemctl enable spark-wallet && systemctl start spark-wallet
+```
 
 ## Developing
 
