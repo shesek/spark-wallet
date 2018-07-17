@@ -31,7 +31,7 @@
     "express": "^4.16.3",
     "helmet": "^3.12.1",
     "is-ip": "^2.0.0",
-    "lightning-client": "github:shesek/lightning-client-js#113032f66816debbf1cdbf63a0d14dca15519c08",
+    "lightning-client": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
     "meow": "^4.0.1",
     "morgan": "^1.9.0",
     "nanoid": "^1.0.4",
