@@ -9,10 +9,11 @@ A wallet GUI for c-lightning,
 accessible over the web or through mobile and desktop apps.
 
 :zap: Simple & intuitive UI
+:zap: Purely off-chain
 :zap: Near-zero configuration
 :zap: Progressive Web App
 :zap: Cordova and Electron builds
-:zap: Personalize looks & feel
+:zap: Personalizable themes
 :zap: Automatic self-signed certs
 :zap: Built-in Tor hidden service support
 :zap:
@@ -29,11 +30,11 @@ Once c-lightning is running, install and start Spark with:
 
 $ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
-$ spark-wallet --ln-path ~/.lightning --port 9737
+$ spark-wallet --ln-path ~/.lightning --port 9737 # these are the defaults
 ```
 
 Or simply `$ npx spark-wallet`, which will install and start Spark in one go.
-`--ln-path ~/.lightning --port 9737` are the defaults. This should normally Just Work ™.
+This should normally Just Work ™.
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
@@ -50,15 +51,15 @@ Note that the desktop app comes bundled with the Spark server and don't require 
 
 See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
-## Using the wallet
+## Features & Usage
 
 <img src="https://i.imgur.com/pgnJKCk.png" width="25%" align="right"></img>
 
 Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
-For now, peers and channels are expected to be managed using the RPC.
-Spark is purely an off-chain wallet, with no on-chain payments.
+Peers and channels are expected to be managed using the RPC.
+Spark is a purely off-chain wallet, with no on-chain payments.
 
-Recommended for use on a mobile device.
+Recommended for use on mobile devices.
 
 GUI controls:
 
