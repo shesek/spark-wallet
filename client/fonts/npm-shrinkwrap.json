@@ -1,6 +1,6 @@
 {
   "name": "spark-fonts",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -13,11 +13,6 @@
       "version": "0.0.54",
       "resolved": "https://registry.npmjs.org/typeface-lato/-/typeface-lato-0.0.54.tgz",
       "integrity": "sha512-2/oP5YrXCBSLg+N2ZdWnMbJ0PRIidrJVFHgRoLxo5MNsdu9eE4aBwsoEY/K/+9rKdktGO8zpiXBYPRn9F6U/Sw=="
-    },
-    "typeface-montserrat": {
-      "version": "0.0.54",
-      "resolved": "https://registry.npmjs.org/typeface-montserrat/-/typeface-montserrat-0.0.54.tgz",
-      "integrity": "sha512-Typhap0PWT299+Va0G/8ZtycHMXrH4gBWKfiW977KEBx5rXUUCa70gvqLx1fdA0WAo6bhSAQmo8uc+QFAmjPww=="
     },
     "typeface-neucha": {
       "version": "0.0.54",
@@ -38,11 +33,6 @@
       "version": "0.0.54",
       "resolved": "https://registry.npmjs.org/typeface-open-sans/-/typeface-open-sans-0.0.54.tgz",
       "integrity": "sha512-w6wOd6EicZdZKf0jSU/K3EzEi3zFgvWQSN7NOpRIQI5KeMWmC5Pg/lqtBVJHB0pRChYRmLdhf4h8ROur0A3JZQ=="
-    },
-    "typeface-raleway": {
-      "version": "0.0.54",
-      "resolved": "https://registry.npmjs.org/typeface-raleway/-/typeface-raleway-0.0.54.tgz",
-      "integrity": "sha512-oilrvv0fV+z4eYvfTAl6t9Oq1mE/ZrLDPM71TrcAtqyVb0QzAJ6hQBS+FQcYdHxK2LGQE+gloQUPtwgY2I7WxA=="
     },
     "typeface-roboto": {
       "version": "0.0.54",

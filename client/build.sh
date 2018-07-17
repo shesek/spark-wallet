@@ -1,5 +1,6 @@
 #!/bin/bash
 set -xeo pipefail
+shopt -s extglob
 
 : ${DEST:=dist}
 : ${NODE_ENV:=production}
@@ -10,7 +11,7 @@ export NODE_ENV
 export VERSION=`node -p 'require("../package").version'`-`git describe --always --abbrev=7`
 
 rm -rf $DEST/*
-mkdir -p $DEST $DEST/lib $DEST/fonts
+mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch
 
 [[ -d node_modules ]] || npm install
 [[ -d fonts/node_modules ]] || (cd fonts && npm install)
@@ -18,7 +19,7 @@ mkdir -p $DEST $DEST/lib $DEST/fonts
 # Static assets
 cp -r www/* $DEST/
 cp -r fonts/node_modules/typeface-* $DEST/fonts/
-cp -r node_modules/bootswatch/dist $DEST/swatch
+cp -r node_modules/bootswatch/dist/!(darkly|litera|minty) $DEST/swatch/
 cp -r swatch/*/ $DEST/swatch/
 find $DEST/swatch -type f ! -name '*.min.css' -delete
 find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
