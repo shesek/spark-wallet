@@ -2,9 +2,7 @@
   "name": "spark-wallet",
   "version": "0.0.1",
   "description": "A GUI wallet for c-lightning",
-  "bin": {
-    "spark": "dist/cli.js"
-  },
+  "bin": "dist/cli.js",
   "scripts": {
     "start": "./start.sh",
     "dist": "./build.sh",

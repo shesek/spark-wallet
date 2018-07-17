@@ -29,10 +29,11 @@ Once c-lightning is running, install and start Spark with:
 
 $ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
-$ spark # defaults: --ln-path ~/.lightning --port 9737
+$ spark-wallet --ln-path ~/.lightning --port 9737
 ```
 
-(Or simply `$ npx spark-wallet`, which will install and start Spark in one go.)
+Or simply `$ npx spark-wallet`, which will install and start Spark in one go.
+`--ln-path ~/.lightning --port 9737` are the defaults. This should normally Just Work ™.
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
