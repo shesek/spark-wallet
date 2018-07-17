@@ -30,6 +30,9 @@ const args = require('meow')(`
     Example
       $ spark -l ~/.lightning
 
+    All options may also be specified as environment variables:
+      $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark
+
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
