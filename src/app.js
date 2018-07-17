@@ -3,11 +3,14 @@
       , ln  = require('lightning-client')(process.env.LN_PATH)
 
   // Test connection
-  function connFailed(err) { throw err }
+  function connFailed(err) {
+    process.send && process.send({ error: err.toString() })
+    throw err
+  }
   ln.on('error', connFailed)
-  const lninfo = await ln.getinfo()
+  const lninfo = await ln.getinfo().catch(connFailed)
+  console.log(`Connected to c-lightning ${lninfo.version} with id ${lninfo.id} on network ${lninfo.network}`)
   ln.removeListener('error', connFailed)
-  console.log(`Connected to c-lightning ${lninfo.version} node with id ${lninfo.id}`)
 
   // Settings
   app.set('port', process.env.PORT || 9737)

@@ -49,8 +49,9 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
 
   , error$ = O.merge(
       scanParse$.filter(x => !x).mapTo('Scanned QR is not a valid URL.')
+    , IPC('serverError')
+    , serverInfo$.mapTo(null)
     , on('[dismiss=alert]', 'click').mapTo(null)
-    , scanValid$.mapTo(null)
     ).startWith(null)
 
   , state$ = combine({ conf$, page$, mode$, serverInfo$, error$, scanner$ })

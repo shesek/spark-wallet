@@ -20,6 +20,8 @@ async function createWindow () {
   })
 
   const sparkServer = await control.maybeStart()
+    .catch(err => console.error('Spark server failed', err))
+
   if (sparkServer) {
     // open a blank file to set serverInfo in the correct origin before opening the main app
     // @XXX this causes slightly slower load times

@@ -28,10 +28,12 @@ function startServer(lnPath) {
 
   proc.on('error', err => console.error('Spark server error', err.stack || err))
   proc.on('message', m => console.log('Spark server msg', m))
-  proc.on('close', _ => proc = null)
+  proc.on('exit', code => console.log('Spark server exited with status', code))
+  proc.on('exit', _ => proc = null)
 
   return new Promise((resolve, reject) =>
-    proc.once('message', m => m.serverUrl ? resolve(m.serverUrl) : reject(new Error('invalid message')))
+    proc.once('message', m => m.serverUrl ? resolve(m.serverUrl)
+                                          : reject(new Error(m.error || 'unknown message '+m)))
   ).then(serverUrl => ({ serverUrl, accessKey, lnPath }))
 }
 
@@ -51,14 +53,16 @@ function maybeStart() {
 app.on('before-quit', stopServer)
 
 ipcMain.on('enableServer', async (e, lnPath) => {
-  store.set({ autoStart: true, lnPath })
-  e.sender.send('serverInfo', await startServer(lnPath))
+  try {
+    e.sender.send('serverInfo', await startServer(lnPath))
+    store.set({ autoStart: true, lnPath })
+  }
+  catch (err) { e.sender.send('serverError', err.message)  }
 })
 
 ipcMain.on('disableServer', _ => {
   store.set('autoStart', false)
   stopServer()
 })
-
 
 module.exports = { maybeStart }
