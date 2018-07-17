@@ -41,23 +41,25 @@ const { NO_TLS, TLS_NAME, TLS_PATH, ONION, ONION_PATH } = process.env
 
 // HTTPS Server
 NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(host =>
-  printService('HTTPS server', 'https', host))
+  serviceReady('HTTPS server', `https://${host}/`))
 
 // HTTP Server
 NO_TLS && require('./transport/http')(app).then(host =>
-  printService('HTTP server', 'http', host))
+  serviceReady('HTTP server', `http://${host}/`))
 
 // Tor Onion Hidden Service
 ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
-  printService('Tor Onion Hidden Service v3', 'http', host))
+  serviceReady('Tor Onion Hidden Service v3', `http://${host}/`))
 
 
 const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
     , hashKey = process.env.QR_WITH_KEY ? `#access-key=${app.settings.accessKey}` : ''
 
-function printService(name, proto, host) {
-  console.log(`${name} running on ${proto}://${host}/`)
-  qrterm && qrterm.generate(`${proto}://${host}/${hashKey}`, { small: true })
+function serviceReady(name, url) {
+  console.log(`${name} running on ${url}`)
+  qrterm && qrterm.generate(`${url}${hashKey}`, { small: true })
+
+  process.send({ serverUrl: url })
 }
 
 process.env.PRINT_KEY && console.log('Access key for remote API access:', app.settings.accessKey)
