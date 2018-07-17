@@ -35,5 +35,8 @@
         "platforms": [
             "android"
         ]
+    },
+    "devDependencies": {
+        "cordova": "^8.0.0"
     }
 }

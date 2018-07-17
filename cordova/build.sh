@@ -1,11 +1,12 @@
 #!/bin/bash
 set -xeo pipefail
 
-mkdir -p www
-rm -rf www/*
+[[ -d node_modules ]] || npm install
 
 export BUILD_TARGET=cordova
 export DEST=`pwd`/www
+
+mkdir -p $DEST && rm -rf $DEST/*
 
 (cd ../client && npm run dist)
 
