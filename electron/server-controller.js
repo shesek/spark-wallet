@@ -27,7 +27,7 @@ function startServer(lnPath) {
   })
 
   proc.on('error', err => console.error('Spark server error', err.stack || err))
-  proc.on('message', m => console.error('Spark server msg', m))
+  proc.on('message', m => console.log('Spark server msg', m))
   proc.on('close', _ => proc = null)
 
   return new Promise((resolve, reject) =>
