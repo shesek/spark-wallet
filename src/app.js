@@ -2,6 +2,13 @@
   const app = require('express')()
       , ln  = require('lightning-client')(process.env.LN_PATH)
 
+  // Test connection
+  function connFailed(err) { throw err }
+  ln.on('error', connFailed)
+  const lninfo = await ln.getinfo()
+  ln.removeListener('error', connFailed)
+  console.log(`Connected to c-lightning ${lninfo.version} node with id ${lninfo.id}`)
+
   // Settings
   app.set('port', process.env.PORT || 9737)
   app.set('host', process.env.HOST || 'localhost')
