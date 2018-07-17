@@ -16,7 +16,7 @@
     "browserify": "^16.2.2",
     "electron": "^3.0.0-beta.1",
     "electron-builder": "^20.19.2",
-    "terser": "^3.7.8",
+    "uglify-js": "^3.4.5",
     "uglifyify": "^5.0.1"
   },
   "build": {

@@ -23,7 +23,7 @@ if [[ -z "$SKIP_SERVER" ]]; then
              -x selfsigned -x qrcode-terminal -x hsv3 -x ../src/webui.js \
              ../node_modules/babel-polyfill \
              ../src/app.js \
-  | ( [[ "$NODE_ENV" != "development" ]] && terser --compress --mangle || cat ) \
+  | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs --compress --mangle || cat ) \
   > server.bundle.js
 fi
 
