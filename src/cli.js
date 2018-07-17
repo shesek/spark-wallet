@@ -2,7 +2,7 @@
 
 const args = require('meow')(`
     Usage
-      $ spark [options]
+      $ spark-wallet [options]
 
     Options
       -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
@@ -28,10 +28,10 @@ const args = require('meow')(`
       -v, --version           output version number
 
     Example
-      $ spark -l ~/.lightning
+      $ spark-wallet -l ~/.lightning
 
     All options may also be specified as environment variables:
-      $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark
+      $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark-wallet
 
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}

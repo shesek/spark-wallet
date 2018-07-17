@@ -9,8 +9,8 @@ A wallet GUI for c-lightning,
 accessible over the web or through mobile and desktop apps.
 
 :zap: Simple & intuitive UI
-:zap: Purely off-chain
 :zap: Near-zero configuration
+:zap: Purely off-chain
 :zap: Progressive Web App
 :zap: Cordova and Electron builds
 :zap: Personalizable themes
@@ -49,7 +49,7 @@ See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"]
 for more details.
 Note that the desktop app comes bundled with the Spark server and don't require the manual server setup described here.
 
-See `$ spark --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
+See `$ spark-wallet --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
 ## Features & Usage
 
@@ -212,12 +212,12 @@ Pull requests, suggestions and comments and welcome!
 ## CLI options
 
 ```bash
-$ spark --help
+$ spark-wallet --help
 
   A wallet GUI for c-lightning, accessible over the web or through mobile and desktop apps.
 
   Usage
-    $ spark [options]
+    $ spark-wallet [options]
 
   Options
     -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
@@ -243,10 +243,10 @@ $ spark --help
     -v, --version           output version number
 
   Example
-    $ spark -l ~/.lightning
+    $ spark-wallet -l ~/.lightning
 
   All options may also be specified as environment variables:
-    $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark
+    $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark-wallet
 ```
 
 ## License
