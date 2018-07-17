@@ -23,7 +23,7 @@ module.exports = (app, login) => {
   const encAuth     = [ username, password ].map(encodeURIComponent).join(':')
       , cookieKey   = hmac(encAuth, 'cookie-key')
       , manifestKey = hmac(encAuth, 'manifest-key').replace(/\W+/g, '').substr(0, 10)
-      , accessKey   = hmac(encAuth, 'access-key').replace(/\W+/g, '')
+      , accessKey   = process.env.ACCESS_KEY || hmac(encAuth, 'access-key').replace(/\W+/g, '')
       , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
 
   Object.assign(app.settings, { manifestKey, accessKey })
