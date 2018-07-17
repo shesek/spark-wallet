@@ -5,7 +5,6 @@
     <author email="nadav@shesek.info" href="https://github.com/shesek">Nadav Ivgi</author>
     <content src="index.html" />
     <access origin="*" />
-    <hook src="build.sh" type="before_build" />
     <plugin name="cordova-plugin-whitelist" spec="1" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="lightning" />
@@ -14,7 +13,7 @@
         <variable name="ANDROID_PATHPREFIX" value="/" />
     </plugin>
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
-    <engine name="android" spec="7.1.0" />
     <plugin name="cordova-plugin-qrscanner" spec="^2.6.0" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
+    <engine name="android" spec="7.1.0" />
 </widget>

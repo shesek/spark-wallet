@@ -8,3 +8,5 @@ export BUILD_TARGET=cordova
 export DEST=`pwd`/www
 
 (cd ../client && npm run dist)
+
+cordova build "$@"

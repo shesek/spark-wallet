@@ -5,6 +5,9 @@
     "description": "A wallet GUI for c-lightning, accessible over the web or through mobile and desktop apps.",
     "author": "Nadav Ivgi",
     "license": "MIT",
+    "scripts": {
+      "dist": "./build.sh"
+    },
     "dependencies": {
         "cordova-android": "7.1.0",
         "cordova-plugin-badge": "^0.8.7",
