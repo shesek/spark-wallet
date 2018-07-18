@@ -1,3 +1,4 @@
+import assert from 'assert'
 import basicAuth from 'basic-auth'
 import nanoid from 'nanoid'
 import nanogen from 'nanoid/generate'
@@ -17,6 +18,7 @@ module.exports = (app, login) => {
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
   } else {
     [ username, password ] = login.split(':', 2)
+    assert(password, 'Invalid login format, expecting "username:pwd"')
   }
 
   const encAuth     = [ username, password ].map(encodeURIComponent).join(':')
