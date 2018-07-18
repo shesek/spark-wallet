@@ -39,10 +39,10 @@ This should normally Just Work ™.
 Spark will generate and print a random username and password that'll be used to login into the wallet.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
 
-To access the wallet, open `https://localhost:9737/` in your browser,
-skip the self-signed TLS certificate warning (see [more below on TLS](#tls)), and login with the username/password.
+To access the wallet, open `http://localhost:9737/` in your browser and login with the username/password.
 
 To accept remote connections, set `--host <listen-address>` (shorthand `-i`, e.g. `-i 0.0.0.0`).
+This will automatically enable TLS ([more details below](#tls)).
 
 Spark can also be accessed using mobile and desktop apps instead of through the browser.
 See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
@@ -119,15 +119,18 @@ running c-lightning and connecting through it.
 
 ## TLS
 
-Spark will by default generate a self-signed TLS certificate and save it to `./spark-tls/`.
+Spark will by default generate a self-signed certificate and enable TLS when binding on a non-`localhost` address.
 
-To save the self-signed certificate to another location, set `--tls-path`.
+The self-signed certificate and key material will be saved to `./spark-tls/`.
+To save to a different location, set `--tls-path`.
 To set a custom "common name" for the generated certificate, set `--tls-name`.
 
 To use your own TLS key and certificate, put your `key.pem` and `cert.pem` files in the `--tls-path` directory.
 
-To disable TLS and start a plaintext HTTP server instead, set `--no-tls` (not recommended unless you're listening on `localhost` only).
+To disable TLS and start a plaintext HTTP server instead, set `--no-tls`.
 Note that without TLS, Chrome will not allow accessing the camera on non-`localhost` hosts.
+
+To enable TLS even for `localhost`, set `--force-tls`.
 
 #### Add as Trusted Certificate to Android
 

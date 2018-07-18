@@ -16,6 +16,7 @@
   app.set('port', process.env.PORT || 9737)
   app.set('host', process.env.HOST || 'localhost')
   app.set('trust proxy', process.env.PROXIED || 'loopback')
+  app.set('tls', !process.env.NO_TLS && (app.settings.host !== 'localhost' || process.env.FORCE_TLS))
 
   // Middlewares
   app.use(require('morgan')('dev'))
@@ -48,19 +49,17 @@
     res.status(err.status || 500).send(err.type && err || err.stack || err)
   })
 
-  const { NO_TLS, TLS_NAME, TLS_PATH, ONION, ONION_PATH } = process.env
+  // HTTPS server (the default for non-localhost hosts)
+  app.enabled('tls')
+  ? require('./transport/tls')(app, process.env.TLS_NAME, process.env.TLS_PATH)
+      .then(host => serviceReady('HTTPS server', `https://${host}/`))
 
-  // HTTPS Server
-  NO_TLS || require('./transport/tls')(app, TLS_NAME, TLS_PATH).then(host =>
-    serviceReady('HTTPS server', `https://${host}/`))
-
-  // HTTP Server
-  NO_TLS && require('./transport/http')(app).then(host =>
-    serviceReady('HTTP server', `http://${host}/`))
+  // HTTP server (for localhost or when --no-tls is specified)
+  : require('./transport/http')(app).then(host => serviceReady('HTTP server', `http://${host}/`))
 
   // Tor Onion Hidden Service
-  ONION && require('./transport/onion')(app, ONION_PATH).then(host =>
-    serviceReady('Tor Onion Hidden Service v3', `http://${host}/`))
+  process.env.ONION && require('./transport/onion')(app, process.env.ONION_PATH)
+    .then(host => serviceReady('Tor Onion Hidden Service v3', `http://${host}/`))
 
   const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
       , hashKey = process.env.QR_WITH_KEY ? `#access-key=${app.settings.accessKey}` : ''

@@ -13,7 +13,8 @@ const args = require('meow')(`
 
       -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
       --tls-name <name>       common name for the generated self-signed cert [default: {host}]
-      --no-tls                disable TLS, start plain HTTP server instead [default: false]
+      --force-tls             enable TLS even when binding on localhost [default: enable for non-localhost only]
+      --no-tls                disable TLS for non-localhost hosts [default: false]
 
       -o, --onion             start Tor Hidden Service [default: false]
       -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]

@@ -4,8 +4,7 @@ import nanogen from 'nanoid/generate'
 import cookieParser from 'cookie-parser'
 import {createHmac} from 'crypto'
 
-const cookieOpt = { signed: true, httpOnly: true, sameSite: true
-                  , maxAge: 2592000000/*1 month*/, secure: !process.env.NO_TLS }
+const cookieAge = 2592000000 // 1 month
 
 const hmac = (key, data, enc='base64') => createHmac('sha256', key).update(data).digest(enc)
 
@@ -25,6 +24,7 @@ module.exports = (app, login) => {
       , manifestKey = hmac(encAuth, 'manifest-key').replace(/\W+/g, '').substr(0, 10)
       , accessKey   = process.env.ACCESS_KEY || hmac(encAuth, 'access-key').replace(/\W+/g, '')
       , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
+      , cookieOpt   = { signed: true, httpOnly: true, sameSite: true, secure: app.enabled('tls'), maxAge: cookieAge }
 
   Object.assign(app.settings, { manifestKey, accessKey })
 
