@@ -7,9 +7,9 @@ import {createHmac} from 'crypto'
 
 const cookieAge = 2592000000 // 1 month
 
-const hmac = (key, data, enc='base64') => createHmac('sha256', key).update(data).digest(enc)
+const hmacStr = (key, data) => createHmac('sha256', key).update(data).digest('base64').replace(/\W+/g, '')
 
-module.exports = (app, login) => {
+module.exports = (app, login, _accessKey) => {
   let username, password
 
   if (!login) {
@@ -21,11 +21,10 @@ module.exports = (app, login) => {
     assert(password, 'Invalid login format, expecting "username:pwd"')
   }
 
-  const encAuth     = [ username, password ].map(encodeURIComponent).join(':')
-      , cookieKey   = hmac(encAuth, 'cookie-key')
-      , manifestKey = hmac(encAuth, 'manifest-key').replace(/\W+/g, '').substr(0, 10)
-      , accessKey   = process.env.ACCESS_KEY || hmac(encAuth, 'access-key').replace(/\W+/g, '')
+  const accessKey   = _accessKey || hmacStr(`${username}:${password}`, 'access-key')
+      , manifestKey = hmacStr(accessKey, 'manifest-key').substr(0, 10)
       , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
+      , cookieKey   = hmacStr(accessKey, 'cookie-key')
       , cookieOpt   = { signed: true, httpOnly: true, sameSite: true, secure: app.enabled('tls'), maxAge: cookieAge }
 
   Object.assign(app.settings, { manifestKey, accessKey })

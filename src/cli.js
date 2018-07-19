@@ -11,7 +11,7 @@ const args = require('meow')(`
       -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
 
       -p, --port <port>       http(s) server port [default: 9737]
-      -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
+      -i, --host <host>       http(s) server listen address [default: localhost]
 
       -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
       --tls-name <name>       common name for the generated self-signed cert [default: {host}]
@@ -43,9 +43,10 @@ const args = require('meow')(`
             , verbose: {alias:'V', type:'boolean'}
 } }).flags
 
-const keys = Object.keys(args).filter(k => k.length > 1)
-keys.filter(k => args[k] !== false).forEach(k => process.env[k.replace(/([A-Z])/g, '_$1').toUpperCase()] = args[k])
-keys.filter(k => args[k] === false).forEach(k => process.env['NO_' + k.replace(/([A-Z])/g, '_$1').toUpperCase()] = true)
+Object.keys(args).filter(k => k.length > 1)
+  .map(k => [ k.replace(/([A-Z])/g, '_$1').toUpperCase(), args[k] ])
+  .forEach(([ k, v ]) => v !== false ? process.env[k] = v
+                                     : process.env[`NO_${k}`] = true)
 
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
