@@ -4,7 +4,7 @@ require('webrtc-adapter')
 
 const Instascan$ = (window.Instascan ? O.of(Instascan)
 : O.fromEvent(document, 'load', true)
-   .filter(e => e.target.src && ~e.target.src.indexOf('lib/instascan.js'))
+   .filter(e => e.target.src && e.target.src.includes('lib/instascan.js'))
    .map(_ => window.Instascan)
 )
 
@@ -40,7 +40,7 @@ const makeScanDriver = (opt={}) => {
 }
 
 const pickCam = cams =>
-  cams.find(cam => cam.name && !!~cam.name.indexOf('back'))
+  cams.find(cam => cam.name && cam.name.includes('back'))
   || cams[0]
 
 module.exports = makeScanDriver
