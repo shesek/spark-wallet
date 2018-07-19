@@ -1,5 +1,4 @@
 const {app, BrowserWindow} = require('electron')
-    , control = require('./server-controller')
 
 require('electron-debug')({ enabled: true, showDevTools: false })
 
@@ -8,6 +7,8 @@ if (!app.requestSingleInstanceLock()) {
   app.quit()
   return
 }
+
+const control = require('./server-controller')
 
 // Init app window
 let mainWindow, loaded=false, initUri
