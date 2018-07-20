@@ -8,7 +8,8 @@ if (!app.requestSingleInstanceLock()) {
   return
 }
 
-const control = require('./server-controller')
+const path = require('path')
+    , control = require('./server-controller')
 
 // Init app window
 let mainWindow, loaded=false, initUri
@@ -18,10 +19,11 @@ async function createWindow () {
   mainWindow = new BrowserWindow({
     width: 500, height: 960
   , webPreferences: { zoomFactor: 1.3 }
+  , icon: path.join(__dirname, 'build', 'icon.png')
   })
 
   const sparkServer = await control.maybeStart()
-    .catch(err => console.error('Spark server failed', err))
+    .catch(err => console.error('Spark server failed', err.stack || err))
 
   if (sparkServer) {
     // open a blank file to set serverInfo in the correct origin before opening the main app

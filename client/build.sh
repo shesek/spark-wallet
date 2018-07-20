@@ -29,6 +29,10 @@ if [[ "$BUILD_TARGET" == "web" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
   cp node_modules/instascan/dist/instascan.min.js $DEST/lib/instascan.js
 fi
 
+if [[ "$BUILD_TARGET" != "web" ]]; then
+  rm -r $DEST/manifest
+fi
+
 # Transpile pug and stylus
 pug index.pug -o $DEST
 stylus -u nib -c styl/style.styl -o $DEST

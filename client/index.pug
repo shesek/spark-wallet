@@ -6,18 +6,23 @@ meta(charset='utf-8')
 meta(name='viewport', content='width=device-width, initial-scale=1')
 link(rel='stylesheet', href='style.css')
 
+- manifestDir = 'manifest-' + (settings ? settings.manifestKey : '{{manifestKey}}') + '/'
+
 if process.env.BUILD_TARGET == 'web'
+  meta(name='access-key', content=settings ? settings.accessKey : '{{accessKey}}')
   meta(name='mobile-web-app-capable', content='yes')
   meta(name='apple-mobile-web-app-capable', content='yes')
-  meta(name='access-key', content=settings ? settings.accessKey : '{{accessKey}}')
-  link(rel='manifest', href='manifest-'+(settings ? settings.manifestKey : '{{manifestKey}}')+'/manifest.json')
+  link(rel='manifest', href=manifestDir+'manifest.json')
+  each size in [ 16, 32, 512 ]
+    link(rel='icon', type='image/png', sizes=size+'x'+size, href=manifestDir+'icon-'+size+'.png')
+  each size in [ 167, 180, 512 ]
+    link(rel='apple-touch-icon', sizes=size+'x'+size, href=manifestDir+'icon-'+size+'.png')
 
 if process.env.BUILD_TARGET != 'web'
-  //- unsafe-eval is required for instascan, which is not used in cordova builds
+  //- in web environment, this is set using an HTTP header instead of a meta tag
+  //- unsafe-eval is only required for instascan, which is not used in cordova builds
   - unsafeEval = process.env.BUILD_TARGET !== 'cordova' ? "script-src 'self' 'unsafe-eval'; " : ''
   meta(http-equiv='Content-Security-Policy', content=unsafeEval+"default-src 'self' gap:; font-src 'self' data:; img-src 'self' data:; connect-src *")
-
-  //- when served over the web, this is set using an HTTP header instead of meta tag
 
 body(class='build-'+process.env.BUILD_TARGET)
 
