@@ -44,7 +44,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togTheme$ = click('.toggle-theme')
   , togUnit$  = click('.toggle-unit')
   , togExp$   = click('.toggle-exp')
-  , togFull$  = DOM.select('.full-screen').events('dblclick', { preventDefault: true, useCapture: true })
 
   // Dismiss alert message
   , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
@@ -54,9 +53,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
   , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
       .merge(togExp$.mapTo(null))
-
-  // @xxx side effects outside of drivers!
-  togFull$.subscribe(_ => fscreen.fullscreenElement ? fscreen.exitFullscreen() : fscreen.requestFullscreen(document.documentElement))
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
