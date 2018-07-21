@@ -38,9 +38,11 @@ const
     r$$.flatMap(r$ => r$.flatMap(_ => O.empty()).catch(err => O.of(err)))
       .map(e => e.response && (e.response.body && e.response.body.message || e.response.body) || e)
 
-, formatError = err => (err.message && err.message.indexOf('Request has been terminated') == 0)
+, formatError = err => (err.message && err.message.startsWith('Request has been terminated'))
     ? new Error('Connection to server lost.')
     : err
+
+, isConnLost = err => err.toString() === 'Error: Connection to server lost.'
 
 , dbg = (obj, label='stream', dbg=debug(label)) =>
     Object.keys(obj).forEach(k => obj[k] && obj[k].subscribe(
@@ -49,5 +51,5 @@ const
       _   => dbg(`${k} completed`)))
 
 module.exports = { combine, toObs, dbg
-                 , dropErrors, extractErrors, formatError
+                 , dropErrors, extractErrors, formatError, isConnLost
                  , formatAmt, parseUri, recvAmt }

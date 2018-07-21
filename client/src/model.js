@@ -1,11 +1,13 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, recvAmt, combine } from './util'
+import { dbg, formatAmt, recvAmt, combine, isConnLost } from './util'
 
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
 , sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
 , sumPeers = peers => peers.filter(p => p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
+
+, fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
 , updPaidInv = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
 , appendPay  = (payments, pay) => [ ...payments.filter(p => p.id !== pay.id), pay ]
@@ -83,17 +85,25 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , step:     unit$.map(unit => unitstep[unit])
     })
 
-  // Keep track of the number of non-background in-flight requests
-  , loading$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
+  // Keep track of the connection status
+  , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
+      .merge(error$.filter(isConnLost).mapTo(false))
+      .startWith(false)
+      .distinctUntilChanged()
+
+  // Keep track of the number of user-initiated in-flight HTTP requests
+  , inflight$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
       .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
       .startWith(0).scan((N, a) => N+a)
 
-  // Keep track of the connection status
-  , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
-      .merge(error$.filter(err => err.toString() == connLost).mapTo(false))
-      .distinctUntilChanged()
+  // Is all the initial state necessary for the app ready?
+  , initLoaded$ = O.combineLatest(...[ info$, peers$, feed$ ].map(x$ => x$.startWith(null))
+    , (info, peers, feed) => !!(info && peers && feed))
 
-  , connLost = 'Error: Connection to server lost.'
+  // Show loading indicator if we have active in-flight requests,
+  // OR when (the init state is still missing AND we don't have an error to show)
+  , loading$ = O.combineLatest(inflight$, initLoaded$, error$.startWith(null)
+    , (inflight, initLoaded, error) => inflight || (!initLoaded && !error))
 
   // User-visible alert messages
   , alert$ = O.merge(
@@ -103,11 +113,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , dismiss$.mapTo(null)
     )
     // hide "connection lost" errors when we get back online
-    .combineLatest(connected$, (alert, conn) => alert && (alert[1] == connLost && conn ? null : alert))
+    .combineLatest(connected$, (alert, conn) => alert && (isConnLost(alert[1]) && conn ? null : alert))
+    // format msat amounts in messages
     .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
     .startWith(null)
-
-  , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
   // RPC console history
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
@@ -119,9 +128,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
 
   return combine({
     conf$, page$, loading$, alert$
-  , info$, peers$
   , unitf$, cbalance$, rate$
-  , feed$, feedStart$, feedShow$
+  , info$: info$.startWith(null), peers$: peers$.startWith(null)
+  , feed$: feed$.startWith(null), feedStart$, feedShow$
   , amtData$, rpcHist$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
