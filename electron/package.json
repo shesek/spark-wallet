@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "dist": "./build.sh",
+    "pkg:win-wine": "./pkg-win-wine.sh",
     "shipit": "./build.sh --publish always"
   },
   "author": "Nadav Ivgi <nadav@shesek.info>",
@@ -24,7 +25,7 @@
     "files": [
       "**/*",
       "build/icon.png",
-      "!build.sh"
+      "!*.sh"
     ],
     "protocols": {
       "name": "Lightning Payment",
@@ -42,6 +43,12 @@
         "deb",
         "snap",
         "tar.gz"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
       ]
     }
   },
