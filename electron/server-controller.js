@@ -21,6 +21,7 @@ function startServer(lnPath) {
       PORT: 0 // any available port
     , LN_PATH: path.normalize(lnPath)
     , ACCESS_KEY: accessKey
+    , LOGIN: `spark:${accessKey}`
     , NO_TLS: 1
     , NO_WEBUI: 1
     }
