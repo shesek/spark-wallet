@@ -8,7 +8,8 @@ if (!app.requestSingleInstanceLock()) {
   return
 }
 
-const path = require('path')
+const os = require('os')
+    , path = require('path')
     , control = require('./server-controller')
 
 // Init app window
@@ -18,7 +19,7 @@ async function createWindow () {
   loaded = false
   mainWindow = new BrowserWindow({
     width: 530, height: 960
-  , icon: path.join(__dirname, 'build', 'icon.png')
+  , icon: path.join(__dirname, 'build', `icon.${({ darwin: 'icns', win32: 'ico' }[os.platform()] || 'png')}`)
   , webPreferences: {
       nodeIntegration: false
     , sandbox: true // @xxx not truly sandboxed without https://github.com/electron-userland/electron-builder/issues/2562

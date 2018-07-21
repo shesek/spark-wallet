@@ -24,7 +24,7 @@
     "productName": "Spark",
     "files": [
       "**/*",
-      "build/icon.png",
+      "build/icon.*",
       "!*.sh"
     ],
     "protocols": {
