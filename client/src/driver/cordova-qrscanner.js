@@ -20,8 +20,7 @@ function startScan() {
 
 function stopScan() {
   document.body.className = document.body.className.replace(/\bqr-scanning\b/, '')
-  QRScanner.cancelScan()
-  QRScanner.hide()
+  QRScanner.destroy()
 }
 
 
