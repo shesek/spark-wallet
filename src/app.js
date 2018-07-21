@@ -3,14 +3,11 @@
       , ln  = require('lightning-client')(process.env.LN_PATH)
 
   // Test connection
-  function connFailed(err) {
-    process.send && process.send({ error: err.toString() })
-    throw err
-  }
+  function connFailed(err) { throw err }
   ln.on('error', connFailed)
-  const lninfo = await ln.getinfo().catch(connFailed)
-  console.log(`Connected to c-lightning ${lninfo.version} with id ${lninfo.id} on network ${lninfo.network}`)
+  const lninfo = await ln.getinfo()
   ln.removeListener('error', connFailed)
+  console.log(`Connected to c-lightning ${lninfo.version} with id ${lninfo.id} on network ${lninfo.network}`)
 
   // Settings
   app.set('port', process.env.PORT || 9737)
@@ -73,3 +70,12 @@
 
   process.env.PRINT_KEY && console.log('Access key for remote API access:', app.settings.accessKey)
 })()
+
+;[ 'unhandledRejection', 'uncaughtException' ].forEach(ev =>
+  process.on(ev, err => {
+    process.send && process.send({ error: err.toString() })
+    console.log(`${ ev }, stopping process`)
+    console.error(err.stack || err)
+    process.exit(1)
+  })
+)

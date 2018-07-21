@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-process.on('unhandledRejection', err => { throw err })
-
 const args = require('meow')(`
     Usage
       $ spark-wallet [options]
