@@ -1,16 +1,12 @@
-import { div, form, input, button, a, span, p, img, h2, h3, small, label } from '@cycle/dom'
+import { div, form, input, button, span, p, img, h2, h3, small, label } from '@cycle/dom'
 import { formGroup } from './util'
 
-const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath }, error }) =>
+const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath } }) =>
   form({ attrs: { do: 'save-settings' } }, [
-    h2('Settings')
-  , error ? div('.alert.alert-dismissable.alert-danger',[
-      button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
-    , error
-    ]) : ''
+    h2('Server Settings')
 
   // local connection mode is available on Electron builds only
-  , process.env.BUILD_TARGET != 'electron' ? '' : formGroup('Mode', div([
+  , process.env.BUILD_TARGET != 'electron' ? '' : formGroup('Connection Mode', div([
       div('.form-check', [
         input('#mode-local.form-check-input', { attrs: { type: 'radio', name: 'mode', value: 'local' }, props: { checked: mode == 'local' } })
       , label('.form-check-label', { attrs: { for: 'mode-local' } }, 'Connect to local c-lightning node')

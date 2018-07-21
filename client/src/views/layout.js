@@ -1,6 +1,7 @@
-import { h, div, link, nav, a, span, p, button } from '@cycle/dom'
+import { h, div, link, nav, a, span, p } from '@cycle/dom'
 import numbro from 'numbro'
 import { formatAmt } from '../util'
+import { alertBox } from './util'
 
 const layout = ({ state: S, body }) =>
   div({ props: { className: `d-flex flex-column theme-${S.conf.theme}${S.loading?' loading':'' }` } }, [
@@ -41,17 +42,5 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
 , useCents = (unit, btcusd) => (unit == 'sat' && +btcusd < 1000000) || (unit == 'bits' && +btcusd < 10000)
 , unitName = unit => unit.replace(/s$/, '')
 , btcFormatOpt = { mantissa: 2, trimMantissa: true, optionalMantissa: true }
-
-const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
-  button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
-, ''+alert[1]
-
-, ' ', process.env.BUILD_TARGET !== 'web' && serverErrors.includes(alert[1])
-  ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
-  : ''
-])
-
-, serverErrors = [ 'Error: Connection to server lost.', 'Error: Unauthorized' ]
-
 
 module.exports = { layout }

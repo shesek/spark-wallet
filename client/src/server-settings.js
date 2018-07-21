@@ -29,6 +29,7 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   , stopScan$ = on('.stop-scan', 'click').mapTo(false)
 
   , save$ = on('form', 'submit', true).map(e => serialize(e.target, { hash: true, disabled: true }))
+      .filter(d => d.serverUrl && d.accessKey)
 
   , scanner$ = O.merge(doScan$, stopScan$, scan$.mapTo(false)).startWith(false)
 
@@ -37,24 +38,28 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   , scanValid$ = scanParse$.filter(x => !!x)
 
   , serverInfo$ = O.merge(
-      storage.local.getItem('serverInfo').first().map(JSON.parse)
+      storage.local.getItem('serverInfo').first().filter(x => !!x).map(JSON.parse)
     , IPC('serverInfo') // embedded electron spark server
     , scanValid$
-    )
+    ).startWith({})
 
   , mode$ = process.env.BUILD_TARGET == 'electron' ? O.merge(
-      serverInfo$.map(s => s.lnPath ? 'local' : 'remote')
+      serverInfo$.map(s => (!s.serverUrl || s.lnPath) ? 'local' : 'remote')
     , on('[name=mode]', 'input').map(e => e.target.value)
     ).distinctUntilChanged() : O.of('remote') // non-electron builds are always remote
 
   , error$ = O.merge(
       scanParse$.filter(x => !x).mapTo('Scanned QR is not a valid URL.')
     , IPC('serverError')
-    , serverInfo$.mapTo(null)
+    )
+
+  , alert$ = O.merge(
+      error$.map(err => [ 'danger', err ])
+    , IPC('serverInfo').map(info => [ 'success', 'Connection to c-lightning established' ])
     , on('[dismiss=alert]', 'click').mapTo(null)
     ).startWith(null)
 
-  , state$ = combine({ conf$, page$, mode$, serverInfo$, error$, scanner$ })
+  , state$ = combine({ conf$, page$, mode$, serverInfo$, alert$, scanner$ })
 
   // sinks
   , body$    = state$.map(S => S.scanner ? view.scan : view.settings(S))
@@ -65,7 +70,7 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
     , mode$.filter(mode => mode == 'remote').mapTo([ 'disableServer' ])
     ) : O.empty()
 
-  dbg({ scan$, save$, serverInfo$, error$, state$, scanner$, ipc$ })
+  dbg({ scan$, save$, serverInfo$, error$, alert$, state$, scanner$, ipc$ })
 
   // redirect back to wallet after saving
   save$.subscribe(_ => location.href = 'index.html')
