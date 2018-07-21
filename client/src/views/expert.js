@@ -10,8 +10,11 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 , ' '
 , button('.btn.btn-info.mt-2', { attrs: { type: 'button', do: 'rpc-help' }}, 'Help')
 , !rpcHist.length ? '' : ul('.list-group.mt-4', rpcHist.map(r =>
-    li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', r.params.join(' ') ]), yaml(r.res) ])))
+    li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', formatParams(r.params) ]), yaml(r.res) ])))
 ])
+
+const formatParams = params =>
+  params.map(p => /\W/.test(p) ? `"${p.replace(/"/g, '\\"')}"` : p).join(' ')
 
 const logs = items => div([
   h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
