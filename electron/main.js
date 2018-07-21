@@ -18,8 +18,13 @@ async function createWindow () {
   loaded = false
   mainWindow = new BrowserWindow({
     width: 500, height: 960
-  , webPreferences: { zoomFactor: 1.3 }
   , icon: path.join(__dirname, 'build', 'icon.png')
+  , webPreferences: {
+      nodeIntegration: false
+    , sandbox: true // @xxx not truly sandboxed without https://github.com/electron-userland/electron-builder/issues/2562
+    , preload: path.join(__dirname, 'preload.js')
+    , zoomFactor: 1.3
+    }
   })
 
   const sparkServer = await control.maybeStart()

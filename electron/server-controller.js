@@ -19,7 +19,7 @@ function startServer(lnPath) {
   proc = fork(require.resolve('./server.bundle.js'), {
     env: {
       PORT: 0 // any available port
-    , LN_PATH: lnPath
+    , LN_PATH: path.normalize(lnPath)
     , ACCESS_KEY: accessKey
     , NO_TLS: 1
     , NO_WEBUI: 1

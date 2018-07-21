@@ -1,5 +1,6 @@
-import { ipcRenderer } from 'electron'
 import { Observable as O } from '../rxjs'
+
+const { ipcRenderer } = window
 
 module.exports = cmd$ => (
   O.from(cmd$).subscribe(cmd => ipcRenderer.send(...cmd))

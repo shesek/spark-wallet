@@ -7,7 +7,7 @@ set -xeo pipefail
 if [[ -z "$SKIP_CLIENT" ]]; then
   export BUILD_TARGET=electron
   export DEST=`pwd`/www
-  export BROWSERIFY_OPT='--exclude electron --no-builtins --insert-global-vars __filename,__dirname'
+  export BROWSERIFY_OPT='--insert-global-vars __filename,__dirname,global'
 
   mkdir -p $DEST && rm -rf $DEST/*
 
