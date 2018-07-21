@@ -6,11 +6,6 @@ import { dropErrors, extractErrors, formatError, dbg } from './util'
 // (so that requests won't hit the server all at once)
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
 
-// @xxx side-effect outside of drivers
-if (process.env.BUILD_TARGET !== 'web' && !localStorage.serverInfo) {
-  location.href = 'settings.html'
-}
-
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
@@ -56,16 +51,10 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , execRpc$.map(([ method, ...params ]) => [ method, params, { category: 'console' }])
 )
 
-const serverInfo = process.env.BUILD_TARGET === 'web'
-  ? { serverUrl: '.', accessKey: document.querySelector('[name=access-key]').content }
-  : JSON.parse(localStorage.serverInfo)
-
-const rpcUrl = url.resolve(serverInfo.serverUrl, 'rpc')
-
-exports.toHttp = rpc$ => rpc$.map(([ method, params=[], ctx={} ]) => ({
+exports.toHttp = (serverInfo, rpc$) => rpc$.map(([ method, params=[], ctx={} ]) => ({
   category: ctx.category || method
 , method: 'POST'
-, url: rpcUrl
+, url: url.resolve(serverInfo.serverUrl, 'rpc')
 , send: { method, params }
 , headers: { 'X-Requested-With': 'spark-rpc', 'X-Access': serverInfo.accessKey }
 , ctx

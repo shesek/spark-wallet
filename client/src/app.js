@@ -19,6 +19,16 @@ import model  from './model'
 import view   from './view'
 import rpc    from './rpc'
 
+// Send Cordova/Electron users directly to server settings if there are none
+if (process.env.BUILD_TARGET !== 'web' && !localStorage.serverInfo) {
+  location.href = 'settings.html' // @xxx side-effects outside of drivers
+  throw new Error('Missing server settings, redirecting')
+}
+
+const serverInfo = process.env.BUILD_TARGET === 'web'
+  ? { serverUrl: '.', accessKey: document.querySelector('[name=access-key]').content }
+  : JSON.parse(localStorage.serverInfo)
+
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
   const actions = intent({ DOM, route, conf$, scan$, urihandler$ })
@@ -41,7 +51,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
   return {
     DOM:   vdom$
-  , HTTP:  rpc.toHttp(rpc$)
+  , HTTP:  rpc.toHttp(serverInfo, rpc$)
   , route: navto$
   , conf$: state$.map(s => s.conf)
   , scan$: scanner$
@@ -52,7 +62,7 @@ const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
 run(main, {
   DOM:   makeDOMDriver('#app')
-, SSE:   makeSSEDriver()
+, SSE:   makeSSEDriver(serverInfo)
 , HTTP:  makeHTTPDriver()
 , route: makeRouteDriver(captureClicks(makeHashHistoryDriver()))
 
