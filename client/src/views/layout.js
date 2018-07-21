@@ -9,7 +9,7 @@ const layout = ({ state: S, body }) =>
   , S.loading ? div('#loader') : ''
   , S.alert ? div('.container', alertBox(S.alert)) : ''
   , div('.content.container', body)
-  , footer(S)
+  , S.info ? footer(S) : ''
   ])
 
 const navbar = ({ unitf, cbalance, page }) =>
@@ -24,16 +24,16 @@ const navbar = ({ unitf, cbalance, page }) =>
 const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) =>
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top', [
-      info ? p('.info.float-left'
-      , [ span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
-        , ` · ${info.network}`
-        , ` · `, a({ attrs: { href: '#/node' } }, info.id.substr(0,10))
-        , btcusd ? (
-            [ 'usd', 'btc' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
-          : useCents(unit, btcusd) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msatusd, 4, false)}¢`
-          : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msatusd, 3, false)}`
-          ) : ''
-        ]) : ''
+      p('.info.float-left', [
+        span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
+      , ` · ${info.network}`
+      , ` · `, a({ attrs: { href: '#/node' } }, info.id.substr(0,10))
+      , btcusd ? (
+          [ 'usd', 'btc' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
+        : useCents(unit, btcusd) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msatusd, 4, false)}¢`
+        : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msatusd, 3, false)}`
+        ) : ''
+      ])
     , p('.toggle-theme.float-right.btn-link', theme)
     ])
   )
