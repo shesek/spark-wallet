@@ -2,6 +2,8 @@ import big from 'big.js'
 import { Observable as O } from './rxjs'
 import { dbg, formatAmt, recvAmt, combine, isConnLost } from './util'
 
+const msatbtc = big(100000000000) // msat in 1 btc
+
 const
   sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
 , sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
@@ -70,7 +72,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
   , conf$    = combine({ expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(100000000000)).startWith(null)
+  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
   , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
 
