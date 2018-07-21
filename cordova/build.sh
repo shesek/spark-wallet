@@ -10,4 +10,5 @@ mkdir -p $DEST && rm -rf $DEST/*
 
 (cd ../client && npm run dist)
 
+cordova prepare
 cordova build "$@"
