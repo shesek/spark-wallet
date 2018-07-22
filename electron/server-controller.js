@@ -1,13 +1,13 @@
 const { app, ipcMain } = require('electron')
     , { fork } = require('child_process')
-    , nanoid = require('nanoid')
+    , { randomBytes } = require('crypto')
     , Store = require('electron-store')
     , path = require('path')
 
 const store = new Store({ name: 'spark-server' })
 
 let accessKey = store.get('accessKey')
-accessKey || store.set('accessKey', accessKey = nanoid(30))
+accessKey || store.set('accessKey', accessKey = randomBytes(32).toString('hex'))
 
 let proc
 

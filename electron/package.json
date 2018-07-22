@@ -54,7 +54,6 @@
   },
   "dependencies": {
     "electron-debug": "^2.0.0",
-    "electron-store": "^2.0.0",
-    "nanoid": "^1.1.0"
+    "electron-store": "^2.0.0"
   }
 }
