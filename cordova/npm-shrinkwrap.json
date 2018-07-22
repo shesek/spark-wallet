@@ -68,7 +68,8 @@
         "ansi": {
             "version": "0.3.1",
             "resolved": "https://registry.npmjs.org/ansi/-/ansi-0.3.1.tgz",
-            "integrity": "sha1-DELU+xcWDVqa8eSEus4cZpIsGyE="
+            "integrity": "sha1-DELU+xcWDVqa8eSEus4cZpIsGyE=",
+            "dev": true
         },
         "ansi-escapes": {
             "version": "1.4.0",
@@ -188,12 +189,14 @@
         "balanced-match": {
             "version": "1.0.0",
             "resolved": "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz",
-            "integrity": "sha1-ibTRmasr7kneFk6gK4nORi1xt2c="
+            "integrity": "sha1-ibTRmasr7kneFk6gK4nORi1xt2c=",
+            "dev": true
         },
         "base64-js": {
             "version": "0.0.8",
             "resolved": "https://registry.npmjs.org/base64-js/-/base64-js-0.0.8.tgz",
-            "integrity": "sha1-EQHpVE9KdrG8OybUUsqW16NeeXg="
+            "integrity": "sha1-EQHpVE9KdrG8OybUUsqW16NeeXg=",
+            "dev": true
         },
         "bcrypt-pbkdf": {
             "version": "1.0.2",
@@ -208,7 +211,8 @@
         "big-integer": {
             "version": "1.6.32",
             "resolved": "https://registry.npmjs.org/big-integer/-/big-integer-1.6.32.tgz",
-            "integrity": "sha512-ljKJdR3wk9thHfLj4DtrNiOSTxvGFaMjWrG4pW75juXC4j7+XuKJVFdg4kgFMYp85PVkO05dFMj2dk2xVsH4xw=="
+            "integrity": "sha512-ljKJdR3wk9thHfLj4DtrNiOSTxvGFaMjWrG4pW75juXC4j7+XuKJVFdg4kgFMYp85PVkO05dFMj2dk2xVsH4xw==",
+            "dev": true
         },
         "block-stream": {
             "version": "0.0.9",
@@ -265,6 +269,7 @@
             "version": "0.1.1",
             "resolved": "https://registry.npmjs.org/bplist-parser/-/bplist-parser-0.1.1.tgz",
             "integrity": "sha1-1g1dzCDLptx+HymbNdPh+V2vuuY=",
+            "dev": true,
             "requires": {
                 "big-integer": "1.6.32"
             }
@@ -273,6 +278,7 @@
             "version": "1.1.11",
             "resolved": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz",
             "integrity": "sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==",
+            "dev": true,
             "requires": {
                 "balanced-match": "1.0.0",
                 "concat-map": "0.0.1"
@@ -639,7 +645,8 @@
         "concat-map": {
             "version": "0.0.1",
             "resolved": "https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz",
-            "integrity": "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s="
+            "integrity": "sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=",
+            "dev": true
         },
         "concat-stream": {
             "version": "1.5.2",
@@ -764,17 +771,40 @@
             }
         },
         "cordova-android": {
-            "version": "7.1.0",
-            "resolved": "https://registry.npmjs.org/cordova-android/-/cordova-android-7.1.0.tgz",
-            "integrity": "sha1-HNNu57nRm61Q0+mEK3Mf5ZCSTdU=",
+            "version": "7.1.1",
+            "resolved": "https://registry.npmjs.org/cordova-android/-/cordova-android-7.1.1.tgz",
+            "integrity": "sha512-MAOwEMT3TuGjKw4McNzzYyHmxkWY3ozafbIgdMAvPzqSBVGIcn+H3SmWfaHtUXfmIPFliT171ICsSm6W5lZXEA==",
             "requires": {
+                "abbrev": "1.1.1",
                 "android-versions": "1.3.0",
-                "cordova-common": "2.2.1",
+                "ansi": "0.3.1",
+                "balanced-match": "1.0.0",
+                "base64-js": "1.2.0",
+                "big-integer": "1.6.32",
+                "bplist-parser": "0.1.1",
+                "brace-expansion": "1.1.11",
+                "concat-map": "0.0.1",
+                "cordova-common": "2.2.5",
+                "cordova-registry-mapper": "1.1.15",
                 "elementtree": "0.1.6",
-                "nopt": "3.0.6",
+                "glob": "5.0.15",
+                "inflight": "1.0.6",
+                "inherits": "2.0.3",
+                "minimatch": "3.0.4",
+                "nopt": "3.0.1",
+                "once": "1.4.0",
+                "path-is-absolute": "1.0.1",
+                "plist": "2.1.0",
                 "properties-parser": "0.2.3",
-                "q": "1.5.1",
-                "shelljs": "0.5.3"
+                "q": "1.4.1",
+                "sax": "0.3.5",
+                "semver": "5.5.0",
+                "shelljs": "0.5.3",
+                "underscore": "1.9.1",
+                "unorm": "1.4.1",
+                "wrappy": "1.0.2",
+                "xmlbuilder": "8.2.2",
+                "xmldom": "0.1.27"
             },
             "dependencies": {
                 "abbrev": {
@@ -788,6 +818,62 @@
                         "semver": "5.5.0"
                     }
                 },
+                "ansi": {
+                    "version": "0.3.1",
+                    "bundled": true
+                },
+                "balanced-match": {
+                    "version": "1.0.0",
+                    "bundled": true
+                },
+                "base64-js": {
+                    "version": "1.2.0",
+                    "bundled": true
+                },
+                "big-integer": {
+                    "version": "1.6.32",
+                    "bundled": true
+                },
+                "bplist-parser": {
+                    "version": "0.1.1",
+                    "bundled": true,
+                    "requires": {
+                        "big-integer": "1.6.32"
+                    }
+                },
+                "brace-expansion": {
+                    "version": "1.1.11",
+                    "bundled": true,
+                    "requires": {
+                        "balanced-match": "1.0.0",
+                        "concat-map": "0.0.1"
+                    }
+                },
+                "concat-map": {
+                    "version": "0.0.1",
+                    "bundled": true
+                },
+                "cordova-common": {
+                    "version": "2.2.5",
+                    "bundled": true,
+                    "requires": {
+                        "ansi": "0.3.1",
+                        "bplist-parser": "0.1.1",
+                        "cordova-registry-mapper": "1.1.15",
+                        "elementtree": "0.1.6",
+                        "glob": "5.0.15",
+                        "minimatch": "3.0.4",
+                        "plist": "2.1.0",
+                        "q": "1.4.1",
+                        "shelljs": "0.5.3",
+                        "underscore": "1.9.1",
+                        "unorm": "1.4.1"
+                    }
+                },
+                "cordova-registry-mapper": {
+                    "version": "1.1.15",
+                    "bundled": true
+                },
                 "elementtree": {
                     "version": "0.1.6",
                     "bundled": true,
@@ -795,11 +881,61 @@
                         "sax": "0.3.5"
                     }
                 },
+                "glob": {
+                    "version": "5.0.15",
+                    "bundled": true,
+                    "requires": {
+                        "inflight": "1.0.6",
+                        "inherits": "2.0.3",
+                        "minimatch": "3.0.4",
+                        "once": "1.4.0",
+                        "path-is-absolute": "1.0.1"
+                    }
+                },
+                "inflight": {
+                    "version": "1.0.6",
+                    "bundled": true,
+                    "requires": {
+                        "once": "1.4.0",
+                        "wrappy": "1.0.2"
+                    }
+                },
+                "inherits": {
+                    "version": "2.0.3",
+                    "bundled": true
+                },
+                "minimatch": {
+                    "version": "3.0.4",
+                    "bundled": true,
+                    "requires": {
+                        "brace-expansion": "1.1.11"
+                    }
+                },
                 "nopt": {
-                    "version": "3.0.6",
+                    "version": "3.0.1",
                     "bundled": true,
                     "requires": {
                         "abbrev": "1.1.1"
+                    }
+                },
+                "once": {
+                    "version": "1.4.0",
+                    "bundled": true,
+                    "requires": {
+                        "wrappy": "1.0.2"
+                    }
+                },
+                "path-is-absolute": {
+                    "version": "1.0.1",
+                    "bundled": true
+                },
+                "plist": {
+                    "version": "2.1.0",
+                    "bundled": true,
+                    "requires": {
+                        "base64-js": "1.2.0",
+                        "xmlbuilder": "8.2.2",
+                        "xmldom": "0.1.27"
                     }
                 },
                 "properties-parser": {
@@ -807,7 +943,7 @@
                     "bundled": true
                 },
                 "q": {
-                    "version": "1.5.1",
+                    "version": "1.4.1",
                     "bundled": true
                 },
                 "sax": {
@@ -820,6 +956,26 @@
                 },
                 "shelljs": {
                     "version": "0.5.3",
+                    "bundled": true
+                },
+                "underscore": {
+                    "version": "1.9.1",
+                    "bundled": true
+                },
+                "unorm": {
+                    "version": "1.4.1",
+                    "bundled": true
+                },
+                "wrappy": {
+                    "version": "1.0.2",
+                    "bundled": true
+                },
+                "xmlbuilder": {
+                    "version": "8.2.2",
+                    "bundled": true
+                },
+                "xmldom": {
+                    "version": "0.1.27",
                     "bundled": true
                 }
             }
@@ -834,6 +990,7 @@
             "version": "2.2.1",
             "resolved": "https://registry.npmjs.org/cordova-common/-/cordova-common-2.2.1.tgz",
             "integrity": "sha1-cAm8WRcpyqcoWliM/Wp7VM2DTww=",
+            "dev": true,
             "requires": {
                 "ansi": "0.3.1",
                 "bplist-parser": "0.1.1",
@@ -1070,7 +1227,8 @@
         "cordova-registry-mapper": {
             "version": "1.1.15",
             "resolved": "https://registry.npmjs.org/cordova-registry-mapper/-/cordova-registry-mapper-1.1.15.tgz",
-            "integrity": "sha1-4kS5GFuBdUc7/2B5MkkFEV+D3Hw="
+            "integrity": "sha1-4kS5GFuBdUc7/2B5MkkFEV+D3Hw=",
+            "dev": true
         },
         "cordova-serve": {
             "version": "2.0.1",
@@ -1363,6 +1521,7 @@
             "version": "0.1.6",
             "resolved": "https://registry.npmjs.org/elementtree/-/elementtree-0.1.6.tgz",
             "integrity": "sha1-KsTEbqMFFsjEy9teOsdBjlkt4gw=",
+            "dev": true,
             "requires": {
                 "sax": "0.3.5"
             }
@@ -1638,6 +1797,7 @@
             "version": "5.0.15",
             "resolved": "https://registry.npmjs.org/glob/-/glob-5.0.15.tgz",
             "integrity": "sha1-G8k2ueAvSmA/zCIuz3Yz0wuLk7E=",
+            "dev": true,
             "requires": {
                 "inflight": "1.0.6",
                 "inherits": "2.0.3",
@@ -1832,6 +1992,7 @@
             "version": "1.0.6",
             "resolved": "https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz",
             "integrity": "sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=",
+            "dev": true,
             "requires": {
                 "once": "1.4.0",
                 "wrappy": "1.0.2"
@@ -1840,7 +2001,8 @@
         "inherits": {
             "version": "2.0.3",
             "resolved": "https://registry.npmjs.org/inherits/-/inherits-2.0.3.tgz",
-            "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4="
+            "integrity": "sha1-Yzwsg+PaQqUC9SRmAiSA9CCCYd4=",
+            "dev": true
         },
         "ini": {
             "version": "1.3.5",
@@ -2218,7 +2380,8 @@
         "lodash": {
             "version": "3.10.1",
             "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz",
-            "integrity": "sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y="
+            "integrity": "sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y=",
+            "dev": true
         },
         "lodash._getnative": {
             "version": "3.9.1",
@@ -2322,6 +2485,7 @@
             "version": "3.0.4",
             "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
             "integrity": "sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==",
+            "dev": true,
             "requires": {
                 "brace-expansion": "1.1.11"
             }
@@ -2467,6 +2631,7 @@
             "version": "1.4.0",
             "resolved": "https://registry.npmjs.org/once/-/once-1.4.0.tgz",
             "integrity": "sha1-WDsap3WWHUsROsF9nFC6753Xa9E=",
+            "dev": true,
             "requires": {
                 "wrappy": "1.0.2"
             }
@@ -2501,7 +2666,8 @@
         "os-homedir": {
             "version": "1.0.2",
             "resolved": "https://registry.npmjs.org/os-homedir/-/os-homedir-1.0.2.tgz",
-            "integrity": "sha1-/7xJiDNuDoM94MFox+8VISGqf7M="
+            "integrity": "sha1-/7xJiDNuDoM94MFox+8VISGqf7M=",
+            "dev": true
         },
         "os-name": {
             "version": "1.0.3",
@@ -2516,12 +2682,14 @@
         "os-tmpdir": {
             "version": "1.0.2",
             "resolved": "https://registry.npmjs.org/os-tmpdir/-/os-tmpdir-1.0.2.tgz",
-            "integrity": "sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ="
+            "integrity": "sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=",
+            "dev": true
         },
         "osenv": {
             "version": "0.1.5",
             "resolved": "https://registry.npmjs.org/osenv/-/osenv-0.1.5.tgz",
             "integrity": "sha512-0CWcCECdMVc2Rw3U5w9ZjqX6ga6ubk1xDVKxtBQPK7wis/0F2r9T6k4ydGYhecl7YUBxBVxhL5oisPsNxAPe2g==",
+            "dev": true,
             "requires": {
                 "os-homedir": "1.0.2",
                 "os-tmpdir": "1.0.2"
@@ -2597,7 +2765,8 @@
         "path-is-absolute": {
             "version": "1.0.1",
             "resolved": "https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz",
-            "integrity": "sha1-F0uSaHNVNP+8es5r9TpanhtcX18="
+            "integrity": "sha1-F0uSaHNVNP+8es5r9TpanhtcX18=",
+            "dev": true
         },
         "path-parse": {
             "version": "1.0.5",
@@ -2655,6 +2824,7 @@
             "version": "1.2.0",
             "resolved": "https://registry.npmjs.org/plist/-/plist-1.2.0.tgz",
             "integrity": "sha1-CEtQk93JJQbiWfh0uNmxr7jHlZM=",
+            "dev": true,
             "requires": {
                 "base64-js": "0.0.8",
                 "util-deprecate": "1.0.2",
@@ -2730,7 +2900,8 @@
         "q": {
             "version": "1.5.1",
             "resolved": "https://registry.npmjs.org/q/-/q-1.5.1.tgz",
-            "integrity": "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc="
+            "integrity": "sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=",
+            "dev": true
         },
         "qrcode-reader": {
             "version": "1.0.4",
@@ -3099,7 +3270,8 @@
         "sax": {
             "version": "0.3.5",
             "resolved": "https://registry.npmjs.org/sax/-/sax-0.3.5.tgz",
-            "integrity": "sha1-iPz8H3PAyLvVt8d2ttPzUB7tBz0="
+            "integrity": "sha1-iPz8H3PAyLvVt8d2ttPzUB7tBz0=",
+            "dev": true
         },
         "sdp": {
             "version": "1.5.4",
@@ -3109,7 +3281,8 @@
         "semver": {
             "version": "5.5.0",
             "resolved": "https://registry.npmjs.org/semver/-/semver-5.5.0.tgz",
-            "integrity": "sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA=="
+            "integrity": "sha512-4SJ3dm0WAwWy/NVeioZh5AntkdJoWKxHxcmyP622fOkgHa4z3R0TdBJICINyaSDE6uNwVc8gZr+ZinwZAH4xIA==",
+            "dev": true
         },
         "semver-diff": {
             "version": "2.1.0",
@@ -3194,7 +3367,8 @@
         "shelljs": {
             "version": "0.5.3",
             "resolved": "https://registry.npmjs.org/shelljs/-/shelljs-0.5.3.tgz",
-            "integrity": "sha1-xUmCuZbHbvDB5rWfvcWCX1txMRM="
+            "integrity": "sha1-xUmCuZbHbvDB5rWfvcWCX1txMRM=",
+            "dev": true
         },
         "simple-concat": {
             "version": "1.0.0",
@@ -3573,12 +3747,14 @@
         "underscore": {
             "version": "1.9.1",
             "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.9.1.tgz",
-            "integrity": "sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg=="
+            "integrity": "sha512-5/4etnCkd9c8gwgowi5/om/mYO5ajCaOgdzj/oW+0eQV9WxKBDZw5+ycmKmeaTXjInS/W0BzpGLo2xR2aBwZdg==",
+            "dev": true
         },
         "unorm": {
             "version": "1.4.1",
             "resolved": "https://registry.npmjs.org/unorm/-/unorm-1.4.1.tgz",
-            "integrity": "sha1-NkIA1fE2RsqLzURJAnEzVhR5IwA="
+            "integrity": "sha1-NkIA1fE2RsqLzURJAnEzVhR5IwA=",
+            "dev": true
         },
         "unpipe": {
             "version": "1.0.0",
@@ -3649,7 +3825,8 @@
         "util-deprecate": {
             "version": "1.0.2",
             "resolved": "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz",
-            "integrity": "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8="
+            "integrity": "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=",
+            "dev": true
         },
         "utils-merge": {
             "version": "1.0.1",
@@ -3742,7 +3919,8 @@
         "wrappy": {
             "version": "1.0.2",
             "resolved": "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz",
-            "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8="
+            "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=",
+            "dev": true
         },
         "write-file-atomic": {
             "version": "1.3.4",
@@ -3787,6 +3965,7 @@
             "version": "4.0.0",
             "resolved": "https://registry.npmjs.org/xmlbuilder/-/xmlbuilder-4.0.0.tgz",
             "integrity": "sha1-mLj2UcowqmJANvEn0RzGbce5B6M=",
+            "dev": true,
             "requires": {
                 "lodash": "3.10.1"
             }
@@ -3794,7 +3973,8 @@
         "xmldom": {
             "version": "0.1.27",
             "resolved": "https://registry.npmjs.org/xmldom/-/xmldom-0.1.27.tgz",
-            "integrity": "sha1-1QH5ezvbQDr4757MIFcxh6rawOk="
+            "integrity": "sha1-1QH5ezvbQDr4757MIFcxh6rawOk=",
+            "dev": true
         },
         "xtend": {
             "version": "4.0.1",
