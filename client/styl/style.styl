@@ -110,6 +110,8 @@ html
 
 // Recv
 .waiting-payment
+  margin-top 1rem
+
   img.qr
     width 100%
     max-width 300px
@@ -120,21 +122,27 @@ html
 
   @media (min-width: 576px) and (max-width: 767.98px)
     h2
-      margin-top 1.5rem
-      font-size 1.6rem
+      font-size 25px
     h3
-      font-size 1.4rem
+      font-size 21px
+    small
+      font-size 12px
 
-  @media (min-width: 768px)
-    margin-top 2rem
-    padding 2rem 3rem
-    border 1px solid #ccc
-
+  @media (min-width: 768px) and (max-width: 991.98px)
     h2
-      margin-top 2rem
-      margin-bottom 1.5rem
+      font-size 34px
     h3
-      margin-bottom 2rem
+      font-size 26px
+    small
+      font-size 15px
+
+  @media (min-width: 992px)
+    h2
+      font-size 45px
+    h3
+      font-size 35px
+    small
+      font-size 18px
 
 // Logs
 .logs
