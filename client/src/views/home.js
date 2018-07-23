@@ -18,9 +18,10 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
         div('.clearfix', [
           type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                         : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-        , ago('.ts.badge.badge-secondary.badge-pill.float-right', ts)
+        , span('.ts.badge.badge-secondary.badge-pill.float-right', { attrs: { title: new Date(ts*1000).toLocaleString() } }, ago(ts))
         ])
       , feedShow != fid ? '' : ul('.list-unstyled.my-3', [
+        , li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', new Date(ts*1000).toLocaleString() ])
         , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
         , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
         , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''

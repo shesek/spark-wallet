@@ -15,13 +15,7 @@ const qruri = process.env.BUILD_TARGET == 'web' && isOnion
 
 const qrinv = inv => qruri(`lightning:${ inv.bolt11  }`.toUpperCase())
 
-const ago = (sel, ts) => span(sel+'.withtip', [
-  vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
-, div('.tooltip.fade.bs-tooltip-top', [
-    div('.arrow')
-  , div('.tooltip-inner', new Date(ts*1000).toLocaleString())
-  ])
-])
+const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
 const formGroup = (labelText, control, help) => div('.form-group', [
   label('.col-form-label.col-form-label-lg', labelText)
