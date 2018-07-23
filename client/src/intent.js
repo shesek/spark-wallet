@@ -52,7 +52,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   // Feed event page navigation and click-to-collapse
   , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
   , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
-      .merge(togExp$.mapTo(null))
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$

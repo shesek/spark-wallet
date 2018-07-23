@@ -1,4 +1,4 @@
-import { div, ul, li, a, span, button, small, p } from '@cycle/dom'
+import { div, ul, li, a, span, button, small, p, strong } from '@cycle/dom'
 import { yaml, ago } from './util'
 
 const perPage = 10
@@ -12,16 +12,21 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
 
-
 , ...(!feed ? '' : !feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
-      li('.list-group-item'+(expert?'.list-group-item-action':''), { dataset: { feedId: fid } }, [
+      li('.list-group-item'+(feedShow == fid ? '.active' : '.list-group-item-action'), { dataset: { feedId: fid } }, [
         div('.clearfix', [
           type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                         : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
         , ago('.ts.badge.badge-secondary.badge-pill.float-right', ts)
         ])
-      , (expert && feedShow == fid) ? yaml(obj) : ''
+      , feedShow != fid ? '' : ul('.list-unstyled.my-3', [
+        , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
+        , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+        , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
+        , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
+        , expert ? li(yaml(obj)) : ''
+        ])
       ])
     ))
   , paging(feed.length, feedStart)
@@ -31,9 +36,12 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
 
 const makeId = (type, obj) => `${type}-${obj.id || obj.pay_index}`
 
+const feesText = ({ msatoshi: quoted, msatoshi_sent: sent }, unitf) =>
+  `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
+
 const paging = (total, start) => total <= perPage ? '' :
   div('.d-flex.justify-content-between.mt-2', [
-    pageLink('newer', start > 0 ? ''+(start-perPage) : null)
+    pageLink('newer', start > 0 ? start-perPage : null)
   , small('.align-self-center.text-muted', `showing ${+start+1} to ${Math.min(total, +start+perPage)} of ${total}`)
   , pageLink('older', start+perPage < total ? start+perPage : null)
   ])

@@ -9,7 +9,12 @@
 
 .theme-pulse
   .list-group-item
-    background transparent
+    &, &:hover, &:focus
+      background transparent
+
+.theme-pulse, .theme-sketchy
+  .list-group-item ul
+    font-weight normal
 
 // these themes have space for a larger timestamp
 .theme-yeti, .theme-dark, .theme-materia, .theme-lumen
