@@ -29,20 +29,22 @@ html, body, #app
 
 // Enlarge base document rem to fill up large displays
 html
-  @media (min-width: 530px)
-    font-size 1.25rem
+  @media (min-height: 600px)
 
-  @media (min-width: 576px)
-    font-size 1.3rem
+    @media (min-width: 530px)
+      font-size 1.25rem
 
-  @media (min-width: 768px)
-    font-size 1.5rem
+    @media (min-width: 576px)
+      font-size 1.3rem
 
-  @media (min-width: 992px)
-    font-size 1.5rem
+    @media (min-width: 768px)
+      font-size 1.5rem
 
-    .container
-      max-width 900px !important
+    @media (min-width: 992px)
+      font-size 1.5rem
+
+      .container
+        max-width 960px
 
 // Header, content & footer
 .navbar-brand
