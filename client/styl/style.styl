@@ -91,6 +91,11 @@ html
   .list-group-item
     // originally 0.75rem, some is removed to make room for the badge margin
     padding-bottom 0.25rem
+    // disable bg hover effect on touch devices
+    @media (hover:none)
+      &:hover
+        background inherit
+
   .badge
     margin-bottom 0.5rem
   .badge.amt
