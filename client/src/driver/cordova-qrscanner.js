@@ -2,9 +2,7 @@ import EventEmitter from 'events'
 import { Observable as O } from '../rxjs'
 
 const em    = new EventEmitter
-    , scan$ = O.fromEvent(em, 'scan')
-    //, cancel$ = O.fromEvent(em, 'cancel')
-    //, error$ = O.fromEvent(em, 'error')
+    , scan$ = O.fromEvent(em, 'scan').share()
 
 function handleScan(err, contents) {
   if (err && err.code == 6) em.emit('cancel')
