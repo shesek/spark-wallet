@@ -56,10 +56,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
 
-  // Display payments toggled by the user + automatically display newly made payments
+  // Display payments toggled by the user + automatically display newly made payments + reset on paging nav
   , feedActive$ = togFeed$.merge(
       incoming$.map(inv => `in-${inv.pay_index}`)
     , outgoing$.map(pay => `out-${pay.id}`)
+    , feedStart_$.mapTo(null)
     ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item the 2nd time toggles it off
 
   // Feed start index based on user page navigation + auto-jump to start on newly made payments
