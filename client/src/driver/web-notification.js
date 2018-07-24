@@ -17,7 +17,7 @@ if (!window.Notification || !navigator.serviceWorker) {
 
   function display(msg) {
     if (worker && !document.hasFocus() && Notification.permission === 'granted')
-      worker.showNotification('Spark', { body: msg, tag: 'spark-msg', icon: 'manifest/icon.png' })
+      worker.showNotification('Spark', { body: msg, tag: 'spark-msg', icon: 'notification.png' })
   }
 
   module.exports = msg$ => (
