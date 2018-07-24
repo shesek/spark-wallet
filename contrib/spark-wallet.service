@@ -9,7 +9,6 @@ User={user}
 Restart=on-failure
 
 SyslogIdentifier=spark-wallet
-EnvironmentFile=/etc/spark-wallet.conf
 PIDFile=/var/run/spark-wallet.pid
 StandardInput=null
 StandardOutput=syslog

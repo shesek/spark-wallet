@@ -24,6 +24,7 @@ const args = require('meow')(`
       --qr-with-key           print QR code with embedded access key [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
+      -C, --config <path>     path to config file [default: ~/.spark-wallet/config]
       -V, --verbose           display debugging information [default: false]
       -h, --help              output usage information
       -v, --version           output version number
@@ -38,11 +39,19 @@ const args = require('meow')(`
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, qrWithKey: {type:'boolean'}
-            , verbose: {alias:'V', type:'boolean'}
+            , config: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 
-Object.keys(args).filter(k => k.length > 1)
-  .map(k => [ k.replace(/([A-Z])/g, '_$1').toUpperCase(), args[k] ])
+// Load config file
+const os = require('os'), fs = require('fs'), path = require('path'), ini = require('ini')
+    , configPath = args.config || path.join(os.homedir(), '.spark-wallet', 'config')
+    , fileConf = fs.existsSync(configPath) ? ini.parse(fs.readFileSync(configPath, 'utf-8')) : {}
+
+const conf = Object.assign(fileConf, args)
+
+// Set config options from argv and file as environment variables
+Object.keys(conf).filter(k => k.length > 1)
+  .map(k => [ k.replace(/([^A-Z_])([A-Z])/g, '$1_$2').replace(/-/g, '_').toUpperCase(), conf[k] ])
   .forEach(([ k, v ]) => v !== false ? process.env[k] = v
                                      : process.env[`NO_${k}`] = true)
 

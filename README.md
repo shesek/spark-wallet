@@ -51,6 +51,19 @@ Note that the desktop app comes bundled with the Spark server and don't require 
 
 See `$ spark-wallet --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
+### Config file
+
+Spark will look up configuration options in `~/.spark-wallet/config`.
+The expected format is one `key=value` per line, as such:
+
+```ini
+ln-path=/data/lightning/testnet
+login=bob:superSecretPassword
+port=8000
+```
+
+The path of the config file can be overridden with `--config/-C`.
+
 ## Features & Usage
 
 <img src="https://i.imgur.com/pgnJKCk.png" width="25%" align="right"></img>
@@ -121,7 +134,7 @@ running c-lightning and connecting through it.
 
 Spark will by default generate a self-signed certificate and enable TLS when binding on a non-`localhost` address.
 
-The self-signed certificate and key material will be saved to `./spark-tls/`.
+The self-signed certificate and key material will be saved to `~/.spark-wallet/tls/`.
 To save to a different location, set `--tls-path`.
 To set a custom "common name" for the generated certificate, set `--tls-name`.
 
@@ -159,7 +172,7 @@ Running Spark as a Tor hidden service has the following benefits:
 - In addition to authenticating the server, they also serve as a mean to authenticate the user - you can't access the server without knowing the `.onion` hostname.
 - You don't have to setup port forwarding, everything is done with outbound connections.
 
-Tor data files (including secret key material for the hidden service) will be saved to `./spark-tor/`. This can be overridden with `--onion-path`.
+Tor data files (including secret key material for the hidden service) will be saved to `~/.spark-wallet/tor/`. This can be overridden with `--onion-path`.
 
 #### Connecting from Android
 
@@ -176,17 +189,17 @@ the URL as a QR to the console.
 ## Adding to startup with `systemd`
 
 ```bash
-# set config options in /etc/spark-wallet.conf, one KEY=VALUE per line
-$ echo LOGIN=bob:superSecretPass123 | sudo tee -a /etc/spark-wallet.conf
-$ echo LN_PATH=$HOME/.lightning | sudo tee -a /etc/spark-wallet.conf
+# set config options in ~/.spark-wallet/config
+$ echo login=bob:superSecretPass123 | sudo tee -a ~/.spark-wallet/config
 
 # create service file from template
 $ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/contrib/spark-wallet.service |
   sed "s~{cmd}~`which spark-wallet`~;s~{user}~`whoami`~" |
   sudo tee /etc/systemd/system/spark-wallet.service
 
-# inspect the generated service file, then start the service with:
-$ systemctl enable spark-wallet && systemctl start spark-wallet
+# inspect the generated service file, then load and start the service with:
+$ sudo systemctl daemon-reload
+$ sudo systemctl enable spark-wallet && sudo systemctl start spark-wallet
 ```
 
 ## Developing
