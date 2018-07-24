@@ -46,9 +46,9 @@ const
 
 , dbg = (obj, label='stream', dbg=debug(label)) =>
     Object.keys(obj).forEach(k => obj[k] && obj[k].subscribe(
-      x   => dbg(`${k} ->`, x),
-      err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err),
-      _   => dbg(`${k} completed`)))
+      x   => dbg(`${k} ->`, x)
+    , err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err)
+    , _   => dbg(`${k} completed`)))
 
 module.exports = { combine, toObs, dbg
                  , dropErrors, extractErrors, formatError, isConnLost
