@@ -7,7 +7,7 @@
   ln.on('error', connFailed)
   const lninfo = await ln.getinfo()
   ln.removeListener('error', connFailed)
-  console.log(`Connected to c-lightning ${lninfo.version} with id ${lninfo.id} on network ${lninfo.network}`)
+  console.log(`Connected to c-lightning ${lninfo.version} with id ${lninfo.id} on network ${lninfo.network} at ${ln.rpcPath}`)
 
   // Settings
   app.set('port', process.env.PORT || 9737)
