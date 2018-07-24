@@ -3,7 +3,9 @@ import path from 'path'
 import http from 'http'
 import fs   from 'fs'
 
-module.exports = (app, dir=path.resolve('spark-tor'), hs_dir=path.join(dir, 'hidden_service')) =>
+const defaultDir = path.join(require('os').homedir(), '.spark-wallet', 'tor')
+
+module.exports = (app, dir=defaultDir, hs_dir=path.join(dir, 'hidden_service')) =>
   new Promise(resolve => {
     // Start HTTP server (non TLS) on a random port
     const httpSrv = http.createServer(app).listen(0, '127.0.0.1', _ =>

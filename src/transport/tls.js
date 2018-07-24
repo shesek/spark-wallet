@@ -5,13 +5,15 @@ import https      from 'https'
 import isIp       from 'is-ip'
 import fs         from 'fs'
 
+const defaultDir = path.join(require('os').homedir(), '.spark-wallet', 'tls')
+
 const defaultExt = [
   { name: 'basicConstraints', cA: true }
 , { name: 'keyUsage', keyCertSign: true, digitalSignature: true , nonRepudiation: true, keyEncipherment: true, dataEncipherment: true }
 ]
 
 
-module.exports = (app, name=app.settings.host, dir='./spark-tls') => {
+module.exports = (app, name=app.settings.host, dir=defaultDir) => {
   const pems   = makePems(name, dir)
       , tlsOpt = { key: pems.private, cert: pems.cert }
       , server = https.createServer(tlsOpt, app)

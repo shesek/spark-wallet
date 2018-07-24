@@ -11,13 +11,13 @@ const args = require('meow')(`
       -p, --port <port>       http(s) server port [default: 9737]
       -i, --host <host>       http(s) server listen address [default: localhost]
 
-      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
+      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
       --tls-name <name>       common name for the generated self-signed cert [default: {host}]
       --force-tls             enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                disable TLS for non-localhost hosts [default: false]
 
       -o, --onion             start Tor Hidden Service [default: false]
-      -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]
+      -O, --onion-path <path> directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
       -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
       -Q, --print-qr          print QR code with the server URL [default: false]
