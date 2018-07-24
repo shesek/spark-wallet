@@ -21,13 +21,13 @@ const makeScanDriver = (opt={}) => {
 
   function startScan(Camera, scanner) {
     Camera.getCameras().then(pickCam).then(cam => {
-      document.body.className += ' qr-scanning'
+      document.body.classList.add('qr-scanning')
       scanner.start(cam)
     })
   }
 
   function stopScan(scanner) {
-    document.body.className = document.body.className.replace(/\bqr-scanning\b/, '')
+    document.body.classList.remove('qr-scanning')
     scanner.stop()
   }
 

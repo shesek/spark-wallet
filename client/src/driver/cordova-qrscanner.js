@@ -13,13 +13,13 @@ function handleScan(err, contents) {
 }
 
 function startScan() {
-  document.body.className += ' qr-scanning'
+  document.body.classList.add('qr-scanning')
   QRScanner.scan(handleScan)
   QRScanner.show()
 }
 
 function stopScan() {
-  document.body.className = document.body.className.replace(/\bqr-scanning\b/, '')
+  document.body.classList.remove('qr-scanning')
   QRScanner.destroy()
 }
 
