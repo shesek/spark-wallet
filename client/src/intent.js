@@ -8,7 +8,7 @@ import { dbg, parseUri } from './util'
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   const
     on     = (sel, ev, pd=false) => DOM.select(sel).events(ev, { preventDefault: pd })
-  , click  = sel => on(sel, 'click').map(e => e.ownerTarget.dataset)
+  , click  = sel => on(sel, 'click')
   , submit = sel => on(sel, 'submit', true).map(e => ({ ...e.target.dataset, ...serialize(e.target, { hash: true }) }))
 
   // Page routes
@@ -46,12 +46,16 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togExp$   = click('.toggle-exp')
 
   // Dismiss alert message
-  , dismiss$  = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
+  , dismiss$ = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
                       , page$.filter(p => p.pathname != '/'))
 
   // Feed event page navigation and click-to-collapse
-  , feedStart$ = click('[data-feed-start]').map(d => +d.feedStart).merge(goHome$.mapTo(0)).startWith(0)
-  , feedShow$  = click('[data-feed-id]').map(d => d.feedId).startWith(null).scan((S, fid) => S == fid ? null : fid)
+  , feedStart$ = click('[data-feed-start]').map(e => +e.ownerTarget.dataset.feedStart).startWith(0)
+  , feedShow$ = click('ul.feed [data-feed-show]')
+      .filter(e => e.target.closest('ul').classList.contains('feed')) // ignore clicks inside nested <ul>s
+      .map(e => e.ownerTarget.dataset.feedShow)
+      .startWith(null)
+      .scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item the 2nd time toggles it off
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$

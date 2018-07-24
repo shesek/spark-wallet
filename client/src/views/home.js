@@ -14,7 +14,7 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
 
 , ...(!feed ? '' : !feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
-      li('.list-group-item'+(feedShow == fid ? '.active' : '.list-group-item-action'), { dataset: { feedId: fid } }, [
+      li('.list-group-item'+(feedShow == fid ? '.active' : '.list-group-item-action'), { dataset: { feedShow: fid } }, [
         div('.clearfix', [
           type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                         : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
