@@ -64,6 +64,7 @@
   function serviceReady(name, url) {
     console.log(`${name} running on ${url}`)
     qrterm && qrterm.generate(`${url}${hashKey}`, { small: true })
+    hashKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet]')
 
     process.send && process.send({ serverUrl: url })
   }
