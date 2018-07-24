@@ -49,13 +49,11 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , dismiss$ = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
                       , page$.filter(p => p.pathname != '/'))
 
-  // Feed event page navigation and click-to-collapse
+  // Payments feed page navigation and click-to-toggle
   , feedStart$ = click('[data-feed-start]').map(e => +e.ownerTarget.dataset.feedStart).startWith(0)
-  , feedShow$ = click('ul.feed [data-feed-show]')
+  , togFeed$ = click('ul.feed [data-feed-toggle]')
       .filter(e => e.target.closest('ul').classList.contains('feed')) // ignore clicks inside nested <ul>s
-      .map(e => e.ownerTarget.dataset.feedShow)
-      .startWith(null)
-      .scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item the 2nd time toggles it off
+      .map(e => e.ownerTarget.dataset.feedToggle)
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
@@ -63,7 +61,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
-         , feedStart$, feedShow$
+         , feedStart$, togFeed$
          , dismiss$
          }
 }

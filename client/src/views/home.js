@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const perPage = 10
 
-const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
+const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => div([
 
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
@@ -14,13 +14,13 @@ const home = ({ feed, feedStart, feedShow, unitf, conf: { expert } }) => div([
 
 , ...(!feed ? '' : !feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
-      li('.list-group-item'+(feedShow == fid ? '.active' : '.list-group-item-action'), { dataset: { feedShow: fid } }, [
+      li('.list-group-item'+(feedActive == fid ? '.active' : '.list-group-item-action'), { dataset: { feedToggle: fid } }, [
         div('.clearfix', [
           type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                         : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
         , span('.ts.badge.badge-secondary.badge-pill.float-right', { attrs: { title: new Date(ts*1000).toLocaleString() } }, ago(ts))
         ])
-      , feedShow != fid ? '' : ul('.list-unstyled.my-3', [
+      , feedActive != fid ? '' : ul('.list-unstyled.my-3', [
         , li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', new Date(ts*1000).toLocaleString() ])
         , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
         , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
