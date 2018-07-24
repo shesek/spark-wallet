@@ -4,6 +4,7 @@ import path       from 'path'
 import https      from 'https'
 import isIp       from 'is-ip'
 import fs         from 'fs'
+import mkdirp     from 'mkdirp'
 
 const defaultDir = path.join(require('os').homedir(), '.spark-wallet', 'tls')
 
@@ -48,7 +49,7 @@ const makePems = (name, dir) => {
   const pems = selfsigned.generate([ { name: 'commonName', value: name } ]
                                  , { extensions, keySize: 2048, algorithm: 'sha256' })
 
-  !fs.existsSync(dir) && fs.mkdirSync(dir)
+  !fs.existsSync(dir) && mkdirp.sync(dir)
   fs.writeFileSync(path.join(dir, 'key.pem'), pems.private)
   fs.writeFileSync(path.join(dir, 'cert.pem'), pems.cert)
 

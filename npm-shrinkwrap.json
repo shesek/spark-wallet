@@ -2812,6 +2812,11 @@
         "brace-expansion": "1.1.8"
       }
     },
+    "minimist": {
+      "version": "0.0.8",
+      "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz",
+      "integrity": "sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0="
+    },
     "minimist-options": {
       "version": "3.0.2",
       "resolved": "https://registry.npmjs.org/minimist-options/-/minimist-options-3.0.2.tgz",
@@ -2827,13 +2832,6 @@
       "integrity": "sha1-MAV0OOrGz3+MR2fzhkjWaX11yQM=",
       "requires": {
         "minimist": "0.0.8"
-      },
-      "dependencies": {
-        "minimist": {
-          "version": "0.0.8",
-          "resolved": "https://registry.npmjs.org/minimist/-/minimist-0.0.8.tgz",
-          "integrity": "sha1-hX/Kv8M5fSYluCKCYuhqp6ARsF0="
-        }
       }
     },
     "morgan": {

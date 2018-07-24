@@ -33,6 +33,7 @@
     "is-ip": "^2.0.0",
     "lightning-client": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
     "meow": "^5.0.0",
+    "mkdirp": "^0.5.1",
     "morgan": "^1.9.0",
     "nanoid": "^1.1.0",
     "node-forge": "^0.7.5",
