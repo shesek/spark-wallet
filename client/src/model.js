@@ -20,7 +20,7 @@ const
 const
   themes   = 'cerulean cosmo cyborg dark flatly journal lumen lux materia pulse sandstone simplex sketchy slate solar spacelab superhero united yeti'.split(' ')
 , units    = 'sat bits milli btc usd'.split(' ')
-, unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 5 }
+, unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 6 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
