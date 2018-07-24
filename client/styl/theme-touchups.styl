@@ -37,3 +37,21 @@ body.qr-scanning
   .theme-solar .main-bg { background: #002B36 }
   .theme-superhero .main-bg { background: #2B3E50 }
   .theme-cyborg .main-bg { background: #060606 }
+
+// explicitly set hovered/focused/active list-group-item bg color back to the default
+// background:inherit is sufficient for the other themes
+.feed .list-group-item
+  &:focus, &:active
+    .theme-dark & { background: #303030  }
+    .theme-sketchy & { background: #fff }
+    .theme-slate & { background: #32383e }
+    .theme-superhero & { background: #4E5D6C }
+    .theme-cyborg & { background: #222  }
+
+  @media (hover:none)
+    &:hover
+      .theme-dark & { background: #303030  }
+      .theme-sketchy & { background: #fff }
+      .theme-slate & { background: #32383e }
+      .theme-superhero & { background: #4E5D6C }
+      .theme-cyborg & { background: #222  }
