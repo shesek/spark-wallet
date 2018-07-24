@@ -2,7 +2,6 @@ import { Observable as O } from './rxjs'
 import serialize from 'form-serialize'
 import stringArgv from 'string-argv'
 import nanoid from 'nanoid'
-import fscreen from 'fscreen'
 import { dbg, parseUri } from './util'
 
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {

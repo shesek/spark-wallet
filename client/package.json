@@ -16,7 +16,6 @@
     "big.js": "^5.1.2",
     "bootswatch": "^4.1.2",
     "form-serialize": "^0.7.2",
-    "fscreen": "^1.0.2",
     "instascan": "github:shesek/instascan#packaged-lib",
     "js-yaml": "^3.12.0",
     "nanoid": "^1.1.0",
