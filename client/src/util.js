@@ -42,7 +42,8 @@ const
     ? new Error('Connection to server lost.')
     : err
 
-, isConnLost = err => err.toString() === 'Error: Connection to server lost.'
+, connErrors = [ 'Error: Connection to server lost.', 'Error: Unauthorized', 'Error: Not Found', 'Error: Bad Gateway', 'Error: Service Unavailable' ]
+, isConnError = err => connErrors.includes(err.toString())
 
 , dbg = (obj, label='stream', dbg=debug(label)) =>
     Object.keys(obj).forEach(k => obj[k] && obj[k].subscribe(
@@ -51,5 +52,5 @@ const
     , _   => dbg(`${k} completed`)))
 
 module.exports = { combine, toObs, dbg
-                 , dropErrors, extractErrors, formatError, isConnLost
+                 , dropErrors, extractErrors, formatError, isConnError
                  , formatAmt, parseUri, recvAmt }

@@ -2,6 +2,7 @@ import YAML from 'js-yaml'
 import qrcode from 'qrcode'
 import vagueTime from 'vague-time'
 import { div, span, pre, label, small, input, button, a } from '@cycle/dom'
+import { isConnError } from '../util'
 
 const isOnion = global.location && /\.onion$/.test(location.hostname)
 
@@ -36,11 +37,10 @@ const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
   button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
 , ''+alert[1]
 
-, ' ', process.env.BUILD_TARGET !== 'web' && serverErrors.includes(alert[1])
+, ' ', process.env.BUILD_TARGET != 'web' && isConnError(alert[1])
   ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
   : ''
 ])
 
-, serverErrors = [ 'Error: Connection to server lost.', 'Error: Unauthorized', 'Error: Not Found' ]
 
 module.exports = { yaml, qruri, qrinv, ago, formGroup, amountField, alertBox }

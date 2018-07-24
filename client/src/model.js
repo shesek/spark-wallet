@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, recvAmt, combine, isConnLost } from './util'
+import { dbg, formatAmt, recvAmt, combine, isConnError } from './util'
 
 const msatbtc = big(100000000000) // msat in 1 btc
 
@@ -99,7 +99,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
 
   // Keep track of the connection status
   , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
-      .merge(error$.filter(isConnLost).mapTo(false))
+      .merge(error$.filter(isConnError).mapTo(false))
       .startWith(false)
       .distinctUntilChanged()
 
@@ -125,7 +125,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , dismiss$.mapTo(null)
     )
     // hide "connection lost" errors when we get back online
-    .combineLatest(connected$, (alert, conn) => alert && (isConnLost(alert[1]) && conn ? null : alert))
+    .combineLatest(connected$, (alert, conn) => alert && (isConnError(alert[1]) && conn ? null : alert))
     // format msat amounts in messages
     .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
     .startWith(null)
