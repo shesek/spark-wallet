@@ -91,6 +91,8 @@ html
   .list-group-item
     // originally 0.75rem, some is removed to make room for the badge margin
     padding-bottom 0.25rem
+
+  .list-group-item:not(.active)
     // disable bg hover effect on touch devices, they get stuck in hover state
     @media (hover:none)
       &:hover

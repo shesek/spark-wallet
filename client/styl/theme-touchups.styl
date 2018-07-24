@@ -40,7 +40,7 @@ body.qr-scanning
 
 // explicitly set hovered/focused/active list-group-item bg color back to the default
 // background:inherit is sufficient for the other themes
-.feed .list-group-item
+.feed .list-group-item:not(.active)
   &:focus, &:active
     .theme-dark & { background: #303030  }
     .theme-sketchy & { background: #fff }
