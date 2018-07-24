@@ -10,7 +10,10 @@ if (!window.Notification || !navigator.serviceWorker) {
   module.exports = _ => O.empty()
 } else {
 
-  Notification.requestPermission()
+  if (Notification.permission !== 'granted') {
+    // don't overwhelm the user with prompts immediately, wait a bit first
+    setTimeout(_ => Notification.requestPermission(), 15000)
+  }
 
   let worker
   navigator.serviceWorker.ready.then(reg => worker = reg)
