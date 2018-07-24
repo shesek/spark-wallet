@@ -5,18 +5,32 @@
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
 
-A wallet GUI for c-lightning,
+A wallet GUI for [c-lightning](https://github.com/ElementsProject/lightning),
 accessible over the web or through mobile and desktop apps.
 
-:zap: Simple & intuitive UI
-:zap: Near-zero configuration
+:zap: Simple & minimalistic
 :zap: Purely off-chain
+:zap: Near-zero configuration
 :zap: Progressive Web App
 :zap: Cordova and Electron builds
 :zap: Personalizable themes
 :zap: Automatic self-signed certs
 :zap: Built-in Tor hidden service support
 :zap:
+
+-----
+
+<img src="https://user-images.githubusercontent.com/877904/43122333-5122ca24-8f29-11e8-9426-58c8646f9d92.png" width="23%"></img>
+&nbsp;&nbsp;&nbsp;
+<img src="https://user-images.githubusercontent.com/877904/43122376-7543f93c-8f29-11e8-9363-5bc39cdb1807.png" width="23%"></img>
+&nbsp;&nbsp;&nbsp;
+<img src="https://user-images.githubusercontent.com/877904/43122396-8715d4f0-8f29-11e8-8736-266b5ecaf636.png" width="23%"></img>
+&nbsp;&nbsp;&nbsp;
+<img src="https://user-images.githubusercontent.com/877904/43122261-1c2428c2-8f29-11e8-8c29-e524de4aa82f.png" width="23%"></img>
+
+> ⚠️ Spark is alpha-quality software under active development.
+> Please use with care, preferably on testnet or with insignificant amounts.
+> Spark comes with no guarantees and with support on a best-effort basis.
 
 ## Installation
 
@@ -30,7 +44,7 @@ Once c-lightning is running, install and start Spark with:
 
 $ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
 
-$ spark-wallet --ln-path ~/.lightning --port 9737 # these are the defaults
+$ spark-wallet # defaults: --ln-path ~/.lightning --port 9737
 ```
 
 Or simply `$ npx spark-wallet`, which will install and start Spark in one go.
@@ -47,14 +61,14 @@ This will automatically enable TLS ([more details below](#tls)).
 Spark can also be accessed using mobile and desktop apps instead of through the browser.
 See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
 for more details.
-Note that the desktop app comes bundled with the Spark server and don't require the manual server setup described here.
+Note that the desktop app comes bundled with the Spark server and doesn't require the manual server setup described here.
 
 See `$ spark-wallet --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
 
-### Config file
+#### Config file
 
-Spark will look up configuration options in `~/.spark-wallet/config`.
-The expected format is one `key=value` per line, as such:
+Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config/-C <path>`).
+The expected format is one `key=value` per line, like so:
 
 ```ini
 ln-path=/data/lightning/testnet
@@ -62,31 +76,25 @@ login=bob:superSecretPassword
 port=8000
 ```
 
-The path of the config file can be overridden with `--config/-C`.
-
-## Features & Usage
-
-<img src="https://i.imgur.com/pgnJKCk.png" width="25%" align="right"></img>
+## Features & Controls
 
 Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
-Peers and channels are expected to be managed using the RPC.
+For now, peers and channels are expected to be managed using the RPC.
 Spark is a purely off-chain wallet, with no on-chain payments.
 
-Recommended for use on mobile devices.
+#### GUI controls
 
-GUI controls:
-
-- Click the balance on the top-right to toggle the currency display unit.
+- **Display unit:** Click the balance on the top-right to toggle the currency display unit.
   The available options are sat, bits, milli, btc and usd.
 
-- Click the theme name on the bottom-right to change themes (over 15 [bootswatch](https://bootswatch.com) themes are available).
+- **Theme switcher:** Click the theme name on the bottom-right to change themes (you can choose between over 15 [bootswatch](https://bootswatch.com) themes).
 
-- Click the estimated times to see exact timestamps.
+- **Collapse payments:** Click on payments in the list to display more details.
 
-- Click the version number on the bottom-left to toggle *expert mode*.
-  This will add two new menu items, "Logs" and "RPC Console",
-  display yaml dumps with additional information throughout the app,
-  and make payments collapsible.
+- **Expert mode:** Click the version number on the bottom-left to toggle expert mode.
+  This will add [two new menu items](https://user-images.githubusercontent.com/877904/43125383-89ac19b4-8f32-11e8-9a5e-d91eb5a637ea.png), "Logs" and
+  ["RPC Console"](https://user-images.githubusercontent.com/877904/43122285-3854be8a-8f29-11e8-9329-d4c5c881c5e2.png),
+  and display yaml dumps with additional information throughout the app.
 
 ## Progressive Web App
 
@@ -100,13 +108,16 @@ and in Firefox mobile with an icon next to the address bar ([see here](https://m
 Note that installing the PWA on Android requires the TLS certificate to be signed by a CA
 or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
 
+Compared to the PWA, the main advantages of the mobile and desktop apps (below) are
+the ability to handle `lightning:` URIs,
+better security sandbox (detached from the browser)
+and static client-side code.
+
 ## Mobile app (Cordova)
 
 A Cordova-based native app for Android is available for download from the
 [releases page](https://github.com/ElementsProject/spark/releases) (`spark.apk`).
 It is not currently published to the app store.
-
-The main advantage of the native app compared to the PWA is the ability to handle `lightning:` URIs.
 
 When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
 You can print your access key to the console by starting Spark with `--print-key/-k`.
@@ -120,8 +131,6 @@ or manually added as a user trusted certificate ([instructions below](#add-as-tr
 Electron-based desktop apps for Linux (packaged as `AppImage`, `deb`, `snap` and `tar.gz`),
 OS X and Windows are available for download from the
 [releases page](https://github.com/ElementsProject/spark/releases).
-
-The main advantage of the desktop app compared to the PWA is the ability to handle `lightning:` URIs.
 
 The desktop app comes bundled with the Spark server-side component. If you're connecting to a local
 c-lightning instance, you can configure the client to connect to it directly without manually setting-up
@@ -190,7 +199,7 @@ the URL as a QR to the console.
 
 ```bash
 # set config options in ~/.spark-wallet/config
-$ echo login=bob:superSecretPass123 | sudo tee -a ~/.spark-wallet/config
+$ echo login=bob:superSecretPass123 | tee -a ~/.spark-wallet/config
 
 # create service file from template
 $ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/contrib/spark-wallet.service |
