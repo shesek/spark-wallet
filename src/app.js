@@ -19,13 +19,17 @@
   app.use(require('morgan')('dev'))
   app.use(require('./auth')(app, process.env.LOGIN, process.env.ACCESS_KEY))
   app.use(require('body-parser').json())
-  app.use(require('compression')())
   app.use(require('helmet')({ contentSecurityPolicy: { directives: {
     defaultSrc: [ "'self'" ]
   , scriptSrc:  [ "'self'", "'unsafe-eval'" ]
   , fontSrc:    [ "'self'", 'data:' ]
   , imgSrc:     [ "'self'", 'data:' ]
   } }, ieNoOpen: false }))
+
+  // Gzip compression (disabled for SSE https://github.com/jshttp/mime-db/pull/138)
+  const compression = require('compression')
+  app.use(compression({ filter: (req, res) =>
+    compression.filter(req, res) && res.getHeader('Content-Type').split(';')[0] !== 'text/event-stream' }))
 
   // CSRF protection. Require the X-Access header or access-key query string arg for POST requests.
   app.post('*', (req, res, next) => !req.csrfSafe ? res.sendStatus(403) : next())
