@@ -16,6 +16,7 @@ const makeScanDriver = (opt={}) => {
   const video    = document.createElement('video')
       , scanner$ = Scanner$.map(Scanner => new Scanner({ ...opt, video })).shareReplay(1)
       , scan$    = scanner$.flatMap(scanner => O.fromEvent(scanner, 'scan')).share()
+      , active$  = scanner$.flatMap(scanner => O.fromEvent(scanner, 'active')).share()
 
   video.className = 'qr-video'
   document.body.appendChild(video)
@@ -33,9 +34,17 @@ const makeScanDriver = (opt={}) => {
   }
 
   return _mode$ => {
-    O.combineLatest(_mode$, Camera$, scanner$).subscribe(([ mode, Camera, scanner  ]) =>
-      mode ? startScan(Camera, scanner)
-           : stopScan(scanner))
+    const mode$ = O.from(_mode$)
+
+    // start/stop scanner according to mode$
+    O.combineLatest(mode$, Camera$, scanner$).subscribe(([ mode, Camera, scanner  ]) =>
+      mode ? startScan(Camera, scanner) : stopScan(scanner))
+
+    // if the scanner becomes active while mode$ is off, turn it off again
+    // without this, starting the scanner then quickly stopping it before it fully initialized could get it stuck on screen
+    active$.withLatestFrom(mode$, scanner$)
+      .subscribe(([ active, mode, scanner ]) => (!mode && setTimeout(_ => scanner.stop(), 100)))
+
     return scan$
   }
 }
