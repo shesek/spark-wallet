@@ -23,7 +23,7 @@ const navbar = ({ unitf, cbalance, page }) =>
 
 const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) =>
   div('.main-bg',
-    h('footer.container.clearfix.text-muted.border-top', [
+    h('footer.container.clearfix.text-muted.border-top.border-light', [
       p('.info.float-left', [
         span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
       , ` · ${info.network}`
