@@ -91,6 +91,6 @@ run(main, {
 : {})
 })
 
-if (process.env.BUILD_TARGET == 'web')
+if (process.env.BUILD_TARGET == 'web' && navigator.serviceWorker)
   window.addEventListener('load', _ => navigator.serviceWorker.register('worker.js'))
 
