@@ -21,7 +21,7 @@ const args = require('meow')(`
 
       -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
       -Q, --print-qr          print QR code with the server URL [default: false]
-      --qr-with-key           print QR code with embedded access key [default: false]
+      --pairing-qr            print QR code with embedded access key [default: false]
       --no-webui              run API server without serving client assets [default: false]
 
       -C, --config <path>     path to config file [default: ~/.spark-wallet/config]
@@ -38,7 +38,7 @@ const args = require('meow')(`
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
-            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, qrWithKey: {type:'boolean'}
+            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, pairingQr: {type:'boolean'}
             , config: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 
@@ -58,7 +58,7 @@ Object.keys(conf).filter(k => k.length > 1)
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
-process.env.QR_WITH_KEY && (process.env.PRINT_QR = true) // --qr-with-key implies --print-qr
+process.env.PAIRING_QR && (process.env.PRINT_QR = true) // --pairing-qr implies --print-qr
 
 require('babel-polyfill')
 require('./app')

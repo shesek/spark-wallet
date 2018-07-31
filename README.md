@@ -121,7 +121,7 @@ It is not currently published to the app store.
 
 When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
 You can print your access key to the console by starting Spark with `--print-key/-k`.
-You can also scan this information from a QR, which you can get with `--qr-with-key`.
+You can also scan this information from a QR, which you can get with `--pairing-qr`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
@@ -260,7 +260,7 @@ $ spark-wallet --help
 
     -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
     -Q, --print-qr          print QR code with the server URL [default: false]
-    --qr-with-key           print QR code with embedded access key [default: false]
+    --pairing-qr            print QR code with embedded access key [default: false]
     --no-webui              run API server without serving client assets [default: false]
 
     -V, --verbose           display debugging information [default: false]

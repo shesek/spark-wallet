@@ -59,7 +59,7 @@
     .then(url => serviceReady('Tor Onion Hidden Service v3', url))
 
   const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
-      , hashKey = process.env.QR_WITH_KEY ? `#access-key=${app.settings.accessKey}` : ''
+      , hashKey = process.env.PAIRING_QR ? `#access-key=${app.settings.accessKey}` : ''
 
   function serviceReady(name, url) {
     console.log(`${name} running on ${url}`)
