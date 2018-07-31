@@ -49,14 +49,14 @@
   // HTTPS server (the default for non-localhost hosts)
   app.enabled('tls')
   ? require('./transport/tls')(app, process.env.TLS_NAME, process.env.TLS_PATH)
-      .then(host => serviceReady('HTTPS server', `https://${host}/`))
+      .then(url => serviceReady('HTTPS server', url))
 
   // HTTP server (for localhost or when --no-tls is specified)
-  : require('./transport/http')(app).then(host => serviceReady('HTTP server', `http://${host}/`))
+  : require('./transport/http')(app).then(url => serviceReady('HTTP server', url))
 
   // Tor Onion Hidden Service
   process.env.ONION && require('./transport/onion')(app, process.env.ONION_PATH)
-    .then(host => serviceReady('Tor Onion Hidden Service v3', `http://${host}/`))
+    .then(url => serviceReady('Tor Onion Hidden Service v3', url))
 
   const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
       , hashKey = process.env.QR_WITH_KEY ? `#access-key=${app.settings.accessKey}` : ''
@@ -75,7 +75,7 @@
 ;[ 'unhandledRejection', 'uncaughtException' ].forEach(ev =>
   process.on(ev, err => {
     process.send && process.send({ error: err.toString() })
-    console.log(`${ ev }, stopping process`)
+    console.error(`${ ev }, stopping process`)
     console.error(err.stack || err)
     process.exit(1)
   })

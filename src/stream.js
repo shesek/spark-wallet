@@ -13,7 +13,7 @@ module.exports = lnPath => {
   async function waitany(last_index) {
     try {
       const inv = await ln.waitanyinvoice(last_index)
-      em.emit('waitany', inv)
+      em.emit('payment', inv)
       waitany(inv.pay_index)
     } catch (err) {
       console.error(err.stack || err.toString())
@@ -54,14 +54,14 @@ module.exports = lnPath => {
 
     const keepAlive = setInterval(_ => res.write(': keepalive\n\n'), 25000)
 
-    const onPay = inv => res.write(`event:waitany\ndata:${ JSON.stringify(inv) }\n\n`)
-    em.on('waitany', onPay)
+    const onPay = inv => res.write(`event:inv-paid\ndata:${ JSON.stringify(inv) }\n\n`)
+    em.on('payment', onPay)
 
     const onRate = rate => res.write(`event:btcusd\ndata:${ JSON.stringify(rate) }\n\n`)
     em.on('rate', onRate)
     lastRate && onRate(lastRate)
 
-    req.on('close', _ => (em.removeListener('waitany', onPay)
+    req.on('close', _ => (em.removeListener('payment', onPay)
                         , em.removeListener('rate', onRate)
                         , clearInterval(keepAlive)))
   }

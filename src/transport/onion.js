@@ -15,7 +15,7 @@ module.exports = (app, dir=defaultDir, hs_dir=path.join(dir, 'hidden_service')) 
     hsv3([ { dataDirectory: hs_dir, virtualPort: 80, localMapping: '127.0.0.1:' + httpPort  } ]
        , { DataDirectory: dir })
       .on('error', reject)
-      .on('ready', _ => resolve(getHost(hs_dir)))
+      .on('ready', _ => resolve(`http://${getHost(hs_dir)}`))
   ))
 
 const getHost = dir => fs.readFileSync(path.join(dir, 'hostname')).toString().trim()

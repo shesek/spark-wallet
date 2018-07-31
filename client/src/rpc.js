@@ -20,15 +20,17 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , peers$:    reply('listpeers').map(r => r.body.peers)
   , payments$: reply('listpayments').map(r => r.body.payments)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
-  , btcusd$:   SSE('btcusd')
 
   // replies to actions
   , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
-  , incoming$: SSE('waitany')
   , execRes$:  reply('console').map(({ body, request: { send } }) => ({ ...send, res: body.help || body }))
   , logs$:     reply('getlog').map(r => r.body.log)
+
+  // push updates via server-sent events
+  , incoming$: SSE('inv-paid')
+  , btcusd$:   SSE('btcusd')
   }
 }
 

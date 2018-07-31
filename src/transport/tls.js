@@ -23,7 +23,7 @@ module.exports = (app, name=app.settings.host, dir=defaultDir) => {
 
   return new Promise(resolve =>
     server.listen(app.settings.port, app.settings.host, _ =>
-      resolve(`${server.address().address}:${server.address().port}`)
+      resolve(`https://${server.address().address}:${server.address().port}`)
     )
   )
 }
