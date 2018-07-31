@@ -3333,6 +3333,11 @@
         "wrappy": "1.0.2"
       }
     },
+    "ordinal": {
+      "version": "1.0.2",
+      "resolved": "https://registry.npmjs.org/ordinal/-/ordinal-1.0.2.tgz",
+      "integrity": "sha1-ofS8S6Vr+Rv54xM1uenKRW7Zyng="
+    },
     "os-browserify": {
       "version": "0.3.0",
       "resolved": "https://registry.npmjs.org/os-browserify/-/os-browserify-0.3.0.tgz",

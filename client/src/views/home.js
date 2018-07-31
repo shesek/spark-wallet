@@ -1,5 +1,6 @@
 import { div, ul, li, a, span, button, small, p, strong } from '@cycle/dom'
 import { yaml, ago } from './util'
+import ordinal from 'ordinal'
 
 const perPage = 10
 
@@ -24,6 +25,8 @@ const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed
           li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', new Date(ts*1000).toLocaleString() ])
         , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
         , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+        , type == 'out' && obj.route ? li([ strong('Route:'), ' ', obj.route.length > 1 ? `${obj.route.length} hops` : 'direct payment'
+                                                            , ' ', small(`(${ordinal(obj.sendpay_tries)} attempt)`) ]) : ''
         , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
         , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
         , expert ? li(yaml(obj)) : ''
