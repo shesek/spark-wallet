@@ -3,7 +3,7 @@ import EventEmitter from 'events'
 import { get } from 'superagent'
 
 const rateUrl = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
-    , rateInterval = 300000 // 5 minutes
+    , rateInterval = 60000 // 1 minute
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)
