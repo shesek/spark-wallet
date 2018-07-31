@@ -11,8 +11,8 @@ const
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
-, updPaidInv = (invs, paid) => invs.map(i => i.label === paid.label ? { ...i, ...paid  } : i)
-, appendPay  = (payments, pay) => [ ...payments.filter(p => p.id !== pay.id), pay ]
+, appendInv = (invs, inv)     => [ ...invs.filter(i     => i.label !== inv.label), inv ]
+, appendPay = (payments, pay) => [ ...payments.filter(p => p.id    !== pay.id)   , pay ]
 
 , idx = xs => x => xs.indexOf(x)
 , idn = x => x
@@ -38,17 +38,19 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     .startWith(null).scan((payments, mod) => mod(payments))
     .filter(payments => !!payments)
     .map   (payments => payments.filter(p => p.status === 'complete'))
+    .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Periodically re-sync from listinvoices,
   // continuously patch with known invoices (paid only)
   , freshInvs$ = O.merge(
       invoices$.map(invs => _ => invs)
     , invoice$.map(inv  => invs => invs && [ ...invs, inv ])
-    , incoming$.map(inv => invs => invs && updPaidInv(invs, inv))
+    , incoming$.map(inv => invs => invs && appendInv(invs, inv))
     )
     .startWith(null).scan((invs, mod) => mod(invs))
     .filter(invs => !!invs)
     .map(invs    => invs.filter(inv => inv.status === 'paid'))
+    .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
