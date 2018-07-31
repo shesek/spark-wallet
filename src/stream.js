@@ -50,14 +50,16 @@ module.exports = lnPath => {
     , 'Connection': 'keep-alive'
     }).flushHeaders()
 
-    res.write('retry: 3000\n\n')
+    const write = data => (res.write(data + '\n\n'), res.flush())
 
-    const keepAlive = setInterval(_ => res.write(': keepalive\n\n'), 25000)
+    write('retry: 3000')
 
-    const onPay = inv => res.write(`event:inv-paid\ndata:${ JSON.stringify(inv) }\n\n`)
+    const keepAlive = setInterval(_ => write(': keepalive'), 25000)
+
+    const onPay = inv => write(`event:inv-paid\ndata:${ JSON.stringify(inv) }`)
     em.on('payment', onPay)
 
-    const onRate = rate => res.write(`event:btcusd\ndata:${ JSON.stringify(rate) }\n\n`)
+    const onRate = rate => write(`event:btcusd\ndata:${ JSON.stringify(rate) }`)
     em.on('rate', onRate)
     lastRate && onRate(lastRate)
 
