@@ -26,16 +26,15 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 // @TODO show expiry
 const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
   form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
-    h2('Confirm payment')
   , ...(payreq.msatoshi ? [
-      p([ 'Do you want to pay ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
-    , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-    , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, `Pay ${unitf(payreq.msatoshi)}`)
+      h2('Confirm payment')
+    , p([ 'Confirm paying ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
     ] : [
-      formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
-    , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
-    , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Confirm Payment')
+      h2('Send payment')
+    , formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
     ])
+  , payreq.description ? p([ 'Description: ', span('.text-muted', payreq.description) ]) : ''
+  , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
   , ' ', a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
   , expert ? yaml(payreq) : ''
   ])
