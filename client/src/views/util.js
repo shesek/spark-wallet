@@ -33,14 +33,16 @@ const amountField = ({ msatoshi, amount, step, unit }, msatField, required) =>
   , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
   ])
 
-const alertBox = alert => div('.alert.alert-dismissable.alert-'+alert[0], [
-  button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×')
-, ''+alert[1]
+const alertBox = ([ kind, text ], dismissable) =>
+  div(`.alert${dismissable?'.alert-dismissable':''}.alert-${kind}`, [
+    dismissable ? button('.close', { attrs: { type: 'button' }, dataset: { dismiss: 'alert' } }, '×') : ''
 
-, ' ', process.env.BUILD_TARGET != 'web' && isConnError(alert[1])
-  ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
-  : ''
-])
+  , text.toString()
+
+  , ' ', process.env.BUILD_TARGET != 'web' && isConnError(text)
+    ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
+    : ''
+  ])
 
 
 module.exports = { yaml, qruri, qrinv, ago, formGroup, amountField, alertBox }

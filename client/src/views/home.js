@@ -3,7 +3,7 @@ import { yaml, ago } from './util'
 
 const perPage = 10
 
-const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => div([
+const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed ? '' : div([
 
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: '#/scan' } }, 'Pay'))
@@ -12,7 +12,7 @@ const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => div([
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
 
-, ...(!feed ? '' : !feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
+, ...(!feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
       li('.list-group-item'+(feedActive == fid ? '.active' : '.list-group-item-action'), { dataset: { feedToggle: fid } }, [
         div('.clearfix', [
