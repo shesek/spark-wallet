@@ -2,22 +2,12 @@
 .theme-slate   .navbar-brand .icon:before { vertical-align: baseline }
 .theme-lux     .navbar-brand .icon:before { vertical-align: text-top }
 .theme-cosmo   .navbar-brand .icon:before { vertical-align: text-top }
-.theme-journal .navbar-brand .icon:before { vertical-align: baseline }
 
 .theme-slate .navbar-brand
   border-right 0
 
-.theme-cyborg, .theme-darkly
+.theme-cyborg
   .input-group-text { color: #fff }
-
-.theme-pulse
-  .list-group-item
-    &, &:hover, &:focus
-      background transparent
-
-.theme-pulse, .theme-sketchy
-  .list-group-item ul
-    font-weight normal
 
 // these themes have space for a larger timestamp
 .theme-yeti, .theme-dark, .theme-materia, .theme-lumen
@@ -31,7 +21,6 @@
 body.qr-scanning
   .main-bg { background: #fff }
   .theme-dark .main-bg { background: #222 }
-  .theme-darkly .main-bg { background: #222 }
   .theme-simplex .main-bg { background: #FCFCFC }
   .theme-slate .main-bg { background: #272B30 }
   .theme-solar .main-bg { background: #002B36 }
@@ -43,7 +32,6 @@ body.qr-scanning
 .feed .list-group-item:not(.active)
   &:focus, &:active
     .theme-dark & { background: #303030  }
-    .theme-sketchy & { background: #fff }
     .theme-slate & { background: #32383e }
     .theme-superhero & { background: #4E5D6C }
     .theme-cyborg & { background: #222  }
@@ -51,7 +39,6 @@ body.qr-scanning
   @media (hover:none)
     &:hover
       .theme-dark & { background: #303030  }
-      .theme-sketchy & { background: #fff }
       .theme-slate & { background: #32383e }
       .theme-superhero & { background: #4E5D6C }
       .theme-cyborg & { background: #222  }
