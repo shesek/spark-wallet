@@ -4,25 +4,10 @@
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
-    "typeface-cabin-sketch": {
-      "version": "0.0.54",
-      "resolved": "https://registry.npmjs.org/typeface-cabin-sketch/-/typeface-cabin-sketch-0.0.54.tgz",
-      "integrity": "sha512-b04NMxD2c4yXn8IqVFMQkww8StbwyinMT7fjoaYa7S4YH22vkX7urXiSp/rSWpM4U78P8f/K1RIQAMv+dzRQiQ=="
-    },
     "typeface-lato": {
       "version": "0.0.54",
       "resolved": "https://registry.npmjs.org/typeface-lato/-/typeface-lato-0.0.54.tgz",
       "integrity": "sha512-2/oP5YrXCBSLg+N2ZdWnMbJ0PRIidrJVFHgRoLxo5MNsdu9eE4aBwsoEY/K/+9rKdktGO8zpiXBYPRn9F6U/Sw=="
-    },
-    "typeface-neucha": {
-      "version": "0.0.54",
-      "resolved": "https://registry.npmjs.org/typeface-neucha/-/typeface-neucha-0.0.54.tgz",
-      "integrity": "sha512-IEFl0Ug3rD4BPqGiDzo2j9uoU0DvJs8dKb4znlgOzfGoZeX8iZIBkm0Q2YKFwyNM45vmyGWvAE0CEeig/Fkr+Q=="
-    },
-    "typeface-news-cycle": {
-      "version": "0.0.54",
-      "resolved": "https://registry.npmjs.org/typeface-news-cycle/-/typeface-news-cycle-0.0.54.tgz",
-      "integrity": "sha512-FY7Zh6sxASGDpVx9pxwyCk/wPoBkk3gry/vUfOodREXg5DxGFhAWe8wH7Vtg/lmFpB0/TVLZxF2mZoQMBnuA0A=="
     },
     "typeface-nunito-sans": {
       "version": "0.0.54",

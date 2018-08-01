@@ -4,10 +4,7 @@
   "author": "Nadav Ivgi",
   "license": "MIT",
   "dependencies": {
-    "typeface-cabin-sketch": "0.0.54",
     "typeface-lato": "0.0.54",
-    "typeface-neucha": "0.0.54",
-    "typeface-news-cycle": "0.0.54",
     "typeface-nunito-sans": "0.0.54",
     "typeface-open-sans": "0.0.54",
     "typeface-roboto": "0.0.54",
