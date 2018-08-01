@@ -51,6 +51,7 @@
     "pug-cli": "^1.0.0-alpha6",
     "pugify": "^2.2.0",
     "stylus": "^0.54.5",
+    "uglify-js": "^3.4.6",
     "uglifyify": "^5.0.1"
   }
 }
