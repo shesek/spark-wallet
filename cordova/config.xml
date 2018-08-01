@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.spark.wallet" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Spark</name>
-    <description>A wallet GUI for c-lightning</description>
+    <description>A minimalistic wallet GUI for c-lightning</description>
     <author email="nadav@shesek.info" href="https://github.com/shesek">Nadav Ivgi</author>
     <content src="index.html" />
     <access origin="*" />
@@ -23,5 +23,5 @@
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <plugin name="cordova-plugin-qrscanner" spec="^2.6.0" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
-    <engine name="android" spec="~7.1.1" />
+    <engine name="android" spec="^7.1.1" />
 </widget>

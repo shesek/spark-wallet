@@ -1,14 +1,14 @@
 # Spark Lightning Wallet
 
+A minimalistic wallet GUI for [c-lightning](https://github.com/ElementsProject/lightning),
+accessible over the web or through mobile and desktop apps.
+
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
 [![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark-wallet/blob/master/LICENSE)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
 
-A wallet GUI for [c-lightning](https://github.com/ElementsProject/lightning),
-accessible over the web or through mobile and desktop apps.
-
-:zap: Simple & minimalistic
+> :zap: Simple & minimalistic
 :zap: Purely off-chain
 :zap: Near-zero configuration
 :zap: Progressive Web App
@@ -32,12 +32,16 @@ accessible over the web or through mobile and desktop apps.
 > Please use with care, preferably on testnet or with insignificant amounts.
 > Spark comes with no guarantees and with support on a best-effort basis.
 
-## Installation
+## Getting Started
 
-Spark requires a running [c-lightning](https://github.com/ElementsProject/lightning) node, at home (preferably) or on the cloud.
-See [setup instructions here](https://blockstream.com/2018/02/02/lightning-instant-bitcoin-transacting-tutorial.html).
+### Installation
 
-Once c-lightning is running, install and start Spark with:
+Spark requires a running [c-lightning](https://github.com/ElementsProject/lightning) node
+(see setup instructions in [the official docs](https://github.com/ElementsProject/lightning/blob/master/doc/INSTALL.md)
+or [this tutorial](https://hackernoon.com/harnessing-lightning-for-instant-bitcoin-transacting-a-tutorial-3b9dcdc00552))
+and nodejs (v6.0 or newer).
+
+Once c-lightning is running, install and start Spark (on the same machine) with:
 
 ```bash
 # $ npm install -g spark-wallet
@@ -59,13 +63,13 @@ To accept remote connections, set `--host <listen-address>` (shorthand `-i`, e.g
 This will automatically enable TLS ([more details below](#tls)).
 
 Spark can also be accessed using mobile and desktop apps instead of through the browser.
-See ["Mobile app (Cordova)"](#mobile-app-cordova) and ["Desktop app (Electron)"](#desktop-app-electron)
+See [*Mobile app (Cordova)*](#mobile-app-cordova) and [*Desktop app (Electron)*](#desktop-app-electron)
 for more details.
 Note that the desktop app comes bundled with the Spark server and doesn't require the manual server setup described here.
 
-See `$ spark-wallet --help` for the full list of available options (also available under ["CLI options"](#cli-options)).
+See `$ spark-wallet --help` for the full list of available options (also available under [*CLI options*](#cli-options)).
 
-#### Config file
+### Config file
 
 Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config/-C <path>`).
 The expected format is one `key=value` per line, like so:
@@ -76,13 +80,20 @@ login=bob:superSecretPassword
 port=8000
 ```
 
-## Features & Controls
+### Features
 
 Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
-For now, peers and channels are expected to be managed using the RPC.
-Spark is a purely off-chain wallet, with no on-chain payments.
+Peers and channels are expected to be managed using the RPC for now.
 
-#### GUI controls
+Spark is a purely off-chain wallet, with no on-chain payments.
+This allows focusing on making the awesome UX enabled by lightning
+without worrying about on-chain complications.
+This might change someday.
+
+Spark has a responsive UI suitable for mobile, tablet and desktop devices,
+but is best optimized for use on mobile.
+
+### Controls
 
 - **Display unit:** Click the balance on the top-right to toggle the currency display unit.
   The available options are sat, bits, milli, btc and usd.
@@ -92,8 +103,8 @@ Spark is a purely off-chain wallet, with no on-chain payments.
 - **Collapse payments:** Click on payments in the list to display more details.
 
 - **Expert mode:** Click the version number on the bottom-left to toggle expert mode.
-  This will add [two new menu items](https://user-images.githubusercontent.com/877904/43125383-89ac19b4-8f32-11e8-9a5e-d91eb5a637ea.png), "Logs" and
-  ["RPC Console"](https://user-images.githubusercontent.com/877904/43122285-3854be8a-8f29-11e8-9329-d4c5c881c5e2.png),
+  This will add [two new menu items](https://user-images.githubusercontent.com/877904/43125383-89ac19b4-8f32-11e8-9a5e-d91eb5a637ea.png), "*Logs*" and
+  ["*RPC Console*"](https://user-images.githubusercontent.com/877904/43122285-3854be8a-8f29-11e8-9329-d4c5c881c5e2.png),
   and display yaml dumps with additional information throughout the app.
 
 ## Progressive Web App
@@ -167,7 +178,7 @@ by following these steps:
    Fill in a name (e.g. "Spark"), leave "Used for" on "VPN and apps", and click OK.
 
 Note that adding a user trusted certificate causes android to display a "Network may be monitored" notification.
-It goes away after awhile.
+It can be flicked off.
 
 ## Tor Onion Hidden Service
 
@@ -193,7 +204,7 @@ To connect using the Cordova app, configure Orbot to route Spark's traffic over 
 (under "Tor-Enabled Apps"), then configure Spark to use the `.onion` server URL.
 
 Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
-the URL as a QR to the console.
+the URL as a QR to the console, or `--pairing-qr` to also include the access key.
 
 ## Adding to startup with `systemd`
 
@@ -214,7 +225,7 @@ $ sudo systemctl enable spark-wallet && sudo systemctl start spark-wallet
 ## Developing
 
 Spark is written in a reactive-functional style using [rxjs](https://github.com/ReactiveX/rxjs) and [cycle.js](https://cycle.js.org),
-with a nodejs/express server as the backend.
+with bootstrap for theming and a nodejs/express server as the backend.
 
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
 
@@ -224,8 +235,8 @@ $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
 
-The Cordova android app can be built by running `npm run cordova:dist`.
-The `.apk` file will be created in `cordova/platforms/android/app/build/outputs/apk/debug/`.
+Cordova builds can be prepared with `npm run cordova:dist`.
+The `.apk` file will be available in `cordova/platforms/android/app/build/outputs/apk/debug/`.
 
 Electron builds can be prepared with `npm run electron:dist`.
 They will be available under `electron/dist`.

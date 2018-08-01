@@ -1,6 +1,6 @@
 {
   "name": "spark-wallet",
-  "description": "A GUI wallet for c-lightning",
+  "description": "A minimalistic wallet GUI for c-lightning",
   "version": "0.0.1",
   "main": "main.js",
   "scripts": {

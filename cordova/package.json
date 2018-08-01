@@ -2,7 +2,7 @@
     "name": "com.spark.wallet",
     "displayName": "SparkWallet",
     "version": "0.1.0",
-    "description": "A wallet GUI for c-lightning, accessible over the web or through mobile and desktop apps.",
+    "description": "A minimalistic wallet GUI for c-lightning",
     "author": "Nadav Ivgi",
     "license": "MIT",
     "scripts": {
