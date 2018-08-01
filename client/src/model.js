@@ -24,7 +24,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.00001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
@@ -58,15 +58,16 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goRecv$
     , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
     ].sort((a, b) => b[1] - a[1]))
 
-  // Display payments toggled by the user + automatically display newly made payments + reset on paging nav
-  , feedActive$ = togFeed$.merge(
-      incoming$.map(inv => `in-${inv.pay_index}`)
-    , outgoing$.map(pay => `out-${pay.id}`)
-    , feedStart_$.mapTo(null)
+  // Collapsed payment/invoice on home feed list
+  , feedActive$ = togFeed$.merge( // display feed items manually toggled by the user, and...
+      incoming$.map(inv => `in-${inv.pay_index}`) // auto display incoming payments
+    , outgoing$.map(pay => `out-${pay.id}`) // auto display outgoing payments
+    , feedStart_$.mapTo(null) // reset on feed paging
+    , goHome$.filter(p => p.search != '?redir').mapTo(null) // reset on home navigation
     ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item the 2nd time toggles it off
 
-  // Feed start index based on user page navigation + auto-jump to start on newly made payments
-  , feedStart$ = feedStart_$.merge(incoming$.mapTo(0), outgoing$.mapTo(0))
+  // Start index for home feed based on user page navigation + reset on home nav
+  , feedStart$ = feedStart_$.merge(goHome$.mapTo(0))
 
   // Periodically re-sync channel balance from "listpeers",
   // continuously patch with known incoming & outgoing payments
