@@ -27,6 +27,7 @@ const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed
         , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
         , type == 'out' && obj.route ? li([ strong('Route:'), ' ', obj.route.length > 1 ? `${obj.route.length} hops` : 'direct payment'
                                                             , ' ', small(`(${ordinal(obj.sendpay_tries)} attempt)`) ]) : ''
+        , obj.description ? li([ strong('Description:'), ' ', span('.break-all', obj.description) ]) : ''
         , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
         , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
         , expert ? li(yaml(obj)) : ''
