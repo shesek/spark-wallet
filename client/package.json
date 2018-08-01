@@ -11,7 +11,7 @@
     "@cycle/dom": "^20.4.0",
     "@cycle/history": "^6.10.0",
     "@cycle/http": "^14.9.0",
-    "@cycle/rxjs-run": "^9.2.0",
+    "@cycle/rxjs-run": "^8.1.0",
     "@cycle/storage": "^5.0.3",
     "big.js": "^5.1.2",
     "bootswatch": "^4.1.3",
