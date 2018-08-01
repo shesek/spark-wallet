@@ -1,0 +1,7 @@
+--ignore-dir=dist
+--ignore-dir=client/dist
+--ignore-dir=electron/dist
+--ignore-dir=cordova/dist
+--ignore-dir=cordova/platforms
+--ignore-file=is:server.bundle.js
+
