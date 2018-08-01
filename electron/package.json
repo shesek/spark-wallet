@@ -16,8 +16,8 @@
     "babelify": "^8.0.0",
     "browserify": "^16.2.2",
     "electron": "^3.0.0-beta.3",
-    "electron-builder": "^20.24.4",
-    "uglify-js": "^3.4.5"
+    "electron-builder": "^20.26.1",
+    "uglify-js": "^3.4.6"
   },
   "build": {
     "appId": "com.spark.wallet",
