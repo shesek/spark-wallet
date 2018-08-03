@@ -14,32 +14,36 @@ const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed
   ])
 
 , ...(!feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
-    ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(([ type, ts, msat, obj, fid=makeId(type, obj) ]) =>
-      li('.list-group-item'+(feedActive == fid ? '.active' : '.list-group-item-action'), { dataset: { feedToggle: fid } }, [
-        div('.clearfix', [
-          type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
-                        : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-        , span('.ts.badge.badge-secondary.badge-pill.float-right', { attrs: { title: new Date(ts*1000).toLocaleString() } }, ago(ts))
-        ])
-      , feedActive != fid ? '' : ul('.list-unstyled.my-3', [
-          li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', new Date(ts*1000).toLocaleString() ])
-        , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
-        , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
-        , type == 'out' && obj.route ? li([ strong('Route:'), ' ', obj.route.length > 1 ? `${obj.route.length} hops` : 'direct payment'
-                                                            , ' ', small(`(${ordinal(obj.sendpay_tries)} attempt)`) ]) : ''
-        , obj.description ? li([ strong('Description:'), ' ', span('.break-all', obj.description) ]) : ''
-        , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
-        , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
-        , expert ? li(yaml(obj)) : ''
-        ])
-      ])
-    ))
+    ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(itemRenderer({ feedActive, unitf, expert })))
   , paging(feed.length, feedStart)
   ])
 
 ])
 
-const makeId = (type, obj) => `${type}-${obj.id || obj.pay_index}`
+const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]) => {
+  const fid     = `${type}-${obj.id || obj.pay_index}`
+      , visible = fid == feedActive
+      , tsStr   = new Date(ts*1000).toLocaleString()
+
+  return li('.list-group-item', { class: { active: visible, 'list-group-item-action': !visible }, dataset: { feedToggle: fid } }, [
+    div('.clearfix', [
+      type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
+                    : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
+    , span('.ts.badge.badge-secondary.badge-pill.float-right', { attrs: { title: tsStr } }, ago(ts))
+    ])
+  , !visible ? '' : ul('.list-unstyled.my-3', [
+      li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', tsStr ])
+    , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
+    , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+    , type == 'out' && obj.route ? li([ strong('Route:'), ' ', obj.route.length > 1 ? `${obj.route.length} hops` : 'direct payment'
+                                                        , ' ', small(`(${ordinal(obj.sendpay_tries)} attempt)`) ]) : ''
+    , obj.description ? li([ strong('Description:'), ' ', span('.break-all', obj.description) ]) : ''
+    , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
+    , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
+    , expert ? li(yaml(obj)) : ''
+    ])
+  ])
+}
 
 const feesText = ({ msatoshi: quoted, msatoshi_sent: sent }, unitf) =>
   `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
