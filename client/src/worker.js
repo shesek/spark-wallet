@@ -2,7 +2,7 @@ const cacheName = 'spark-assets-' + process.env.VERSION
 
 const cachePath = [ '', 'style.css', 'app.js', 'load-theme.js'
                   , 'lib/instascan.js'
-                  , 'swatch/yeti/bootstrap.min.css'
+                  , 'swatch/dark/bootstrap.min.css'
                   , 'fonts/typeface-open-sans/index.css'
                   , 'fonts/typeface-open-sans/files/open-sans-latin-300.woff2'
                   , 'fonts/typeface-open-sans/files/open-sans-latin-400.woff2'
