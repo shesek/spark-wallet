@@ -5,13 +5,12 @@ import { dbg, formatAmt, recvAmt, combine, isConnError } from './util'
 const msatbtc = big(100000000000) // msat in 1 btc
 
 const
-  sumOuts  = outs  => outs.reduce((T, o) => T + o.value, 0)
-, sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
+  sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
 , sumPeers = peers => peers.filter(p => p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
-, appendInv = (invs, inv)     => [ ...invs.filter(i     => i.label !== inv.label), inv ]
+, appendInv = (invs, inv)     => [ ...invs.filter(    i => i.label !== inv.label), inv ]
 , appendPay = (payments, pay) => [ ...payments.filter(p => p.id    !== pay.id)   , pay ]
 
 , idx = xs => x => xs.indexOf(x)
@@ -22,7 +21,7 @@ const
 , units    = 'sat bits milli btc usd'.split(' ')
 , unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 6 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
-, unitstep = { ...unitrate, usd: 0.00001 }
+, unitstep = { ...unitrate, usd: 0.000001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, conf$: savedConf$
