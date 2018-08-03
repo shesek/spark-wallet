@@ -1,6 +1,7 @@
 import { Observable as O } from './rxjs'
 import { combine, toObs, recvAmt } from './util'
 import views from './views'
+import themeColors from '../theme-colors.json'
 
 const isFunc = x => typeof x == 'function'
 
@@ -27,9 +28,13 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, p
   // behaviour exhibited by chrome that was causing slower pageloads
   // @xxx side effects outside of drivers!
   const themeLink = document.querySelector('link[href*=bootstrap]')
-  state$.map(S => S.conf.theme).distinctUntilChanged()
-    .map(theme => `swatch/${theme}/bootstrap.min.css`)
-    .subscribe(path => themeLink.getAttribute('href') != path && (themeLink.href = path))
+      , metaColor = document.querySelector('meta[name=theme-color]')
+
+  state$.map(S => S.conf.theme).distinctUntilChanged().subscribe(theme => {
+    const path = `swatch/${theme}/bootstrap.min.css`
+    themeLink.getAttribute('href') != path && (themeLink.href = path)
+    metaColor.content = themeColors[theme]
+  })
 
   return combine({ state$, body$ }).map(views.layout)
 }

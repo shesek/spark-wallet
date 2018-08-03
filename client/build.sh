@@ -47,6 +47,9 @@ bundle() {
 # Primary wallet application bundle
 bundle src/app.js > $DEST/app.js
 
+# Theme loader
+bundle src/load-theme.js > $DEST/load-theme.js
+
 # Service worker
 if [[ "$BUILD_TARGET" == "web" ]]; then
   bundle src/worker.js > $DEST/worker.js
