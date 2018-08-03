@@ -71,7 +71,7 @@ See `$ spark-wallet --help` for the full list of available options (also availab
 
 ### Config file
 
-Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config/-C <path>`).
+Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config-path/-C <path>`).
 The expected format is one `key=value` per line, like so:
 
 ```ini

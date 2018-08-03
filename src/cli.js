@@ -5,29 +5,29 @@ const args = require('meow')(`
       $ spark-wallet [options]
 
     Options
-      -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
-      -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
+      -l, --ln-path <path>     path to c-lightning data directory [default: ~/.lightning]
+      -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
 
-      -p, --port <port>       http(s) server port [default: 9737]
-      -i, --host <host>       http(s) server listen address [default: localhost]
+      -p, --port <port>        http(s) server port [default: 9737]
+      -i, --host <host>        http(s) server listen address [default: localhost]
 
-      -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
-      --tls-name <name>       common name for the generated self-signed cert [default: {host}]
-      --force-tls             enable TLS even when binding on localhost [default: enable for non-localhost only]
-      --no-tls                disable TLS for non-localhost hosts [default: false]
+      -s, --tls-path <path>    directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
+      --tls-name <name>        common name for the generated self-signed cert [default: {host}]
+      --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
+      --no-tls                 disable TLS for non-localhost hosts [default: false]
 
-      -o, --onion             start Tor Hidden Service [default: false]
-      -O, --onion-path <path> directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+      -o, --onion              start Tor Hidden Service [default: false]
+      -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
-      -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
-      -Q, --print-qr          print QR code with the server URL [default: false]
-      --pairing-qr            print QR code with embedded access key [default: false]
-      --no-webui              run API server without serving client assets [default: false]
+      -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
+      -Q, --print-qr           print QR code with the server URL [default: false]
+      --pairing-qr             print QR code with embedded access key [default: false]
+      --no-webui               run API server without serving client assets [default: false]
 
-      -C, --config <path>     path to config file [default: ~/.spark-wallet/config]
-      -V, --verbose           display debugging information [default: false]
-      -h, --help              output usage information
-      -v, --version           output version number
+      -C, --config-path <path> path to config file [default: ~/.spark-wallet/config]
+      -V, --verbose            display debugging information [default: false]
+      -h, --help               output usage information
+      -v, --version            output version number
 
     Example
       $ spark-wallet -l ~/.lightning
@@ -39,12 +39,12 @@ const args = require('meow')(`
             , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, pairingQr: {type:'boolean'}
-            , config: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
+            , configPath: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 
 // Load config file
 const os = require('os'), fs = require('fs'), path = require('path'), ini = require('ini')
-    , configPath = args.config || path.join(os.homedir(), '.spark-wallet', 'config')
+    , configPath = args.configPath || process.env.CONFIG_PATH || path.join(os.homedir(), '.spark-wallet', 'config')
     , fileConf = fs.existsSync(configPath) ? ini.parse(fs.readFileSync(configPath, 'utf-8')) : {}
 
 const conf = Object.assign(fileConf, args)
