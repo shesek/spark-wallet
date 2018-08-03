@@ -28,9 +28,62 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
 
+  // Config options
+    conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
+  , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
+  , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan(n => (n+1) % themes.length).map(n => themes[n])
+  , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan(n => (n+1) % units.length) .map(n => units[n])
+  , conf$    = combine({ expert$, theme$, unit$ })
+
+  // Currency & unit conversion handling
+  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
+  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
+  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
+
+  // Keep track of connection status
+  , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
+      .merge(error$.filter(isConnError).mapTo(false))
+      .startWith(false)
+      .distinctUntilChanged()
+
+  // Keep track of the number of user-initiated in-flight HTTP requests
+  , inflight$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
+      .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
+      .startWith(0).scan((N, a) => N+a)
+
+  // Is all the initial state necessary for the app ready?
+  , initLoaded$ = O.combineLatest(...[ info$, peers$, payments$, invoices$ ].map(x$ => x$.startWith(null))
+    , (info, peers, payments, invs) => !!(info && peers && payments && invs))
+
+  // Show loading indicator if we have active in-flight requests,
+  // OR when (the init state is still missing AND we don't have an error to show)
+  , loading$ = O.combineLatest(inflight$, initLoaded$, error$.startWith(null)
+    , (inflight, initLoaded, error) => inflight || (!initLoaded && !error))
+
+  // User-visible alert messages
+  , alert$ = O.merge(
+      error$.map(err  => [ 'danger', ''+err ])
+    , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
+    , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
+    , dismiss$.mapTo(null)
+    )
+    // hide "connection lost" errors when we get back online
+    .combineLatest(connected$, (alert, conn) => alert && (isConnError(alert[1]) && conn ? null : alert))
+    // format msat amounts in messages
+    .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
+    .startWith(null)
+
+  // Periodically re-sync channel balance from "listpeers",
+  // continuously patch with known incoming & outgoing payments
+  , cbalance$ = O.merge(
+      peers$.map(peers  => _ => sumPeers(peers))
+    , incoming$.map(inv => N => N + inv.msatoshi_received)
+    , outgoing$.map(pay => N => N - pay.msatoshi_sent)
+    ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
+
   // Periodically re-sync from listpayments,
   // continuously patch with known outgoing payments (completed only)
-    freshPays$ = O.merge(
+  , freshPays$ = O.merge(
       payments$.map(payments => _ => payments)
     , outgoing$.map(pay => payments => payments && appendPay(payments, pay))
     )
@@ -68,27 +121,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Start index for home feed based on user page navigation + reset on home nav
   , feedStart$ = feedStart_$.merge(goHome$.mapTo(0))
 
-  // Periodically re-sync channel balance from "listpeers",
-  // continuously patch with known incoming & outgoing payments
-  , cbalance$ = O.merge(
-      peers$.map(peers  => _ => sumPeers(peers))
-    , incoming$.map(inv => N => N + inv.msatoshi_received)
-    , outgoing$.map(pay => N => N - pay.msatoshi_sent)
-    ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
-
-  // Config options
-  , conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
-  , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
-  , theme$   = conf('theme', 'yeti', themes).concat(togTheme$).scan(n => (n+1) % themes.length).map(n => themes[n])
-  , unit$    = conf('unit',  'sat',  units) .concat(togUnit$) .scan(n => (n+1) % units.length) .map(n => units[n])
-  , conf$    = combine({ expert$, theme$, unit$ })
-
-  // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
-  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
-
-  // Payment amount field handling, shared for creating new invoices and paying custom amounts
+  // Payment amount field handling (shared for creating new invoices and paying custom amounts)
   , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
                       .merge(page$.mapTo(null)).startWith(null)
   , amtData$ = combine({
@@ -98,39 +131,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , unit:     unit$
     , step:     unit$.map(unit => unitstep[unit])
     })
-
-  // Keep track of the connection status
-  , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
-      .merge(error$.filter(isConnError).mapTo(false))
-      .startWith(false)
-      .distinctUntilChanged()
-
-  // Keep track of the number of user-initiated in-flight HTTP requests
-  , inflight$ = req$$.filter(({ request: r }) => !(r.ctx && r.ctx.bg))
-      .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
-      .startWith(0).scan((N, a) => N+a)
-
-  // Is all the initial state necessary for the app ready?
-  , initLoaded$ = O.combineLatest(...[ info$, peers$, feed$ ].map(x$ => x$.startWith(null))
-    , (info, peers, feed) => !!(info && peers && feed))
-
-  // Show loading indicator if we have active in-flight requests,
-  // OR when (the init state is still missing AND we don't have an error to show)
-  , loading$ = O.combineLatest(inflight$, initLoaded$, error$.startWith(null)
-    , (inflight, initLoaded, error) => inflight || (!initLoaded && !error))
-
-  // User-visible alert messages
-  , alert$ = O.merge(
-      error$.map(err  => [ 'danger', ''+err ])
-    , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
-    , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
-    , dismiss$.mapTo(null)
-    )
-    // hide "connection lost" errors when we get back online
-    .combineLatest(connected$, (alert, conn) => alert && (isConnError(alert[1]) && conn ? null : alert))
-    // format msat amounts in messages
-    .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
-    .startWith(null)
 
   // RPC console history
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
