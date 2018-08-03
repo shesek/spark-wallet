@@ -1,0 +1,6 @@
+cordova
+electron
+client/dist
+dist
+node_modules
+doc

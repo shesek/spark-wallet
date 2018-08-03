@@ -32,9 +32,7 @@ accessible over the web or through mobile and desktop apps.
 > Please use with care, preferably on testnet or with insignificant amounts.
 > Spark comes with no guarantees and with support on a best-effort basis.
 
-## Getting Started
-
-### Installation
+## Installation
 
 Spark requires a running [c-lightning](https://github.com/ElementsProject/lightning) node
 (see setup instructions in [the official docs](https://github.com/ElementsProject/lightning/blob/master/doc/INSTALL.md)
@@ -69,7 +67,7 @@ Note that the desktop app comes bundled with the Spark server and doesn't requir
 
 See `$ spark-wallet --help` for the full list of available options (also available under [*CLI options*](#cli-options)).
 
-### Config file
+### Configuration file
 
 Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config-path/-C <path>`).
 The expected format is one `key=value` per line, like so:
@@ -80,14 +78,19 @@ login=bob:superSecretPassword
 port=8000
 ```
 
-### Features
+### Deploy with Docker
+
+Spark is also available as a Docker image that comes bundled with bitcoind and c-lightning.
+See [`doc/docker.md`](https://github.com/ElementsProject/spark/blob/master/doc/docker.md) for more details.
+
+## Wallet Features
 
 Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
 Peers and channels are expected to be managed using the RPC for now.
 
 Spark is a purely off-chain wallet, with no on-chain payments.
-This allows focusing on making the awesome UX enabled by lightning
-without worrying about on-chain complications.
+This allows Spark to fully realize the awesome UX enabled by lightning,
+without worrying about the complications and friction of on-chain.
 This might change someday.
 
 Spark has a responsive UI suitable for mobile, tablet and desktop devices,
@@ -95,7 +98,7 @@ but is best optimized for use on mobile.
 
 ### Controls
 
-- **Display unit:** Click the balance on the top-right to toggle the currency display unit.
+- **Display unit:** Click the balance on the top-right or the unit in the "request payment" page to toggle the currency display unit.
   The available options are sat, bits, milli, btc and usd.
 
 - **Theme switcher:** Click the theme name on the bottom-right to change themes (you can choose between over 15 [bootswatch](https://bootswatch.com) themes).
