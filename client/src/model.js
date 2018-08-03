@@ -62,8 +62,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
       incoming$.map(inv => `in-${inv.pay_index}`) // auto display incoming payments
     , outgoing$.map(pay => `out-${pay.id}`) // auto display outgoing payments
     , feedStart_$.mapTo(null) // reset on feed paging
-    , goHome$.filter(p => p.search != '?redir').mapTo(null) // reset on home navigation
-    ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item the 2nd time toggles it off
+    , goHome$.filter(p => p.search != '?r').mapTo(null) // reset on home navigation (unless auto-redirected)
+    ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item again toggles it off
 
   // Start index for home feed based on user page navigation + reset on home nav
   , feedStart$ = feedStart_$.merge(goHome$.mapTo(0))

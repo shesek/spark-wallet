@@ -37,9 +37,9 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goNode$, goRpc$, p
 // Navigation
 exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) => O.merge(
   // navto '/' when receiving payments for the last invoice created by the user
-  in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/')
+  in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/?r')
   // navto '/' after sending payments
-, out$.mapTo('/')
+, out$.mapTo('/?r')
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo('/confirm')
 )

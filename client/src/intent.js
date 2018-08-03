@@ -46,7 +46,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   // Dismiss alert message
   , dismiss$ = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
-                      , page$.filter(p => p.pathname != '/'))
+                     , page$.filter(p => p.search != '?r'))
 
   // Payments feed page navigation and click-to-toggle
   , feedStart$ = click('[data-feed-start]').map(e => +e.ownerTarget.dataset.feedStart).startWith(0)
