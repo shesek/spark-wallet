@@ -1,7 +1,7 @@
-.theme-slate   .navbar-brand .icon { left: -2px }
-.theme-slate   .navbar-brand .icon:before { vertical-align: baseline }
-.theme-lux     .navbar-brand .icon:before { vertical-align: text-top }
-.theme-cosmo   .navbar-brand .icon:before { vertical-align: text-top }
+.theme-slate  .navbar-brand .icon { left: -2px }
+.theme-slate  .navbar-brand .icon:before { vertical-align: baseline }
+.theme-lux    .navbar-brand .icon:before { vertical-align: text-top }
+.theme-cosmo  .navbar-brand .icon:before { vertical-align: text-top }
 
 .theme-slate .navbar-brand
   border-right 0
@@ -17,7 +17,6 @@
 
 // explicitly style .main-bg with the theme's main background color
 // when scanning QRs, so that it covers the QR video
-
 body.qr-scanning
   .main-bg { background: #fff }
   .theme-dark .main-bg { background: #222 }
@@ -27,18 +26,15 @@ body.qr-scanning
   .theme-superhero .main-bg { background: #2B3E50 }
   .theme-cyborg .main-bg { background: #060606 }
 
-// explicitly set hovered/focused/active list-group-item bg color back to the default
-// background:inherit is sufficient for the other themes
-.feed .list-group-item:not(.active)
-  &:focus, &:active
-    .theme-dark & { background: #303030  }
-    .theme-slate & { background: #32383e }
-    .theme-superhero & { background: #4E5D6C }
-    .theme-cyborg & { background: #222  }
+// explicitly override hovered/focused/active list-group-item styles
+.feed .list-group-item
+  &.active
+    .theme-cyborg & { background: #2A9FD6 }
+    .theme-slate & { background: #3e444c }
 
   @media (hover:none)
-    &:hover
-      .theme-dark & { background: #303030  }
-      .theme-slate & { background: #32383e }
+    &:hover:not(.active)
       .theme-superhero & { background: #4E5D6C }
       .theme-cyborg & { background: #222  }
+      .theme-dark & { background: #303030  }
+      .theme-slate & { background: #32383e }
