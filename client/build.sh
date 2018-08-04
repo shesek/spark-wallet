@@ -44,7 +44,7 @@ fi
 # Browserify bundles
 
 bundle() {
-  browserify $BROWSERIFY_OPT $1 \
+  browserify -p bundle-collapser/plugin $BROWSERIFY_OPT $1 \
     | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs -c warnings=false -m || cat )
 }
 
