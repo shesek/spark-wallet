@@ -37,6 +37,10 @@ fi
 pug index.pug -o $DEST
 stylus -u nib -c styl/style.styl -o $DEST
 
+if [[ "$BUILD_TARGET" == "web" ]]; then
+  stylus -u nib -c styl/noscript.styl -o $DEST
+fi
+
 # Browserify bundles
 
 bundle() {
