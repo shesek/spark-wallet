@@ -4,11 +4,12 @@ A minimalistic wallet GUI for [c-lightning](https://github.com/ElementsProject/l
 accessible over the web or through mobile and desktop apps.
 
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
-[![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark-wallet/blob/master/LICENSE)
+[![docker release](https://img.shields.io/docker/pulls/shesek/spark.svg)](https://hub.docker.com/r/shesek/spark)
+[![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark/blob/master/LICENSE)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=c-lightning)
 
-> :zap: Simple & minimalistic
+:zap: Simple & minimalistic
 :zap: Purely off-chain
 :zap: Near-zero configuration
 :zap: Progressive Web App
@@ -16,7 +17,7 @@ accessible over the web or through mobile and desktop apps.
 :zap: Personalizable themes
 :zap: Automatic self-signed certs
 :zap: LetsEncrypt integration
-:zap: Tor hidden service support
+:zap: Tor hidden service (v3)
 :zap:
 
 -----
@@ -111,6 +112,15 @@ but is best optimized for use on mobile.
   ["*RPC Console*"](https://user-images.githubusercontent.com/877904/43122285-3854be8a-8f29-11e8-9329-d4c5c881c5e2.png),
   and display yaml dumps with additional information throughout the app.
 
+### Browser support
+
+Supported on recent desktop and mobile version of Chrome, Firefox and Safari.
+
+Requires iOS 11+ for WebRTC (used by the QR scanner), but works otherwise with iOS 9+.
+Chrome on iOS does not support WebRTC.
+
+Untested on IE.
+
 ## Progressive Web App
 
 You can install Spark as a [PWA](https://developer.mozilla.org/en-US/Apps/Progressive) to get a more native-app-like experience,
@@ -119,6 +129,10 @@ including an home launcher that opens up in full screen, system notifications an
 Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https://imgur.com/zVe1sOH)),
 in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
 and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
+
+iOS has a [bug](https://github.com/webrtc/samples/issues/933) [preventing](https://stackoverflow.com/questions/46228218/how-to-access-camera-on-ios11-home-screen-web-app/46350136)
+PWAs from using WebRTC (used by the QR scanner), but it works otherwise.
+The QR scanner works if you access Spark without using the "Add to homescreen" feature.
 
 Note that installing the PWA on Android requires the TLS certificate to be signed by a CA
 or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
@@ -278,33 +292,36 @@ Pull requests, suggestions and comments and welcome!
 ```bash
 $ spark-wallet --help
 
-  A wallet GUI for c-lightning, accessible over the web or through mobile and desktop apps.
+  A minimalistic wallet GUI for c-lightning
 
   Usage
     $ spark-wallet [options]
 
   Options
-    -l, --ln-path <path>    path to c-lightning data directory [default: ~/.lightning]
-    -u, --login <userpwd>   http basic auth login, "username:password" format [default: generate random]
+    -l, --ln-path <path>     path to c-lightning data directory [default: ~/.lightning]
+    -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
 
-    -p, --port <port>       http(s) server port [default: 9737]
-    -i, --host <host>       http(s) server listen address [default: 127.0.0.1]
+    -p, --port <port>        http(s) server port [default: 9737]
+    -i, --host <host>        http(s) server listen address [default: localhost]
 
-    -s, --tls-path <path>   directory to read/store key.pem and cert.pem for TLS [default: ./spark-tls/]
-    --tls-name <name>       common name for the generated self-signed cert [default: {host}]
-    --no-tls                disable TLS, start plain HTTP server instead [default: false]
+    --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
+    --no-tls                 disable TLS for non-localhost hosts [default: false]
+    --tls-path <path>        directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
+    --tls-name <name>        common name for the TLS cert [default: {host}]
+    --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
 
-    -o, --onion             start Tor Hidden Service [default: false]
-    -O, --onion-path <path> directory to read/store hidden service data [default: ./spark-tor/]
+    -o, --onion              start Tor Hidden Service (v3) [default: false]
+    -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
-    -k, --print-key         print access key to console (for use with the Cordova/Electron apps) [default: false]
-    -Q, --print-qr          print QR code with the server URL [default: false]
-    --pairing-qr            print QR code with embedded access key [default: false]
-    --no-webui              run API server without serving client assets [default: false]
+    -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
+    -q, --print-qr           print QR code with the server URL [default: false]
+    -Q, --pairing-qr         print QR code with embedded access key [default: false]
+    --no-webui               run API server without serving client assets [default: false]
 
-    -V, --verbose           display debugging information [default: false]
-    -h, --help              output usage information
-    -v, --version           output version number
+    -C, --config-path <path> path to config file [default: ~/.spark-wallet/config]
+    -V, --verbose            display debugging information [default: false]
+    -h, --help               output usage information
+    -v, --version            output version number
 
   Example
     $ spark-wallet -l ~/.lightning

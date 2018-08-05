@@ -17,7 +17,7 @@ const args = require('meow')(`
       --tls-name <name>        common name for the TLS cert [default: {host}]
       --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
 
-      -o, --onion              start Tor Hidden Service [default: false]
+      -o, --onion              start Tor Hidden Service (v3) [default: false]
       -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
