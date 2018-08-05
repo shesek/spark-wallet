@@ -49,7 +49,7 @@
 
   // HTTPS server (the default for non-localhost hosts)
   app.enabled('tls')
-  ? require('./transport/tls')(app, process.env.TLS_NAME, process.env.TLS_PATH)
+  ? require('./transport/tls')(app, process.env.TLS_NAME, process.env.TLS_PATH, process.env.LETSENCRYPT)
       .then(url => serviceReady('HTTPS server', url))
 
   // HTTP server (for localhost or when --no-tls is specified)

@@ -11,10 +11,11 @@ const args = require('meow')(`
       -p, --port <port>        http(s) server port [default: 9737]
       -i, --host <host>        http(s) server listen address [default: localhost]
 
-      -s, --tls-path <path>    directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
-      --tls-name <name>        common name for the generated self-signed cert [default: {host}]
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
+      --tls-path <path>        directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
+      --tls-name <name>        common name for the TLS cert [default: {host}]
+      --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
 
       -o, --onion              start Tor Hidden Service [default: false]
       -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
@@ -36,7 +37,8 @@ const args = require('meow')(`
       $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark-wallet
 
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
-            , port: {alias:'p'}, host: {alias:'i'}, tlsPath: {alias:'s'}
+            , port: {alias:'p'}, host: {alias:'i'}
+            , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, pairingQr: {type:'boolean'}
             , configPath: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
@@ -59,6 +61,8 @@ process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
 process.env.PAIRING_QR && (process.env.PRINT_QR = true) // --pairing-qr implies --print-qr
+
+if (process.env.TLS_PATH || process.env.TLS_NAME || process.env.LETSENCRYPT) process.env.FORCE_TLS = true
 
 require('babel-polyfill')
 require('./app')

@@ -21,7 +21,7 @@ fi
 if [[ -z "$SKIP_SERVER" ]]; then
   browserify --node -t babelify -t [ browserify-package-json --only version  ] \
              -p bundle-collapser/plugin \
-             -x selfsigned -x qrcode-terminal -x hsv3 -x ../src/webui.js \
+             -x ../src/webui.js -x ../src/transport/tls.js -x ../src/transport/onion.js -x qrcode-terminal
              ../node_modules/babel-polyfill \
              ../src/app.js \
   | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs --compress --mangle || cat ) \
