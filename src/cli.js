@@ -21,8 +21,8 @@ const args = require('meow')(`
       -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
-      -Q, --print-qr           print QR code with the server URL [default: false]
-      --pairing-qr             print QR code with embedded access key [default: false]
+      -q, --print-qr           print QR code with the server URL [default: false]
+      -Q, --pairing-qr         print QR code with embedded access key [default: false]
       --no-webui               run API server without serving client assets [default: false]
 
       -C, --config-path <path> path to config file [default: ~/.spark-wallet/config]
@@ -40,7 +40,7 @@ const args = require('meow')(`
             , port: {alias:'p'}, host: {alias:'i'}
             , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
-            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'Q'}, pairingQr: {type:'boolean'}
+            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}, pairingQr: {type:'boolean', alias:'Q'}
             , configPath: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 

@@ -59,13 +59,13 @@
   process.env.ONION && require('./transport/onion')(app, process.env.ONION_PATH)
     .then(url => serviceReady('Tor Onion Hidden Service v3', url))
 
-  const qrterm  = process.env.PRINT_QR && require('qrcode-terminal')
-      , hashKey = process.env.PAIRING_QR ? `#access-key=${app.settings.accessKey}` : ''
+  const qrterm = process.env.PRINT_QR && require('qrcode-terminal')
+      , qrKey  = process.env.PAIRING_QR ? `?access-key=${app.settings.accessKey}` : ''
 
   function serviceReady(name, url) {
     console.log(`${name} running on ${url}`)
-    qrterm && qrterm.generate(`${url}${hashKey}`, { small: true })
-    hashKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet]')
+    qrterm && qrterm.generate(`${url}/${qrKey}`, { small: true })
+    qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet]')
 
     process.send && process.send({ serverUrl: url })
   }

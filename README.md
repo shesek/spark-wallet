@@ -136,7 +136,7 @@ It is not currently published to the app store.
 
 When the app starts for the first time, you'll need to configure your Spark server URL and API access key.
 You can print your access key to the console by starting Spark with `--print-key/-k`.
-You can also scan this information from a QR, which you can get with `--pairing-qr`.
+You can also scan this information from a QR, which you can get with `--pairing-qr/-Q`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be signed by a CA,
 or manually added as a user trusted certificate ([instructions below](#add-as-trusted-certificate-to-android)).
@@ -231,8 +231,8 @@ applications, open the `.onion` URL in Orfox, and enable JavaScript under `⋮` 
 To connect using the Cordova app, configure Orbot to route Spark's traffic over the Tor VPN
 (under "Tor-Enabled Apps"), then configure Spark to use the `.onion` server URL.
 
-Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-Q` to print
-the URL as a QR to the console, or `--pairing-qr` to also include the access key.
+Instead of manually copying the `.onion` URL, you may want to specify `--print-qr/-q` to print
+the URL as a QR to the console, or `--pairing-qr/-Q` to also include the access key.
 
 ## Adding to startup with `systemd`
 

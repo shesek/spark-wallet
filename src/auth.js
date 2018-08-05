@@ -43,7 +43,8 @@ module.exports = (app, login, _accessKey) => {
     // Authenticate using the access key token, via the X-Access header or access-key query string argument.
     // This also marks the request as csrfSafe. Used for RPC API calls and for SSE requests.
     if (req.get('X-Access') === accessKey || req.query['access-key'] === accessKey) {
-      req.csrfSafe =  true
+      req.csrfSafe = true
+      if (req.path == '/') res.cookie('user', username, cookieOpt)
       return next()
     }
 

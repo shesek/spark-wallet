@@ -83,16 +83,14 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   }
 }
 
-const keyMarker = '#access-key='
+const keyMarker = '?access-key='
 
 function parseQR(url) {
   const p = urlutil.parse(url)
 
   return (p && p.host)
-  ? {
-      serverUrl: p.hash ? url.substr(0, url.indexOf('#')) : url
-    , accessKey: p.hash && p.hash.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null
-    }
+  ? { serverUrl: p.search ? url.substr(0, url.indexOf('?')) : url
+    , accessKey: p.search && p.search.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null }
   : null
 }
 
