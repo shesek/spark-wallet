@@ -25,8 +25,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
-  , execRes$:  reply('console').map(({ body, request: { send } }) => ({ ...send, res: body.help || body }))
-  , logs$:     reply('getlog').map(r => r.body.log)
+  , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
+  , logs$:     reply('getlog').map(r => ({ ...r.body, log: r.body.log.slice(-200) }))
 
   // push updates via server-sent events
   , incoming$: SSE('inv-paid')

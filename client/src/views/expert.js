@@ -10,19 +10,26 @@ const rpc = ({ rpcHist }) => form({ attrs: { do: 'exec-rpc' } }, [
 , ' '
 , button('.btn.btn-info.mt-2', { attrs: { type: 'button', do: 'rpc-help' }}, 'Help')
 , !rpcHist.length ? '' : ul('.list-group.mt-4', rpcHist.map(r =>
-    li('.list-group-item', [ pre('.mb-0', [ '$ ', r.method, ' ', formatParams(r.params) ]), yaml(r.res) ])))
+    li('.list-group-item', [
+      pre('.mb-0', [ '$ ', r.method, ' ', formatParams(r.params) ])
+    , yaml(r.method == 'help' && r.res.help ? formatHelp(r.res) : r.res)
+    ])))
 ])
 
 const formatParams = params =>
   params.map(p => /\W/.test(p) ? `"${p.replace(/"/g, '\\"')}"` : p).join(' ')
 
-const logs = items => div([
+const formatHelp = res =>
+  res.help.map(({ command, description }) => `${ command }\n  ${ description }`).join('\n\n')
+
+const logs = ({ log, created_at }) => div([
   h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
-, pre('.logs.mt-3', code(items.map(i =>
+, pre('.logs.mt-3', code(log.map(i =>
     i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
-                         : `${i.time} [${i.type}] ${i.source} ${i.log}`
+                         : `${i.time ? logTime(created_at, i.time) : ''} [${i.type}] ${i.source} ${i.log}`
   ).join('\n')))
 ])
 
+const logTime = (logStart, time) => new Date((+logStart + +time) * 1000).toISOString()
 
 module.exports = { rpc, logs }
