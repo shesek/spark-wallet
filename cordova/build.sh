@@ -12,3 +12,8 @@ mkdir -p $DEST && rm -rf $DEST/*
 
 cordova prepare
 cordova build "$@"
+
+# give the .apk file a more descriptive name
+apkname=spark-wallet-`node -p 'require("../package").version'`.apk
+(cd platforms/android/app/build/outputs/apk/$([[ "$@" == *"--release" ]] && echo release || echo debug) \
+  && mv app-*.apk $apkname)
