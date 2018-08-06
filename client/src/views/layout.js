@@ -3,6 +3,8 @@ import numbro from 'numbro'
 import { formatAmt } from '../util'
 import { alertBox } from './util'
 
+const longVer='v'+process.env.VERSION, shortVer=longVer.replace(/-.*/, '')
+
 const layout = ({ state: S, body }) =>
   div({ props: { className: `d-flex flex-column theme-${S.conf.theme}${S.loading?' loading':'' }` } }, [
     navbar(S)
@@ -25,15 +27,18 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.border-light', [
       p('.info.float-left', [
-        span('.toggle-exp', expert ? `🔧 ${info.version}` : info.version.replace(/-.*/,''))
+        span('.toggle-exp', expert ? `🔧 ${longVer}` : shortVer)
+
       , ` · ${info.network}`
       , ` · `, a({ attrs: { href: '#/node' } }, info.id.substr(0,10))
+
       , btcusd ? (
           [ 'usd', 'btc' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
         : useCents(unit, btcusd) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msatusd, 4, false)}¢`
         : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msatusd, 3, false)}`
         ) : ''
       ])
+
     , p('.toggle-theme.float-right.btn-link', theme)
     ])
   )
