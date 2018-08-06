@@ -1,5 +1,7 @@
 --ignore-dir=dist
 --ignore-dir=client/dist
+--ignore-dir=client/swatch
+--ignore-dir=client/fonts
 --ignore-dir=electron/dist
 --ignore-dir=electron/www
 --ignore-dir=cordova/dist
@@ -7,4 +9,4 @@
 --ignore-dir=cordova/platforms
 --ignore-dir=cordova/plugins
 --ignore-file=is:server.bundle.js
-
+--ignore-file=is:npm-shrinkwrap.json
