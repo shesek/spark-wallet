@@ -1,6 +1,6 @@
 {
   "name": "spark-fonts",
-  "version": "0.0.1",
+  "private": true,
   "author": "Nadav Ivgi",
   "license": "MIT",
   "dependencies": {

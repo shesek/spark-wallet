@@ -1,6 +1,6 @@
 {
   "name": "spark-client",
-  "version": "0.0.1",
+  "private": true,
   "scripts": {
     "dist": "./build.sh",
     "install": "./fonts/rewrite-css.sh node_modules/bootswatch/dist/*/*.min.css"
