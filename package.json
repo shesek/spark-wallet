@@ -9,7 +9,8 @@
     "prepublishOnly": "npm run dist",
     "dist:cordova": "cd cordova && npm run dist --",
     "dist:electron": "cd electron && npm run dist --",
-    "dist:electron:win": "cd electron && npm run dist:win --"
+    "dist:electron:win": "cd electron && npm run dist:win --",
+    "dist:all": "./contrib/dist-all.sh"
   },
   "repository": "https://github.com/ElementsProject/spark",
   "files": [

@@ -2,5 +2,6 @@ cordova
 electron
 client/dist
 dist
+spark-wallet-*-npm.tgz
 node_modules
 doc
