@@ -12,9 +12,8 @@ accessKey || store.set('accessKey', accessKey = randomBytes(32).toString('hex'))
 let proc
 
 function startServer(lnPath) {
+  stopServer()
   console.log('Starting embedded Spark server for ' + lnPath)
-
-  proc && proc.kill()
 
   proc = fork(require.resolve('./server.bundle.js'), {
     env: {
@@ -24,13 +23,14 @@ function startServer(lnPath) {
     , LOGIN: `spark:${accessKey}`
     , NO_TLS: 1
     , NO_WEBUI: 1
+    , NODE_ENV: 'production'
     }
   })
 
   proc.on('error', err => console.error('Spark server error', err.stack || err))
   proc.on('message', m => console.log('Spark server msg', m))
   proc.on('exit', code => console.log('Spark server exited with status', code))
-  proc.on('exit', _ => proc = null)
+  proc.on('exit', _ => { proc.removeAllListeners(); proc = null })
 
   return new Promise((resolve, reject) =>
     proc.once('message', m => m.serverUrl ? resolve(m.serverUrl)
@@ -41,6 +41,7 @@ function startServer(lnPath) {
 function stopServer() {
   if (proc) {
     console.log('Stopping embedded Spark server')
+    proc.removeAllListeners()
     proc.kill()
     proc = null
   }
