@@ -3,7 +3,7 @@ doctype html
 title Spark
 
 meta(charset='utf-8')
-meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
+meta(name='viewport', content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover')
 link(rel='stylesheet', href='style.css')
 meta(name='theme-color', content='#375a7f')
 
@@ -11,7 +11,6 @@ if process.env.BUILD_TARGET == 'web'
   meta(name='access-key', content=settings ? settings.accessKey : '{{accessKey}}')
   meta(name='mobile-web-app-capable', content='yes')
   meta(name='apple-mobile-web-app-capable', content='yes')
-  meta(name='apple-mobile-web-app-status-bar-style', content='black-translucent')
 
   - manifestDir = 'manifest-' + (settings ? settings.manifestKey : '{{manifestKey}}') + '/'
   link(rel='manifest', href=manifestDir+'manifest.json')
