@@ -6,8 +6,7 @@
   "scripts": {
     "start": "electron .",
     "dist": "./build.sh",
-    "pkg:win-wine": "./pkg-win-wine.sh",
-    "shipit": "./build.sh --publish always"
+    "dist:win": "./pkg-win-wine.sh"
   },
   "author": "Nadav Ivgi <nadav@shesek.info>",
   "repository": "https://github.com/ElementsProject/spark",
@@ -24,6 +23,7 @@
   "build": {
     "appId": "com.spark.wallet",
     "productName": "Spark",
+    "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
     "files": [
       "**/*",
       "build/icon.*",
@@ -52,6 +52,12 @@
         "nsis",
         "portable"
       ]
+    },
+    "nsis": {
+      "artifactName": "${name}-${version}-${os}-setup.${ext}"
+    },
+    "portable": {
+      "artifactName": "${name}-${version}-${os}-portable.${ext}"
     }
   },
   "dependencies": {

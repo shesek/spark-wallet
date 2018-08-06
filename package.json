@@ -7,8 +7,9 @@
     "start": "./start.sh",
     "dist": "./build.sh",
     "prepublishOnly": "npm run dist",
-    "cordova:dist": "cd cordova && npm run dist --",
-    "electron:dist": "cd electron && npm run dist --"
+    "dist:cordova": "cd cordova && npm run dist --",
+    "dist:electron": "cd electron && npm run dist --",
+    "dist:electron:win": "cd electron && npm run dist:win --"
   },
   "repository": "https://github.com/ElementsProject/spark",
   "files": [
