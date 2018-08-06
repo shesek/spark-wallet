@@ -71,7 +71,7 @@ See `$ spark-wallet --help` for the full list of available options (also availab
 
 ### Configuration file
 
-Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config-path/-C <path>`).
+Spark reads configuration options from `~/.spark-wallet/config` (can be overridden with `--config/-c <path>`).
 The expected format is one `key=value` per line, like so:
 
 ```ini
@@ -318,7 +318,7 @@ $ spark-wallet --help
     -Q, --pairing-qr         print QR code with embedded access key [default: false]
     --no-webui               run API server without serving client assets [default: false]
 
-    -C, --config-path <path> path to config file [default: ~/.spark-wallet/config]
+    -c, --config <path>      path to config file [default: ~/.spark-wallet/config]
     -V, --verbose            display debugging information [default: false]
     -h, --help               output usage information
     -v, --version            output version number

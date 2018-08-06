@@ -17,15 +17,16 @@ const args = require('meow')(`
       --tls-name <name>        common name for the TLS cert [default: {host}]
       --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
 
-      -o, --onion              start Tor Hidden Service (v3) [default: false]
-      -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
-
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
       -q, --print-qr           print QR code with the server URL [default: false]
       -Q, --pairing-qr         print QR code with embedded access key [default: false]
+
+      -o, --onion              start Tor Hidden Service (v3) [default: false]
+      -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+
       --no-webui               run API server without serving client assets [default: false]
 
-      -C, --config-path <path> path to config file [default: ~/.spark-wallet/config]
+      -c, --config <path>      path to config file [default: ~/.spark-wallet/config]
       -V, --verbose            display debugging information [default: false]
       -h, --help               output usage information
       -v, --version            output version number
@@ -39,15 +40,15 @@ const args = require('meow')(`
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
             , port: {alias:'p'}, host: {alias:'i'}
             , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
-            , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}, pairingQr: {type:'boolean', alias:'Q'}
-            , configPath: {alias:'C'}, verbose: {alias:'V', type:'boolean'}
+            , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
+            , config: {alias:'c'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 
 // Load config file
 const os = require('os'), fs = require('fs'), path = require('path'), ini = require('ini')
-    , configPath = args.configPath || process.env.CONFIG_PATH || path.join(os.homedir(), '.spark-wallet', 'config')
-    , fileConf = fs.existsSync(configPath) ? ini.parse(fs.readFileSync(configPath, 'utf-8')) : {}
+    , confPath = args.config || process.env.CONFIG || path.join(os.homedir(), '.spark-wallet', 'config')
+    , fileConf = fs.existsSync(confPath) ? ini.parse(fs.readFileSync(confPath, 'utf-8')) : {}
 
 const conf = Object.assign(fileConf, args)
 

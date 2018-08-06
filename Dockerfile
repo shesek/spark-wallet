@@ -53,7 +53,7 @@ COPY --from=builder /opt/lightningd/lightningd/lightning* /usr/bin/
 COPY --from=builder /opt/bitcoin/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark
 
-ENV CONFIG_PATH=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor
+ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor
 
 ENTRYPOINT [ "contrib/docker-entrypoint.sh" ]
 
