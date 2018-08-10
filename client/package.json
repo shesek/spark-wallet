@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dist": "./build.sh",
-    "install": "./fonts/rewrite-css.sh node_modules/bootswatch/dist/*/*.min.css"
+    "postinstall": "(cd fonts && npm install) && ./fonts/rewrite-css.sh node_modules/bootswatch/dist/*/*.min.css"
   },
   "author": "Nadav Ivgi",
   "license": "MIT",
@@ -35,7 +35,12 @@
       "pugify",
       "envify",
       "uglifyify",
-      [ "browserify-package-json", { "only": "version"  } ]
+      [
+        "browserify-package-json",
+        {
+          "only": "version"
+        }
+      ]
     ]
   },
   "devDependencies": {

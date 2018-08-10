@@ -14,7 +14,6 @@ rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch
 
 [[ -d node_modules ]] || npm install
-[[ -d fonts/node_modules ]] || (cd fonts && npm install)
 
 # Static assets
 cp -r www/* $DEST/
