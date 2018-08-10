@@ -1,17 +1,33 @@
+// fix icon position
 .theme-slate  .navbar-brand .icon { left: -2px }
 .theme-slate  .navbar-brand .icon:before { vertical-align: baseline }
 .theme-lux    .navbar-brand .icon:before { vertical-align: text-top }
 .theme-cosmo  .navbar-brand .icon:before { vertical-align: text-top }
 
-.theme-slate .navbar-brand
-  border-right 0
+// slate touchups
+.theme-slate
+  .navbar-brand
+    border-right 0
+  .input-group-text
+    padding 0.65rem 1rem
 
+// cyborg touchups
 .theme-cyborg
   .input-group-text { color: #fff }
 
+// dark touchups
 .theme-dark
   .alert
      border none
+
+// dark/yeti touchups (dark is based on yeti)
+.theme-dark, .theme-yeti
+  // make amount badges more readable, the default weight is too thin
+  .feed .badge.amt
+    font-weight normal
+  .feed .badge:not(.badge-pill)
+    padding-left 0.6em
+    padding-right 0.6em
 
 // these themes have space for a larger timestamp
 .theme-yeti, .theme-dark, .theme-materia, .theme-lumen

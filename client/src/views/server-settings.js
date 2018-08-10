@@ -7,14 +7,14 @@ const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath } }) =>
 
   // local connection mode is available on Electron builds only
   , process.env.BUILD_TARGET != 'electron' ? '' : formGroup('Connection Mode', div([
-      div('.form-check', [
+      div('.form-check', label('.form-check-label', { attrs: { for: 'mode-local' } }, [
         input('#mode-local.form-check-input', { attrs: { type: 'radio', name: 'mode', value: 'local' }, props: { checked: mode == 'local' } })
-      , label('.form-check-label', { attrs: { for: 'mode-local' } }, 'Connect to local c-lightning node')
-      ])
-    , div('.form-check', [
+      , ' Connect to local c-lightning node'
+      ]))
+    , div('.form-check', label('.form-check-label', { attrs: { for: 'mode-remote' } }, [
         input('#mode-remote.form-check-input', { attrs: { type: 'radio', name: 'mode', value: 'remote' }, props: { checked: mode == 'remote' } })
-      , label('.form-check-label', { attrs: { for: 'mode-remote' } }, 'Connect to remote Spark server')
-      ])
+      , ' Connect to remote Spark server'
+      ]))
     ]))
 
   , mode == 'remote' ? '' : formGroup('Path to c-lightning'

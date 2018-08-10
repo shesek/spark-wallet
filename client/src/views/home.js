@@ -29,7 +29,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     div('.clearfix', [
       type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
                     : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-    , span('.ts.badge.badge-secondary.badge-pill.float-right', { attrs: { title: tsStr } }, ago(ts))
+    , span('.ts.badge.badge-secondary.float-right', { attrs: { title: tsStr } }, ago(ts))
     ])
   , !visible ? '' : ul('.list-unstyled.my-3', [
       li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', tsStr ])
