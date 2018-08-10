@@ -3,6 +3,7 @@ set -xeo pipefail
 
 gh_repo=elementsproject/spark
 sdir="${BASH_SOURCE%/*}"
+docker_name=shesek/spark
 
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
 
@@ -36,6 +37,16 @@ if [[ -z "$SKIP_BUILD" ]]; then
 
   # Cordova is not reproducible and is built outside of Docker
   npm run dist:cordova -- --release
+fi
+
+# Build Docker server image
+if [[ -z "$SKIP_DOCKER" ]]; then
+  docker build -t $docker_name:$version .
+  docker tag $docker_name:$version $docker_name:latest
+  # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
+  # and is needed for the SHA256SUMS file. https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
+  # https://github.com/moby/moby/issues/16482 https://github.com/docker/distribution/issues/1662
+  docker push $docker_name
 fi
 
 # Make SHA256SUMS & sign it

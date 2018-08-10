@@ -307,6 +307,9 @@ To install the signed NPM package, rather than downloading it from the NPM regis
 and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`,
 or install it from a signed git commit hash using `$ npm install -g github:ElementsProject/spark#[commit-hash-verified-to-be-signed]`.
 
+To install the signed Docker image, get the image hash from `SHA256SUMS.asc` and install it with
+`$ docker pull shesek/spark@sha256:[image-hash-verified-by-be-signed]`.
+
 The distribution checksums for the NPM package, Linux `.tar.gz`/`.deb`/`.snap` builds, macOS `.zip` build and Windows builds (installer and portable)
 [are deterministically reproducible](https://github.com/ElementsProject/spark/blob/master/doc/reproducible-builds.md).
 

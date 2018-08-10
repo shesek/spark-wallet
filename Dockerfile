@@ -1,5 +1,6 @@
 FROM node:8.11-slim as builder
 
+# Install c-lightning
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget zlib1g-dev
 
@@ -12,6 +13,7 @@ RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && DEVELOPER=$DEVELOPER ./configure \
     && make
 
+# Install bitcoind
 ENV BITCOIN_VERSION 0.16.2
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_SHA256 71f217e30e98d5ccc1fb574b9499595e87e118e596278fad5507a7b84650859c
@@ -26,19 +28,29 @@ RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
     && BD=bitcoin-$BITCOIN_VERSION/bin \
     && tar -xzvf bitcoin.tar.gz $BD/bitcoind $BD/bitcoin-cli --strip-components=1
 
-WORKDIR /opt/spark
+# npm doesn't normally like running as root, allow it since we're in docker
+RUN npm config set unsafe-perm true
 
-COPY package.json npm-shrinkwrap.json ./
+# Install Spark
+WORKDIR /opt/spark/client
+COPY client/package.json client/npm-shrinkwrap.json ./
+COPY client/fonts ./fonts
 RUN npm install
 
+WORKDIR /opt/spark
+COPY package.json npm-shrinkwrap.json ./
+RUN npm install
 COPY . .
-RUN npm run dist:npm \
-    && find . -mindepth 1 -maxdepth 1 \
-              ! -name '*.json' ! -name dist ! -name LICENSE ! -name node_modules ! -name contrib \
-              -exec rm -r "{}" \; \
-    && npm prune --production
 
-FROM node:8.9-slim
+# Build production NPM package
+RUN npm run dist:npm \
+ && npm prune --production \
+ && find . -mindepth 1 -maxdepth 1 \
+           ! -name '*.json' ! -name dist ! -name LICENSE ! -name node_modules ! -name contrib \
+           -exec rm -r "{}" \;
+
+# Prepare final image
+FROM node:8.11-slim
 
 WORKDIR /opt/spark
 
