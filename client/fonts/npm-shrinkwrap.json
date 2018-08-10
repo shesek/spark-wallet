@@ -1,8 +1,7 @@
 {
   "name": "spark-fonts",
-  "version": "0.0.1",
-  "lockfileVersion": 1,
   "requires": true,
+  "lockfileVersion": 1,
   "dependencies": {
     "typeface-lato": {
       "version": "0.0.54",

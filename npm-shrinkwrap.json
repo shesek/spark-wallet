@@ -1333,6 +1333,7 @@
     },
     "error": {
       "version": "github:shesek/error#7e0e5c5b5efc52f58db25aa5d15e67cd6adcb8da",
+      "from": "error@github:shesek/error#7e0e5c5b5efc52f58db25aa5d15e67cd6adcb8da",
       "requires": {
         "string-template": "0.2.1",
         "xtend": "4.0.1"
@@ -2739,6 +2740,7 @@
     },
     "lightning-client": {
       "version": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
+      "from": "lightning-client@github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
       "requires": {
         "debug": "3.1.0",
         "error": "github:shesek/error#7e0e5c5b5efc52f58db25aa5d15e67cd6adcb8da",
@@ -2991,7 +2993,8 @@
     "node-forge": {
       "version": "0.7.5",
       "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.5.tgz",
-      "integrity": "sha512-MmbQJ2MTESTjt3Gi/3yG1wGpIMhUfcIypUCGtTizFR9IiccFwxSpfp0vtIZlkFclEqERemxfnSdZEMR9VqqEFQ=="
+      "integrity": "sha512-MmbQJ2MTESTjt3Gi/3yG1wGpIMhUfcIypUCGtTizFR9IiccFwxSpfp0vtIZlkFclEqERemxfnSdZEMR9VqqEFQ==",
+      "optional": true
     },
     "node.extend": {
       "version": "1.1.6",

@@ -1,8 +1,7 @@
 {
   "name": "spark-client",
-  "version": "0.0.1",
-  "lockfileVersion": 1,
   "requires": true,
+  "lockfileVersion": 1,
   "dependencies": {
     "@cycle/dom": {
       "version": "20.4.0",
