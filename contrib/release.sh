@@ -2,7 +2,6 @@
 set -xeo pipefail
 
 gh_repo=elementsproject/spark
-sdir="${BASH_SOURCE%/*}"
 docker_name=shesek/spark
 
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
@@ -51,7 +50,7 @@ fi
 
 # Make SHA256SUMS & sign it
 if [[ -z "$SKIP_SHASUM" ]]; then
-  $sdir/dist-shasums.sh | gpg --clearsign --digest-algo sha256 > SHA256SUMS.asc
+  ./contrib/dist-shasums.sh | gpg --clearsign --digest-algo sha256 > SHA256SUMS.asc
 fi
 
 # Tag version & sign it
