@@ -8,7 +8,7 @@ shopt -s extglob
 
 export BUILD_TARGET
 export NODE_ENV
-export VERSION=`node -p 'require("../package").version'`-`git describe --always --abbrev=7`
+export VERSION=`node -p 'require("../package").version'`
 
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch

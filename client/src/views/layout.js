@@ -3,8 +3,6 @@ import numbro from 'numbro'
 import { formatAmt } from '../util'
 import { alertBox } from './util'
 
-const longVer='v'+process.env.VERSION, shortVer=longVer.replace(/-.*/, '')
-
 const layout = ({ state: S, body }) =>
   div({ props: { className: `d-flex flex-column theme-${S.conf.theme}${S.loading?' loading':'' }` } }, [
     navbar(S)
@@ -27,7 +25,7 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.border-light', [
       p('.info.float-left', [
-        span('.toggle-exp', expert ? `🔧 ${longVer}` : shortVer)
+        span('.toggle-exp', `${expert?'🔧 ':''} v${process.env.VERSION}`)
 
       , ` · ${info.network}`
       , ` · `, a({ attrs: { href: '#/node' } }, info.id.substr(0,10))

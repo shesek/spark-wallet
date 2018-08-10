@@ -10,9 +10,32 @@ sdir="${BASH_SOURCE%/*}"
 npm version --no-git-tag-version --allow-same-version $1
 version=`node -p 'require("./package").version'`
 
-# Build dist files
+# Extract unreleased changelog & update version number
+changelog="`sed -nr '/^## (Unreleased|'$version' )/{n;:a;n;/^## /q;p;ba}' CHANGELOG.md`"
+sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
+
+echo -e "Building Spark v$version\n\n$changelog\n\n"
+
+# Build NPM, Electron and Cordova dist files
 if [[ -z "$SKIP_BUILD" ]]; then
-  npm run dist:all
+  # clean up previous builds
+  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist
+
+  # Build NPM package and Electron builds inside the builder Docker (for reproducibility)
+  if [[ -z "$NO_DOCKER_BUILDER" ]]; then
+    docker build -f contrib/builder.Dockerfile -t spark-builder .
+    docker run -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
+    # unpack new builds to appropriate locations
+    mv docker-builds/spark-wallet-*-npm.tgz .
+    mv -f docker-builds/npm-unpacked dist
+    mv -f docker-builds/electron electron/dist
+  else
+    npm run dist:npm -- --pack-tgz
+    npm run dist:electron -- --linux --mac # windows build require wine and is therefore only built inside docker
+  fi
+
+  # Cordova is not reproducible and is built outside of Docker
+  npm run dist:cordova -- --release
 fi
 
 # Make SHA256SUMS & sign it
@@ -22,10 +45,6 @@ fi
 
 # Tag version & sign it
 if [[ -z "$SKIP_TAG" ]]; then
-  # extract unreleased changelog & update version number
-  changelog="`sed -n '/^## Unreleased/{n;:a;n;/^## /q;p;ba}' CHANGELOG.md`"
-  sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
-
   git add package.json npm-shrinkwrap.json cordova/config.xml SHA256SUMS.asc CHANGELOG.md
 
   git commit -m v$version

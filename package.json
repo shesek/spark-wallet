@@ -5,12 +5,10 @@
   "bin": "dist/cli.js",
   "scripts": {
     "start": "./start.sh",
-    "dist": "./build.sh",
-    "prepublishOnly": "npm run dist",
+    "prepublishOnly": "npm run dist:npm",
+    "dist:npm": "./build.sh",
     "dist:cordova": "cd cordova && npm run dist --",
-    "dist:electron": "cd electron && npm run dist --",
-    "dist:electron:win": "cd electron && npm run dist:win --",
-    "dist:all": "./contrib/dist-all.sh"
+    "dist:electron": "cd electron && npm run dist --"
   },
   "repository": "https://github.com/ElementsProject/spark",
   "files": [

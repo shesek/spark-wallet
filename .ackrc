@@ -8,5 +8,6 @@
 --ignore-dir=cordova/www
 --ignore-dir=cordova/platforms
 --ignore-dir=cordova/plugins
+--ignore-dir=docker-builds
 --ignore-file=is:server.bundle.js
 --ignore-file=is:npm-shrinkwrap.json

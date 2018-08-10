@@ -1,4 +1,4 @@
-FROM node:8.9-slim as builder
+FROM node:8.11-slim as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget zlib1g-dev
@@ -32,7 +32,7 @@ COPY package.json npm-shrinkwrap.json ./
 RUN npm install
 
 COPY . .
-RUN npm run dist \
+RUN npm run dist:npm \
     && find . -mindepth 1 -maxdepth 1 \
               ! -name '*.json' ! -name dist ! -name LICENSE ! -name node_modules ! -name contrib \
               -exec rm -r "{}" \; \

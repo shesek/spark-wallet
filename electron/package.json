@@ -5,8 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist": "./build.sh",
-    "dist:win": "./pkg-win-wine.sh"
+    "dist": "./build.sh"
   },
   "author": "Nadav Ivgi <nadav@shesek.info>",
   "repository": "https://github.com/ElementsProject/spark",
@@ -24,10 +23,12 @@
     "appId": "com.spark.wallet",
     "productName": "Spark",
     "artifactName": "${name}-${version}-${os}-${arch}.${ext}",
+    "afterPack": "./hook-afterPack.js",
     "files": [
       "**/*",
       "build/icon.*",
-      "!*.sh"
+      "!*.sh",
+      "!hook-*.js"
     ],
     "protocols": {
       "name": "Lightning Payment",

@@ -1,7 +1,10 @@
 cordova
-electron
+electron/dist
+electron/www
 client/dist
 dist
 spark-wallet-*-npm.tgz
 node_modules
+**/node_modules
 doc
+docker-builds

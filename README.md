@@ -287,6 +287,29 @@ To get more verbose output in the browser developer console, set `localStorage.d
 
 Pull requests, suggestions and comments and welcome!
 
+## Code signing & Reproducible builds
+
+Signed distribution checksums are available in the git repo at
+[`SHA256SUMS.asc`](https://github.com/ElementsProject/spark/blob/master/SHA256SUMS.asc)
+(updated with every versioned release)
+and on the [releases page](https://github.com/ElementsProject/spark/releases).
+Git version tags are signed too.
+
+The releases are signed by Nadav Ivgi (@shesek).
+The public key can be verified on [keybase](https://keybase.io/nadav),
+[github](https://api.github.com/users/shesek/gpg_keys),
+[twitter](https://twitter.com/shesek) (under bio),
+[HN](https://news.ycombinator.com/user?id=nadaviv)
+or on [a domain he's known to control](https://www.bitrated.com/.keys/staff/nadav.asc).
+
+To install the signed NPM package, rather than downloading it from the NPM registry, download it from
+[the releases page](https://github.com/ElementsProject/spark/releases), verify the hash
+and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`,
+or install it from a signed git commit hash using `$ npm install -g github:ElementsProject/spark#[commit-hash-verified-to-be-signed]`.
+
+The distribution checksums for the NPM package, Linux `.tar.gz`/`.deb`/`.snap` builds, macOS `.zip` build and Windows builds (installer and portable)
+[are deterministically reproducible](https://github.com/ElementsProject/spark/blob/master/doc/reproducible-builds.md).
+
 ## CLI options
 
 ```bash
