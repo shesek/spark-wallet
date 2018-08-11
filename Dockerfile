@@ -46,7 +46,7 @@ COPY . .
 RUN npm run dist:npm \
  && npm prune --production \
  && find . -mindepth 1 -maxdepth 1 \
-           ! -name '*.json' ! -name dist ! -name LICENSE ! -name node_modules ! -name contrib \
+           ! -name '*.json' ! -name dist ! -name LICENSE ! -name node_modules ! -name scripts \
            -exec rm -r "{}" \;
 
 # Prepare final image
@@ -72,6 +72,6 @@ ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor
 # inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
 RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/hsv3-dep/node_modules
 
-ENTRYPOINT [ "contrib/docker-entrypoint.sh" ]
+ENTRYPOINT [ "scripts/docker-entrypoint.sh" ]
 
 EXPOSE 9735 9737

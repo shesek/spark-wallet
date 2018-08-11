@@ -6,12 +6,12 @@ The Android `.apk` and Linux `.AppImage` builds are currently not :-(
 
 ### Reproduce with Docker
 
-A `Dockerfile` for reproducing the builds is available at `contrib/build-releases.Dockerfile`.
+A `Dockerfile` for reproducing the builds is available at `scripts/build-releases.Dockerfile`.
 It can be used as follows:
 
 ```bash
 $ git clone https://github.com/ElementsProject/spark && cd spark
-$ docker build -f contrib/builder.Dockerfile -t spark-builder .
+$ docker build -f scripts/builder.Dockerfile -t spark-builder .
 $ docker run -it -v `pwd`/docker-builds:/target spark-builder
 ```
 

@@ -4,12 +4,12 @@
   "description": "A minimalistic wallet GUI for c-lightning",
   "bin": "dist/cli.js",
   "scripts": {
-    "start": "./start.sh",
+    "start": "./scripts/start.sh",
     "prepublishOnly": "npm run dist:npm",
-    "dist:npm": "./build.sh",
+    "dist:npm": "./scripts/build.sh",
     "dist:cordova": "cd cordova && npm run dist --",
     "dist:electron": "cd electron && npm run dist --",
-    "release": "./contrib/release.sh"
+    "release": "./scripts/release.sh"
   },
   "repository": "https://github.com/ElementsProject/spark",
   "files": [

@@ -23,7 +23,7 @@ if [[ -z "$SKIP_BUILD" ]]; then
 
   # Build NPM package and Electron builds inside the builder Docker (for reproducibility)
   if [[ -z "$NO_DOCKER_BUILDER" ]]; then
-    docker build -f contrib/builder.Dockerfile -t spark-builder .
+    docker build -f scripts/builder.Dockerfile -t spark-builder .
     docker run -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
     # unpack new builds to appropriate locations
     mv docker-builds/spark-wallet-*-npm.tgz .
@@ -50,7 +50,7 @@ fi
 
 # Make SHA256SUMS & sign it
 if [[ -z "$SKIP_SHASUM" ]]; then
-  ./contrib/dist-shasums.sh | gpg --clearsign --digest-algo sha256 > SHA256SUMS.asc
+  ./scripts/dist-shasums.sh | gpg --clearsign --digest-algo sha256 > SHA256SUMS.asc
 fi
 
 # Tag version & sign it

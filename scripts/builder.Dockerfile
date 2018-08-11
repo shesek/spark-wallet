@@ -46,11 +46,11 @@ RUN npm install --no-optional
 
 COPY . .
 
-# Build NPM package and Electron builds. Cordoava is not built.
+# Build NPM package and Electron builds. Cordova is not built.
 CMD npm run dist:npm -- --pack-tgz \
  && npm run dist:electron -- --linux --mac --win \
  && mkdir -p /target && rm -rf /target/* \
- && ./contrib/dist-shasums.sh | tee /target/SHA256SUMS \
+ && ./scripts/dist-shasums.sh | tee /target/SHA256SUMS \
  && mv spark-wallet-*-npm.tgz /target \
  && mv -f dist /target/npm-unpacked \
  && mv -f electron/dist /target/electron \

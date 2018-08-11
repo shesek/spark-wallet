@@ -255,7 +255,7 @@ the URL as a QR to the console, or `--pairing-qr/-Q` to also include the access 
 $ echo login=bob:superSecretPass123 | tee -a ~/.spark-wallet/config
 
 # create service file from template
-$ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/contrib/spark-wallet.service |
+$ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/scripts/spark-wallet.service |
   sed "s~{cmd}~`which spark-wallet`~;s~{user}~`whoami`~" |
   sudo tee /etc/systemd/system/spark-wallet.service
 
