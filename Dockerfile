@@ -50,11 +50,12 @@ RUN npm run dist:npm \
            -exec rm -r "{}" \;
 
 # Prepare final image
+
 FROM node:8.11-slim
 
 WORKDIR /opt/spark
 
-RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools libgmp-dev libsqlite3-dev \
+RUN apt-get update && apt-get install -y --no-install-recommends inotify-tools libgmp-dev libsqlite3-dev xz-utils \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/spark/dist/cli.js /usr/bin/spark-wallet \
     && mkdir /data \
@@ -66,6 +67,10 @@ COPY --from=builder /opt/bitcoin/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark
 
 ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor
+
+# link the hsv3 (Tor Hidden Service V3) node_modules installation directory
+# inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
+RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/hsv3-dep/node_modules
 
 ENTRYPOINT [ "contrib/docker-entrypoint.sh" ]
 

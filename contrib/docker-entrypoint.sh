@@ -72,6 +72,9 @@ fi
 lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
 echo "ready."
 
+# ensure the hsv3 installation directory exists
+mkdir -p $TOR_PATH/tor-installation/node_modules
+
 echo "Starting spark wallet..."
 spark-wallet -l $LN_PATH -i 0.0.0.0 $@ $SPARK_OPTS &
 

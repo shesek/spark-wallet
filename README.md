@@ -225,7 +225,7 @@ It can be flicked off.
 ## Tor Onion Hidden Service
 
 To start Spark as a Tor hidden service (v3), set `--onion`.
-Spark comes bundled with Tor (via [granax](https://github.com/bookchin/granax));
+Spark will install Tor automatically (via [granax](https://github.com/bookchin/granax));
 you don't have to pre-install anything for this to work.
 
 Running Spark as a Tor hidden service has the following benefits:

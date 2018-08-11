@@ -39,11 +39,10 @@ WORKDIR /opt/spark/client
 COPY client/package.json client/npm-shrinkwrap.json ./
 COPY client/fonts ./fonts
 RUN npm install
+
 WORKDIR /opt/spark
 COPY package.json npm-shrinkwrap.json ./
-RUN GRANAX_USE_SYSTEM_TOR=1 npm install --no-optional
-# USE_SYSTEM_TOR tells granax not to download the tor bundle, which is not needed here.
-# --no-optional should avoid downloading granax altogether, but it is broken in npm v5.6.0: https://github.com/npm/npm/issues/17633
+RUN npm install --no-optional
 
 COPY . .
 

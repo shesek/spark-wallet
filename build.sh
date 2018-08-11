@@ -4,8 +4,13 @@ set -xeo pipefail
 mkdir -p dist
 rm -rf dist/*
 
-babel -d dist src
+# Build server-side code
+babel -d dist --ignore node_modules src
 
+# Copy hsv3-dep (on-demand installation for Tor)
+cp src/transport/hsv3-dep/{package,npm-shrinkwrap}.json dist/transport/hsv3-dep/
+
+# Build client-side www assets
 (cd client && DEST=../dist/www npm run dist)
 
 # Remove sources of non-determinism
