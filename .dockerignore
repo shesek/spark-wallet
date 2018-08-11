@@ -1,3 +1,4 @@
+.git
 cordova
 electron/dist
 electron/www
@@ -8,3 +9,5 @@ node_modules
 **/node_modules
 doc
 docker-builds
+.dockerignore
+Dockerfile

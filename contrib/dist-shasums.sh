@@ -12,6 +12,7 @@ sha256sum spark-wallet-*-npm.tgz \
 # Get hash digest for docker image
 if command -v docker > /dev/null; then
   version=`node -p 'require("./package.json").version'`
-  dockerhash=`docker inspect --format='{{index .RepoDigests 0}}' $docker_name:$version | cut -d: -f2`
-  [[ -n "$dockerhash" ]] && echo "$dockerhash  spark-wallet-$version-docker"
+  dockerhash=`docker inspect --format='{{index .RepoDigests 0}}' $docker_name:$version 2> /dev/null | cut -d: -f2 \
+              || echo >&2 WARN: docker digest missing`
+  [[ -z "$dockerhash" ]] || echo "$dockerhash  spark-wallet-$version-docker"
 fi

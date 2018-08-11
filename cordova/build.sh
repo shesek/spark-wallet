@@ -10,13 +10,15 @@ mkdir -p $DEST && rm -rf $DEST/*
 
 (cd ../client && npm run dist)
 
-# update config.xml to package.json's version
+# update config.xml to match the package.json version
 version=`node -p 'require("../package").version'`
-sed -i -r 's/(<widget.*version=")[^"]+/\1'$version'/' config.xml
+grep -e '<widget.*version="'$version'"' config.xml \
+  || sed -i -r 's/(<widget.*version=")[^"]+/\1'$version'/' config.xml
 
 cordova prepare
 cordova build "$@"
 
-# give the .apk file a more descriptive name
+# remove previous build and give the .apk file a more descriptive name
 (cd platforms/android/app/build/outputs/apk/$([[ "$@" == *"--release" ]] && echo release || echo debug) \
+  && rm -f spark-wallet-*-android.apk \
   && mv app-*.apk spark-wallet-$version-android.apk)

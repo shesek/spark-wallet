@@ -7,12 +7,12 @@ docker_name=shesek/spark
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
 
 # Bump version
-npm version --no-git-tag-version --allow-same-version $1
+[[ "$1" != "nobump" ]] && npm version --no-git-tag-version $1
 version=`node -p 'require("./package").version'`
 
 # Extract unreleased changelog & update version number
 changelog="`sed -nr '/^## (Unreleased|'$version' )/{n;:a;n;/^## /q;p;ba}' CHANGELOG.md`"
-sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
+grep '## Unreleased' CHANGELOG.md && sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
 
 echo -e "Building Spark v$version\n\n$changelog\n\n"
 
