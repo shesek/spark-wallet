@@ -1,6 +1,8 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { formGroup, yaml, amountField } from './util'
 
+const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+
 const scanReq = div('.qr-scanner', [
   // the camera itself is displayed by the driver in the background,
   // outside of cycle.js vdom management. here we just display the scanning area indicator
@@ -21,6 +23,8 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Decode request')
 , ' '
 , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
+, hasCam ? '' : p('.text-muted.mt-4.small', 'Your browser does not support WebRTC camera access. '
+                                          + 'A newer browser would enable scanning a QR with the payment request.')
 ])
 
 // @TODO show expiry

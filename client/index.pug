@@ -35,9 +35,6 @@ body(class='build-'+process.env.BUILD_TARGET)
 
   script(src=bundle || 'app.js', defer)
 
-  if process.env.BUILD_TARGET == 'web' || process.env.BUILD_TARGET == 'electron'
-    script(src='lib/instascan.js', async)
-
   if process.env.BUILD_TARGET == 'cordova'
     script(src='cordova.js', defer)
 
