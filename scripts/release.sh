@@ -19,9 +19,10 @@ echo -e "Building Spark v$version\n\n$changelog\n\n"
 # Build NPM, Electron and Cordova dist files
 if [[ -z "$SKIP_BUILD" ]]; then
   # clean up previous builds
-  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist
+  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk/release
+  mkdir -p cordova/platforms/android/app/build/outputs/apk
 
-  # Build NPM package and Electron builds inside the builder Docker (for reproducibility)
+  # Build using Docker for reproducibility
   if [[ -z "$NO_DOCKER_BUILDER" ]]; then
     docker build -f scripts/builder.Dockerfile -t spark-builder .
     docker run -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
@@ -29,13 +30,12 @@ if [[ -z "$SKIP_BUILD" ]]; then
     mv docker-builds/spark-wallet-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist
     mv -f docker-builds/electron electron/dist
+    mv -f docker-builds/cordova-android cordova/platforms/android/app/build/outputs/apk/release
   else
     npm run dist:npm -- --pack-tgz
-    npm run dist:electron -- --linux --mac # windows build require wine and is therefore only built inside docker
+    npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
+    npm run dist:cordova -- --release
   fi
-
-  # Cordova is not reproducible and is built outside of Docker
-  npm run dist:cordova -- --release
 fi
 
 # Build Docker server image
@@ -55,7 +55,7 @@ fi
 
 # Tag version & sign it
 if [[ -z "$SKIP_TAG" ]]; then
-  git add package.json npm-shrinkwrap.json cordova/config.xml SHA256SUMS.asc CHANGELOG.md
+  git add package.json npm-shrinkwrap.json SHA256SUMS.asc CHANGELOG.md
 
   git commit -m v$version
   git tag --sign -m "$changelog" v$version

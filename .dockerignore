@@ -1,5 +1,7 @@
 .git
-cordova
+cordova/platforms
+cordova/www
+cordova/plugins
 electron/dist
 electron/www
 client/dist

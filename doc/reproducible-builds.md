@@ -1,8 +1,9 @@
 # Reproducible builds
 
-The NPM package, Linux `.tar.gz`/`.deb`/`.snap` builds, macOS `.zip` build and Windows builds are deterministically reproducible.
+The NPM package, Android `apk` builds, Linux `tar.gz`/`deb`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
+are deterministically reproducible.
 
-The Android `.apk` and Linux `.AppImage` builds are currently not :-(
+The Linux `AppImage` builds are currently not. :-(
 
 ### Reproduce with Docker
 
@@ -15,8 +16,7 @@ $ docker build -f scripts/builder.Dockerfile -t spark-builder .
 $ docker run -it -v `pwd`/docker-builds:/target spark-builder
 ```
 
-The distribution files and a `SHA256SUMS` file will be created in `./docker-builds/`
-(not including the non-reproducible cordova builds).
+The distribution files and a `SHA256SUMS` file will be created in `./docker-builds/`.
 
 ### NPM package
 
