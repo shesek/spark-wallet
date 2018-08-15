@@ -86,7 +86,7 @@ const letsencrypt = (name, dir, email) => {
 
       if (err.errno == 'EACCES') {
         console.error(`\nYou don't have prmission to bind on ${err.address}:${err.port}.`);
-        console.error('See https://github.com/ElementsProject/spark/blob/master/README.md#letsencrypt-integration for advice.');
+        console.error('See https://github.com/ElementsProject/spark/blob/master/doc/tls.md#letsencrypt-integration for advice.');
       } else if (err.errno == 'EADDRINUSE') {
         console.error(`\n${err.address}:${err.port} is already being used by some other program. Stop it and try again.`);
       }

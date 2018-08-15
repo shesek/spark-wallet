@@ -7,9 +7,9 @@ const args = require('meow')(`
     Options
       -l, --ln-path <path>     path to c-lightning data directory [default: ~/.lightning]
       -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
-
       -p, --port <port>        http(s) server port [default: 9737]
       -i, --host <host>        http(s) server listen address [default: localhost]
+      --no-webui               run API server without serving client assets [default: false]
 
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
@@ -23,8 +23,6 @@ const args = require('meow')(`
 
       -o, --onion              start Tor Hidden Service (v3) [default: false]
       -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
-
-      --no-webui               run API server without serving client assets [default: false]
 
       -c, --config <path>      path to config file [default: ~/.spark-wallet/config]
       -V, --verbose            display debugging information [default: false]
