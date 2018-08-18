@@ -1,7 +1,5 @@
 import { Observable as O } from '../rxjs'
 
-require('webrtc-adapter')
-
 // check for WebRTC camera support
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 

@@ -1,4 +1,7 @@
 import 'babel-polyfill'
+import 'webrtc-adapter'
+import 'pwacompat'
+
 import run from '@cycle/rxjs-run'
 
 import storageDriver      from '@cycle/storage'
