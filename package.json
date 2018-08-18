@@ -18,10 +18,16 @@
   "keywords": [
     "bitcoin",
     "lightning",
-    "wallet"
+    "wallet",
+    "lightning-wallet",
+    "lightning-network",
+    "c-lightning"
   ],
   "author": "Nadav Ivgi",
   "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "basic-auth": "^2.0.0",
