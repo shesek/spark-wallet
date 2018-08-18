@@ -10,9 +10,6 @@ const
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
-, appendInv = (invs, inv)     => [ ...invs.filter(    i => i.label !== inv.label), inv ]
-, appendPay = (payments, pay) => [ ...payments.filter(p => p.id    !== pay.id)   , pay ]
-
 , idx = xs => x => xs.indexOf(x)
 , idn = x => x
 
@@ -81,27 +78,24 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
-  // Periodically re-sync from listpayments,
-  // continuously patch with known outgoing payments (completed only)
+  // Periodically re-sync from listpayments (completed only),
+  // continuously patch with known outgoing payments
   , freshPays$ = O.merge(
-      payments$.map(payments => _ => payments)
-    , outgoing$.map(pay => payments => payments && appendPay(payments, pay))
+      payments$.map(payments => _ => payments.filter(p => p.status === 'complete'))
+    , outgoing$.map(pay => payments => payments && [ ...payments, pay ])
     )
     .startWith(null).scan((payments, mod) => mod(payments))
     .filter(payments => !!payments)
-    .map   (payments => payments.filter(p => p.status === 'complete'))
     .distinctUntilChanged((prev, next) => prev.length === next.length)
 
-  // Periodically re-sync from listinvoices,
-  // continuously patch with known invoices (paid only)
+  // Periodically re-sync from listinvoices (paid only),
+  // continuously patch with known incoming payments
   , freshInvs$ = O.merge(
-      invoices$.map(invs => _ => invs)
-    , invoice$.map(inv  => invs => invs && [ ...invs, inv ])
-    , incoming$.map(inv => invs => invs && appendInv(invs, inv))
+      invoices$.map(invs => _ => invs.filter(inv => inv.status == 'paid'))
+    , incoming$.map(inv => invs => invs && [ ...invs, inv ])
     )
     .startWith(null).scan((invs, mod) => mod(invs))
     .filter(invs => !!invs)
-    .map(invs    => invs.filter(inv => inv.status === 'paid'))
     .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Chronologically sorted feed of incoming and outgoing payments
