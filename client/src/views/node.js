@@ -4,7 +4,7 @@ import { yaml, qruri } from './util'
 exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
   if (!info) return '';
 
-  const uri = info.binding[0] ? `${info.id}@${info.binding[0].address}:${info.binding[0].port}` : info.id
+  const uri = info.address[0] ? `${info.id}@${info.address[0].address}:${info.address[0].port}` : info.id
       , qr  = await qruri(uri)
 
   return div([
@@ -18,7 +18,7 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
       , p('.d-block.d-sm-none.text-center.text-muted.break-all.mt-4', uri)
       ])
     ])
-  , !info.binding[0] ? p('.text-muted.small', 'This node does not accept incoming connections.') : ''
+  , !info.address[0] ? p('.text-muted.small', 'This node does not accept incoming connections.') : ''
   , expert ? yaml({ info, peers }) : ''
   ])
 }
