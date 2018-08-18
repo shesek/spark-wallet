@@ -90,7 +90,7 @@ function parseQR(url) {
 
   return (p && p.host)
   ? { serverUrl: p.search ? url.substr(0, url.indexOf('?')) : url
-    , accessKey: p.search && p.search.startsWith(keyMarker) ? p.hash.substr(keyMarker.length) : null }
+    , accessKey: p.search && p.search.startsWith(keyMarker) ? p.search.substr(keyMarker.length) : null }
   : null
 }
 
