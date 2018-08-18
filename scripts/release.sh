@@ -1,8 +1,8 @@
 #!/bin/bash
 set -xeo pipefail
 
-gh_repo=elementsproject/spark
-docker_name=shesek/spark
+gh_repo=shesek/spark-wallet
+docker_name=shesek/spark-wallet
 
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
 

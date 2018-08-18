@@ -1,7 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
-docker_name=shesek/spark
+docker_name=shesek/spark-wallet
 
 sha256sum spark-wallet-*-npm.tgz \
           electron/dist/*.{AppImage,deb,snap,tar.gz,exe,zip} \

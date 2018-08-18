@@ -5,7 +5,7 @@
 $ echo login=bob:superSecretPass123 | tee -a ~/.spark-wallet/config
 
 # Create service file from template
-$ curl -s https://raw.githubusercontent.com/ElementsProject/spark/master/scripts/spark-wallet.service |
+$ curl -s https://raw.githubusercontent.com/shesek/spark-wallet/master/scripts/spark-wallet.service |
   sed "s~{cmd}~`which spark-wallet`~;s~{user}~`whoami`~" |
   sudo tee /etc/systemd/system/spark-wallet.service
 

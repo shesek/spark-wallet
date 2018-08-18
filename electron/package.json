@@ -8,7 +8,7 @@
     "dist": "./build.sh"
   },
   "author": "Nadav Ivgi <nadav@shesek.info>",
-  "repository": "https://github.com/ElementsProject/spark",
+  "repository": "https://github.com/shesek/spark-wallet",
   "license": "MIT",
   "devDependencies": {
     "babelify": "^8.0.0",

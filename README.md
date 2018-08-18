@@ -1,8 +1,9 @@
 # Spark Lightning Wallet
 
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
-[![docker release](https://img.shields.io/docker/pulls/shesek/spark.svg)](https://hub.docker.com/r/shesek/spark)
-[![MIT license](https://img.shields.io/github/license/elementsproject/spark.svg)](https://github.com/elementsproject/spark/blob/master/LICENSE)
+[![build status](https://api.travis-ci.org/shesek/spark-wallet.svg)](https://travis-ci.org/shesek/spark-wallet)
+[![docker release](https://img.shields.io/docker/pulls/shesek/spark-wallet.svg)](https://hub.docker.com/r/shesek/spark-wallet)
+[![MIT license](https://img.shields.io/github/license/shesek/spark-wallet.svg)](https://github.com/shesek/spark-wallet/blob/master/LICENSE)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=spark-wallet)
 
@@ -64,9 +65,7 @@ or [this tutorial](https://hackernoon.com/harnessing-lightning-for-instant-bitco
 and nodejs v6.0 or newer (v8 is recommended, see [instructions here](https://nodejs.org/en/download/package-manager/)).
 
 ```bash
-# $ npm install -g spark-wallet
-
-$ npm install -g git+ssh://git@github.com:ElementsProject/spark#dist
+$ npm install -g spark-wallet
 
 $ spark-wallet # defaults: --ln-path ~/.lightning --port 9737
 ```
@@ -98,27 +97,27 @@ This will automatically enable TLS with a self-signed certificate.
 
 For more information on TLS, instructions for setting up a CA-signed certificate using the built-in LetsEncrypt integration
 and for adding the self-signed certificate to Android,
-see [`doc/tls.md`](https://github.com/ElementsProject/spark/blob/master/doc/tls.md).
+see [`doc/tls.md`](https://github.com/shesek/spark-wallet/blob/master/doc/tls.md).
 
 To start Spark as a Tor hidden service, set `--onion`. You don't need Tor pre-installed for this to work.
-See [`doc/onion.md`](https://github.com/ElementsProject/spark/blob/master/doc/onion.md) for more details,
+See [`doc/onion.md`](https://github.com/shesek/spark-wallet/blob/master/doc/onion.md) for more details,
 the advantages of using an hidden service, and instructions for connecting from Android.
 *This is highly recommended.*
 
 #### Deploy with Docker
 
 Spark is also available as a Docker image that comes bundled with bitcoind and c-lightning.
-See [`doc/docker.md`](https://github.com/ElementsProject/spark/blob/master/doc/docker.md) for details.
+See [`doc/docker.md`](https://github.com/shesek/spark-wallet/blob/master/doc/docker.md) for details.
 
 #### Adding to startup with `systemd`
 
-See [`doc/startup-systemd.md`](https://github.com/ElementsProject/spark/blob/master/doc/startup-systemd.md).
+See [`doc/startup-systemd.md`](https://github.com/shesek/spark-wallet/blob/master/doc/startup-systemd.md).
 
 ## Desktop apps
 
 Electron-based desktop apps for Linux (packaged as `deb`, `AppImage`, `snap` and `tar.gz`),
 macOS (as `zip`) and Windows (installer and a portable) are available for download from the
-[releases page](https://github.com/ElementsProject/spark/releases).
+[releases page](https://github.com/shesek/spark-wallet/releases).
 
 The desktop apps comes bundled with the Spark server-side component. If you're connecting to a local
 c-lightning instance, you [can configure](https://user-images.githubusercontent.com/877904/44290659-5c224c80-a282-11e8-9433-bb442f11ca88.png)
@@ -130,7 +129,7 @@ running c-lightning and connecting through it.
 ## Mobile app
 
 A Cordova-based native app for Android is available for download from the
-[releases page](https://github.com/ElementsProject/spark/releases) (`spark-wallet-[x.y.z]-android.apk`).
+[releases page](https://github.com/shesek/spark-wallet/releases) (`spark-wallet-[x.y.z]-android.apk`).
 It is not currently published to the app store.
 
 The app requires a Spark server to communicate with, which you need [to setup](#server-installation) as a prerequisite.
@@ -140,8 +139,8 @@ You can print your access key to the console by starting Spark with `--print-key
 You can also scan this information from a QR, which you can get with `--pairing-qr/-Q`.
 
 For the native app to properly communicate with the server, the TLS certificate has to be
-[signed by a CA](https://github.com/ElementsProject/spark/blob/master/doc/tls.md#letsencrypt-integration)
-or manually [added as a user trusted certificate](https://github.com/ElementsProject/spark/blob/master/doc/tls.md#add-as-trusted-certificate-to-android).
+[signed by a CA](https://github.com/shesek/spark-wallet/blob/master/doc/tls.md#letsencrypt-integration)
+or manually [added as a user trusted certificate](https://github.com/shesek/spark-wallet/blob/master/doc/tls.md#add-as-trusted-certificate-to-android).
 
 ## Progressive Web App
 
@@ -152,7 +151,7 @@ Available in Chrome mobile under `⋮` -> `Add to homescreen` ([see here](https:
 in Chrome desktop under `More tools` -> `Install to desktop` ([see here](https://i.imgur.com/Pj6FpGA.png))
 and in Firefox mobile with an icon next to the address bar ([see here](https://mdn.mozillademos.org/files/15762/add-to-home-screen-icon.png)).
 
-Installing the PWA requires TLS and a [CA-signed certificate](https://github.com/ElementsProject/spark/blob/master/doc/tls.md#letsencrypt-integration).
+Installing the PWA requires TLS and a [CA-signed certificate](https://github.com/shesek/spark-wallet/blob/master/doc/tls.md#letsencrypt-integration).
 
 Compared to the PWA, the main advantages of the mobile and desktop apps are
 the ability to handle `lightning:` URIs,
@@ -194,7 +193,7 @@ with bootstrap for theming and a nodejs/express server as the backend.
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
 
 ```bash
-$ git clone https://github.com/ElementsProject/spark && cd spark
+$ git clone https://github.com/shesek/spark-wallet && cd spark
 $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
@@ -212,9 +211,9 @@ Pull requests, suggestions and comments and welcome!
 ## Code signing & reproducible builds
 
 Signed distribution checksums are available in the git repo at
-[`SHA256SUMS.asc`](https://github.com/ElementsProject/spark/blob/master/SHA256SUMS.asc)
+[`SHA256SUMS.asc`](https://github.com/shesek/spark-wallet/blob/master/SHA256SUMS.asc)
 (updated with every versioned release)
-and on the [releases page](https://github.com/ElementsProject/spark/releases).
+and on the [releases page](https://github.com/shesek/spark-wallet/releases).
 Git version tags are signed too.
 
 The releases are signed by Nadav Ivgi (@shesek).
@@ -225,14 +224,14 @@ The public key can be verified on [keybase](https://keybase.io/nadav),
 or on [a domain he's known to control](https://www.bitrated.com/.keys/staff/nadav.asc).
 
 To install the signed NPM package, download it from
-[the releases page](https://github.com/ElementsProject/spark/releases), verify the hash
+[the releases page](https://github.com/shesek/spark-wallet/releases), verify the hash
 and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`.
 
 To install the signed Docker image, get the image hash from `SHA256SUMS.asc` and install it with
-`$ docker pull shesek/spark@sha256:[image-hash-verified-by-be-signed]`.
+`$ docker pull shesek/spark-wallet@sha256:[image-hash-verified-by-be-signed]`.
 
 The NPM package, Android `apk` builds, Linux `tar.gz`/`deb`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
-[are deterministically reproducible](https://github.com/ElementsProject/spark/blob/master/doc/reproducible-builds.md).
+[are deterministically reproducible](https://github.com/shesek/spark-wallet/blob/master/doc/reproducible-builds.md).
 
 ## CLI options
 
@@ -278,4 +277,4 @@ $ spark-wallet --help
 
 ## License
 
-[MIT](https://github.com/ElementsProject/spark/blob/master/LICENSE)
+[MIT](https://github.com/shesek/spark-wallet/blob/master/LICENSE)

@@ -11,7 +11,7 @@
     "dist:electron": "cd electron && npm run dist --",
     "release": "./scripts/release.sh"
   },
-  "repository": "https://github.com/ElementsProject/spark",
+  "repository": "https://github.com/shesek/spark-wallet",
   "files": [
     "dist"
   ],

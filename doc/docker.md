@@ -4,7 +4,7 @@ You can use Docker To setup Spark, a bitcoind node and a c-lightning node all in
 
 ```bash
 $ docker run -v ~/.spark-docker:/data -p 9737:9737 \
-             shesek/spark --login bob:superSecretPass456
+             shesek/spark-wallet --login bob:superSecretPass456
 ```
 
 You will then be able to access the Spark wallet at `https://localhost:9737`.
@@ -31,7 +31,7 @@ mount the lightning data directory to `/etc/lightning`:
 ```bash
 $ docker run -v ~/.spark-docker:/data -p 9737:9737 \
              -v ~/.lightning:/etc/lightning \
-             shesek/spark
+             shesek/spark-wallet
 ```
 
 Connecting to remote lightningd instances is currently not supported.
