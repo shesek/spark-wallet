@@ -16,6 +16,9 @@ const qruri = process.env.BUILD_TARGET == 'web' && isOnion
 
 const qrinv = inv => qruri(`lightning:${ inv.bolt11  }`.toUpperCase())
 
+// Avoid displaying our default description (of "⚡")
+const showDesc = o => o.description && o.description !== '⚡'
+
 const ago = ts => vagueTime.get({ to: Math.min(ts*1000, Date.now()) })
 
 const formGroup = (labelText, control, help) => div('.form-group', [
@@ -45,4 +48,4 @@ const alertBox = ([ kind, text ], dismissable) =>
   ])
 
 
-module.exports = { yaml, qruri, qrinv, ago, formGroup, amountField, alertBox }
+module.exports = { yaml, qruri, qrinv, showDesc, ago, formGroup, amountField, alertBox }

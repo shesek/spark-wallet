@@ -1,5 +1,5 @@
 import { div, ul, li, a, span, button, small, p, strong } from '@cycle/dom'
-import { yaml, ago } from './util'
+import { yaml, ago, showDesc } from './util'
 import ordinal from 'ordinal'
 
 const perPage = 10
@@ -39,7 +39,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , type == 'out' && obj.route ? li([ strong('Route:'), ' ', obj.route.length > 1 ? `${obj.route.length} hops` : 'direct payment'
                                                         , ' ', small(`(${ordinal(obj.sendpay_tries)} attempt)`) ]) : ''
-    , obj.description ? li([ strong('Description:'), ' ', span('.break-all', obj.description) ]) : ''
+    , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-all', obj.description) ]) : ''
     , type == 'out' ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
     , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
     , expert ? li(yaml(obj)) : ''

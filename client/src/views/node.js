@@ -18,7 +18,7 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
       , p('.d-block.d-sm-none.text-center.text-muted.break-all.mt-4', uri)
       ])
     ])
-  , !info.address[0] ? p('.text-muted.small', 'This node does not accept incoming connections.') : ''
+  , !info.address[0] ? p('.text-muted.small.text-center', 'This node does not accept incoming connections.') : ''
   , expert ? yaml({ info, peers }) : ''
   ])
 }

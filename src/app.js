@@ -65,9 +65,12 @@
       , qrKey  = process.env.PAIRING_QR ? `?access-key=${app.settings.accessKey}` : ''
 
   function serviceReady(name, url) {
-    console.log(`${name} running on ${url}`)
-    qrterm && qrterm.generate(`${url}/${qrKey}`, { small: true })
-    qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet]')
+    console.log(`\n${name} running on ${url}`)
+    if (qrterm && !url.includes('://localhost:')) {
+      console.log(`Scan QR to ${qrKey ? 'pair with' : 'open'} ${name}:`)
+      qrterm.generate(`${url}/${qrKey}`, { small: true })
+      qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet.]')
+    }
 
     process.send && process.send({ serverUrl: url })
   }
