@@ -2670,7 +2670,7 @@
         "es6-promise": "4.2.4",
         "lodash": "4.17.5",
         "stampit": "3.2.1",
-        "uuid": "3.2.1"
+        "uuid": "3.3.2"
       }
     },
     "function-bind": {
@@ -2880,7 +2880,7 @@
       "requires": {
         "babel-runtime": "6.26.0",
         "fsm-as-promised": "0.14.5",
-        "visibilityjs": "1.2.7"
+        "visibilityjs": "1.2.8"
       }
     },
     "invariant": {
@@ -3363,9 +3363,9 @@
       "optional": true
     },
     "nanoid": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.1.0.tgz",
-      "integrity": "sha512-iOCqgXieGrk8/wDt1n9rZS2KB1dYVssemY0NTWjfzVr+1t1gAmdTp1u2+YHppKro3Bk5S+Gs+xmYCfpuXauYXQ=="
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.2.1.tgz",
+      "integrity": "sha512-S1QSG+TQtsqr2/ujHZcNT0OxygffUaUT755qTc/SPKfQ0VJBlOO6qb1425UYoHXPvCZ3pWgMVCuy1t7+AoCxnQ=="
     },
     "next-tick": {
       "version": "1.0.0",
@@ -3935,6 +3935,11 @@
       "integrity": "sha1-wNWmOycYgArY4esPpSachN1BhF4=",
       "dev": true
     },
+    "pwacompat": {
+      "version": "2.0.7",
+      "resolved": "https://registry.npmjs.org/pwacompat/-/pwacompat-2.0.7.tgz",
+      "integrity": "sha512-t4dhQguv6SGUn+BEwdENse7ayrTtqGTR24jxWBdEcVLrkwvGZrx4PDaY2libDWdsAsLH2LfW9lm09pJG/+49fg=="
+    },
     "qrcode": {
       "version": "1.2.2",
       "resolved": "https://registry.npmjs.org/qrcode/-/qrcode-1.2.2.tgz",
@@ -4225,7 +4230,7 @@
       "resolved": "https://registry.npmjs.org/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.13.tgz",
       "integrity": "sha512-Xz4zQLZNs9lFBvqbaHGIjLWtyZ1V82ec5r+WNEo7NlIx3zF5M3ytn9mkkfYeZmpE032cNg3Vvf0rP8kNXUNd9w==",
       "requires": {
-        "sdp": "2.7.4"
+        "sdp": "2.8.0"
       }
     },
     "rxjs": {
@@ -4255,9 +4260,9 @@
       "dev": true
     },
     "sdp": {
-      "version": "2.7.4",
-      "resolved": "https://registry.npmjs.org/sdp/-/sdp-2.7.4.tgz",
-      "integrity": "sha512-0+wTfgvUUEGcvvFoHIC0aiGbx6gzwAUm8FkKt5Oqqkjf9mEEDLgwnoDKX7MYTGXrNNwzikVbutJ+OVNAGmJBQw=="
+      "version": "2.8.0",
+      "resolved": "https://registry.npmjs.org/sdp/-/sdp-2.8.0.tgz",
+      "integrity": "sha512-wRSES07rAwKWAR7aev9UuClT7kdf9ZTdeUK5gTgHue9vlhs19Fbm3ccNEGJO4y2IitH4/JzS4sdzyPl6H2KQLw=="
     },
     "semver": {
       "version": "5.5.0",
@@ -4473,9 +4478,9 @@
       }
     },
     "string-argv": {
-      "version": "0.1.0",
-      "resolved": "https://registry.npmjs.org/string-argv/-/string-argv-0.1.0.tgz",
-      "integrity": "sha512-wDKYrFaNrwOTqavWFn2EKfWk8+zCAOzVJxFVbYW+WNSTjPEO2+rd90Z5Fois6EuoWY+L9ZQhno5nig3Q25GRHg=="
+      "version": "0.1.1",
+      "resolved": "https://registry.npmjs.org/string-argv/-/string-argv-0.1.1.tgz",
+      "integrity": "sha512-El1Va5ehZ0XTj3Ekw4WFidXvTmt9SrC0+eigdojgtJMVtPkF0qbBe9fyNSl9eQf+kUHnTSQxdQYzuHfZy8V+DQ=="
     },
     "string-width": {
       "version": "2.1.1",
@@ -4737,9 +4742,9 @@
       }
     },
     "uglify-js": {
-      "version": "3.4.6",
-      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.4.6.tgz",
-      "integrity": "sha512-O1D7L6WcOzS1qW2ehopEm4cWm5yA6bQBozlks8jO8ODxYCy4zv+bR/la4Lwp01tpkYGNonnpXvUpYtrvSu8Yzg==",
+      "version": "3.4.7",
+      "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.4.7.tgz",
+      "integrity": "sha512-J0M2i1mQA+ze3EdN9SBi751DNdAXmeFLfJrd/MDIkRc3G3Gbb9OPVSx7GIQvVwfWxQARcYV2DTxIkMyDAk3o9Q==",
       "dev": true,
       "requires": {
         "commander": "2.16.0",
@@ -4845,9 +4850,9 @@
       "integrity": "sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8="
     },
     "uuid": {
-      "version": "3.2.1",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.2.1.tgz",
-      "integrity": "sha512-jZnMwlb9Iku/O3smGWvZhauCf6cvvpKi4BKRiliS3cxnI+Gz9j5MEpTz2UFuXiKPJocb7gnsLHwiS05ige5BEA=="
+      "version": "3.3.2",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-3.3.2.tgz",
+      "integrity": "sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA=="
     },
     "v8flags": {
       "version": "2.1.1",
@@ -4878,9 +4883,9 @@
       "integrity": "sha512-x+cYdNnaA3CxvMaTX0INdTCN8m8aF2uY9BvEqmxuYp8bL09cs/kWVQPVGcA35fMktdOsP69IgU7wFj/61dJHEw=="
     },
     "visibilityjs": {
-      "version": "1.2.7",
-      "resolved": "https://registry.npmjs.org/visibilityjs/-/visibilityjs-1.2.7.tgz",
-      "integrity": "sha512-+5bhYUd8JtXVkUiWDSatVMqo+Zw1dnn+5BU6UaifKfy88Q1bfKTi4x2OdW/n0TBGHdK7ol25/p+7qwbsljbWwQ=="
+      "version": "1.2.8",
+      "resolved": "https://registry.npmjs.org/visibilityjs/-/visibilityjs-1.2.8.tgz",
+      "integrity": "sha512-Y+aL3OUX88b+/VSmkmC2ApuLbf0grzbNLpCfIDSw3BzTU6PqcPsdgIOaw8b+eZoy+DdQqnVN3y/Evow9vQq9Ig=="
     },
     "vm-browserify": {
       "version": "1.1.0",
@@ -4918,12 +4923,12 @@
       }
     },
     "webrtc-adapter": {
-      "version": "6.3.1",
-      "resolved": "https://registry.npmjs.org/webrtc-adapter/-/webrtc-adapter-6.3.1.tgz",
-      "integrity": "sha512-BY/RvDfdOuJECTdvR0wcn7L3yjZNa0/HEjTJO/bgKSWCT7WFpnKIyzqzUwA5Jc0+kyAIRvnNMxkxtalFCl5jFg==",
+      "version": "6.3.2",
+      "resolved": "https://registry.npmjs.org/webrtc-adapter/-/webrtc-adapter-6.3.2.tgz",
+      "integrity": "sha512-7pFMXpZCka7ScIQyk8Wo+fOr3OlKLtGd6YHqkHVT74zerpY2Siyds8sxsmkE0bNqsi/J1b0vDzN7WpB34dQzAA==",
       "requires": {
         "rtcpeerconnection-shim": "1.2.13",
-        "sdp": "2.7.4"
+        "sdp": "2.8.0"
       }
     },
     "which": {

@@ -2771,9 +2771,9 @@
       "optional": true
     },
     "nanoid": {
-      "version": "1.1.0",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.1.0.tgz",
-      "integrity": "sha512-iOCqgXieGrk8/wDt1n9rZS2KB1dYVssemY0NTWjfzVr+1t1gAmdTp1u2+YHppKro3Bk5S+Gs+xmYCfpuXauYXQ=="
+      "version": "1.2.1",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.2.1.tgz",
+      "integrity": "sha512-S1QSG+TQtsqr2/ujHZcNT0OxygffUaUT755qTc/SPKfQ0VJBlOO6qb1425UYoHXPvCZ3pWgMVCuy1t7+AoCxnQ=="
     },
     "negotiator": {
       "version": "0.6.1",
