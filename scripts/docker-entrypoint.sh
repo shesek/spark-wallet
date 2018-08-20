@@ -76,7 +76,7 @@ echo "ready."
 mkdir -p $TOR_PATH/tor-installation/node_modules
 
 echo "Starting spark wallet..."
-spark-wallet -l $LN_PATH -i 0.0.0.0 $@ $SPARK_OPTS &
+spark-wallet -l $LN_PATH "$@" $SPARK_OPTS &
 
 # shutdown the entire process when any of the background jobs exits (even if successfully)
 wait -n

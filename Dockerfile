@@ -4,7 +4,7 @@ FROM node:8.11-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget zlib1g-dev
 
-ARG LIGHTNINGD_VERSION=v0.6
+ARG LIGHTNINGD_VERSION=0d3c3a225e532d54e5371394dbff7240500a0431
 ARG DEVELOPER
 
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
@@ -66,7 +66,7 @@ COPY --from=builder /opt/lightningd/lightningd/lightning* /usr/bin/
 COPY --from=builder /opt/bitcoin/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark
 
-ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor
+ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor HOST=0.0.0.0
 
 # link the hsv3 (Tor Hidden Service V3) node_modules installation directory
 # inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
