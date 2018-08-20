@@ -3,7 +3,8 @@ FROM node:8.11.3-stretch
 
 ENV TZ=UTC
 ENV PATH=./node_modules/.bin:$PATH
-RUN npm config set unsafe-perm true # npm doesn't normally like running as root, allow it since we're in docker
+# npm doesn't normally like running as root, allow it since we're in docker
+RUN npm config set unsafe-perm true
 
 RUN apt-get update && apt-get install -y --no-install-recommends git faketime binutils software-properties-common apt-transport-https unzip
 
@@ -24,7 +25,6 @@ RUN echo '#!/bin/sh\nLD_PRELOAD="" '$(which wine)' "$@"' > /usr/local/sbin/wine 
 
 
 # Dependencies for building Android apps: Java, SDK tools & Gradle
-
 ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
 ENV ANDROID_HOME=/root/sdktools
 ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/root/gradle-4.1/bin
@@ -38,15 +38,14 @@ RUN add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xen
   # mkdir because of https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
   && apt-get install -y --no-install-recommends oracle-java8-installer
 # Android SKD tools
-RUN wget -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
+RUN wget -q -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
   && echo "92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9 sdktools.zip" | sha256sum -c - \
-  && unzip sdktools.zip -d $ANDROID_HOME && rm sdktools.zip \
-  && yes | (sdkmanager platform-tools "platforms;android-27" "build-tools;27.0.3" && sdkmanager --licenses)
+  && unzip -q sdktools.zip -d $ANDROID_HOME && rm sdktools.zip \
+  && yes | (sdkmanager platform-tools "platforms;android-27" "build-tools;27.0.3" && sdkmanager --licenses) > /dev/null 2>&1
 # Gradle 4.1
-RUN wget https://services.gradle.org/distributions/gradle-4.1-bin.zip \
-  && sha256sum gradle-4.1-bin.zip \
+RUN wget -q https://services.gradle.org/distributions/gradle-4.1-bin.zip \
   && echo "d55dfa9cfb5a3da86a1c9e75bb0b9507f9a8c8c100793ccec7beb6e259f9ed43 gradle-4.1-bin.zip" | sha256sum -c - \
-  && unzip gradle-4.1-bin.zip -d ~ && rm gradle-4.1-bin.zip
+  && unzip -q gradle-4.1-bin.zip -d ~ && rm gradle-4.1-bin.zip
 
 
 # Electron dependencies
@@ -56,7 +55,7 @@ RUN npm install
 COPY electron ./
 # build a dummy electron app, to trigger a download of all the required artifacts files in docker build time.
 # See https://github.com/electron-userland/electron-builder/issues/3220 for details.
-RUN mkdir www && DEBUG=* electron-builder --linux --mac --win -c.extraMetadata.version=0.0.0 && rm -rf www dist
+RUN mkdir www && electron-builder --linux --mac --win -c.extraMetadata.version=0.0.0 && rm -rf www dist
 
 # Cordova dependencies
 WORKDIR /opt/spark/cordova
@@ -84,6 +83,7 @@ CMD npm run dist:npm -- --pack-tgz \
  && npm run dist:electron -- --linux --mac --win \
  && npm run dist:cordova -- --release \
  && mkdir -p /target && rm -rf /target/* \
+ && echo '-----BEGIN SHA256SUM-----' \
  && ./scripts/dist-shasums.sh | tee /target/SHA256SUMS \
  && mv spark-wallet-*-npm.tgz /target \
  && mv -f dist /target/npm-unpacked \

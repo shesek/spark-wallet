@@ -59,7 +59,8 @@ if [[ -z "$SKIP_TAG" ]]; then
 
   git commit -m v$version
   git tag --sign -m "$changelog" v$version
-  git push && git push --tags
+  git branch -f stable HEAD
+  git push gh master stable && git push gh --tags
 fi
 
 # Publish release to npm

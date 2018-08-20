@@ -27,3 +27,16 @@ Run `npm run dist:npm -- --pack-tgz` to create `spark-wallet-[x.y.z]-npm.tgz` in
 The `npm-shrinkwrap.json` file inside the npm package commits to integrity checksums
 for the entire dependency graph using
 [Subresource Integrity](https://w3c.github.io/webappsec-subresource-integrity/).
+
+
+### Travis-CI
+
+The builds are also [reproduced on Travis-CI](https://travis-ci.org/shesek/spark-wallet).
+The SHA256 checksums are available at the end of the job log.
+
+You can get the checksums for the last stable release as follows:
+
+```bash
+$ jobid=$(curl -s 'https://api.travis-ci.org/v3/repo/shesek%2Fspark-wallet/builds?branch.name=stable&sort_by=started_at:desc&limit=1' | jq -r '.builds[0].jobs[0].id')
+$ curl -s https://api.travis-ci.org/v3/job/$jobid/log.txt | sed -nr '/^-----BEGIN SHA256SUM-----\s*$/{:a;n;/^\s*$/q;p;ba}'
+```
