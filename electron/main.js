@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require('electron')
+const { app, BrowserWindow, Menu } = require('electron')
 
 require('electron-debug')({ enabled: true, showDevTools: false })
 
@@ -53,6 +53,22 @@ app.on('ready', createWindow)
 app.on('window-all-closed', _ => process.platform === 'darwin' || app.quit())
 app.on('activate', _ => mainWindow || createWindow())
 
+if (process.platform === 'darwin') app.on('ready', _ =>
+  Menu.setApplicationMenu(Menu.buildFromTemplate([{
+    label: 'Edit'
+  , submenu: [
+      { role: 'undo' }
+    , { role: 'redo' }
+    , { type: 'separator' }
+    , { role: 'cut' }
+    , { role: 'copy' }
+    , { role: 'paste' }
+    , { role: 'pasteandmatchstyle' }
+    , { role: 'delete' }
+    , { role: 'selectall' }
+    ]
+  }]))
+)
 
 // Register handler for lightning: URIs
 app.setAsDefaultProtocolClient('lightning')
