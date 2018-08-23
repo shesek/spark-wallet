@@ -30,9 +30,15 @@ Note that verifying domain ownership requires binding an HTTP server on port 80,
 You can either:
 
 1. Start `spark-wallet` as root (simplest, but not recommended).
+
 2. Use `setcap` to allow nodejs processes to bind on all ports: `$ sudo setcap 'cap_net_bind_service=+ep' $(which node)`
+
 3. Bind the verification server to a different port with `--le-port 8080` (any port >1024 will work), then forward port 80 to it with:
    `$ iptables -A PREROUTING -t nat -p tcp --dport 80 -j REDIRECT --to-port 8080 && iptables -t nat -A OUTPUT -o lo -p tcp --dport 80 -j DNAT --to-destination :8080`
+
+4. If you already have another HTTP server running on port 80, you can reverse proxy requests coming to `/.well-known/acme-challenge/*` to the verification server.
+
+   Example with nginx: `server { listen 80; server_name spark.foo.com; location /.well-known/acme-challenge/ { proxy_pass http://localhost:8080; } }`
 
 After initially verifying your domain, you may start Spark with `--le-noverify` to skip starting the verification server.
 This will work until the next renewal is due (every 90 days).

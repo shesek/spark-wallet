@@ -9,20 +9,26 @@ const args = require('meow')(`
       -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
       -p, --port <port>        http(s) server port [default: 9737]
       -i, --host <host>        http(s) server listen address [default: localhost]
-      --no-webui               run API server without serving client assets [default: false]
 
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
       --tls-path <path>        directory to read/store key.pem and cert.pem for TLS [default: ~/.spark-wallet/tls/]
       --tls-name <name>        common name for the TLS cert [default: {host}]
+
       --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
+      --le-port <port>         port to bind LetsEncrypt verification server [default: 80]
+      --le-noverify            skip starting the LetsEncrypt verification server [default: start when {letencrypt} is set]
+      --le-debug               display additional debug information for LetEncrypt [default: false]
+
+      -o, --onion              start Tor Hidden Service (v3) [default: false]
+      -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
 
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
       -q, --print-qr           print QR code with the server URL [default: false]
       -Q, --pairing-qr         print QR code with embedded access key [default: false]
 
-      -o, --onion              start Tor Hidden Service (v3) [default: false]
-      -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+      --no-webui               run API server without serving client assets [default: false]
+      --no-test-conn           skip testing access to c-lightning rpc (useful for init scripts) [default: false]
 
       -c, --config <path>      path to config file [default: ~/.spark-wallet/config]
       -V, --verbose            display debugging information [default: false]
@@ -48,7 +54,7 @@ const os = require('os'), fs = require('fs'), path = require('path'), ini = requ
     , confPath = args.config || process.env.CONFIG || path.join(os.homedir(), '.spark-wallet', 'config')
     , fileConf = fs.existsSync(confPath) ? ini.parse(fs.readFileSync(confPath, 'utf-8')) : {}
 
-const conf = Object.assign(fileConf, args)
+const conf = Object.assign({}, fileConf, args)
 
 // Set config options from argv and file as environment variables
 Object.keys(conf).filter(k => k.length > 1)
@@ -57,7 +63,7 @@ Object.keys(conf).filter(k => k.length > 1)
                                      : process.env[`NO_${k}`] = true)
 
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
-process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,${process.env.DEBUG||''}`)
+process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,superagent,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
 process.env.PAIRING_QR && (process.env.PRINT_QR = true) // --pairing-qr implies --print-qr
 
