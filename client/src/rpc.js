@@ -2,6 +2,8 @@ import url from 'url'
 import { Observable as O } from './rxjs'
 import { dropErrors, extractErrors, formatError, dbg } from './util'
 
+const INVOICE_TTL = 18000 // 5 hours
+
 // send the 1st tick immediately, randomize the 2nd, then send every `ms`
 // (so that requests won't hit the server all at once)
 const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
@@ -37,7 +39,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
-, newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description ], inv ])
+, newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , timer(60000,           [ 'listinvoices', [], { bg: true } ])
