@@ -1,4 +1,4 @@
-import { div, h2, img, p } from '@cycle/dom'
+import { div, h2, img, p, a } from '@cycle/dom'
 import { yaml, qruri } from './util'
 
 exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
@@ -18,7 +18,8 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
       , p('.d-block.d-sm-none.text-center.text-muted.break-all.mt-4', uri)
       ])
     ])
-  , !info.address[0] ? p('.text-muted.small.text-center', 'This node does not accept incoming connections.') : ''
+  , !info.address[0] ? p('.text-muted.small.text-center.mt-2', 'This node does not accept incoming connections.') : ''
+  , process.env.BUILD_TARGET != 'web' ? p('.text-center.mt-4', a('.btn.btn-secondary.btn-sm', { attrs: { href: 'settings.html', rel: 'external' }}, 'Server settings')) : ''
   , expert ? yaml({ info, peers }) : ''
   ])
 }
