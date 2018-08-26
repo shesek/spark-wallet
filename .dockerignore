@@ -4,7 +4,9 @@ cordova/www
 cordova/plugins
 electron/dist
 electron/www
+electron/server.bundle.js
 client/dist
+client/www/*.css
 dist
 spark-wallet-*-npm.tgz
 node_modules
@@ -13,3 +15,5 @@ doc
 docker-builds
 .dockerignore
 Dockerfile
+scripts/builder.Dockerfile
+.env

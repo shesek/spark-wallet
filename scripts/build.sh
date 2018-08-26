@@ -14,7 +14,8 @@ cp src/transport/hsv3-dep/{package,npm-shrinkwrap}.json dist/transport/hsv3-dep/
 (cd client && DEST=../dist/www npm run dist)
 
 # Remove sources of non-determinism
-chmod -R 755 dist
+chmod -R 755 dist package.json npm-shrinkwrap.json README.md CHANGELOG.md LICENSE
+TZ=UTC touch -t "1711081658.41" package.json npm-shrinkwrap.json README.md CHANGELOG.md LICENSE
 TZ=UTC find dist -exec touch -t "1711081658.41" {} \;
 # this is done automatically since npm v5.7.1, but the latest stable 5.7.x and 5.8.x are currently buggy (https://github.com/npm/npm/issues/19989)
 

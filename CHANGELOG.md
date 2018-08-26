@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Improve reproducibility of `apk`, `snap` and npm package builds
+
 ## 0.0.1 - 2018-08-26
 
 First versioned release.

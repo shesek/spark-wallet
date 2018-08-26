@@ -25,7 +25,9 @@ if [[ -z "$SKIP_BUILD" ]]; then
   # Build using Docker for reproducibility
   if [[ -z "$NO_DOCKER_BUILDER" ]]; then
     docker build -f scripts/builder.Dockerfile -t spark-builder .
-    docker run -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
+    # fuse required for reproducible apks, see doc/reproducible-builds.md
+    docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined \
+               -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
     # unpack new builds to appropriate locations
     mv docker-builds/spark-wallet-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist

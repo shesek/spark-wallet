@@ -206,7 +206,7 @@ with bootstrap for theming and a nodejs/express server as the backend.
 To start a development server with live compilation for babel, browserify, pug and stylus, run:
 
 ```bash
-$ git clone https://github.com/shesek/spark-wallet && cd spark
+$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
 $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
@@ -245,7 +245,7 @@ and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`.
 To install the signed Docker image, get the image hash from `SHA256SUMS.asc` and install it with
 `$ docker pull shesek/spark-wallet@sha256:[image-hash-verified-by-be-signed]`.
 
-The NPM package, Android `apk` builds, Linux `tar.gz`/`deb`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
+The NPM package, Android `apk` builds, Linux `tar.gz`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
 [are deterministically reproducible](doc/reproducible-builds.md).
 
 ## CLI options
