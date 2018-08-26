@@ -2,6 +2,7 @@ import forge  from 'node-forge'
 import path   from 'path'
 import https  from 'https'
 import http   from 'http'
+import net    from 'net'
 import isIp   from 'is-ip'
 import fs     from 'fs'
 import mkdirp from 'mkdirp'
@@ -10,7 +11,8 @@ const defaultDir = path.join(require('os').homedir(), '.spark-wallet', 'tls')
 
 module.exports = (app, name=app.settings.host, dir=defaultDir, leEmail) => {
   const tlsOpt = leEmail ? letsencrypt(name, dir, leEmail) : selfsigned(name, dir)
-      , server = https.createServer(tlsOpt, app)
+      , redir  = (req, res) => (res.writeHead(301, { Location: `https://${ req.headers.host || name }/` }), res.end())
+      , server = createMultiServer(tlsOpt, app, redir)
 
   tlsOpt.cert && app.get('/cert.pem', (req, res) => res.type('pem').send(tlsOpt.cert))
   // @TODO allow downloading letsencrypt's cert
@@ -23,7 +25,6 @@ module.exports = (app, name=app.settings.host, dir=defaultDir, leEmail) => {
 }
 
 // Self-signed certificate (no CA)
-
 const selfsigned = (name, dir) => {
   if (fs.existsSync(path.join(dir, 'key.pem'))) {
     const keyPem  = fs.readFileSync(path.join(dir, 'key.pem'))
@@ -60,7 +61,6 @@ const defaultExt = [
 ]
 
 // Automatic CA-signed TLS certificate registration via LetsEncrypt
-
 const letsencrypt = (name, dir, email) => {
   console.log(`Setting up LetsEncrypt CA-signed TLS cert for ${name} with email ${email} in ${dir}`)
 
@@ -77,9 +77,9 @@ const letsencrypt = (name, dir, email) => {
   if (!process.env.LE_NOVERIFY) {
     console.log('Starting LetsEncrypt verification server')
 
-    const redir = (req, res) => res.redirect(`https://${ req.get('host') || name }`)
+    const noCon = (req, res) => (res.writeHead(204), res.end()) // 204 No Content
 
-    http.createServer(gl.middleware(redir)).listen(process.env.LE_PORT || 80)
+    http.createServer(gl.middleware(noCon)).listen(process.env.LE_PORT || 80)
     .on('error', err => {
       console.error(`ERROR: ${err.code} while starting vertification server on ${err.address}:${err.port}`)
       console.error(err.stack || err)
@@ -96,4 +96,36 @@ const letsencrypt = (name, dir, email) => {
   }
 
   return gl.tlsOptions
+}
+
+// Create a server capable of handling both TLS and plain HTTP requests
+// This is done to redirect users accessing the TLS server without using 'https://'
+// Protocol detection/delegation based on https://stackoverflow.com/a/42019773/865693
+const createMultiServer = (tlsOpt, tlsHandler, plainHandler) => {
+  const server = net.createServer(socket =>
+    socket.once('data', buff => {
+      socket.pause()
+
+      // Determine if this is a TLS or plain HTTP request
+      const byte  = buff[0]
+          , proto = byte === 22 ? 'https' : (32 < byte && byte < 127) ? 'http' : null
+
+      if (!proto) {
+        console.error(new Error('Cannot detect HTTP/TLS request').stack)
+        return socket.destroy()
+      }
+
+      // Push the buffer back onto the front of the data stream
+      socket.unshift(buff)
+
+      // Delegate the socket to the appropriate handler
+      server[proto].emit('connection', socket)
+
+      socket.resume()
+    })
+  )
+
+  server.http = http.createServer(plainHandler)
+  server.https = https.createServer(tlsOpt, tlsHandler)
+  return server
 }
