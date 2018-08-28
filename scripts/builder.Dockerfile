@@ -49,19 +49,18 @@ RUN wget -q https://services.gradle.org/distributions/gradle-4.1-bin.zip \
 
 # Electron dependencies
 WORKDIR /opt/spark/electron
-COPY electron/package.json electron/npm-shrinkwrap.json ./
+COPY electron/package.json electron/npm-shrinkwrap.json electron/hook-afterPack.js ./
 RUN npm install
-COPY electron ./
-# build a dummy electron app, to trigger a download of all the required artifacts files in docker build time.
-# See https://github.com/electron-userland/electron-builder/issues/3220 for details.
-RUN mkdir www && electron-builder --linux --mac --win -c.extraMetadata.version=0.0.0 && rm -rf www dist
+# build a dummy electron app, to trigger a download of all the required artifacts files in docker build time
+# see https://github.com/electron-userland/electron-builder/issues/3220 for details.
+RUN mkdir www && echo '/**/' > main.js && electron-builder --linux --mac --win -c.extraMetadata.version=0.0.0 && rm -rf www main.js dist
 
 # Cordova dependencies
 WORKDIR /opt/spark/cordova
 COPY cordova/package.json cordova/npm-shrinkwrap.json cordova/config.xml ./
 COPY cordova/res ./res
 RUN npm install && cordova telemetry off
-# build a dummy cordova app to download required artifacts as an early cached stage
+# build a dummy cordova app to download required artifacts in docker build time
 RUN mkdir www && cordova prepare && cordova build && rm -r www platforms/android/app/build
 
 # Spark client
