@@ -6,14 +6,18 @@ you don't have to pre-install anything for this to work.
 
 Running Spark as a Tor hidden service has the following benefits:
 
+- Communication is encrypted with strong cryptography (SHA3/ed25519 with perfect forward secrecy).
+
 - Tor `.onion` hostnames are self-authenticating and are pinned to your server's public key.
 
 - In addition to authenticating the server, they also serve as a mean to authenticate the user - you can't access the server without knowing the `.onion` hostname.
   That means that even if a security vulnerability is found on nodejs/Spark,
-  an attacker will not be able the access to server in order to exploit it.
+  an attacker will not be able to access the server in order to exploit it.
 
 - You don't have to setup port forwarding, everything is done with outbound connections.
   Punch through routers with ease.
+
+- Provides a static hostname even if you don't have a static IP.
 
 Tor data files (including secret key material for the hidden service) will be saved to `~/.spark-wallet/tor/`. This can be overridden with `--onion-path`.
 

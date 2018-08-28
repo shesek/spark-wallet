@@ -40,7 +40,7 @@
 
 Spark is a minimalistic wallet GUI for c-lightning, accessible over the web or
 through mobile and desktop apps (for Android, Linux, macOS and Windows).
-It is currently aimed for technically oriented users and is not an all-in-one package,
+It is currently oriented for technically advanced users and is not an all-in-one package,
 but rather a "remote control" interface for a c-lightning node that has to be managed separately.
 
 Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
@@ -67,7 +67,7 @@ Requires a running [c-lightning](https://github.com/ElementsProject/lightning) n
 or [this tutorial](https://hackernoon.com/harnessing-lightning-for-instant-bitcoin-transacting-a-tutorial-3b9dcdc00552))
 and nodejs v6.0 or newer (nodejs v8 is recommended, see [instructions here](https://nodejs.org/en/download/package-manager/).
 If you're running into permission issues,
-[read this](https://docs.npmjs.com/getting-started/fixing-npm-permissions#option-two-change-npms-default-directory).)
+[try this](https://docs.npmjs.com/getting-started/fixing-npm-permissions#option-two-change-npms-default-directory).)
 
 ```bash
 $ npm install -g spark-wallet
@@ -221,7 +221,7 @@ To get more verbose output in the browser developer console, set `localStorage.d
 
 See [`doc/dev-regtest-env.md`](doc/dev-regtest-env.md) for instructions setting up a regtest environment with multiple wallets.
 
-Pull requests, suggestions and comments and welcome!
+Pull requests, suggestions and comments are welcome!
 
 ## Code signing & reproducible builds
 
@@ -271,8 +271,8 @@ $ spark-wallet --help
 
     --letsencrypt <email>    enable CA-signed certificate via LetsEncrypt [default: false]
     --le-port <port>         port to bind LetsEncrypt verification server [default: 80]
-    --le-noverify            skip starting the LetsEncrypt verification server [default: start when {letencrypt} is set]
-    --le-debug               display additional debug information for LetEncrypt [default: false]
+    --le-noverify            skip starting the LetsEncrypt verification server [default: start when {letsencrypt} is set]
+    --le-debug               display additional debug information for LetsEncrypt [default: false]
 
     -o, --onion              start Tor Hidden Service (v3) [default: false]
     -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
