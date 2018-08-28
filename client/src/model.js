@@ -82,10 +82,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // continuously patch with known outgoing payments
   , freshPays$ = O.merge(
       payments$.map(payments => _ => payments.filter(p => p.status === 'complete'))
-    , outgoing$.map(pay => payments => payments && [ ...payments, pay ])
+    , outgoing$.map(pay => payments => payments && [ ...payments.filter(p => p.id !== pay.id), pay ])
     )
     .startWith(null).scan((payments, mod) => mod(payments))
-    .filter(payments => !!payments)
+    .filter(Boolean)
     .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Periodically re-sync from listinvoices (paid only),
@@ -95,7 +95,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , incoming$.map(inv => invs => invs && [ ...invs, inv ])
     )
     .startWith(null).scan((invs, mod) => mod(invs))
-    .filter(invs => !!invs)
+    .filter(Boolean)
     .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Chronologically sorted feed of incoming and outgoing payments
