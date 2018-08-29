@@ -19,7 +19,7 @@ echo -e "Building Spark v$version\n\n$changelog\n\n"
 # Build NPM, Electron and Cordova dist files
 if [[ -z "$SKIP_BUILD" ]]; then
   # clean up previous builds
-  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk/release
+  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk/debug
   mkdir -p cordova/platforms/android/app/build/outputs/apk
 
   # Build using Docker for reproducibility
@@ -32,11 +32,11 @@ if [[ -z "$SKIP_BUILD" ]]; then
     mv docker-builds/spark-wallet-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist
     mv -f docker-builds/electron electron/dist
-    mv -f docker-builds/cordova-android cordova/platforms/android/app/build/outputs/apk/release
+    mv -f docker-builds/cordova-android cordova/platforms/android/app/build/outputs/apk/debug
   else
     npm run dist:npm -- --pack-tgz
     npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
-    npm run dist:cordova -- --release
+    npm run dist:cordova
   fi
 fi
 
@@ -81,7 +81,7 @@ if [[ -z "$SKIP_UPLOAD" ]]; then
   for file in SHA256SUMS.asc \
               spark-wallet-*-npm.tgz \
               electron/dist/*.{AppImage,deb,snap,tar.gz,exe,zip} \
-              cordova/platforms/android/app/build/outputs/apk/release/*.apk; do
+              cordova/platforms/android/app/build/outputs/apk/debug/*.apk; do
     echo ">> Uploading $file"
 
     curl -f --progress-bar -H "$gh_auth" -H "Content-Type: application/octet-stream" \

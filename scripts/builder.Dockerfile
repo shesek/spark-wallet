@@ -83,14 +83,14 @@ RUN chmod -R 755 electron
 CMD (test ! -c /dev/fuse || (mv -f cordova cordova-src && mkdir cordova && disorderfs --sort-dirents=yes --reverse-dirents=no cordova-src cordova)) \
  && npm run dist:npm -- --pack-tgz \
  && npm run dist:electron -- --linux --mac --win \
- && npm run dist:cordova -- --release \
+ && npm run dist:cordova \
  && mkdir -p /target && rm -rf /target/* \
  && echo '-----BEGIN SHA256SUM-----' \
  && ./scripts/dist-shasums.sh | tee /target/SHA256SUMS \
  && mv spark-wallet-*-npm.tgz /target \
  && mv -f dist /target/npm-unpacked \
  && mv -f electron/dist /target/electron \
- && mv -f cordova/platforms/android/app/build/outputs/apk/release /target/cordova-android \
+ && mv -f cordova/platforms/android/app/build/outputs/apk/debug /target/cordova-android \
  && (test -z "$OWNER" || chown -R $OWNER /target)
 
 # disorderfs (fuse mount configured with stable file sorting) is required for reproducible android apk builds. See:

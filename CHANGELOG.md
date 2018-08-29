@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Android: don't generate release builds
+
 ## 0.1.0 - 2018-08-29
 
 Public release! 🎇 🎉 🎈
