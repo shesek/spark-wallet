@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.1 - 2018-08-29
 
 - Android: don't generate release builds
 
