@@ -6,9 +6,10 @@ const args = require('meow')(`
 
     Options
       -l, --ln-path <path>     path to c-lightning data directory [default: ~/.lightning]
-      -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
       -p, --port <port>        http(s) server port [default: 9737]
       -i, --host <host>        http(s) server listen address [default: localhost]
+      -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
+      -U, --login-file <path>  persist randomly generated login to <path> [default: dont persist]
 
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
@@ -42,7 +43,7 @@ const args = require('meow')(`
     All options may also be specified as environment variables:
       $ LN_PATH=/data/lightning PORT=8070 NO_TLS=1 spark-wallet
 
-`, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}
+`, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}, loginFile: {alias:'U'}
             , port: {alias:'p'}, host: {alias:'i'}
             , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}, pairingQr: {type:'boolean', alias:'Q'}
