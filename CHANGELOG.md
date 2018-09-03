@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Bug fix: plain HTTP to TLS redirection under nodejs v9.6+ (#10)
+
 ## 0.1.1 - 2018-08-29
 
 - Android: don't generate release builds

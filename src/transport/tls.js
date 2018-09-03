@@ -119,6 +119,7 @@ const createMultiServer = (tlsOpt, tlsHandler, plainHandler) => {
       socket.unshift(buff)
 
       // Delegate the socket to the appropriate handler
+      socket.server = server[proto]
       server[proto].emit('connection', socket)
 
       socket.resume()
