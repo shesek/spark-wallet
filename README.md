@@ -182,7 +182,7 @@ The QR scanner works if you access Spark without using the PWA "Add to homescree
 - **Payment details:** Click on payments in the list to display more details.
   (note that the fee shown includes c-lightning's [overpayment randomization](https://github.com/ElementsProject/lightning/issues/1089))
 
-- **Expert mode:** Click the version number on the bottom-left to toggle expert mode.
+- **Reckless mode:** Click the version number on the bottom-left to toggle reckless mode.
   This will add two new menu items, "*Logs*" and
   ["*RPC Console*"](https://user-images.githubusercontent.com/877904/44295439-7fb0bb80-a2b1-11e8-8506-f5afb1c9f1d7.png),
   and display yaml dumps with additional information throughout the app.
