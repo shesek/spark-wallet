@@ -43,7 +43,7 @@ else
     mkdir -p /data/bitcoin
     RPC_OPT="-datadir=/data/bitcoin"
 
-    bitcoind -$NETWORK $RPC_OPT $BITCOIND_OPTS &
+    bitcoind -$NETWORK $RPC_OPT $BITCOIND_OPT &
     echo -n "waiting for cookie... "
     sed --quiet '/^\.cookie$/ q' <(inotifywait -e create,moved_to --format '%f' -qmr /data/bitcoin)
   fi
@@ -76,7 +76,7 @@ echo "ready."
 mkdir -p $TOR_PATH/tor-installation/node_modules
 
 echo "Starting spark wallet..."
-spark-wallet -l $LN_PATH "$@" $SPARK_OPTS &
+spark-wallet -l $LN_PATH "$@" $SPARK_OPT &
 
 # shutdown the entire process when any of the background jobs exits (even if successfully)
 wait -n
