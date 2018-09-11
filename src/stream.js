@@ -63,7 +63,7 @@ module.exports = lnPath => {
     em.on('rate', onRate)
     lastRate && onRate(lastRate)
 
-    req.on('close', _ => (em.removeListener('payment', onPay)
+    req.once('end', _ => (em.removeListener('payment', onPay)
                         , em.removeListener('rate', onRate)
                         , clearInterval(keepAlive)))
   }
