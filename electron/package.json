@@ -41,6 +41,7 @@
       "target": "zip"
     },
     "linux": {
+      "executableName": "spark-desktop",
       "target": [
         "AppImage",
         "deb",
