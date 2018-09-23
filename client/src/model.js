@@ -5,8 +5,8 @@ import { dbg, formatAmt, recvAmt, combine, isConnError } from './util'
 const msatbtc = big(100000000000) // msat in 1 btc
 
 const
-  sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.msatoshi_to_us, 0)
-, sumPeers = peers => peers.filter(p => p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
+  sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + c.spendable_msatoshi, 0)
+, sumPeers = peers => peers.filter(p => p.connected && p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
