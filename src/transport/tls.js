@@ -102,7 +102,9 @@ const letsencrypt = (name, dir, email) => {
 // This is done to redirect users accessing the TLS server without using 'https://'
 // Protocol detection/delegation based on https://stackoverflow.com/a/42019773/865693
 const createMultiServer = (tlsOpt, tlsHandler, plainHandler) => {
-  const server = net.createServer(socket =>
+  const server = net.createServer(socket => {
+    socket.once('error', err => { console.error('socket error:', err.stack || err); socket.destroy() })
+
     socket.once('data', buff => {
       socket.pause()
 
@@ -124,7 +126,7 @@ const createMultiServer = (tlsOpt, tlsHandler, plainHandler) => {
 
       socket.resume()
     })
-  )
+  })
 
   server.http = http.createServer(plainHandler)
   server.https = https.createServer(tlsOpt, tlsHandler)
