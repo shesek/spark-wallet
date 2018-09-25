@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+
 RUN dpkg --add-architecture i386 \
   && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 818A435C5FCBF54A \
   && apt-add-repository https://dl.winehq.org/wine-builds/debian \
-  && apt-get update && apt-get install -y --no-install-recommends winehq-stable=3.0.2~stretch
+  && apt-get update && apt-get install -y --no-install-recommends winehq-stable=3.0.3~stretch
 ENV WINEDEBUG -all,err+all
 ENV WINEDLLOVERRIDES winemenubuilder.exe=d
 
