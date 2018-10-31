@@ -14,7 +14,7 @@ const
 
 , parseUri = uri => {
     const m = uri.trim().match(reUri)
-    return m && (m[1] || m[2] || m[3])
+    return m && (m[1] || m[2] || m[3]).toLowerCase()
   }
 , reUri = /^lightning:([a-z0-9]+)|^bitcoin:.*[?&]lightning=([a-z0-9]+)|^(ln[a-z0-9]+)$/i
 
