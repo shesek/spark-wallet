@@ -6,8 +6,8 @@ ENV PATH=./node_modules/.bin:$PATH
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
-RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u3 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
-  apt-transport-https=1.4.8 unzip=6.0-21 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u1 disorderfs=0.5.1-1+b1
+RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u4 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
+  apt-transport-https=1.4.8 unzip=6.0-21 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u2 disorderfs=0.5.1-1+b1
 
 # Wine for Electron Windows builds
 # copied from https://github.com/electron-userland/electron-builder/blob/master/docker/wine/Dockerfile
@@ -35,7 +35,8 @@ RUN add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xen
   && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
   && mkdir -p /usr/share/man/man1 \
   # mkdir because of https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
-  && apt-get install -y --no-install-recommends oracle-java8-installer=8u181-1~webupd8~1
+  && apt-get install -y --no-install-recommends oracle-java8-installer=8u191-1~webupd8~1
+
 # Android SKD tools
 RUN wget -q -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
   && echo "92ffee5a1d98d856634e8b71132e8a95d96c83a63fde1099be3d86df3106def9 sdktools.zip" | sha256sum -c - \
