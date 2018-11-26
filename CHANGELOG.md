@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 - 2018-11-26
+
+- Various fixes for BOLT11 payment request parsing (#28, #35, 1489777f6)
+
+- Update npm, build and cordova dependencies
+
 ## 0.1.2 - 2018-09-25
 
 - Bug fix: plain HTTP to TLS redirection under nodejs v9.6+ (#10, aef8693ded25a956bc)
