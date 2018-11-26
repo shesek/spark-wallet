@@ -1,8 +1,7 @@
 {
     "name": "com.spark.wallet",
-    "version": "0.1.0",
-    "lockfileVersion": 1,
     "requires": true,
+    "lockfileVersion": 1,
     "dependencies": {
         "JSONStream": {
             "version": "1.3.3",
@@ -771,12 +770,12 @@
             }
         },
         "cordova-android": {
-            "version": "7.1.1",
-            "resolved": "https://registry.npmjs.org/cordova-android/-/cordova-android-7.1.1.tgz",
-            "integrity": "sha512-MAOwEMT3TuGjKw4McNzzYyHmxkWY3ozafbIgdMAvPzqSBVGIcn+H3SmWfaHtUXfmIPFliT171ICsSm6W5lZXEA==",
+            "version": "7.1.4",
+            "resolved": "https://registry.npmjs.org/cordova-android/-/cordova-android-7.1.4.tgz",
+            "integrity": "sha512-Rtvu002I83uzfVyCsE6p2krFKVHt9TSAqZUATes+zH+o9cdxYGrLHY+PKCQo4SLCdSMdrkIHCDnQPTYTp/d7+g==",
             "requires": {
                 "abbrev": "1.1.1",
-                "android-versions": "1.3.0",
+                "android-versions": "1.4.0",
                 "ansi": "0.3.1",
                 "balanced-match": "1.0.0",
                 "base64-js": "1.2.0",
@@ -812,7 +811,7 @@
                     "bundled": true
                 },
                 "android-versions": {
-                    "version": "1.3.0",
+                    "version": "1.4.0",
                     "bundled": true,
                     "requires": {
                         "semver": "5.5.0"

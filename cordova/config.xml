@@ -13,7 +13,6 @@
         <icon density="xxhdpi" src="res/android/icon-144-xxhdpi.png" />
         <icon density="xxxhdpi" src="res/android/icon-192-xxxhdpi.png" />
     </platform>
-    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="lightning" />
         <variable name="ANDROID_SCHEME" value=" " />
@@ -23,5 +22,6 @@
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <plugin name="cordova-plugin-qrscanner" spec="^2.6.0" />
     <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.3" />
-    <engine name="android" spec="^7.1.1" />
+    <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
+    <engine name="android" spec="^7.1.4" />
 </widget>

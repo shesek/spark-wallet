@@ -9,7 +9,7 @@
         "dist": "./build.sh"
     },
     "dependencies": {
-        "cordova-android": "^7.1.1",
+        "cordova-android": "^7.1.4",
         "cordova-plugin-badge": "^0.8.7",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^2.0.2",
