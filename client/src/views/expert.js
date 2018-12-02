@@ -23,7 +23,7 @@ const formatHelp = res =>
   res.help.map(({ command, description }) => `${ command }\n  ${ description }`).join('\n\n')
 
 const logs = ({ log, created_at }) => div([
-  h2([ 'Log entries ', button('.btn.btn-sm.btn-secondary', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
+  h2([ 'Log entries', ' ', button('.btn.btn-sm.btn-secondary.float-right', { attrs: { do: 'refresh-logs' } }, 'Refresh') ])
 , pre('.logs.mt-3', code(log.map(i =>
     i.type === 'SKIPPED' ? `[SKIPPED] ${i.num_skipped}`
                          : `${i.time ? logTime(created_at, i.time) : ''} [${i.type}] ${i.source} ${i.log}`
