@@ -46,3 +46,5 @@ export const alertBox = ([ kind, text ], dismissable) =>
     ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
     : ''
   ])
+
+export const omitKey = (k, { [k]: _, ...rest }) => rest

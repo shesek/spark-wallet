@@ -1,5 +1,5 @@
 import { div, form, input, button, a, span, p, img, h2, h3, small } from '@cycle/dom'
-import { formGroup, yaml, qrinv, amountField } from './util'
+import { formGroup, yaml, qrinv, amountField, omitKey } from './util'
 
 const recv = ({ amtData }) =>
   form({ attrs: { do: 'new-invoice' } }, [
@@ -30,7 +30,5 @@ const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) =>
     ])
   , expert ? yaml(omitKey('bolt11', inv)) : ''
   ]))
-
-const omitKey = (k, { [k]: _, ...rest }) => rest
 
 module.exports = { recv, invoice }
