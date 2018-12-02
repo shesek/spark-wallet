@@ -6,7 +6,7 @@ const INVOICE_TTL = 18000 // 5 hours
 
 // send the 1st tick immediately, randomize the 2nd, then send every `ms`
 // (so that requests won't hit the server all at once)
-const timer = (ms, val) => O.timer(Math.random()*ms, ms).startWith(-1).mapTo(val)
+const timer = ms => O.timer(Math.random()*ms, ms).startWith(-1)
 
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
@@ -42,10 +42,10 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merg
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 
-, timer(60000,           [ 'listinvoices', [], { bg: true } ])
-, timer(60000,           [ 'listpayments', [], { bg: true } ])
-, timer(60000,           [ 'listpeers',    [], { bg: true } ])
-, timer(60000,           [ 'getinfo',      [], { bg: true } ])
+, timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
+, timer(60000).mapTo(    [ 'listpayments', [], { bg: true } ])
+, timer(60000).mapTo(    [ 'listpeers',    [], { bg: true } ])
+, timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 
 // also send a "getinfo" ping whenever the window regains focus, to check
 // for server connectivity and quickly hide/show the "connection lost" message
