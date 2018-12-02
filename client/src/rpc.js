@@ -36,16 +36,18 @@ exports.parseRes = ({ HTTP, SSE }) => {
   }
 }
 
-exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, execRpc$ }) => O.merge(
+exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, updChan$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
+, updChan$.mapTo(        [ 'listpeers' ] )
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
 , timer(60000).mapTo(    [ 'listpayments', [], { bg: true } ])
-, timer(60000).mapTo(    [ 'listpeers',    [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
+, timer(60000).merge(goChan$).throttleTime(2000)
+              .mapTo(    [ 'listpeers',    [], { bg: true } ])
 
 // also send a "getinfo" ping whenever the window regains focus, to check
 // for server connectivity and quickly hide/show the "connection lost" message

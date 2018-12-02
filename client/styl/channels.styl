@@ -1,0 +1,20 @@
+.channels
+
+  .channel-bar
+    height 1.5em !important
+    margin-bottom 0.5rem
+
+    .progress-bar
+      color #fff
+
+  .status-text
+    white-space pre-wrap
+    font-size 0.9em
+
+  .list-group-item:not(.active)
+    &.p-online.c-active .state
+      color var(--success)
+    &.p-offline .state, &.c-closed .state
+      color var(--danger)
+    &.c-opening .state, &.c-closing .state
+      color var(--warning)

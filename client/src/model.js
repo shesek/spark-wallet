@@ -20,8 +20,9 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
 , unitstep = { ...unitrate, usd: 0.000001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$
-                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, conf$: savedConf$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
+                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
+                  , conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, btcusd$, info$, peers$ }) => {
   const
 
@@ -126,6 +127,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , step:     unit$.map(unit => unitstep[unit])
     })
 
+  // Collapsed channel
+  , chanActive$ = togChan$.merge(goChan$.mapTo(null)).startWith(null)
+      .scan((S, chanid) => S == chanid ? null : chanid)
+
+
   // RPC console history
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
       .scan((xs, x) => x === 'clear' ? [] : [ x, ...xs ].slice(0, 20))
@@ -139,7 +145,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , unitf$, cbalance$, rate$
   , info$: info$.startWith(null), peers$: peers$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
-  , amtData$, rpcHist$
+  , amtData$, chanActive$, rpcHist$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Channel view GUI
+
 ## 0.1.3 - 2018-11-26
 
 - Various fixes for BOLT11 payment request parsing (#28, #35, 1489777f6)

@@ -19,7 +19,11 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
       ])
     ])
   , !info.address[0] ? p('.text-muted.small.text-center.mt-2', 'This node does not accept incoming connections.') : ''
-  , process.env.BUILD_TARGET != 'web' ? p('.text-center.mt-4', a('.btn.btn-secondary.btn-sm', { attrs: { href: 'settings.html', rel: 'external' }}, 'Server settings')) : ''
+  , p('.text-center.mt-4', [
+      process.env.BUILD_TARGET != 'web' ? a('.btn.btn-secondary.btn-sm', { attrs: { href: 'settings.html', rel: 'external' }}, 'Server settings') : ''
+    , ' '
+    , a('.btn.btn-secondary.btn-sm', { attrs: { href: '#/channels' }}, 'Channels')
+    ])
   , expert ? yaml({ info, peers }) : ''
   ])
 }

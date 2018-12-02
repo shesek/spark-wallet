@@ -7,6 +7,7 @@ vendor-prefixes = webkit moz o official
 @import 'scrollbar'
 @import 'theme-touchups'
 @import 'qr'
+@import 'channels'
 
 html
   touch-action manipulation
@@ -93,8 +94,8 @@ html
 .btn-link
   cursor pointer
 
-// Homepage
-.feed
+// Homepage feed & channels list
+.list-group
   .list-group-item
     // originally 0.75rem, some is removed to make room for the badge margin
     padding-bottom 0.25rem
@@ -110,14 +111,6 @@ html
 
   .badge
     margin-bottom 0.5rem
-  .badge.amt
-    font-size 100%
-  .badge.ts
-    margin-top 0.19rem
-
-    @media (min-width: 440px)
-      font-size 100%
-      margin-top 0
 
   .list-group-item ul li
     margin-bottom 0.5rem
@@ -129,6 +122,17 @@ html
       font-weight inherit
     pre
       color inherit !important
+
+  .badge.amt
+    font-size 100%
+
+  .badge.float-right
+    margin-top 0.19rem
+
+    @media (min-width: 440px)
+      font-size 100%
+      margin-top 0
+
 
 // Confirm outgoing payments
 .conf-pay

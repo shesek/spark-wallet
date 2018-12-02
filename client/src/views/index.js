@@ -4,5 +4,6 @@ module.exports = {
 , ...require('./pay')
 , ...require('./recv')
 , ...require('./node')
+, ...require('./channels')
 , ...require('./expert')
 }

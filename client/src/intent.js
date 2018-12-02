@@ -17,6 +17,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goSend$ = route('/payreq')
   , goRecv$ = route('/recv')
   , goNode$ = route('/node')
+  , goChan$ = route('/channels')
   , goLogs$ = route('/logs').merge(click('[do=refresh-logs]'))
   , goRpc$  = route('/rpc')
 
@@ -54,13 +55,20 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .filter(e => e.target.closest('ul').classList.contains('feed')) // ignore clicks inside nested <ul>s
       .map(e => e.ownerTarget.dataset.feedToggle)
 
+  // Channels management
+  , updChan$ = click('[do=refresh-channels]')
+  , togChan$ = click('ul.channels [data-chan-toggle]')
+      .filter(e => e.target.closest('ul').classList.contains('channels')) // ignore clicks inside nested <ul>s
+      .map(e => e.ownerTarget.dataset.chanToggle)
+
   return { conf$, page$
-         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
+         , goHome$, goScan$, goSend$, goRecv$, goNode$, goChan$, goLogs$, goRpc$
          , viewPay$, confPay$
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
+         , togChan$, updChan$
          , dismiss$
          }
 }
