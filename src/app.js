@@ -1,6 +1,7 @@
 (async function() { // IIFE
   const app = require('express')()
       , ln  = require('lightning-client')(process.env.LN_PATH)
+      , cmd = require('./cmd')(ln)
 
   // Test connection
   if (!process.env.NO_TEST_CONN) {
@@ -34,8 +35,9 @@
 
   // RPC API
   app.post('/rpc', (req, res, next) =>
-    ln.call(req.body.method, req.body.params)
-      .then(r => res.send(r)).catch(next))
+    (cmd[req.body.method] ? cmd[req.body.method](...req.body.params)
+                          : ln.call(req.body.method, req.body.params)
+    ).then(r => res.send(r)).catch(next))
 
   // Streaming API
   app.get('/stream', require('./stream')(ln.rpcPath))
