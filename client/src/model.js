@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, formatAmt, recvAmt, combine, isConnError } from './util'
+import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './util'
 
 const msatbtc = big(100000000000) // msat in 1 btc
 
@@ -23,7 +23,9 @@ const
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
                   , conf$: savedConf$
-                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, btcusd$, info$, peers$ }) => {
+                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$
+                  , funded$, closed$
+                  , btcusd$, info$, peers$ }) => {
   const
 
   // Config options
@@ -63,6 +65,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
     , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
+    , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.msatoshi_total}}}, awaiting on-chain confirmation` ])
+    , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
     , dismiss$.mapTo(null)
     )
     // hide "connection lost" errors when we get back online
@@ -71,10 +75,21 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
     .startWith(null)
 
+  // List of active channels
+  // Periodically re-sync channel balance from "listpeers",
+  // continuously patch with known channel opening/closing
+  , channels$ = O.merge(
+      peers$.map(peers => _ => getChannels(peers))
+    , funded$.map(chan => S => [ ...S, chan ])
+    , closed$.map(chan => S => [ ...S.filter(c => c.chan.channel_id != chan.chan.channel_id), chan ])
+    ).startWith(null).scan((S, mod) => mod(S))
+    .filter(Boolean)
+
+  // Total channel balance
   // Periodically re-sync channel balance from "listpeers",
   // continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
-      peers$.map(peers  => _ => sumPeers(peers))
+      channels$.map(peers  => _ => sumPeers(peers))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
@@ -128,8 +143,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     })
 
   // Collapsed channel
-  , chanActive$ = togChan$.merge(goChan$.mapTo(null)).startWith(null)
-      .scan((S, chanid) => S == chanid ? null : chanid)
+  , chanActive$ = O.merge(
+      togChan$ // display channel toggler by the user
+    , funded$.map(f => f.chan.channel_id) // auto display newly funded channels
+    , goChan$.filter(p => p.search != '?r').mapTo(null) // reset when opening channels page
+  ).startWith(null).scan((S, chanid) => S == chanid ? null : chanid)
 
 
   // RPC console history
@@ -143,7 +161,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   return combine({
     conf$, page$, loading$, alert$
   , unitf$, cbalance$, rate$
-  , info$: info$.startWith(null), peers$: peers$.startWith(null)
+  , info$: info$.startWith(null), peers$: peers$.startWith(null), channels$: channels$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
   , msatusd$, btcusd$: btcusd$.startWith(null)

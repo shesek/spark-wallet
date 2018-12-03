@@ -6,7 +6,7 @@ import themeColors from '../theme-colors.json'
 const isFunc = x => typeof x == 'function'
 
 // DOM view
-exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
+exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -14,6 +14,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNode$, 
   , goSend$.mapTo(views.pasteReq)
   , goRecv$.mapTo(views.recv)
   , goChan$.mapTo(views.channels)
+  , goNewChan$.mapTo(views.newChannel)
   , goNode$.mapTo(views.nodeInfo)
   , goRpc$.mapTo(views.rpc)
 
@@ -41,13 +42,15 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNode$, 
 }
 
 // Navigation
-exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$ }) => O.merge(
+exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$, funded$ }) => O.merge(
   // navto '/' when receiving payments for the last invoice created by the user
   in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/?r')
   // navto '/' after sending payments
 , out$.mapTo('/?r')
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo('/confirm')
+  // navto /channels after opening channel
+, funded$.mapTo('/channels?r')
 )
 
 // HTML5 notifications

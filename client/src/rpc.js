@@ -8,6 +8,7 @@ const INVOICE_TTL = 18000 // 5 hours
 // (so that requests won't hit the server all at once)
 const timer = ms => O.timer(Math.random()*ms, ms).startWith(-1)
 
+// Parse incoming RPC replies
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
@@ -27,6 +28,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
+  , funded$:   reply('connectfund').map(r => r.body)
+  , closed$:   reply('closeget').map(r => r.body)
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
   , logs$:     reply('getlog').map(r => ({ ...r.body, log: r.body.log.slice(-200) }))
 
@@ -36,12 +39,17 @@ exports.parseRes = ({ HTTP, SSE }) => {
   }
 }
 
-exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, updChan$, execRpc$ }) => O.merge(
+// RPC commands to send
+// NOTE: "connectfund" and "closeget" are custom rpc commands provided by the Spark server.
+exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
+
 , updChan$.mapTo(        [ 'listpeers' ] )
+, openChan$.map(d     => [ 'connectfund',  [ d.nodeuri, d.channel_capacity_msat/1000|0, d.feerate ] ])
+, closeChan$.map(d    => [ 'closeget',  [ d.peerid, d.chanid ] ])
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
 , timer(60000).mapTo(    [ 'listpayments', [], { bg: true } ])

@@ -16,5 +16,11 @@
       color var(--success)
     &.p-offline .state, &.c-closed .state
       color var(--danger)
-    &.c-opening .state, &.c-closing .state
+    &.c-opening .state
+      color var(--info)
+    &.c-closing .state
       color var(--warning)
+
+  .btn-link, .btn-link:hover, .btn-link:focus
+    color inherit
+    text-decoration underline

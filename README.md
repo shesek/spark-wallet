@@ -43,8 +43,7 @@ through mobile and desktop apps (for Android, Linux, macOS and Windows).
 It is currently oriented for technically advanced users and is not an all-in-one package,
 but rather a "remote control" interface for a c-lightning node that has to be managed separately.
 
-Spark currently focuses on the core aspects of day-to-day usage: sending, receiving and viewing history.
-Peers and channels are expected to be managed using the RPC for now.
+Sparks supports sending and receiving payments, viewing history, and managing channels.
 
 Spark is a purely off-chain wallet, with no on-chain payments.
 This allows Spark to fully realize the awesome UX enabled by lightning,
@@ -187,7 +186,9 @@ The QR scanner works if you access Spark without using the PWA "Add to homescree
   ["*RPC Console*"](https://user-images.githubusercontent.com/877904/44295439-7fb0bb80-a2b1-11e8-8506-f5afb1c9f1d7.png),
   and display yaml dumps with additional information throughout the app.
 
-- **Node address:** Click the node id on the footer to display your node address (as text and QR).
+- **Node address:** Click the node id on the footer to open the node info page which displays your node address (as text and QR).
+
+- **Channel management:** Click the "*Channels*" button inside the node info page to show and manage channels.
 
 ## Browser support
 

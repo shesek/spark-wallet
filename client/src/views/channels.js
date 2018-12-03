@@ -1,20 +1,15 @@
-import { div, h2, ul, li, span, pre, strong, small, em, button, header } from '@cycle/dom'
-import { yaml, omitKey } from './util'
+import { div, h2, ul, li, span, pre, strong, small, em, button, header, a, form, input, p } from '@cycle/dom'
+import { yaml, omitKey, formGroup, amountField, getChannels } from './util'
 
 const stateGroups = {
   active: [ 'CHANNELD_NORMAL' ]
 , opening: [ 'CHANNELD_AWAITING_LOCKIN', 'OPENINGD' ]
-, closing: [ 'CLOSINGD_SIGEXCHANGE', 'CHANNELD_SHUTTING_DOWN', 'ONCHAIN', 'AWAITING_UNILATERAL' ]
-, closed: [ 'CLOSINGD_COMPLETE', 'FUNDING_SPEND_SEEN' ]
+, closing: [ 'CLOSINGD_COMPLETE', 'CLOSINGD_SIGEXCHANGE', 'CHANNELD_SHUTTING_DOWN', 'AWAITING_UNILATERAL' ]
+, closed: [ 'FUNDING_SPEND_SEEN', 'ONCHAIN' ]
 }
-
-const groupStyle = { active: 'success', opening: 'info', closing: 'warning', closed: 'danger' }
 
 // Get group for given state
 const getGroup = state => Object.keys(stateGroups).find(group => stateGroups[group].includes(state))
-
-// Get all channels as a list of (peer,channel) tuples
-const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
 
 // Sort by status first, then by amount
 const chanSorter = (a, b) => (chanSorting(b) - chanSorting(a)) || (b.chan.msatoshi_total - a.chan.msatoshi_total)
@@ -28,17 +23,34 @@ const chanSorting = ({ peer, chan }) =>
 : stateGroups.closed.includes(chan.state) ? 1
 : 0
 
-export const channels = ({ peers, unitf, chanActive, conf: { expert } }) => {
-  if (!peers) return '';
+export const channels = ({ channels, unitf, chanActive, conf: { expert } }) => {
+  if (!channels) return '';
 
-  const chans = getChannels(peers)
-  chans.sort(chanSorter)
+  channels = channels.slice()
+  channels.sort(chanSorter)
 
   return div([
-    h2('.mb-3', [ 'Channels', ' ', button('.btn.btn-sm.btn-secondary.float-right', { attrs: { do: 'refresh-channels' } }, 'Reload') ])
-  , ul('.list-group.channels', chans.map(channelRenderer({ unitf, expert, chanActive })))
+    h2('.mb-3', [ 'Channels'
+    , ' ', button('.btn.btn-sm.btn-secondary.float-right', { attrs: { do: 'refresh-channels' } }, 'Reload')
+    //, ' ', a('.btn.btn-sm.btn-primary.float-right.mr-1', { attrs: { href: '#/channels/new' } }, 'New')
+    ])
+  , channels.length
+    ? ul('.list-group.channels', channels.map(channelRenderer({ unitf, expert, chanActive })))
+    : p('You have no channels.')
+  , div('.text-center', a('.btn.btn-primary.mt-3', { attrs: { href: '#/channels/new' } }, 'Open channel'))
   ])
 }
+
+export const newChannel = ({ amtData, conf: { expert } }) =>
+  form({ attrs: { do: 'open-channel' } }, [
+    h2('Open channel')
+  , formGroup('Node URI', input('.form-control.form-control-lg', { attrs: { name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true, autofocus: true } }))
+  , formGroup('Channel funding', amountField(amtData, 'channel_capacity_msat', true))
+  , !expert ? '' : formGroup('Fee rate', input('.form-control.form-control-lg', { attrs: { name: 'feerate', placeholder: '(optional)' } }))
+  , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Open channel')
+  , ' '
+  , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/channels' } }, 'Cancel')
+  ])
 
 const channelRenderer = ({ chanActive, unitf, expert }) => ({ chan, peer }) => {
 
@@ -50,7 +62,9 @@ const channelRenderer = ({ chanActive, unitf, expert }) => ({ chan, peer }) => {
 
   const stateGroup = getGroup(chan.state)
       , stateLabel = !peer.connected && stateGroup == 'active' ? 'offline' : stateGroup
-      , receivable = chan.msatoshi_total - chan.msatoshi_to_us - (chan.their_channel_reserve_satoshis*1000)
+      , theirBal   = chan.msatoshi_total - chan.msatoshi_to_us
+      , receivable = theirBal - (chan.their_channel_reserve_satoshis*1000)
+      , isClosed   = [ 'closing', 'closed' ].includes(stateGroup)
 
   const visible = chanActive == chan.channel_id
       , classes = { active: visible, 'list-group-item-action': !visible
@@ -62,23 +76,33 @@ const channelRenderer = ({ chanActive, unitf, expert }) => ({ chan, peer }) => {
     , span('.state', stateLabel)
     ])
 
-  , div('.progress.channel-bar', [
+  , div('.progress.channel-bar', !isClosed ? [
       bar('Our reserve', 'warning', chan.our_channel_reserve_satoshis * 1000)
     , bar('Spendable', 'success', chan.spendable_msatoshi)
     , bar('Receivable', 'info', receivable)
     , bar('Their reserve', 'warning', chan.their_channel_reserve_satoshis * 1000)
+    ] : [
+      bar('Ours', 'success', chan.msatoshi_to_us)
+    , bar('Theirs', 'info', theirBal)
     ])
 
   , !visible ? '' : ul('.list-unstyled.my-3', [
-      li([ strong('Channel ID:'), ' ', chan.short_channel_id || chan.channel_id ])
+      li([ strong('Channel ID:'), ' ', chan.short_channel_id || small('.break-all', chan.channel_id) ])
     , (!expert || !chan.short_channel_id) ? '' : li([ strong('Full Channel ID:'), ' ', small('.break-all', chan.channel_id) ])
     , li([ strong('Status:'), ' ', chan.state ])
+
     , li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ])
-    , li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ])
-    , li([ strong('Receivable:'), ' ', unitf(receivable) ])
-    , li([ strong('Node:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
+    , !isClosed ? '' : li([ strong('Theirs:'), ' ', unitf(theirBal) ])
+    , isClosed ? '' : li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ])
+    , isClosed ? '' : li([ strong('Receivable:'), ' ', unitf(receivable) ])
+
+    , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
     , !expert ? '' : li([ strong('Funding TXID:'), ' ', small('.break-all', chan.funding_txid) ])
     , !expert ? '' : li('.status-text', chan.status.join('\n'))
+
+    , isClosed ? '' : li('.text-center'
+        , button('.btn.btn-link.btn-sm', { dataset: { closeChannel: chan.channel_id, closeChannelPeer: peer.id } }, 'Close channel'))
+
     , !expert ? '' : li(yaml({ peer: omitKey('channels', peer), ...omitKey('status', chan) }))
     ])
   ])

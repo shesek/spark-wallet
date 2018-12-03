@@ -28,7 +28,7 @@ const scanReq = div('.qr-scanner', [
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
   formGroup('Payment request'
-, textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true, rows: 5 } }))
+  , textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true, rows: 5 } }))
 , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Decode request')
 , ' '
 , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
