@@ -4,7 +4,7 @@ FROM node:8.11-slim as builder
 RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake build-essential git libtool libgmp-dev \
   libsqlite3-dev python python3 wget zlib1g-dev
 
-ARG LIGHTNINGD_VERSION=0d3c3a225e532d54e5371394dbff7240500a0431
+ARG LIGHTNINGD_VERSION=608b1a236b19564765355790667c9843c19d84a9
 ARG DEVELOPER
 
 RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
@@ -14,9 +14,9 @@ RUN git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
     && make
 
 # Install bitcoind
-ENV BITCOIN_VERSION 0.16.3
+ENV BITCOIN_VERSION 0.17.0.1
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
-ENV BITCOIN_SHA256 5d422a9d544742bc0df12427383f9c2517433ce7b58cf672b9a9b17c2ef51e4f
+ENV BITCOIN_SHA256 6ccc675ee91522eee5785457e922d8a155e4eb7d5524bd130eb0ef0f0c4a6008
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
@@ -25,7 +25,8 @@ RUN mkdir /opt/bitcoin && cd /opt/bitcoin \
     && gpg --keyserver keyserver.ubuntu.com --recv-keys "$BITCOIN_PGP_KEY" \
     && wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
     && gpg --verify bitcoin.asc \
-    && BD=bitcoin-$BITCOIN_VERSION/bin \
+    && BD=bitcoin-0.17.0/bin \
+    # the above is needed because the dir name is missing the .1 && BD=bitcoin-$BITCOIN_VERSION/bin \
     && tar -xzvf bitcoin.tar.gz $BD/bitcoind $BD/bitcoin-cli --strip-components=1
 
 # npm doesn't normally like running as root, allow it since we're in docker
