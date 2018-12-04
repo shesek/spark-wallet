@@ -10,7 +10,7 @@
     },
     "dependencies": {
         "cordova-android": "^7.1.4",
-        "cordova-plugin-badge": "^0.8.7",
+        "cordova-plugin-badge": "^0.8.8",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-local-notification": "^0.9.0-beta.3",
@@ -37,6 +37,6 @@
         ]
     },
     "devDependencies": {
-        "cordova": "^8.0.0"
+        "cordova": "^8.1.2"
     }
 }
