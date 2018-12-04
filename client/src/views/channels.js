@@ -98,12 +98,13 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
   , !visible ? '' : ul('.list-unstyled.my-3', [
       li([ strong('Channel ID:'), ' ', chan.short_channel_id || small('.break-all', chan.channel_id) ])
     , (!expert || !chan.short_channel_id) ? '' : li([ strong('Full Channel ID:'), ' ', small('.break-all', chan.channel_id) ])
-    , li([ strong('Status:'), ' ', chan.state ])
+    , li([ strong('Status:'), ' ', chan.state.replace(/_/g, ' ') ])
+
+    , isClosed ? '' : li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ])
+    , isClosed ? '' : li([ strong('Receivable:'), ' ', unitf(receivable) ])
 
     , li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ])
     , !isClosed ? '' : li([ strong('Theirs:'), ' ', unitf(theirBal) ])
-    , isClosed ? '' : li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ])
-    , isClosed ? '' : li([ strong('Receivable:'), ' ', unitf(receivable) ])
 
     , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (about ${channelAgeFuz})` ]) : ''
     , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
