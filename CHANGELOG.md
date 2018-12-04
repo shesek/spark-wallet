@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Bug fix: calculate off-chain balance correctly
+
 ## 0.2.0-rc.1 - 2018-12-03
 
 - Channel management GUI

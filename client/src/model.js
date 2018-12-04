@@ -5,8 +5,8 @@ import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './ut
 const msatbtc = big(100000000000) // msat in 1 btc
 
 const
-  sumChans = chans => chans.filter(c => c.state === 'CHANNELD_NORMAL').reduce((T, c) => T + Math.max(0, c.spendable_msatoshi), 0)
-, sumPeers = peers => peers.filter(p => p.connected && p.channels).reduce((T, p) => T + sumChans(p.channels), 0)
+  sumChans = chans => chans.filter(c => c.peer.connected && c.chan.state === 'CHANNELD_NORMAL')
+                           .reduce((T, c) => T + Math.max(0, c.chan.spendable_msatoshi), 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -89,7 +89,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Periodically re-sync channel balance from "listpeers",
   // continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
-      channels$.map(peers  => _ => sumPeers(peers))
+      channels$.map(chans => _ => sumChans(chans))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
