@@ -1,8 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.2.0-rc.1 - 2018-12-03
 
-- Channel view GUI
+- Channel management GUI
+
+- Update Electron to v3.0.10
+
+- Update Cordova to v8.1.2
 
 ## 0.1.3 - 2018-11-26
 
