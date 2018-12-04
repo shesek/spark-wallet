@@ -67,7 +67,7 @@ fi
 
 # Publish release to npm
 if [[ -z "$SKIP_NPM" ]]; then
-  npm publish --ignore-scripts # ignore prepublish script, we don't need to build again
+  npm publish --tag ${NPM_TAG:-latest} --ignore-scripts # ignore prepublish script, we don't need to build again
 fi
 
 # Upload dist files to GitHub releases
