@@ -90,7 +90,7 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
       , receivable = theirBal - (chan.their_channel_reserve_satoshis*1000)
 
   const channelHeight = chan.short_channel_id && +chan.short_channel_id.split(/[:x]/)[0]
-      , channelAge    = channelHeight && blockheight && (blockheight - channelHeight)
+      , channelAge    = channelHeight && blockheight && (blockheight - channelHeight + 1)
       , channelAgeFuz = channelAge && ago(Date.now()/1000 - channelAge*blockInterval).replace(/ ago$/,'')
 
 
