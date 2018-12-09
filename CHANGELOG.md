@@ -1,8 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.2.0-rc.3 - 2018-12-09
 
 - Channel management: display available on-chain balance and add "fund max" option
+
+- Channel management: display channel age in number of blocks and estimated fuzzy time duration
 
 - Cordova: build signed APK files
 
