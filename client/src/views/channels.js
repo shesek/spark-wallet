@@ -103,10 +103,10 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
     , !isClosed ? li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ]) : ''
     , !isClosed ? li([ strong('Receivable:'), ' ', unitf(receivable) ]) : ''
 
-    , li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ])
-    , isClosed ? li([ strong('Theirs:'), ' ', unitf(theirBal) ]) : ''
+    , isClosed || expert ? li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ]) : ''
+    , isClosed || expert ? li([ strong('Theirs:'), ' ', unitf(theirBal) ]) : ''
 
-    , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (about ${channelAgeFuz})` ]) : ''
+    , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (${channelAgeFuz})` ]) : ''
     , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
     , expert ? li([ strong('Funding TXID:'), ' ', small('.break-all', chan.funding_txid) ]) : ''
     , expert ? li('.status-text', chan.status.join('\n')) : ''
