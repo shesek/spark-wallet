@@ -77,7 +77,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     .startWith(null)
 
   // On-chain balance
-  , obalance$ = funds$.map(funds => funds.outputs.reduce((T, o) => T+o.value, 0))
+  , obalance$ = funds$.map(funds => funds.outputs.reduce((T, o) => T+o.value*1000, 0))
       .distinctUntilChanged()
 
   // List of active channels
