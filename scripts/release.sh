@@ -7,7 +7,12 @@ docker_name=shesek/spark-wallet
 [ -z "$1" ] && { echo >&2 "version bump argument required, e.g. $0 patch"; exit 1; }
 
 # Bump version
-[[ "$1" != "nobump" ]] && npm version --no-git-tag-version $1
+if [[ "$1" != "nobump" ]]; then
+  npm version --no-git-tag-version $1
+  androidVer=`node -p 'require("./package").androidVer+1'`
+  sed -ri 's/"androidVer": [0-9]+/"androidVer": '$androidVer'/' package.json
+fi
+
 version=`node -p 'require("./package").version'`
 
 # Extract unreleased changelog & update version number
