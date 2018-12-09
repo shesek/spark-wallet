@@ -4,6 +4,8 @@
 
 - Channel management: display available on-chain balance and add "fund max" option
 
+- Cordova: build signed APK files
+
 ## 0.2.0-rc.2 - 2018-12-04
 
 - Bug fix: calculate off-chain balance correctly

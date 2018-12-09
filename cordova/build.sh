@@ -8,7 +8,7 @@ export DEST=`pwd`/www
 
 mkdir -p $DEST && rm -rf $DEST/*
 
-(cd ../client && npm run dist)
+[ -z "$SKIP_CLIENT" ] && (cd ../client && npm run dist)
 
 version=`node -p 'require("../package").version'`
 
@@ -18,10 +18,12 @@ version=`node -p 'require("../package").version'`
 # this is done so that we don't have to maintain a duplicated version number in cordova's config files
 androidVer=`node -p 'const p = require("../package").version.split("-")[0].split(".").map(Number);p[0]*1000+p[1]*100+p[2]'`
 
+build_type=${BUILD_TYPE:-debug}
+
 cordova prepare
-cordova build android "$@" -- --versionCode=$androidVer
+cordova build android --$build_type "$@" -- --versionCode=$androidVer
 
 # remove previous build and give the .apk file a more descriptive name
-(cd platforms/android/app/build/outputs/apk/$([[ "$@" == *"--release" ]] && echo release || echo debug) \
+(cd platforms/android/app/build/outputs/apk/$build_type \
   && rm -f spark-wallet-*-android.apk \
-  && mv app-*.apk spark-wallet-$version-android.apk)
+  && mv app-*.apk spark-wallet-$version-android-$build_type.apk)

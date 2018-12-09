@@ -14,12 +14,15 @@ version=`node -p 'require("./package").version'`
 changelog="`sed -nr '/^## (Unreleased|'$version' )/{n;:a;n;/^## /q;p;ba}' CHANGELOG.md`"
 grep '## Unreleased' CHANGELOG.md && sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
 
+# Try loading Android signing keys
+[[ -z "$ANDROID_SIGN_CONFIG" && -f ../spark-signing-keys/build.json ]] && ANDROID_SIGN_CONFIG=`pwd`/../spark-signing-keys/build.json
+
 echo -e "Building Spark v$version\n\n$changelog\n\n"
 
 # Build NPM, Electron and Cordova dist files
 if [[ -z "$SKIP_BUILD" ]]; then
   # clean up previous builds
-  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk/debug
+  rm -rf docker-builds spark-wallet-*-npm.tgz dist electron/dist cordova/platforms/android/app/build/outputs/apk
   mkdir -p cordova/platforms/android/app/build/outputs/apk
 
   # Build using Docker for reproducibility
@@ -38,6 +41,9 @@ if [[ -z "$SKIP_BUILD" ]]; then
     npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
     npm run dist:cordova
   fi
+
+  # Create the non-reproducible signed release apk file (outside of docker)
+  [ -n "$ANDROID_SIGN_CONFIG" ] && BUILD_TYPE=release npm run dist:cordova -- --buildConfig $ANDROID_SIGN_CONFIG
 fi
 
 # Build Docker server image
@@ -81,7 +87,7 @@ if [[ -z "$SKIP_UPLOAD" ]]; then
   for file in SHA256SUMS.asc \
               spark-wallet-*-npm.tgz \
               electron/dist/*.{AppImage,deb,snap,tar.gz,exe,zip} \
-              cordova/platforms/android/app/build/outputs/apk/debug/*.apk; do
+              cordova/platforms/android/app/build/outputs/apk/{debug,release}/*.apk; do
     echo ">> Uploading $file"
 
     curl -f --progress-bar -H "$gh_auth" -H "Content-Type: application/octet-stream" \
