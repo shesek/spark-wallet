@@ -1,5 +1,5 @@
-import { div, h2, ul, li, span, pre, strong, small, em, button, header, a, form, input, p } from '@cycle/dom'
-import { yaml, omitKey, formGroup, amountField, getChannels, ago } from './util'
+import { div, h2, ul, li, span, pre, strong, small, em, button, header, a, form, input, p, label } from '@cycle/dom'
+import { yaml, omitKey, formGroup, amountField, getChannels, ago, fancyCheckbox } from './util'
 
 const blockInterval = process.env.BLOCK_INTERVAL || 600
 
@@ -45,16 +45,35 @@ export const channels = ({ channels, chanActive, unitf, info, conf: { expert } }
   ])
 }
 
-export const newChannel = ({ amtData, conf: { expert } }) =>
-  form({ attrs: { do: 'open-channel' } }, [
+export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit, expert } }) => {
+  const availText = obalance != null ? `Available: ${unitf(obalance)}` : ''
+
+  return form({ attrs: { do: 'open-channel' } }, [
     h2('Open channel')
-  , formGroup('Node URI', input('.form-control.form-control-lg', { attrs: { name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true, autofocus: true } }))
-  , formGroup('Channel funding', amountField(amtData, 'channel_capacity_msat', true))
-  , !expert ? '' : formGroup('Fee rate', input('.form-control.form-control-lg', { attrs: { name: 'feerate', placeholder: '(optional)' } }))
+
+  , formGroup('Node URI', input('.form-control.form-control-lg' , { attrs: {
+      name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true, autofocus: true } }))
+
+  , formGroup('Channel funding', div([
+      !fundMaxChan
+        ? amountField(amtData, 'channel_capacity_msat', true, availText)
+        : div('.input-group', [
+            input({ attrs: { type: 'hidden', name: 'channel_capacity_msat', value: 'all' } })
+          , input('.form-control.form-control-lg.disabled', { attrs: { disabled: true, placeholder: availText } })
+          , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
+          ])
+    , fancyCheckbox('channel-fund-max', 'Fund maximum', fundMaxChan, '.btn-sm')
+    ]))
+
+  , expert ? formGroup('Fee rate', input('.form-control.form-control-lg'
+             , { attrs: { type: 'text', name: 'feerate', placeholder: '(optional)'
+                        , pattern: '[0-9]+(perk[bw])?' } })) : ''
+
   , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Open channel')
   , ' '
   , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/channels' } }, 'Cancel')
   ])
+}
 
 const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan, peer }) => {
 

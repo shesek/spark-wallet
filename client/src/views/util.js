@@ -27,11 +27,11 @@ export const formGroup = (labelText, control, help) => div('.form-group', [
 , help ? small('.form-text.text-muted', help) : ''
 ])
 
-export const amountField = ({ msatoshi, amount, step, unit }, msatField, required) =>
+export const amountField = ({ msatoshi, amount, step, unit }, msatField, required, placeholder) =>
   div('.input-group', [
     input({ attrs: { type: 'hidden', name: msatField }, props: { value: msatoshi } })
   , input('.form-control.form-control-lg'
-    , { attrs: { type: 'number', step, min: step, name: 'amount', required, placeholder: (required?'':'(optional)') }
+    , { attrs: { type: 'number', step, min: step, name: 'amount', required, placeholder: placeholder||(required?'':'(optional)') }
       , props: { value: amount } })
   , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
   ])
@@ -46,5 +46,16 @@ export const alertBox = ([ kind, text ], dismissable) =>
     ? a('.alert-link', { attrs: { href: 'settings.html', rel: 'external' } }, 'Try configuring a different server?')
     : ''
   ])
+
+export const fancyCheckbox = (name, desc, checked, klass='') => {
+  klass += checked ? '.btn-primary' : '.btn-secondary'
+  return div('.fancy-checkbox.mt-3', [
+    input({ attrs: { id: name, name, type: 'checkbox', autocomplete: 'off', checked } })
+  , div('.btn-group', [
+      label('.btn'+klass, { attrs: { for: name } })
+    , label('.btn.active'+klass, { attrs: { for: name } }, desc)
+    ])
+  ])
+}
 
 export const omitKey = (k, { [k]: _, ...rest }) => rest

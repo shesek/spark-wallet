@@ -22,8 +22,9 @@ const
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
+                  , fundMaxChan$
                   , conf$: savedConf$
-                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$
+                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
                   , btcusd$, info$, peers$ }) => {
   const
@@ -74,6 +75,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     // format msat amounts in messages
     .combineLatest(unitf$, (alert, unitf) => alert && [ alert[0], fmtAlert(alert[1], unitf) ])
     .startWith(null)
+
+  // On-chain balance
+  , obalance$ = funds$.map(funds => funds.outputs.reduce((T, o) => T+o.value, 0))
+      .distinctUntilChanged()
 
   // List of active channels
   // Periodically re-sync channel balance from "listpeers",
@@ -161,9 +166,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   return combine({
     conf$, page$, loading$, alert$
   , unitf$, cbalance$, rate$
+  , obalance$: obalance$.startWith(null)
   , info$: info$.startWith(null), peers$: peers$.startWith(null), channels$: channels$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
+  , fundMaxChan$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }

@@ -1,0 +1,22 @@
+.fancy-checkbox
+
+  .btn
+    font-size 0.8em
+
+  input[type="checkbox"]
+      display none
+
+  input[type="checkbox"] + .btn-group > label:first-child
+    &:before
+      width 20px
+      display inline-block
+
+  input[type="checkbox"]:not(:checked) + .btn-group > label:first-child
+    &:before
+      // NO-BREAK SPACE
+      content " "
+
+  input[type="checkbox"]:checked + .btn-group > label:first-child
+    &:before
+      // CHECK MARK
+      content "✓"

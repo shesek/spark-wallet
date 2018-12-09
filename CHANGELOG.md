@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Channel management: display available on-chain balance and add "fund max" option
+
 ## 0.2.0-rc.2 - 2018-12-04
 
 - Bug fix: calculate off-chain balance correctly

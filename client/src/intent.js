@@ -62,11 +62,16 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togChan$ = click('ul.channels [data-chan-toggle]')
       .filter(e => e.target.closest('ul').classList.contains('channels')) // ignore clicks inside nested <ul>s
       .map(e => e.ownerTarget.dataset.chanToggle)
-  , openChan$ = submit('[do=open-channel]')
   , closeChan$ = click('[data-close-channel]')
       .map(e => e.ownerTarget.dataset).map(d => ({ chanid: d.closeChannel, peerid: d.closeChannelPeer }))
       .filter(_ => confirm('Are you sure you want to close this channel?'))
       .share()
+  , openChan$ = submit('[do=open-channel]')
+      .map(d => ({ ...d, channel_capacity_sat: toSatCapacity(d.channel_capacity_msat) }))
+  , fundMaxChan$ = on('[name=channel-fund-max]', 'input')
+      .map(e => e.target.checked)
+      .merge(goNewChan$.mapTo(false))
+      .startWith(false)
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
@@ -76,7 +81,10 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
-         , togChan$, updChan$, openChan$, closeChan$
+         , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
          , dismiss$
          }
 }
+
+const toSatCapacity = msat_capacity =>
+  msat_capacity == 'all' ? 'all' : msat_capacity/1000|0

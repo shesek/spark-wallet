@@ -23,6 +23,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , peers$:    reply('listpeers').map(r => r.body.peers)
   , payments$: reply('listpayments').map(r => r.body.payments)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
+  , funds$:    reply('listfunds').map(r => r.body)
 
   // replies to actions
   , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
@@ -41,14 +42,14 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
 // RPC commands to send
 // NOTE: "connectfund" and "closeget" are custom rpc commands provided by the Spark server.
-exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
+exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
 , newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , updChan$.mapTo(        [ 'listpeers' ] )
-, openChan$.map(d     => [ 'connectfund',  [ d.nodeuri, d.channel_capacity_msat/1000|0, d.feerate ] ])
+, openChan$.map(d     => [ 'connectfund',  [ d.nodeuri, d.channel_capacity_sat, d.feerate ] ])
 , closeChan$.map(d    => [ 'closeget',  [ d.peerid, d.chanid ] ])
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
@@ -56,6 +57,8 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, updChan$, op
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
               .mapTo(    [ 'listpeers',    [], { bg: true } ])
+, timer(60000).merge(goNewChan$).throttleTime(2000)
+              .mapTo(    [ 'listfunds',    [], { bg: true } ])
 
 // also send a "getinfo" ping whenever the window regains focus, to check
 // for server connectivity and quickly hide/show the "connection lost" message
