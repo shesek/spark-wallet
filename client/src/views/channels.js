@@ -97,24 +97,24 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
 
   , !visible ? '' : ul('.list-unstyled.my-3', [
       li([ strong('Channel ID:'), ' ', chan.short_channel_id || small('.break-all', chan.channel_id) ])
-    , (!expert || !chan.short_channel_id) ? '' : li([ strong('Full Channel ID:'), ' ', small('.break-all', chan.channel_id) ])
+    , (expert && chan.short_channel_id) ? li([ strong('Full Channel ID:'), ' ', small('.break-all', chan.channel_id) ]) : ''
     , li([ strong('Status:'), ' ', chan.state.replace(/_/g, ' ') ])
 
-    , isClosed ? '' : li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ])
-    , isClosed ? '' : li([ strong('Receivable:'), ' ', unitf(receivable) ])
+    , !isClosed ? li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ]) : ''
+    , !isClosed ? li([ strong('Receivable:'), ' ', unitf(receivable) ]) : ''
 
     , li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ])
-    , !isClosed ? '' : li([ strong('Theirs:'), ' ', unitf(theirBal) ])
+    , isClosed ? li([ strong('Theirs:'), ' ', unitf(theirBal) ]) : ''
 
     , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (about ${channelAgeFuz})` ]) : ''
     , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
-    , !expert ? '' : li([ strong('Funding TXID:'), ' ', small('.break-all', chan.funding_txid) ])
-    , !expert ? '' : li('.status-text', chan.status.join('\n'))
+    , expert ? li([ strong('Funding TXID:'), ' ', small('.break-all', chan.funding_txid) ]) : ''
+    , expert ? li('.status-text', chan.status.join('\n')) : ''
 
-    , isClosed ? '' : li('.text-center'
-        , button('.btn.btn-link.btn-sm', { dataset: { closeChannel: chan.channel_id, closeChannelPeer: peer.id } }, 'Close channel'))
+    , !isClosed ? li('.text-center'
+      , button('.btn.btn-link.btn-sm', { dataset: { closeChannel: chan.channel_id, closeChannelPeer: peer.id } }, 'Close channel')) : ''
 
-    , !expert ? '' : li(yaml({ peer: omitKey('channels', peer), ...omitKey('status', chan) }))
+    , expert ? li(yaml({ peer: omitKey('channels', peer), ...omitKey('status', chan) })) : ''
     ])
   ])
 }
