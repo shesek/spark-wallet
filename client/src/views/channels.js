@@ -86,13 +86,14 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
   const stateGroup = getGroup(chan.state)
       , stateLabel = !peer.connected && stateGroup == 'active' ? 'offline' : stateGroup
       , isClosed   = [ 'closing', 'closed' ].includes(stateGroup)
-      , theirBal   = chan.msatoshi_total - chan.msatoshi_to_us
-      , receivable = theirBal - (chan.their_channel_reserve_satoshis*1000)
+      , ours       = chan.msatoshi_to_us
+      , theirs     = chan.msatoshi_total - ours
+      , receivable = theirs - (chan.their_channel_reserve_satoshis*1000)
+      , spendable  = ours - (chan.our_channel_reserve_satoshis*1000)
 
   const channelHeight = chan.short_channel_id && +chan.short_channel_id.split(/[:x]/)[0]
       , channelAge    = channelHeight && blockheight && (blockheight - channelHeight + 1)
       , channelAgeFuz = channelAge && ago(Date.now()/1000 - channelAge*blockInterval).replace(/ ago$/,'')
-
 
   const visible = chanActive == chan.channel_id
       , classes = { active: visible, 'list-group-item-action': !visible
@@ -106,12 +107,12 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
 
   , div('.progress.channel-bar', !isClosed ? [
       bar('Our reserve', 'warning', chan.our_channel_reserve_satoshis * 1000)
-    , bar('Spendable', 'success', chan.spendable_msatoshi)
-    , bar('Receivable', 'info', receivable)
+    , spendable  > 0 ? bar('Spendable', 'success', spendable) : ''
+    , receivable > 0 ? bar('Receivable', 'info', receivable) : ''
     , bar('Their reserve', 'warning', chan.their_channel_reserve_satoshis * 1000)
     ] : [
-      bar('Ours', 'success', chan.msatoshi_to_us)
-    , bar('Theirs', 'info', theirBal)
+      ours   > 0 ? bar('Ours', 'success', ours) : ''
+    , theirs > 0 ? bar('Theirs', 'info', theirs) : ''
     ])
 
   , !visible ? '' : ul('.list-unstyled.my-3', [
@@ -119,11 +120,11 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
     , (expert && chan.short_channel_id) ? li([ strong('Full Channel ID:'), ' ', small('.break-all', chan.channel_id) ]) : ''
     , li([ strong('Status:'), ' ', chan.state.replace(/_/g, ' ') ])
 
-    , !isClosed ? li([ strong('Spendable:'), ' ', unitf(chan.spendable_msatoshi) ]) : ''
+    , !isClosed ? li([ strong('Spendable:'), ' ', unitf(spendable) ]) : ''
     , !isClosed ? li([ strong('Receivable:'), ' ', unitf(receivable) ]) : ''
 
-    , isClosed || expert ? li([ strong('Ours:'), ' ', unitf(chan.msatoshi_to_us) ]) : ''
-    , isClosed || expert ? li([ strong('Theirs:'), ' ', unitf(theirBal) ]) : ''
+    , isClosed || expert ? li([ strong('Ours:'), ' ', unitf(ours) ]) : ''
+    , isClosed || expert ? li([ strong('Theirs:'), ' ', unitf(theirs) ]) : ''
 
     , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (${channelAgeFuz})` ]) : ''
     , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])

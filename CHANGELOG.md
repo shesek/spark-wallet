@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Channel management: display how much more we need to receive in order to spend
+
 ## 0.2.0-rc.3 - 2018-12-09
 
 - Channel management: display available on-chain balance and add "fund max" option
