@@ -4,7 +4,7 @@ trap 'jobs -p | xargs -r kill' SIGTERM
 
 : ${NETWORK:=testnet}
 : ${LIGHTNINGD_OPT:=--log-level=debug}
-: ${BITCOIND_OPT:=-debug=rpc}
+: ${BITCOIND_OPT:=-debug=rpc --printtoconsole=0}
 
 [[ "$NETWORK" == "mainnet" ]] && NETWORK=bitcoin
 
@@ -69,13 +69,15 @@ if [ ! -S /etc/lightning/lightning-rpc ]; then
   sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
 fi
 
-lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
-echo "ready."
-
-# ensure the hsv3 installation directory exists
+# lightning-cli is unavailable in standalone mode, so we can't check the rpc connection.
+# Spark itself also checks the connection when starting up, so this is not too bad.
+if command -v lightning-cli > /dev/null; then
+  lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+  echo -n "c-lightning RPC ready."
+fi
 mkdir -p $TOR_PATH/tor-installation/node_modules
 
-echo "Starting spark wallet..."
+echo -e "\nStarting spark wallet..."
 spark-wallet -l $LN_PATH "$@" $SPARK_OPT &
 
 # shutdown the entire process when any of the background jobs exits (even if successfully)

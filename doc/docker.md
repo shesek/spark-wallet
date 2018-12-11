@@ -31,8 +31,11 @@ mount the lightning data directory to `/etc/lightning`:
 ```bash
 $ docker run -v ~/.spark-docker:/data -p 9737:9737 \
              -v ~/.lightning:/etc/lightning \
-             shesek/spark-wallet
+             shesek/spark-wallet:standalone
 ```
+
+Note the `:standalone` version for the docker image, which doesn't include
+bitcoind's/lightningd's binaries and weights about 60MB less.
 
 Connecting to remote lightningd instances is currently not supported.
 
