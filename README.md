@@ -9,7 +9,6 @@
 
 :zap: Simple & minimalistic
 :zap: Purely off-chain
-:zap: Near-zero configuration
 :zap: Progressive Web App
 :zap: Personalizable themes
 :zap: Mobile and desktop apps
@@ -133,8 +132,8 @@ running c-lightning and connecting through it.
 ## Mobile app
 
 A Cordova-based native app for Android is available for download from the
-[releases page](https://github.com/shesek/spark-wallet/releases) (`spark-wallet-[x.y.z]-android.apk`).
-It is not currently published to the app store.
+[Google Play app store](https://play.google.com/store/apps/details?id=com.spark.wallet)
+or from the [releases page](https://github.com/shesek/spark-wallet/releases).
 
 The app requires a Spark server to communicate with, which you need [to setup](#server-installation) as a prerequisite.
 
