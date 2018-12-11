@@ -73,6 +73,7 @@ ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor 
 # inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
 RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/hsv3-dep/node_modules
 
+VOLUME /data
 ENTRYPOINT [ "scripts/docker-entrypoint.sh" ]
 
 EXPOSE 9735 9737
