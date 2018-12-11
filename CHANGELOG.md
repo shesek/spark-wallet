@@ -1,8 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 - 2018-12-11
 
 - Channel management: display how much more we need to receive in order to spend
+
+- Now available on Google Play: https://play.google.com/store/apps/details?id=com.spark.wallet
 
 ## 0.2.0-rc.3 - 2018-12-09
 

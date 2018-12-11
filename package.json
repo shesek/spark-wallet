@@ -1,7 +1,7 @@
 {
   "name": "spark-wallet",
-  "version": "0.2.0-rc.3",
-  "androidVer": 201,
+  "version": "0.2.0",
+  "androidVer": 202,
   "description": "A minimalistic wallet GUI for c-lightning",
   "bin": "dist/cli.js",
   "scripts": {
