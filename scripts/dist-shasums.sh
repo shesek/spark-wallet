@@ -6,6 +6,7 @@ docker_name=shesek/spark-wallet
 sha256sum spark-wallet-*-npm.tgz \
           electron/dist/*.{AppImage,deb,snap,tar.gz,exe,zip} \
           cordova/platforms/android/app/build/outputs/apk/{debug,release}/*.apk \
+  2> /dev/null \
   | sed 's~ [^ ]*/~ ~' \
   || true # don't fail on missing files
 
