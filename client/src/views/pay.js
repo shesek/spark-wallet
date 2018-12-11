@@ -48,9 +48,10 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
 
   , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-all', payreq.description) ]) : ''
 
-  , div('.mt-4', [
-      button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
-    , ' ', a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
+  , div('.form-buttons', [
+      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
+    , ' '
+    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
     ])
 
   , expert ? yaml(payreq) : ''

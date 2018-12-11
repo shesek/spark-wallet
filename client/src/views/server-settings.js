@@ -41,9 +41,11 @@ const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath } }) =>
       })
     )
 
-  , button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save settings')
-  , ' '
-  , mode == 'remote' ? button('.btn.btn-lg.btn-secondary.scan-qr', 'Scan QR') : ''
+  , div('.form-buttons', [
+      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Save settings')
+    , ' '
+    , mode == 'remote' ? button('.btn.btn-lg.btn-secondary.scan-qr', 'Scan QR') : ''
+    ])
   ])
 
 const scan = div('.qr-scanner', [

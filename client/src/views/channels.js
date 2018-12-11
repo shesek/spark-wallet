@@ -69,9 +69,11 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
              , { attrs: { type: 'text', name: 'feerate', placeholder: '(optional)'
                         , pattern: '[0-9]+(perk[bw])?' } })) : ''
 
-  , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Open channel')
-  , ' '
-  , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/channels' } }, 'Cancel')
+  , div('.form-buttons', [
+      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Open channel')
+    , ' '
+    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/channels' } }, 'Cancel')
+    ])
   ])
 }
 
