@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `--public-url` CLI option
+
 ## 0.2.0 - 2018-12-11
 
 - Channel management: display how much more we need to receive in order to spend

@@ -26,6 +26,7 @@ const args = require('meow')(`
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
       -q, --print-qr           print QR code with the server URL [default: false]
       -Q, --pairing-qr         print QR code with embedded access key [default: false]
+      --public-url <url>       override public URL used for QR codes [default: http(s)://{host}/]
 
       --no-webui               run API server without serving client assets [default: false]
       --no-test-conn           skip testing access to c-lightning rpc (useful for init scripts) [default: false]

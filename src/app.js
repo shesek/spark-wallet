@@ -54,10 +54,11 @@
   // HTTPS server (the default for non-localhost hosts)
   app.enabled('tls')
   ? require('./transport/tls')(app, process.env.TLS_NAME, process.env.TLS_PATH, process.env.LETSENCRYPT)
-      .then(url => serviceReady('HTTPS server', url))
+      .then(url => serviceReady('HTTPS server', process.env.PUBLIC_URL || url))
 
   // HTTP server (for localhost or when --no-tls is specified)
-  : require('./transport/http')(app).then(url => serviceReady('HTTP server', url))
+  : require('./transport/http')(app)
+      .then(url => serviceReady('HTTP server', process.env.PUBLIC_URL || url))
 
   // Tor Onion Hidden Service
   process.env.ONION && require('./transport/onion')(app, process.env.ONION_PATH)
@@ -67,6 +68,7 @@
       , qrKey  = process.env.PAIRING_QR ? `?access-key=${app.settings.accessKey}` : ''
 
   function serviceReady(name, url) {
+    url = url.replace(/\/$/, '')
     console.log(`\n${name} running on ${url}`)
     if (qrterm && !url.includes('://localhost:')) {
       console.log(`Scan QR to ${qrKey ? 'pair with' : 'open'} ${name}:`)
