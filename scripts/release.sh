@@ -82,11 +82,14 @@ if [[ -z "$SKIP_NPM" ]]; then
 fi
 
 # Upload dist files to GitHub releases
-if [[ -z "$SKIP_UPLOAD" ]]; then
+if [[ -z "$SKIP_UPLOAD" && -n "$GH_TOKEN" ]]; then
   gh_auth="Authorization: token $GH_TOKEN"
   gh_base=https://api.github.com/repos/$gh_repo
+  release_opt=`jq -n --arg version v$version --arg changelog "$changelog" \
+    '{ tag_name: $version, name: $version, body: $changelog, draft:true }'`
   gh_release=`curl -sf -H "$gh_auth" $gh_base/releases/tags/v$version \
-           || curl -sf -H "$gh_auth" -d '{"tag_name":"'v$version'","prerelease":true}' $gh_base/releases`
+           || curl -sf -H "$gh_auth" -d "$release_opt" $gh_base/releases`
+  gh_release_id=``
   gh_upload=`echo "$gh_release" | jq -r .upload_url | sed -e 's/{?name,label}//'`
 
   for file in SHA256SUMS.asc \
@@ -97,5 +100,10 @@ if [[ -z "$SKIP_UPLOAD" ]]; then
 
     curl -f --progress-bar -H "$gh_auth" -H "Content-Type: application/octet-stream" \
          --data-binary @"$file" "$gh_upload?name=$(basename $file)" | (grep -v browser_download_url || true)
+
+  # make release public once everything is ready
+  curl -sf -H "$gh_auth" -X PATCH $gh_base/releases/`echo "$gh_release" | jq -r .id` \
+    -d '{"draft":false}'
+
   done
 fi
