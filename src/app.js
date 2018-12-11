@@ -20,8 +20,8 @@
 
   // Middlewares
   app.use(require('morgan')('dev'))
-  app.use(require('./auth')(app, process.env.LOGIN, process.env.ACCESS_KEY))
   app.use(require('body-parser').json())
+  app.use(require('./auth')(app, process.env.LOGIN, process.env.ACCESS_KEY))
   app.use(require('compression')())
   app.use(require('helmet')({ contentSecurityPolicy: { directives: {
     defaultSrc: [ "'self'" ]
