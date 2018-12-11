@@ -2,8 +2,8 @@
 
 ## Unreleased
 
-- Add `--login-file/-U <path>` to persist randomly generated login credentials to `<path>`
-  (similar to the "cookie file" feature in bitcoind).
+- Add `--cookie-file/-C <path>` to persist randomly generated login credentials to `<path>`
+  (similar to the cookie file feature in bitcoind).
 
 - Add `--public-url` CLI option
 

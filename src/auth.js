@@ -10,16 +10,16 @@ const cookieAge = 2592000000 // 1 month
 
 const hmacStr = (key, data) => createHmac('sha256', key).update(data).digest('base64').replace(/\W+/g, '')
 
-module.exports = (app, loginFile, login, _accessKey) => {
-  if (loginFile && (login || _accessKey)) throw new Error('--login-file cannot be used with --login or --access-key')
+module.exports = (app, cookieFile, login, _accessKey) => {
+  if (cookieFile && (login || _accessKey)) throw new Error('--cookie-file cannot be used with --login or --access-key')
 
   let username, password
 
-  const hasFile = loginFile && fs.existsSync(loginFile)
+  const hasFile = cookieFile && fs.existsSync(cookieFile)
   if (hasFile) {
-    console.log(`Loading login credentials from ${loginFile}`)
-    ;[ username, password, _accessKey ] = fs.readFileSync(loginFile).toString('utf-8').trim().split(':')
-    assert(password, `Invalid login file at ${loginFile}, expecting "username:pwd[:access-key]"`)
+    console.log(`Loading login credentials from ${cookieFile}`)
+    ;[ username, password, _accessKey ] = fs.readFileSync(cookieFile).toString('utf-8').trim().split(':')
+    assert(password, `Invalid login file at ${cookieFile}, expecting "username:pwd[:access-key]"`)
   } else if (login) { // provided via --login (or LOGIN)
     ;[ username, password ] = login.split(':', 2)
     assert(password, `Invalid login format, expecting "username:pwd"`)
@@ -36,9 +36,9 @@ module.exports = (app, loginFile, login, _accessKey) => {
       , cookieKey   = hmacStr(accessKey, 'cookie-key')
       , cookieOpt   = { signed: true, httpOnly: true, sameSite: true, secure: app.enabled('tls'), maxAge: cookieAge }
 
-  if (loginFile && !hasFile) {
-    console.log(`Writing login credentials to ${loginFile}`)
-    fs.writeFileSync(loginFile, [ username, password, accessKey ].join(':'))
+  if (cookieFile && !hasFile) {
+    console.log(`Writing login credentials to ${cookieFile}`)
+    fs.writeFileSync(cookieFile, [ username, password, accessKey ].join(':'))
   }
 
   Object.assign(app.settings, { manifestKey, accessKey })
