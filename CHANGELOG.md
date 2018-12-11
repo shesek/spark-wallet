@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add `--cookie-file/-C <path>` to persist randomly generated login credentials to `<path>`
+  (similar to the cookie file feature in bitcoind).
+
 - Add `--public-url` CLI option
 
 ## 0.2.0 - 2018-12-11

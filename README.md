@@ -76,6 +76,7 @@ $ spark-wallet # defaults: --ln-path ~/.lightning --port 9737
 Or simply `$ npx spark-wallet`, which will install and start Spark (with the default args) in one go.
 
 Spark will generate and print a random username and password that'll be used to login into the wallet.
+To persist/load the generated credentials, set `--cookie-file <path>`.
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
 
 To access the wallet, open `http://localhost:9737/` in your browser and login with the username/password.
@@ -260,9 +261,10 @@ $ spark-wallet --help
 
   Options
     -l, --ln-path <path>     path to c-lightning data directory [default: ~/.lightning]
-    -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
     -p, --port <port>        http(s) server port [default: 9737]
     -i, --host <host>        http(s) server listen address [default: localhost]
+    -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
+    -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: none]
 
     --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
     --no-tls                 disable TLS for non-localhost hosts [default: false]

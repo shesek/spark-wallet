@@ -1,3 +1,4 @@
+import fs from 'fs'
 import assert from 'assert'
 import basicAuth from 'basic-auth'
 import nanoid from 'nanoid'
@@ -9,23 +10,36 @@ const cookieAge = 2592000000 // 1 month
 
 const hmacStr = (key, data) => createHmac('sha256', key).update(data).digest('base64').replace(/\W+/g, '')
 
-module.exports = (app, login, _accessKey) => {
+module.exports = (app, cookieFile, login, _accessKey) => {
+  if (cookieFile && (login || _accessKey)) throw new Error('--cookie-file cannot be used with --login or --access-key')
+
   let username, password
 
-  if (!login) {
+  const hasFile = cookieFile && fs.existsSync(cookieFile)
+  if (hasFile) {
+    console.log(`Loading login credentials from ${cookieFile}`)
+    ;[ username, password, _accessKey ] = fs.readFileSync(cookieFile).toString('utf-8').trim().split(':')
+    assert(password, `Invalid login file at ${cookieFile}, expecting "username:pwd[:access-key]"`)
+  } else if (login) { // provided via --login (or LOGIN)
+    ;[ username, password ] = login.split(':', 2)
+    assert(password, `Invalid login format, expecting "username:pwd"`)
+  } else { // generate random
     username = nanogen('abcdefghijklmnopqrstuvwxyz', 5)
     password = nanoid(15)
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
-  } else {
-    [ username, password ] = login.split(':', 2)
-    assert(password, 'Invalid login format, expecting "username:pwd"')
   }
 
+  // HMAC derive the access key from the user/pwd combo, if not explicitly defined
   const accessKey   = _accessKey || hmacStr(`${username}:${password}`, 'access-key')
       , manifestKey = hmacStr(accessKey, 'manifest-key').substr(0, 10)
       , manifestRe  = new RegExp(`^/manifest-${manifestKey}/`)
       , cookieKey   = hmacStr(accessKey, 'cookie-key')
       , cookieOpt   = { signed: true, httpOnly: true, sameSite: true, secure: app.enabled('tls'), maxAge: cookieAge }
+
+  if (cookieFile && !hasFile) {
+    console.log(`Writing login credentials to ${cookieFile}`)
+    fs.writeFileSync(cookieFile, [ username, password, accessKey ].join(':'))
+  }
 
   Object.assign(app.settings, { manifestKey, accessKey })
 
