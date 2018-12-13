@@ -54,11 +54,20 @@ module.exports = (app, cookieFile, login, _accessKey) => {
       return next()
     }
 
-    // Authenticate using the access key token, via the X-Access header or access-key query string argument.
+    // Browser pairing using access-key in query string
+    if (req.method == 'GET' && req.path == '/' && req.query['access-key'] === accessKey) {
+      // issue a redirect to remove the access-key from the url and prevent it from being saved to the browser history.
+      // the redirect is done to a page that issues a second <meta> redirect (below), to get the SameSite user cookie
+      // sent properly when the pairing link is clicked on from a different site origin.
+      res.cookie('user', username, cookieOpt)
+      return res.redirect(301, 'redir')
+    }
+    if (req.url == '/redir') return res.type('text/html').end('<meta http-equiv="refresh" content="0; url=.">')
+
+    // Authenticate using the access key token, via the X-Access header or using access-key on the body/query.
     // This also marks the request as csrfSafe. Used for RPC API calls and for SSE requests.
     if ((req.get('X-Access') || req.query['access-key'] || req.body['access-key']) === accessKey) {
       req.csrfSafe = true
-      if (req.path == '/') res.cookie('user', username, cookieOpt)
       return next()
     }
 

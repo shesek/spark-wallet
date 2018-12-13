@@ -8,7 +8,9 @@
 - Add `--public-url` CLI option
 
 - Add standalone docker image variant available as
-  shesek/spark-wallet:x.y.z-standalone
+  shesek/spark-wallet:x.y.z-standalone and shesek/spark-wallet:standalone
+
+- Prevent access-key from being saved to browser history when pairing with query string.
 
 ## 0.2.0 - 2018-12-11
 
