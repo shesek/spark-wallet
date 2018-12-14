@@ -1,16 +1,18 @@
 # Changelog
 
-## Unreleased
+## 0.2.1 - 2018-12-13
 
 - Add `--cookie-file/-C <path>` to persist randomly generated login credentials to `<path>`
-  (similar to the cookie file feature in bitcoind).
+  (similar to the cookie file feature in bitcoind)
 
 - Add `--public-url` CLI option
 
 - Add standalone docker image variant available as
   shesek/spark-wallet:x.y.z-standalone and shesek/spark-wallet:standalone
 
-- Prevent access-key from being saved to browser history when pairing with query string.
+- Prevent access-key from being saved to browser history when pairing with query string
+
+- Accept access-key as request body parameter
 
 ## 0.2.0 - 2018-12-11
 
