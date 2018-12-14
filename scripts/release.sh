@@ -91,7 +91,6 @@ if [[ -z "$SKIP_UPLOAD" && -n "$GH_TOKEN" ]]; then
     '{ tag_name: $version, name: $version, body: $changelog, draft:true }'`
   gh_release=`curl -sf -H "$gh_auth" $gh_base/releases/tags/v$version \
            || curl -sf -H "$gh_auth" -d "$release_opt" $gh_base/releases`
-  gh_release_id=``
   gh_upload=`echo "$gh_release" | jq -r .upload_url | sed -e 's/{?name,label}//'`
 
   for file in SHA256SUMS.asc \
