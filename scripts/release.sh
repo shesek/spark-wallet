@@ -40,7 +40,7 @@ if [[ -z "$SKIP_BUILD" ]]; then
     mv docker-builds/spark-wallet-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist
     mv -f docker-builds/electron electron/dist
-    mv -f docker-builds/cordova-android cordova/platforms/android/app/build/outputs/apk/debug
+    mv -f docker-builds/cordova-android-debug cordova/platforms/android/app/build/outputs/apk/debug
   else
     npm run dist:npm -- --pack-tgz
     npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
