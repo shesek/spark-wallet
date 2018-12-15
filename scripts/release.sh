@@ -101,10 +101,9 @@ if [[ -z "$SKIP_UPLOAD" && -n "$GH_TOKEN" ]]; then
 
     curl -f --progress-bar -H "$gh_auth" -H "Content-Type: application/octet-stream" \
          --data-binary @"$file" "$gh_upload?name=$(basename $file)" | (grep -v browser_download_url || true)
+  done
 
   # make release public once everything is ready
   curl -sf -H "$gh_auth" -X PATCH $gh_base/releases/`echo "$gh_release" | jq -r .id` \
     -d '{"draft":false}'
-
-  done
 fi
