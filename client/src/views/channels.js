@@ -52,7 +52,7 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
     h2('Open channel')
 
   , formGroup('Node URI', input('.form-control.form-control-lg' , { attrs: {
-      name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true, autofocus: true } }))
+      name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true } }))
 
   , formGroup('Channel funding', div([
       !fundMaxChan
