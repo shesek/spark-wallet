@@ -6,7 +6,7 @@ ENV STANDALONE=$STANDALONE
 
 # Install build c-lightning for third-party packages (c-lightning/bitcoind)
 RUN apt-get update && apt-get install -y --no-install-recommends git \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential git libtool libgmp-dev \
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential libtool libgmp-dev \
                                      libsqlite3-dev python python3 wget zlib1g-dev")
 
 ARG LIGHTNINGD_VERSION=608b1a236b19564765355790667c9843c19d84a9
