@@ -74,8 +74,12 @@ fi
 if command -v lightning-cli > /dev/null; then
   lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
   echo -n "c-lightning RPC ready."
-  mkdir -p $TOR_PATH/tor-installation/node_modules
+fi
 
+mkdir -p $TOR_PATH/tor-installation/node_modules
+
+if [ -z "$STANDALONE" ]; then
+  # when not in standalone mode, run spark-wallet as an additional background job
   echo -e "\nStarting spark wallet..."
   spark-wallet -l $LN_PATH "$@" $SPARK_OPT &
 
@@ -83,6 +87,7 @@ if command -v lightning-cli > /dev/null; then
   wait -n
   kill -TERM $$
 else
+  # in standalone mode, replace the process with spark-wallet
   echo -e "\nStarting spark wallet (standalone mode)..."
   exec spark-wallet -l $LN_PATH "$@" $SPARK_OPT
 fi
