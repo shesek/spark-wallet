@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Skip to manual BOLT11 entry on non-touch devices
+
 ## 0.2.1 - 2018-12-13
 
 - Add `--cookie-file/-C <path>` to persist randomly generated login credentials to `<path>`
