@@ -90,3 +90,8 @@
     process.exit(1)
   })
 )
+
+process.on('SIGTERM', err => {
+  console.error('Caught SIGTERM, shutting down')
+  process.exit(0)
+})
