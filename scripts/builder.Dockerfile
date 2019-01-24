@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+
 # Wine for Electron Windows builds
 # copied from https://github.com/electron-userland/electron-builder/blob/master/docker/wine/Dockerfile
 RUN dpkg --add-architecture i386 \
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 818A435C5FCBF54A \
+  && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys D43F640145369C51D786DDEA76F1A20FF987672F \
   && apt-add-repository https://dl.winehq.org/wine-builds/debian \
   && apt-get update && apt-get install -y --no-install-recommends winehq-stable=3.0.4~stretch
 ENV WINEDEBUG -all,err+all
