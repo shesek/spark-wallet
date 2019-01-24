@@ -46,7 +46,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
     , formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
     ])
 
-  , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-all', payreq.description) ]) : ''
+  , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-word', payreq.description) ]) : ''
 
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
