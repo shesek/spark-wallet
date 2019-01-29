@@ -24,6 +24,6 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
     , ' '
     , a('.btn.btn-secondary.btn-sm', { attrs: { href: '#/channels' }}, 'Channels')
     ])
-  , expert ? yaml({ info, peers }) : ''
+  , expert ? yaml(info) : ''
   ])
 }
