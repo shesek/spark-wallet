@@ -105,5 +105,5 @@ if [[ -z "$SKIP_UPLOAD" && -n "$GH_TOKEN" ]]; then
 
   # make release public once everything is ready
   curl -sf -H "$gh_auth" -X PATCH $gh_base/releases/`echo "$gh_release" | jq -r .id` \
-    -d '{"draft":false}'
+    -d '{"draft":false}' > /dev/null
 fi
