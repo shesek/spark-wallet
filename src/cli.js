@@ -9,7 +9,8 @@ const args = require('meow')(`
       -p, --port <port>        http(s) server port [default: 9737]
       -i, --host <host>        http(s) server listen address [default: localhost]
       -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
-      -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: none]
+      -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: ~/.spark-wallet/cookie]
+      --no-cookie-file         disable cookie file [default: false]
 
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
@@ -63,6 +64,10 @@ Object.keys(conf).filter(k => k.length > 1)
   .map(k => [ k.replace(/([^A-Z_])([A-Z])/g, '$1_$2').replace(/-/g, '_').toUpperCase(), conf[k] ])
   .forEach(([ k, v ]) => v !== false ? process.env[k] = v
                                      : process.env[`NO_${k}`] = true)
+
+// Enable cookie file by default in the same dir as the config file
+if (!process.env.NO_COOKIE_FILE && !process.env.COOKIE_FILE)
+  process.env.COOKIE_FILE = path.join(os.homedir(), '.spark-wallet', 'cookie')
 
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,superagent,${process.env.DEBUG||''}`)
