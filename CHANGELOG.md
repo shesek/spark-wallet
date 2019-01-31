@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.2.3 - 2019-01-31
+
+- docker: Update c-lightning to v0.6.3
+
+- docker: Update Bitcoin Core to v0.17.1
+
+- docker: Verify digital signature for c-lightning
+
+- docker: Fix missing dependency in standalone mode (#53)
+
+- ui: Improve invoice description word break
+
+- ui: Hide peers debug information in node info page
+
+
 ## 0.2.2 - 2018-12-22
 
 - ui: Skip to manual BOLT11 entry on non-touch devices
