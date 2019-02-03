@@ -28,6 +28,7 @@ const args = require('meow')(`
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
       -q, --print-qr           print QR code with the server URL [default: false]
       -Q, --pairing-qr         print QR code with embedded access key [default: false]
+      -P, --pairing-url        print URL with embedded access key [default: false]
       --public-url <url>       override public URL used for QR codes [default: http(s)://{host}/]
 
       --no-webui               run API server without serving client assets [default: false]
@@ -47,7 +48,8 @@ const args = require('meow')(`
 `, { flags: { lnPath: {alias:'l'}, login: {alias:'u'}, cookieFile: {alias:'C'}
             , port: {alias:'p'}, host: {alias:'i'}
             , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
-            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}, pairingQr: {type:'boolean', alias:'Q'}
+            , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}
+            , pairingQr: {type:'boolean', alias:'Q'}, pairingUrl: {type:'boolean', alias:'P'}
             , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
             , config: {alias:'c'}, verbose: {alias:'V', type:'boolean'}
 } }).flags

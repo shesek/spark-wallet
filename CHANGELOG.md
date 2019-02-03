@@ -4,6 +4,8 @@
 
 - Enable cookie file by default, persists random login credentials to `~/.spark-wallet/cookie`.
 
+- Add `--pairing-url` CLI option
+
 ## 0.2.3 - 2019-01-31
 
 - docker: Update c-lightning to v0.6.3

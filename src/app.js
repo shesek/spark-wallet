@@ -70,10 +70,16 @@
   function serviceReady(name, url) {
     url = url.replace(/\/$/, '')
     console.log(`\n${name} running on ${url}`)
+
     if (qrterm && !url.includes('://localhost:')) {
       console.log(`Scan QR to ${qrKey ? 'pair with' : 'open'} ${name}:`)
       qrterm.generate(`${url}/${qrKey}`, { small: true })
-      qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet.]')
+      qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet.]\n')
+    }
+
+    if (process.env.PAIRING_URL) {
+      console.log('Pairing URL:', `${url}/?access-key=${app.settings.accessKey}`)
+      console.log('[NOTE: This URL contains your secret access key, which provides full access to your wallet.]\n')
     }
 
     process.send && process.send({ serverUrl: url })
