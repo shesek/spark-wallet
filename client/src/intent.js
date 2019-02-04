@@ -1,8 +1,7 @@
 import { Observable as O } from './rxjs'
 import serialize from 'form-serialize'
-import stringArgv from 'string-argv'
 import nanoid from 'nanoid'
-import { dbg, parseUri } from './util'
+import { dbg, parseUri, parseRpcCmd } from './util'
 
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   const
@@ -30,7 +29,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   // RPC console actions
   , clrHist$ = click('[do=clear-console-history]')
-  , execRpc$ = submit('[do=exec-rpc]').map(r => stringArgv(r.cmd))
+  , execRpc$ = submit('[do=exec-rpc]').map(r => parseRpcCmd(r.cmd))
       .merge(click('[do=rpc-help]').mapTo([ 'help' ]))
 
   // New invoice actions

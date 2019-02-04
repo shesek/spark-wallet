@@ -1,7 +1,7 @@
 import debug  from 'debug'
 import numbro from 'numbro'
-
-import { Big as big }      from 'big.js'
+import stringArgv from 'string-argv'
+import { Big as big } from 'big.js'
 import { Observable as O } from './rxjs'
 
 export const formatAmt = (amt, rate, digits, comma=true) =>
@@ -52,3 +52,10 @@ export const dbg = (obj, label='stream', dbg=debug(label)) =>
     x   => dbg(`${k} ->`, x)
   , err => dbg(`${k} \x1b[91mError:\x1b[0m`, err.stack || err)
   , _   => dbg(`${k} completed`)))
+
+const specialArgs = { 'true': true, 'false': false }
+
+export const parseRpcCmd = str => {
+  const [ method, ...args ] = stringArgv(str)
+  return [ method, ...args.map(arg => arg in specialArgs ? specialArgs[arg] : arg) ]
+}
