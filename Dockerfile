@@ -83,7 +83,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotif
 COPY --from=builder /opt/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark
 
-ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor HOST=0.0.0.0
+ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor COOKIE_FILE=/data/spark/cookie HOST=0.0.0.0
 
 # link the hsv3 (Tor Hidden Service V3) node_modules installation directory
 # inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
