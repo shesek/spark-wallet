@@ -24,7 +24,6 @@ PrivateTmp=true
 ProtectSystem=full
 NoNewPrivileges=true
 PrivateDevices=true
-MemoryDenyWriteExecute=true
 
 [Install]
 WantedBy=multi-user.target
