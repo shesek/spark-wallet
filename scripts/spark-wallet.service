@@ -1,17 +1,14 @@
 [Unit]
 Description=Spark Lightning Wallet
-Requires=network.target
-After=network.target
+Requires=lightningd.target
+After=lightningd.target
 
 [Service]
 User={user}
 Group={user}
 Restart=on-failure
 
-ExecStart={cmd} --no-test-conn
-# --no-test-conn because c-lightning might not be ready when we boot up.
-# this delays opening the connection until we get the first API call from a user.
-# if c-lightning is running as a systemd service, you should make this service depend on it instead.
+ExecStart={cmd}
 
 SyslogIdentifier=spark-wallet
 PIDFile=/var/run/spark-wallet.pid
