@@ -60,7 +60,7 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, 
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
               .mapTo(    [ 'listpeers',    [], { bg: true } ])
-, timer(60000).merge(goNewChan$).throttleTime(2000)
+, timer(60000).merge(goNewChan$).merge(goDeposit$).throttleTime(2000)
               .mapTo(    [ 'listfunds',    [], { bg: true } ])
 
 // also send a "getinfo" ping whenever the window regains focus, to check
