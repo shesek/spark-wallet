@@ -2,6 +2,6 @@
   "name": "hsv3-dep",
   "private": "true",
   "dependencies": {
-    "hsv3": "^1.1.4"
+    "hsv3": "^1.1.5"
   }
 }
