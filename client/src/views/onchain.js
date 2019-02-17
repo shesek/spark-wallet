@@ -17,9 +17,9 @@ export const deposit = ({ address, type }) => qruri(`bitcoin:${address}`).then(q
       ])
     ])
   , div('.my-4.text-center', [
-      a('.btn.btn-primary.btn-lg', { attrs: { href: `bitcoin:${address}` } }, 'Fund with wallet')
+      a('.btn.btn-primary.btn-lg.mb-1', { attrs: { href: `bitcoin:${address}` } }, 'Fund with wallet')
     , ' '
-    , button('.btn.btn-secondary.btn-lg', { dataset: { newaddrType: otherType[type] } }, `Switch to ${labelType[otherType[type]]}`)
+    , button('.btn.btn-secondary.btn-lg.mb-1', { dataset: { newaddrType: otherType[type] } }, `Switch to ${labelType[otherType[type]]}`)
     ])
   , p('.text-center', `Current on-chain balance: ${ unitf(obalance) }`)
   , p('.text-muted.small', 'Note: c-lightning does not process unconfirmed payments. You will not receive a notification for the payment, please check back once its confirmed.')
