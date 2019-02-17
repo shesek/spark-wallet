@@ -8,6 +8,8 @@
 
 - bugfix: Properly parse boolean args in RPC console
 
+- ui: Add a new interface for making on-chain deposits
+
 ## 0.2.3 - 2019-01-31
 
 - docker: Update c-lightning to v0.6.3

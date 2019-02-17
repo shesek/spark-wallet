@@ -21,6 +21,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   , goChan$ = route('/channels')
   , goNewChan$ = route('/channels/new')
+  , goDeposit$ = route('/deposit').mapTo('bech32')
+      .merge(click('[data-newaddr-type]').map(e => e.ownerTarget.dataset.newaddrType))
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
@@ -73,7 +75,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .startWith(false)
 
   return { conf$, page$
-         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$
+         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
          , goChan$, goNewChan$
          , viewPay$, confPay$
          , execRpc$, clrHist$

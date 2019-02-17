@@ -166,7 +166,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   return combine({
     conf$, page$, loading$, alert$
   , unitf$, cbalance$, rate$
-  , obalance$: obalance$.startWith(null)
+  , funds$: funds$.startWith(null), obalance$: obalance$.startWith(null)
   , info$: info$.startWith(null), peers$: peers$.startWith(null), channels$: channels$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$

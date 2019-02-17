@@ -6,7 +6,7 @@ import themeColors from '../theme-colors.json'
 const isFunc = x => typeof x == 'function'
 
 // DOM view
-exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, invoice$, logs$ }) => {
+exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, invoice$, newaddr$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -21,6 +21,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
   // server responses
   , payreq$.map(views.confirmPay)
   , invoice$.flatMap(views.invoice)
+  , newaddr$.flatMap(views.deposit)
   , logs$.map(views.logs)
 
   ).switchMap(view => isFunc(view) ? state$.map(view).flatMap(toObs) : O.of(view))

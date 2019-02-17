@@ -5,5 +5,6 @@ module.exports = {
 , ...require('./recv')
 , ...require('./node')
 , ...require('./channels')
+, ...require('./onchain')
 , ...require('./expert')
 }
