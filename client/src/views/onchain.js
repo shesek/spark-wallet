@@ -17,7 +17,7 @@ export const deposit = ({ address, type }) => qruri(`bitcoin:${address}`).then(q
       ])
     ])
   , div('.my-4.text-center', [
-      a('.btn.btn-primary.btn-lg', { attrs: { href: `bitcoin:${address}` } }, 'Pay with wallet')
+      a('.btn.btn-primary.btn-lg', { attrs: { href: `bitcoin:${address}` } }, 'Fund with wallet')
     , ' '
     , button('.btn.btn-secondary.btn-lg', { dataset: { newaddrType: otherType[type] } }, `Switch to ${labelType[otherType[type]]}`)
     ])
