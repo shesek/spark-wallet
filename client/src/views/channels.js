@@ -67,7 +67,7 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
 
   , expert ? formGroup('Fee rate', input('.form-control.form-control-lg'
              , { attrs: { type: 'text', name: 'feerate', placeholder: '(optional)'
-                        , pattern: '[0-9]+(perk[bw])?' } })) : ''
+                        , pattern: '[0-9]+(perk[bw])?|slow|normal|urgent' } })) : ''
 
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Open channel')
