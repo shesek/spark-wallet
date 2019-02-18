@@ -20,7 +20,7 @@ export const deposit = ({ address, type }) => addrQr(address).then(qr => ({ fund
       ])
     ])
   , div('.my-4.text-center', [
-      a('.btn.btn-primary.btn-lg.mb-1', { attrs: { href: `bitcoin:${address}` } }, 'Fund with wallet')
+      a('.btn.btn-primary.btn-lg.mb-1', { attrs: { href: `bitcoin:${address}` } }, 'Open wallet')
     , ' '
     , button('.btn.btn-secondary.btn-lg.mb-1', { dataset: { newaddrType: otherType[type] } }, `Switch to ${labelType[otherType[type]]}`)
     ])
