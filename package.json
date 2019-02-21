@@ -5,6 +5,7 @@
   "description": "A minimalistic wallet GUI for c-lightning",
   "bin": "dist/cli.js",
   "scripts": {
+    "postinstall": "cd client && npm install",
     "start": "./scripts/start.sh",
     "prepublishOnly": "npm run dist:npm",
     "dist:npm": "./scripts/build.sh",
