@@ -8,7 +8,8 @@
     "start": "./scripts/start.sh",
     "prepublishOnly": "npm run dist:npm",
     "dist:npm": "./scripts/build.sh",
-    "dist:cordova": "cd cordova && npm run dist --",
+    "dist:cordova:android": "cd cordova && npm run dist:android --",
+    "dist:cordova:ios": "cd cordova && npm run dist:ios --",
     "dist:electron": "cd electron && npm run dist --",
     "release": "./scripts/release.sh"
   },

@@ -6,10 +6,13 @@
     "author": "Nadav Ivgi",
     "license": "MIT",
     "scripts": {
-        "dist": "./build.sh"
+        "dist:android": "./build-android.sh",
+        "dist:ios": "./build-ios.sh"
     },
     "dependencies": {
         "cordova-android": "^7.1.4",
+        "cordova-ios": "^4.5.5",
+        "cordova-plugin-add-swift-support": "^1.7.2",
         "cordova-plugin-badge": "^0.8.8",
         "cordova-plugin-customurlscheme": "^4.3.0",
         "cordova-plugin-device": "^2.0.2",
@@ -33,7 +36,8 @@
             "cordova-plugin-local-notification": {}
         },
         "platforms": [
-            "android"
+            "android",
+            "ios"
         ]
     },
     "devDependencies": {

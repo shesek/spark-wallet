@@ -62,7 +62,7 @@ COPY cordova/package.json cordova/npm-shrinkwrap.json cordova/config.xml ./
 COPY cordova/res ./res
 RUN npm install && cordova telemetry off
 # build a dummy cordova app to download required artifacts in docker build time
-RUN mkdir www && cordova prepare && cordova build && rm -r www platforms/android/app/build
+RUN mkdir www && cordova prepare && cordova build android && rm -r www platforms/android/app/build
 
 # Spark client
 WORKDIR /opt/spark/client
@@ -84,7 +84,7 @@ RUN chmod -R 755 electron
 CMD (test ! -c /dev/fuse || (mv -f cordova cordova-src && mkdir cordova && disorderfs --sort-dirents=yes --reverse-dirents=no cordova-src cordova)) \
  && npm run dist:npm -- --pack-tgz \
  && npm run dist:electron -- --linux --mac --win \
- && npm run dist:cordova \
+ && npm run dist:cordova:android \
  && mkdir -p /target && rm -rf /target/* \
  && echo '-----BEGIN SHA256SUM-----' \
  && ./scripts/dist-shasums.sh | tee /target/SHA256SUMS \

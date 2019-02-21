@@ -212,8 +212,9 @@ $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
 
-Cordova builds can be prepared with `npm run dist:cordova`.
+Cordova android builds can be prepared with `npm run dist:cordova:android`.
 The `.apk` file will be available in `cordova/platforms/android/app/build/outputs/apk/debug/`.
+iOS builds can be prepared with `npm run dist:cordova:ios`.
 
 Electron builds can be prepared with `npm run dist:electron`.
 They will be available under `electron/dist`.

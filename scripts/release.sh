@@ -44,11 +44,11 @@ if [[ -z "$SKIP_BUILD" ]]; then
   else
     npm run dist:npm -- --pack-tgz
     npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
-    npm run dist:cordova
+    npm run dist:cordova:android
   fi
 
   # Create the non-reproducible signed release apk file (outside of docker)
-  [ -n "$ANDROID_SIGN_CONFIG" ] && BUILD_TYPE=release npm run dist:cordova -- --buildConfig $ANDROID_SIGN_CONFIG
+  [ -n "$ANDROID_SIGN_CONFIG" ] && BUILD_TYPE=release npm run dist:cordova:android -- --buildConfig $ANDROID_SIGN_CONFIG
 fi
 
 # Build Docker server image
