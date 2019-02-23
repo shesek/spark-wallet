@@ -4,6 +4,12 @@
 
 - Add `--onion-nonanonymous` option to start the tor hidden service in non-anonymous mode
 
+- Use the compact alphanumeric QR encoding mode for bech32 addresses
+
+- Accept "slow", "normal" and "urgent" as feerate values
+
+- Various UI improvements to the deposit page
+
 ## 0.2.4 - 2019-02-17
 
 - Enable cookie file by default, persists random login credentials to `~/.spark-wallet/cookie`.
