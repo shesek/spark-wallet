@@ -26,5 +26,5 @@ export const deposit = ({ address, type }) => addrQr(address, type).then(qr => (
     ])
   , p('.text-center', `Current on-chain balance: ${ unitf(obalance) }`)
   , p('.text-muted.small', 'Note: c-lightning does not process unconfirmed payments. You will not receive a notification for the payment, please check back once its confirmed.')
-  , expert ? yaml({ outputs: funds.outputs }) : ''
+  , expert ? yaml({ outputs: funds && funds.outputs }) : ''
   ]))
