@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add `--onion-nonanonymous` option to start the tor hidden service in non-anonymous mode
+
 ## 0.2.4 - 2019-02-17
 
 - Enable cookie file by default, persists random login credentials to `~/.spark-wallet/cookie`.

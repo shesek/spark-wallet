@@ -24,6 +24,7 @@ const args = require('meow')(`
 
       -o, --onion              start Tor Hidden Service (v3) [default: false]
       -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+      --onion-nonanonymous     setup hidden service in non-anonymous mode [default: false]
 
       -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
       -q, --print-qr           print QR code with the server URL [default: false]
@@ -50,7 +51,7 @@ const args = require('meow')(`
             , leNoverify: {type:'boolean'}, leDebug: {type:'boolean'}
             , printKey: {type:'boolean', alias:'k'}, printQr: {type:'boolean', alias:'q'}
             , pairingQr: {type:'boolean', alias:'Q'}, pairingUrl: {type:'boolean', alias:'P'}
-            , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}
+            , onion: {type:'boolean',alias:'o'}, onionPath: {alias:'O'}, onionNonanonymous: {type:'boolean'}
             , config: {alias:'c'}, verbose: {alias:'V', type:'boolean'}
 } }).flags
 
@@ -74,6 +75,7 @@ if (!process.env.NO_COOKIE_FILE && !process.env.COOKIE_FILE)
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
 process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,superagent,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
+process.env.ONION_NONANONYMOUS && (process.env.ONION = true) // --onion-nonanonymous implies --onion
 process.env.PAIRING_QR && (process.env.PRINT_QR = true) // --pairing-qr implies --print-qr
 
 if (process.env.TLS_PATH || process.env.TLS_NAME || process.env.LETSENCRYPT) process.env.FORCE_TLS = true

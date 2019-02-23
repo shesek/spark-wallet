@@ -279,6 +279,7 @@ $ spark-wallet --help
 
     -o, --onion              start Tor Hidden Service (v3) [default: false]
     -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+    --onion-nonanonymous     setup hidden service in non-anonymous mode [default: false]
 
     -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
     -q, --print-qr           print QR code with the server URL [default: false]
