@@ -1,7 +1,7 @@
 {
-  "name": "hsv3-dep",
+  "name": "granax-dep",
   "private": "true",
   "dependencies": {
-    "hsv3": "^1.1.5"
+    "granax": "^3.1.5"
   }
 }

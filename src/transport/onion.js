@@ -11,15 +11,21 @@ module.exports = async (app, dir=defaultDir, hs_dir=path.join(dir, 'hidden_servi
       resolve(httpSrv.address().port))
   })
 
-  // Get the hsv3 lib, install on demand if its the first time we're using it.
-  const hsv3 = await require('./hsv3-dep')()
+  // Get the granax lib, install on demand if its the first time we're using it.
+  const granax = await require('./granax-dep')()
 
   // Setup an hidden service over the HTTP server
   return new Promise((resolve, reject) =>
-    hsv3([ { dataDirectory: hs_dir, virtualPort: 80, localMapping: '127.0.0.1:' + httpPort  } ]
-       , { DataDirectory: dir })
-      .on('error', reject)
-      .on('ready', _ => resolve(`http://${getHost(hs_dir)}`))
+    granax({ authOnConnect: true  }, [
+      { DataDirectory: dir }
+    , {
+        HiddenServiceDir: hs_dir
+      , HiddenServiceVersion: 3
+      , HiddenServicePort: `80 127.0.0.1:${httpPort}`
+      }
+    ])
+    .on('error', reject)
+    .on('ready', _ => resolve(`http://${getHost(hs_dir)}`))
   )
 }
 

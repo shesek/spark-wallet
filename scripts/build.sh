@@ -7,8 +7,8 @@ rm -rf dist/*
 # Build server-side code
 babel -d dist --ignore node_modules src
 
-# Copy hsv3-dep (on-demand installation for Tor)
-cp src/transport/hsv3-dep/{package,npm-shrinkwrap}.json dist/transport/hsv3-dep/
+# Copy granax-dep (on-demand installation for Tor)
+cp src/transport/granax-dep/{package,npm-shrinkwrap}.json dist/transport/granax-dep/
 
 # Build client-side www assets
 (cd client && DEST=../dist/www npm run dist)

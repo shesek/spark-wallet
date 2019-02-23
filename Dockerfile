@@ -85,9 +85,9 @@ COPY --from=builder /opt/spark /opt/spark
 
 ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor COOKIE_FILE=/data/spark/cookie HOST=0.0.0.0
 
-# link the hsv3 (Tor Hidden Service V3) node_modules installation directory
+# link the granax (Tor Control client) node_modules installation directory
 # inside /data/spark/tor/, to persist the Tor Bundle download in the user-mounted volume
-RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/hsv3-dep/node_modules
+RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/granax-dep/node_modules
 
 VOLUME /data
 ENTRYPOINT [ "scripts/docker-entrypoint.sh" ]

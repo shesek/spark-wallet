@@ -2,9 +2,9 @@ import path from 'path'
 import fs   from 'fs'
 import cp   from 'child_process'
 
-// Install the hsv3 (Tor Hidden Service V3) package on demand.
+// Install the granax (Tor Control Protocol library) package on demand.
 //
-// Installing hsv3 downloads the Tor Browser Bundle, which results in about 250mb of
+// Installing granax downloads the Tor Browser Bundle, which results in about 250mb of
 // extra storage space, which we want to avoid if the user isn't using the Tor onion feature.
 
 
@@ -15,13 +15,13 @@ fs.existsSync(npmExe) || (npmExe = 'npm')
 
 module.exports = async _ => {
   // check if we have it already
-  try { return require('hsv3') } catch (_) {}
+  try { return require('granax') } catch (_) {}
 
   console.log('\nTor Hidden Service enabled (via --onion) for the first time, downloading the Tor Bundle...'
             + '\nThe Spark .onion server will start automatically when its ready.'
             + '\n\nIn the meanwhile, you can access the local HTTP server directly.\n')
 
-  // trigger an "npm install" for hsv3-dep/package.json
+  // trigger an "npm install" for granax-dep/package.json
   const installer = cp.spawn(npmExe, [ 'install' ], { cwd: __dirname, stdio: 'inherit' })
 
   await new Promise((resolve, reject) => {
@@ -30,5 +30,5 @@ module.exports = async _ => {
       code == 0 ? resolve() : reject(new Error('Tor installation failed, exited with code '+code)))
   })
 
-  return require('hsv3')
+  return require('granax')
 }
