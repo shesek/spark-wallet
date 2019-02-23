@@ -4,10 +4,10 @@ import { yaml, qruri } from './util'
 const labelType = { bech32: 'Bech32', 'p2sh-segwit': 'P2SH' }
     , otherType = { bech32: 'p2sh-segwit', 'p2sh-segwit': 'bech32' }
 
-// Use uppercase to enable the more compact alphanumeric QR mode
-const addrQr = address => qruri(`bitcoin:${address.toUpperCase()}`)
+// Encode bech32 as uppercase to enable the more compact alphanumeric QR mode
+const addrQr = (address, type) => qruri(`bitcoin:${type == 'bech32' ? address.toUpperCase() : address}`)
 
-export const deposit = ({ address, type }) => addrQr(address).then(qr => ({ funds, obalance, unitf, conf: { expert } }) =>
+export const deposit = ({ address, type }) => addrQr(address, type).then(qr => ({ funds, obalance, unitf, conf: { expert } }) =>
   div('.onchain-deposit', [
     div('.row', [
       div('.col-sm-6.text-center', [
