@@ -60,7 +60,7 @@ module.exports = (app, cookieFile, login) => {
 
     // Browser pairing using access-key in query string
     if (req.method == 'GET' && req.path == '/' && req.query['access-key'] === accessKey) {
-      res.set('Cache-Control', 'no-cache')
+      res.set('Cache-Control', 'private, no-cache')
       res.cookie('user', username, cookieOpt)
       // issue a redirect to remove the access-key from the url and prevent it from being saved to the browser history.
       // the redirect is done to a page that issues a second <meta> redirect (below), to get the SameSite user cookie
