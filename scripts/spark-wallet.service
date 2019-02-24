@@ -1,7 +1,7 @@
 [Unit]
 Description=Spark Lightning Wallet
-Requires=lightningd.target
-After=lightningd.target
+Requires=lightningd.service
+After=lightningd.service
 
 [Service]
 User={user}
