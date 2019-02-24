@@ -60,10 +60,11 @@ module.exports = (app, cookieFile, login) => {
 
     // Browser pairing using access-key in query string
     if (req.method == 'GET' && req.path == '/' && req.query['access-key'] === accessKey) {
+      res.set('Cache-Control', 'no-cache')
+      res.cookie('user', username, cookieOpt)
       // issue a redirect to remove the access-key from the url and prevent it from being saved to the browser history.
       // the redirect is done to a page that issues a second <meta> redirect (below), to get the SameSite user cookie
       // sent properly when the pairing link is clicked on from a different site origin.
-      res.cookie('user', username, cookieOpt)
       return res.redirect(301, 'redir')
     }
     if (req.url == '/redir') return res.type('text/html').end('<meta http-equiv="refresh" content="0; url=.">')
