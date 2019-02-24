@@ -2,8 +2,6 @@
 
 ## Unreleased
 
-- Add `--onion-nonanonymous` option to start the tor hidden service in non-anonymous mode
-
 - Use the compact alphanumeric QR encoding mode for bech32 addresses
 
 - Accept "slow", "normal" and "urgent" as feerate values
