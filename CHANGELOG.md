@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses
 
