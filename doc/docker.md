@@ -3,7 +3,7 @@
 You can use Docker To setup Spark, a bitcoind node and a c-lightning node all in go with the following command:
 
 ```bash
-$ docker run -v ~/.spark-docker:/data -p 9737:9737 \
+$ docker run -it -v ~/.spark-docker:/data -p 9737:9737 \
              shesek/spark-wallet --login bob:superSecretPass456
 ```
 
@@ -29,7 +29,7 @@ To connect to an existing `lightningd` instance running on the same machine,
 mount the lightning data directory to `/etc/lightning`:
 
 ```bash
-$ docker run -v ~/.spark-docker:/data -p 9737:9737 \
+$ docker run -it -v ~/.spark-docker:/data -p 9737:9737 \
              -v ~/.lightning:/etc/lightning \
              shesek/spark-wallet:standalone
 ```
