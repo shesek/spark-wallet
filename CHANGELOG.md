@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Changed the way the balance shown in the top-right corner is calculated. See:
+
+  https://github.com/shesek/spark-wallet/issues/62
+
+  https://github.com/shesek/spark-wallet/commit/9b500c48c4c32fd61a11995410f17adf9f6cdf8d
+
 ## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses
