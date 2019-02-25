@@ -12,13 +12,13 @@ const layout = ({ state: S, body }) =>
   , S.info ? footer(S) : ''
   ])
 
-const navbar = ({ unitf, cbalance, page }) =>
+const navbar = ({ unitf, cbalance, obalance, page }) =>
   nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
     a('.navbar-brand', { attrs: { href: '#/' } }, [
       page.pathname != '/' ? span('.icon.icon-left-open') : ''
     , 'Spark'
     ])
-  , cbalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance)) : ''
+  , cbalance != null && obalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance + obalance)) : ''
   ]))
 
 const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) =>

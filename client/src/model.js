@@ -5,8 +5,8 @@ import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './ut
 const msatbtc = big(100000000000) // msat in 1 btc
 
 const
-  sumChans = chans => chans.filter(c => c.peer.connected && c.chan.state === 'CHANNELD_NORMAL')
-                           .reduce((T, c) => T + Math.max(0, c.chan.spendable_msatoshi), 0)
+  sumChans = chans => chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
+                           .reduce((T, c) => T + Math.max(0, c.chan.msatoshi_to_us), 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -77,6 +77,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     .startWith(null)
 
   // On-chain balance
+  // TODO: patch with known outgoing payments
   , obalance$ = funds$.map(funds => funds.outputs.reduce((T, o) => T+o.value*1000, 0))
       .distinctUntilChanged()
 
