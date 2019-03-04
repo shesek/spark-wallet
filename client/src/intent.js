@@ -23,6 +23,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , goNewChan$ = route('/channels/new')
   , goDeposit$ = route('/deposit').mapTo('bech32')
       .merge(click('[data-newaddr-type]').map(e => e.ownerTarget.dataset.newaddrType))
+  , goWithdraw$ = route('/withdraw')
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
@@ -71,11 +72,19 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .map(d => ({ ...d, channel_capacity_sat: toSatCapacity(d.channel_capacity_msat) }))
   , fundMaxChan$ = on('[name=channel-fund-max]', 'input')
       .map(e => e.target.checked)
-      .merge(goNewChan$.mapTo(false))
+      .merge(goNewChan$.mapTo(false))   
+      .startWith(false)
+
+  // Withdraw
+  , execWithdraw$ = submit('[do=exec-withdraw]')
+      .map(d => ({ ...d, amount_sat: toSatCapacity(d.amount_sat) }))
+  , withdrawAll$ = on('[name=withdraw-all]', 'input')
+      .map(e => e.target.checked)
+      .merge(goWithdraw$.mapTo(false))   
       .startWith(false)
 
   return { conf$, page$
-         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
+         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$, goWithdraw$
          , goChan$, goNewChan$
          , viewPay$, confPay$
          , execRpc$, clrHist$
@@ -83,6 +92,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
          , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
+         , execWithdraw$, withdrawAll$
          , dismiss$
          }
 }
