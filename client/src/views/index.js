@@ -5,7 +5,6 @@ module.exports = {
 , ...require('./recv')
 , ...require('./node')
 , ...require('./channels')
-, ...require('./deposit')
-, ...require('./withdraw')
+, ...require('./onchain')
 , ...require('./expert')
 }
