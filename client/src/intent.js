@@ -70,29 +70,29 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .share()
   , openChan$ = submit('[do=open-channel]')
       .map(d => ({ ...d, channel_capacity_sat: toSatCapacity(d.channel_capacity_msat) }))
-  , fundMaxChan$ = on('[name=channel-fund-max]', 'input')
-      .map(e => e.target.checked)
-      .merge(goNewChan$.mapTo(false))   
-      .startWith(false)
-
+  
   // Withdraw
   , execWithdraw$ = submit('[do=exec-withdraw]')
       .map(d => ({ ...d, amount_sat: toSatCapacity(d.amount_sat) }))
-  , withdrawAll$ = on('[name=withdraw-all]', 'input')
-      .map(e => e.target.checked)
-      .merge(goWithdraw$.mapTo(false))   
-      .startWith(false)
+
+  , fundMax$ = O.merge(
+      on('[name=channel-fund-max]', 'input')
+    , on('[name=withdraw-fund-max]', 'input'))
+        .map(e => e.target.checked)
+        .merge(goNewChan$.mapTo(false))
+        .merge(goWithdraw$.mapTo(false))
+        .startWith(false)
 
   return { conf$, page$
-         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$, goWithdraw$
+         , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
          , goChan$, goNewChan$
          , viewPay$, confPay$
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
-         , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
-         , execWithdraw$, withdrawAll$
+         , togChan$, updChan$, openChan$, closeChan$
+         , goWithdraw$, execWithdraw$, fundMax$
          , dismiss$
          }
 }

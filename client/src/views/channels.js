@@ -45,7 +45,7 @@ export const channels = ({ channels, chanActive, unitf, info, conf: { expert } }
   ])
 }
 
-export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit, expert } }) => {
+export const newChannel = ({ amtData, fundMax, obalance, unitf, conf: { unit, expert } }) => {
   const availText = obalance != null ? `Available: ${unitf(obalance)}` : ''
 
   return form({ attrs: { do: 'open-channel' } }, [
@@ -55,14 +55,14 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
       name: 'nodeuri', placeholder: 'nodeid@host[:port]', required: true } }))
 
   , formGroup('Channel funding', div([
-      !fundMaxChan
+      !fundMax
         ? amountField(amtData, 'channel_capacity_msat', true, availText)
         : div('.input-group', [
             input({ attrs: { type: 'hidden', name: 'channel_capacity_msat', value: 'all' } })
           , input('.form-control.form-control-lg.disabled', { attrs: { disabled: true, placeholder: availText } })
           , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
           ])
-    , fancyCheckbox('channel-fund-max', 'Fund maximum', fundMaxChan, '.btn-sm')
+    , fancyCheckbox('channel-fund-max', 'Fund maximum', fundMax, '.btn-sm')
     ]))
 
   , expert ? formGroup('Fee rate', input('.form-control.form-control-lg'

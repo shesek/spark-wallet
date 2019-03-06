@@ -22,7 +22,7 @@ const
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
-                  , fundMaxChan$, withdrawAll$
+                  , fundMax$
                   , conf$: savedConf$
                   , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
@@ -69,7 +69,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
     , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.msatoshi_total}}}, awaiting on-chain confirmation` ])
     , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
-    , withdrawn$.map(w   => [ 'success', `Withdraw completed. t word-wrap: break-word;word-wrap: break-word;  xid: ${w.txid}` ]) 
+    , withdrawn$.map(w   => [ 'success', `Withdraw sent. txid: ${w.txid}` ]) 
     , dismiss$.mapTo(null)
     )
     // hide "connection lost" errors when we get back online
@@ -173,7 +173,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , info$: info$.startWith(null), peers$: peers$.startWith(null), channels$: channels$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
-  , fundMaxChan$, withdrawAll$
+  , fundMax$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }

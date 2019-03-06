@@ -1,5 +1,5 @@
 import { div, img, h2, h4, span, a, p, button, form, input } from '@cycle/dom'
-import { yaml, qruri, formGroup, amountField, fancyCheckbox} from './util'
+import { yaml, qruri, formGroup, amountField, fancyCheckbox } from './util'
 
 const labelType = { bech32: 'Bech32', 'p2sh-segwit': 'P2SH' }
     , otherType = { bech32: 'p2sh-segwit', 'p2sh-segwit': 'bech32' }
@@ -29,7 +29,7 @@ export const deposit = ({ address, type }) => addrQr(address, type).then(qr => (
   , expert ? yaml({ outputs: funds && funds.outputs }) : ''
   ]))
 
-  export const withdraw = ({ amtData, withdrawAll, obalance, unitf, conf: { unit, expert } }) => {
+  export const withdraw = ({ amtData, fundMax, obalance, unitf, conf: { unit, expert } }) => {
     const availText = obalance != null ? `Available: ${unitf(obalance)}` : ''
   
     return form({ attrs: { do: 'exec-withdraw' } }, [
@@ -39,14 +39,14 @@ export const deposit = ({ address, type }) => addrQr(address, type).then(qr => (
         name: 'address', required: true } }))
   
     , formGroup('Withdraw Amount', div([
-        !withdrawAll
+        !fundMax
           ? amountField(amtData, 'amount_sat', true, availText)
           : div('.input-group', [
               input({ attrs: { type: 'hidden', name: 'amount_sat', value: 'all' } })
             , input('.form-control.form-control-lg.disabled', { attrs: { disabled: true, placeholder: availText } })
             , div('.input-group-append.toggle-unit', span('.input-group-text', unit))
             ])
-      , fancyCheckbox('withdraw-all', 'Withdraw All', withdrawAll, '.btn-sm')
+      , fancyCheckbox('withdraw-fund-max', 'Withdraw All', fundMax, '.btn-sm')
       ]))
   
     , expert ? formGroup('Fee rate', input('.form-control.form-control-lg'
