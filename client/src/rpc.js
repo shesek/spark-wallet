@@ -30,7 +30,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
   , newaddr$:  reply('newaddr').map(r => ({ address: r.body.address, type: r.request.send.params[0] }))
-  , withdrawn$: reply('withdraw').map(r => ({tx: r.body.tx, txid: r.body.txid}))
+  , withdrawn$: reply('withdraw').map(r => ({ txid: r.body.txid }))
   , funded$:   reply('connectfund').map(r => r.body)
   , closed$:   reply('closeget').map(r => r.body)
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
