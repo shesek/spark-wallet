@@ -23,8 +23,11 @@ exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
       process.env.BUILD_TARGET != 'web' ? a('.btn.btn-secondary.btn-sm', { attrs: { href: 'settings.html', rel: 'external' }}, 'Server settings') : ''
     , ' '
     , a('.btn.btn-secondary.btn-sm', { attrs: { href: '#/channels' }}, 'Channels')
-    , ' '
+  ])
+  , p('.text-center.mt-4', [
     , a('.btn.btn-secondary.btn-sm', { attrs: { href: '#/deposit' }}, 'Deposit')
+    , ' '
+    , a('.btn.btn-secondary.btn-sm', { attrs: { href: '#/withdraw' }}, 'Withdraw')
     ])
   , expert ? yaml(info) : ''
   ])
