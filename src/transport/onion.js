@@ -21,7 +21,6 @@ module.exports = async (app, dir=defaultDir, hs_dir=path.join(dir, 'hidden_servi
   , HiddenServicePort: `80 127.0.0.1:${httpPort}`
   }
 
-  /*
   if (process.env.ONION_NONANONYMOUS) {
     console.log('[warn] Tor Hidden Service configured to run in NON-ANONYMOUS mode. It will provide no privacy.')
     Object.assign(torConfig, {
@@ -30,7 +29,6 @@ module.exports = async (app, dir=defaultDir, hs_dir=path.join(dir, 'hidden_servi
     , HiddenServiceSingleHopMode: 1
     })
   }
-  */
 
   // Setup an hidden service over the HTTP server
   return new Promise((resolve, reject) =>

@@ -8,6 +8,14 @@
 
   https://github.com/shesek/spark-wallet/commit/9b500c48c4c32fd61a11995410f17adf9f6cdf8d
 
+- Add support for running a Tor hidden service in non-anonymous mode. This makes the hidden service faster, at the cost of losing the privacy benefits.
+
+  From the [Tor documentation](https://2019.www.torproject.org/docs/tor-manual.html#HiddenServiceSingleHopMode):
+
+  > Non Anonymous Hidden Services on a tor instance in HiddenServiceSingleHopMode make one-hop (direct) circuits between the onion service server, and the introduction and rendezvous points. (Onion service descriptors are still posted using 3-hop paths, to avoid onion service directories blocking the service.) This option makes every hidden service instance hosted by a tor instance a Single Onion Service. One-hop circuits make Single Onion servers easily locatable, but clients remain location-anonymous. However, the fact that a client is accessing a Single Onion rather than a Hidden Service may be statistically distinguishable.
+
+  To enable this mode, set `--onion-nonanonymous`.
+
 ## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses

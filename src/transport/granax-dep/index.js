@@ -15,7 +15,7 @@ fs.existsSync(npmExe) || (npmExe = 'npm')
 
 module.exports = async _ => {
   // check if we have it already
-  try { return require('granax') } catch (_) {}
+  try { return require('@deadcanaries/granax') } catch (_) {}
 
   console.log('\nTor Hidden Service enabled (via --onion) for the first time, downloading the Tor Bundle...'
             + '\nThe Spark .onion server will start automatically when its ready.'
@@ -30,5 +30,5 @@ module.exports = async _ => {
       code == 0 ? resolve() : reject(new Error('Tor installation failed, exited with code '+code)))
   })
 
-  return require('granax')
+  return require('@deadcanaries/granax')
 }
