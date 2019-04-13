@@ -71,10 +71,15 @@
     url = url.replace(/\/$/, '')
     console.log(`\n${name} running on ${url}`)
 
-    if (qrterm && !url.includes('://localhost:')) {
-      console.log(`Scan QR to ${qrKey ? 'pair with' : 'open'} ${name}:`)
-      qrterm.generate(`${url}/${qrKey}`, { small: true })
-      qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet.]\n')
+    if (qrterm) {
+      if (!url.includes('://localhost:')) {
+        console.log(`Scan QR to ${qrKey ? 'pair with' : 'open'} ${name}:`)
+        qrterm.generate(`${url}/${qrKey}`, { small: true })
+        qrKey && console.log('[NOTE: This QR contains your secret access key, which provides full access to your wallet.]\n')
+      } else if (!process.env.ONION) {
+        // Display a warning if we don't have a publicly accessible URL and onion is off
+        console.error('Refusing to generate a QR for localhost; Please specify --host, --public-url or --onion to have a publicly accessible URL that can be reached from other devices.')
+      }
     }
 
     if (process.env.PAIRING_URL) {
