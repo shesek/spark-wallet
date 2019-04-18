@@ -73,7 +73,7 @@ ENV STANDALONE=$STANDALONE
 
 WORKDIR /opt/spark
 
-RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotify-tools \
+RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotify-tools netcat-openbsd \
         $([ -n "$STANDALONE" ] || echo libgmp-dev libsqlite3-dev) \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /opt/spark/dist/cli.js /usr/bin/spark-wallet \

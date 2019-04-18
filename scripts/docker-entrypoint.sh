@@ -68,7 +68,7 @@ else
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
 fi
 
-if [ ! -S $LN_PATH/lightning-rpc ]; then
+if [ ! -S $LN_PATH/lightning-rpc ] || ! echo | nc -q0 -U $LN_PATH/lightning-rpc; then
   echo -n "waiting for RPC unix socket... "
   sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
 fi
