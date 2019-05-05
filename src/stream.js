@@ -1,9 +1,18 @@
 import LightningClient from 'lightning-client'
 import EventEmitter from 'events'
-import { get } from 'superagent'
+import request from 'superagent'
+
+// a proxy server can be specified using standard env variables (http(s)_proxy / all_proxy),
+// see github.com/Rob--W/proxy-from-env for details
+require('superagent-proxy')(request)
 
 const rateUrl = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
     , rateInterval = 60000 // 1 minute
+
+const fetchRate = _ =>
+  request.get(rateUrl)
+    .proxy()
+    .then(r => r.body.last)
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)
@@ -32,7 +41,7 @@ module.exports = lnPath => {
   ;(async function getrate() {
     if (em.listenerCount('rate') || !lastRate) {
       // only pull if someone is listening or if we don't have a rate yet
-      try { em.emit('rate', lastRate = await get(rateUrl).then(r => r.body.last)) }
+      try { em.emit('rate', lastRate = await fetchRate()) }
       catch (err) { console.error(err.stack || err.toString()) }
       setTimeout(getrate, rateInterval)
     } else {

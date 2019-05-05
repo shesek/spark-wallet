@@ -16,6 +16,10 @@
 
   To enable this mode, set `--onion-nonanonymous`.
 
+- Allow specifying a proxy server for making HTTP requests (currently, requests are only sent for fetching the exchange rate)
+  using the standard `HTTP(S)_PROXY`/`ALL_PROXY` environment variables.
+  See [proxy-from-env](https://github.com/Rob--W/proxy-from-env) for more details.
+
 ## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses
