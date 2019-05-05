@@ -7,7 +7,7 @@ ENV PATH=./node_modules/.bin:$PATH
 RUN npm config set unsafe-perm true
 
 RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u4 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
-  apt-transport-https=1.4.9 unzip=6.0-21 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u2 disorderfs=0.5.1-1+b1
+  apt-transport-https=1.4.9 unzip=6.0-21+deb9u1 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u2 disorderfs=0.5.1-1+b1
 
 # Wine for Electron Windows builds
 # copied from https://github.com/electron-userland/electron-builder/blob/master/docker/wine/Dockerfile
