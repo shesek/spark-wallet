@@ -6,13 +6,29 @@ import request from 'superagent'
 // see github.com/Rob--W/proxy-from-env for details
 require('superagent-proxy')(request)
 
-const rateUrl = 'https://www.bitstamp.net/api/v2/ticker/btcusd'
-    , rateInterval = 60000 // 1 minute
+const rateInterval = 60000 // 1 minute
+
+const rateProviders = {
+  bitstamp: {
+    url: 'https://www.bitstamp.net/api/v2/ticker/btcusd'
+  , parser: r => r.body.last
+  }
+
+, wasabi: {
+    url: 'http://wasabiukrxmkdgve5kynjztuovbg43uxcbcxn6y2okcrsg7gb6jdmbad.onion/api/v3/btc/Offchain/exchange-rates'
+  , parser: r => r.body[0].rate
+  }
+}
+
+const rateProvider = rateProviders[process.env.RATE_PROVIDER || 'bitstamp']
+
+if (!rateProvider) throw new Error('Invalid rate provider')
 
 const fetchRate = _ =>
-  request.get(rateUrl)
+  request.get(rateProvider.url)
+    .type('json')
     .proxy()
-    .then(r => r.body.last)
+    .then(rateProvider.parser)
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)

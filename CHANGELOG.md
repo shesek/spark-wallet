@@ -20,6 +20,8 @@
   using the standard `HTTP(S)_PROXY`/`ALL_PROXY` environment variables.
   See [proxy-from-env](https://github.com/Rob--W/proxy-from-env) for more details.
 
+- Add support for fetching exchanges rates from the Wasabi API (#78)
+
 ## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses

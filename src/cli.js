@@ -11,6 +11,7 @@ const args = require('meow')(`
       -u, --login <userpwd>    http basic auth login, "username:password" format [default: generate random]
       -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: ~/.spark-wallet/cookie]
       --no-cookie-file         disable cookie file [default: false]
+      --rate-provider <name>   exchange rate provider, one of "bitstamp"or "wasabi" (requires tor) [default: bitstamp]
 
       --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
       --no-tls                 disable TLS for non-localhost hosts [default: false]
