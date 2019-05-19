@@ -20,9 +20,11 @@ const rateProviders = {
   }
 }
 
-const rateProvider = rateProviders[process.env.RATE_PROVIDER || 'bitstamp']
-
-if (!rateProvider) throw new Error('Invalid rate provider')
+let rateProvider
+if (!process.env.NO_RATES) {
+  rateProvider = rateProviders[process.env.RATE_PROVIDER || 'bitstamp']
+  if (!rateProvider) throw new Error('Invalid rate provider')
+}
 
 const fetchRate = _ =>
   request.get(rateProvider.url)
@@ -54,17 +56,19 @@ module.exports = lnPath => {
 
   // Periodically pull BTC<->USD exchange rate
   let lastRate
-  ;(async function getrate() {
-    if (em.listenerCount('rate') || !lastRate) {
-      // only pull if someone is listening or if we don't have a rate yet
-      try { em.emit('rate', lastRate = await fetchRate()) }
-      catch (err) { console.error(err.stack || err.toString()) }
-      setTimeout(getrate, rateInterval)
-    } else {
-      // set a shorter interval for the next update check if we skipped this one
-      setTimeout(getrate, 10000)
-    }
-  })()
+  if (rateProvider) {
+    ;(async function getrate() {
+      if (em.listenerCount('rate') || !lastRate) {
+        // only pull if someone is listening or if we don't have a rate yet
+        try { em.emit('rate', lastRate = await fetchRate()) }
+        catch (err) { console.error(err.stack || err.toString()) }
+        setTimeout(getrate, rateInterval)
+      } else {
+        // set a shorter interval for the next update check if we skipped this one
+        setTimeout(getrate, 10000)
+      }
+    })()
+  }
 
   // GET /stream middleware
   return (req, res) => {

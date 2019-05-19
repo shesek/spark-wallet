@@ -17,10 +17,14 @@
   To enable this mode, set `--onion-nonanonymous`.
 
 - Allow specifying a proxy server for making HTTP requests (currently, requests are only sent for fetching the exchange rate)
-  using the standard `HTTP(S)_PROXY`/`ALL_PROXY` environment variables.
+  using the standard `HTTP(S)_PROXY`/`ALL_PROXY` environment variables (or the matching `--http(s)-proxy` / `--all-proxy` CLI args).
   See [proxy-from-env](https://github.com/Rob--W/proxy-from-env) for more details.
 
 - Add support for fetching exchanges rates from the Wasabi API (#78)
+
+  Can be set with `--rate-provider wasabi` (requires Tor, either as a transparent proxy or using `--all-proxy socks5h://127.0.0.1:9050`).
+
+- Allow disabling exchange rate lookup using `--no-rates` (#81)
 
 ## 0.2.5 - 2019-02-24
 
