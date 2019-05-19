@@ -1,36 +1,8 @@
 import LightningClient from 'lightning-client'
 import EventEmitter from 'events'
-import request from 'superagent'
-
-// a proxy server can be specified using standard env variables (http(s)_proxy / all_proxy),
-// see github.com/Rob--W/proxy-from-env for details
-require('superagent-proxy')(request)
+import { fetchRate } from './exchange-rate'
 
 const rateInterval = 60000 // 1 minute
-
-const rateProviders = {
-  bitstamp: {
-    url: 'https://www.bitstamp.net/api/v2/ticker/btcusd'
-  , parser: r => r.body.last
-  }
-
-, wasabi: {
-    url: 'http://wasabiukrxmkdgve5kynjztuovbg43uxcbcxn6y2okcrsg7gb6jdmbad.onion/api/v3/btc/Offchain/exchange-rates'
-  , parser: r => r.body[0].rate
-  }
-}
-
-let rateProvider
-if (!process.env.NO_RATES) {
-  rateProvider = rateProviders[process.env.RATE_PROVIDER || 'bitstamp']
-  if (!rateProvider) throw new Error('Invalid rate provider')
-}
-
-const fetchRate = _ =>
-  request.get(rateProvider.url)
-    .type('json')
-    .proxy()
-    .then(rateProvider.parser)
 
 module.exports = lnPath => {
   const ln = LightningClient(lnPath)
@@ -56,8 +28,8 @@ module.exports = lnPath => {
 
   // Periodically pull BTC<->USD exchange rate
   let lastRate
-  if (rateProvider) {
-    ;(async function getrate() {
+  if (fetchRate) {
+    (async function getrate() {
       if (em.listenerCount('rate') || !lastRate) {
         // only pull if someone is listening or if we don't have a rate yet
         try { em.emit('rate', lastRate = await fetchRate()) }
