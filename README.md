@@ -198,19 +198,6 @@ IE is unsupported.
 Requires iOS 11.2+ for WebRTC (used by the QR scanner), but works otherwise with iOS 9+.
 Chrome on iOS does not support WebRTC.
 
-## Building from source
-
-Spark can be built from source using the following commands:
-
-```bash
-$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
-$ npm run dist:npm
-$ ./dist/cli.js
-```
-
-The `--verbose` (or `-V`) flag can be passed to log more information, which can be useful while debugging.
-
-
 ## Developing
 
 Spark is written in a reactive-functional style using [rxjs](https://github.com/ReactiveX/rxjs) and [cycle.js](https://cycle.js.org),
@@ -224,11 +211,21 @@ $ npm install
 $ npm start -- --ln-path /data/lightning
 ```
 
+Spark can be built from source using the following commands (more efficient than running the live compliation development server):
+
+```bash
+$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
+$ npm run dist:npm
+$ ./dist/cli.js --ln-path /data/lightning
+```
+
 Cordova builds can be prepared with `npm run dist:cordova`.
 The `.apk` file will be available in `cordova/platforms/android/app/build/outputs/apk/debug/`.
 
 Electron builds can be prepared with `npm run dist:electron`.
 They will be available under `electron/dist`.
+
+To get more verbose server-side logging, start the server with `--verbose` (or `-V`).
 
 To get more verbose output in the browser developer console, set `localStorage.debug = 'spark:*'`.
 
