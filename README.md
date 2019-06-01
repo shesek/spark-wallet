@@ -198,6 +198,18 @@ IE is unsupported.
 Requires iOS 11.2+ for WebRTC (used by the QR scanner), but works otherwise with iOS 9+.
 Chrome on iOS does not support WebRTC.
 
+## Building from source
+
+Spark can be built from source using the following commands:
+
+```bash
+$ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
+$ npm run dist:npm
+$ ./dist/cli.js
+```
+
+The `--verbose` (or `-V`) flag can be passed to log more information, which can be useful while debugging.
+
 
 ## Developing
 
