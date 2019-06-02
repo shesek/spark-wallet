@@ -24,18 +24,14 @@ RUN echo '#!/bin/sh\nLD_PRELOAD="" '$(which wine)' "$@"' > /usr/local/sbin/wine 
 
 
 # Dependencies for building Android apps: Java, SDK tools & Gradle
-ENV JAVA_HOME=/usr/lib/jvm/java-8-oracle
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV ANDROID_HOME=/root/sdktools
 ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/root/gradle-4.1/bin
+
 WORKDIR /root
-# Oracle Java 8
-RUN add-apt-repository "deb http://ppa.launchpad.net/webupd8team/java/ubuntu xenial main" -y \
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys C2518248EEA14886 \
-  && apt-get update \
-  && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
-  && mkdir -p /usr/share/man/man1 \
-  # mkdir because of https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=863199
-  && apt-get install -y --no-install-recommends oracle-java8-installer=8u201-1~webupd8~1
+
+# Java 8
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk-headless=8u212-b03-2~deb9u1
 
 # Android SKD tools
 RUN wget -q -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
