@@ -6,15 +6,20 @@ ENV PATH=./node_modules/.bin:$PATH
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
-RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u4 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
+RUN apt-get update && apt-get install -y --no-install-recommends curl git=1:2.11.0-3+deb9u4 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
   apt-transport-https=1.4.9 unzip=6.0-21+deb9u1 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u2 disorderfs=0.5.1-1+b1
 
 # Wine for Electron Windows builds
 # copied from https://github.com/electron-userland/electron-builder/blob/master/docker/wine/Dockerfile
-RUN dpkg --add-architecture i386 \
-  && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys D43F640145369C51D786DDEA76F1A20FF987672F \
-  && apt-add-repository https://dl.winehq.org/wine-builds/debian \
-  && apt-get update && apt-get install -y --no-install-recommends winehq-stable=4.0~stretch
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common && dpkg --add-architecture i386 && curl -L https://dl.winehq.org/wine-builds/winehq.key > winehq.key && apt-key add winehq.key && apt-add-repository https://dl.winehq.org/wine-builds/ubuntu && \
+  apt-get update && \
+  apt-get -y purge software-properties-common libdbus-glib-1-2 python3-dbus python3-gi python3-pycurl python3-software-properties && \
+  apt-get install -y --no-install-recommends winehq-stable && \
+  # clean
+  apt-get clean && rm -rf /var/lib/apt/lists/* && unlink winehq.key
+
+RUN curl -L https://github.com/electron-userland/electron-builder-binaries/releases/download/wine-2.0.3-mac-10.13/wine-home.zip > /tmp/wine-home.zip && unzip /tmp/wine-home.zip -d /root/.wine && unlink /tmp/wine-home.zip
+
 ENV WINEDEBUG -all,err+all
 ENV WINEDLLOVERRIDES winemenubuilder.exe=d
 
