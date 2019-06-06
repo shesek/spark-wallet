@@ -26,6 +26,8 @@
 
 - Allow disabling exchange rate lookup using `--no-rates` (#81)
 
+- Switch from Oracle Java to OpenJDK for building the Android app (#79, #84)
+
 ## 0.2.5 - 2019-02-24
 
 - Use the compact alphanumeric QR encoding mode for bech32 addresses
