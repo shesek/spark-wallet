@@ -1,5 +1,5 @@
 import { div, ul, li, a, span, button, small, p, strong } from '@cycle/dom'
-import { yaml, ago, showDesc } from './util'
+import { yaml, ago, showDesc, pluralize } from './util'
 import ordinal from 'ordinal'
 
 const perPage = 10
@@ -7,8 +7,9 @@ const perPage = 10
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     , preferCam = hasCam && ('ontouchstart' in window)
 
-const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed ? '' : div([
+const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels, funds, conf: { expert } }) => !feed ? '' : div([
 
+  // Main buttons
   div('.row.mb-2', [
     div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: preferCam ? '#/scan' : '#/payreq' } }, 'Pay'))
   , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
@@ -16,12 +17,24 @@ const home = ({ feed, feedStart, feedActive, unitf, conf: { expert } }) => !feed
   , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
   ])
 
+ // Balance overview
+, channels && funds ? div('.balance-overview.card.text-center.mb-3', div('.card-body.p-2',
+    div('.row', [
+      div('.col-6', div('.container', [
+        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${channels.length} channel`) ])
+      ]))
+     , div('.col-6', div('.container', [
+        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
+      ]))
+    ])
+  )) : ''
+
+
+  // Payments feed
 , ...(!feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
     ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(itemRenderer({ feedActive, unitf, expert })))
   , paging(feed.length, feedStart)
-  ])
-
-])
+  ])])
 
 const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]) => {
   const fid     = `${type}-${obj.id || obj.pay_index}`

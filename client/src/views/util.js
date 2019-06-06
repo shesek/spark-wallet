@@ -59,3 +59,5 @@ export const fancyCheckbox = (name, desc, checked, klass='') => {
 }
 
 export const omitKey = (k, { [k]: _, ...rest }) => rest
+
+export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ? 's' : ''}`

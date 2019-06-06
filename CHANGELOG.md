@@ -8,6 +8,8 @@
 
   https://github.com/shesek/spark-wallet/commit/9b500c48c4c32fd61a11995410f17adf9f6cdf8d
 
+- Display channel and on-chain balances separately on the homepage (#67)
+
 - Add support for running a Tor hidden service in non-anonymous mode. This makes the hidden service faster, at the cost of losing the privacy benefits.
 
   From the [Tor documentation](https://2019.www.torproject.org/docs/tor-manual.html#HiddenServiceSingleHopMode):

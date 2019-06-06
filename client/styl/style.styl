@@ -144,6 +144,15 @@ html
       font-size 100%
       margin-top 0
 
+// Homepage balance overview
+.balance-overview
+  .row > :last-child::before
+    content '+'
+    position absolute
+    left 0
+    margin-left -0.25em
+    font-weight 300
+    color var(--gray)
 
 // Confirm outgoing payments
 .conf-pay
