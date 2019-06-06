@@ -18,7 +18,7 @@ module.exports = (app, cookieFile, login) => {
   const hasFile = cookieFile && fs.existsSync(cookieFile)
 
   if (login) { // provided via --login (or LOGIN)
-    ;[ username, password, accessKey ] = login.split(':', 2)
+    ;[ username, password, accessKey ] = login.split(':', 3)
     assert(password, `Invalid login format, expecting "username:pwd"`)
   } else if (hasFile) {
     console.log(`Loading login credentials from ${cookieFile}`)
