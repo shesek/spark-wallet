@@ -25,7 +25,7 @@ fi
 if [[ -z "$SKIP_SERVER" ]]; then
   browserify --node -t babelify -t [ browserify-package-json --only version  ] \
              -p bundle-collapser/plugin \
-             -x ../src/webui.js -x ../src/transport/tls.js -x ../src/transport/onion.js -x qrcode-terminal \
+             -x ../src/webui.js -x ../src/transport/tls.js -x ../src/transport/onion.js -x qrcode-terminal -x http2 \
              ../node_modules/babel-polyfill \
              ../src/app.js \
   | ( [[ "$NODE_ENV" != "development" ]] && terser --compress warnings=false --mangle || cat ) \
