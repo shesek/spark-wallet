@@ -278,6 +278,7 @@ $ spark-wallet --help
 
     --rate-provider <name>   exchange rate provider, one of "bitstamp" or "wasabi" (requires tor) [default: bitstamp]
     --no-rates               disable exchange rate lookup [default: false]
+    --proxy <uri>            set a proxy for looking up rates, e.g. socks5h://127.0.0.1:9050 [default: none]
 
     --force-tls              enable TLS even when binding on localhost [default: enable for non-localhost only]
     --no-tls                 disable TLS for non-localhost hosts [default: false]
@@ -291,6 +292,7 @@ $ spark-wallet --help
 
     -o, --onion              start Tor Hidden Service (v3) [default: false]
     -O, --onion-path <path>  directory to read/store hidden service data [default: ~/.spark-wallet/tor/]
+    --onion-nonanonymous     setup hidden service in non-anonymous mode [default: false]
 
     -k, --print-key          print access key to console (for use with the Cordova/Electron apps) [default: false]
     -q, --print-qr           print QR code with the server URL [default: false]
