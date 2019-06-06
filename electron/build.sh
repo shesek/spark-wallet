@@ -28,7 +28,7 @@ if [[ -z "$SKIP_SERVER" ]]; then
              -x ../src/webui.js -x ../src/transport/tls.js -x ../src/transport/onion.js -x qrcode-terminal \
              ../node_modules/babel-polyfill \
              ../src/app.js \
-  | ( [[ "$NODE_ENV" != "development" ]] && uglifyjs --compress --mangle || cat ) \
+  | ( [[ "$NODE_ENV" != "development" ]] && terser --compress warnings=false --mangle || cat ) \
   > server.bundle.js
 fi
 
