@@ -21,10 +21,10 @@ const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels
 , channels && funds ? div('.balance-overview.card.text-center.mb-3', div('.card-body.p-2',
     div('.row', [
       div('.col-6', div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${channels.length} channel`) ])
+        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${channels.length} channel`) ])
       ]))
      , div('.col-6', div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
+        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
       ]))
     ])
   )) : ''
