@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.6 - 2019-06-07
 
 - Changed the way the balance shown in the top-right corner is calculated. See:
 
