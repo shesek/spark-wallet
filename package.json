@@ -14,7 +14,8 @@
   },
   "repository": "https://github.com/shesek/spark-wallet",
   "files": [
-    "dist"
+    "dist",
+    "npm-shrinkwrap.json"
   ],
   "keywords": [
     "bitcoin",
