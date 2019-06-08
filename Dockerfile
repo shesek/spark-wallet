@@ -46,6 +46,11 @@ RUN mkdir /opt/bin && ([ -n "$STANDALONE" ] || \
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
+# Install tini
+RUN wget -qO /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64" \
+    && echo "12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855 /opt/bin/tini" | sha256sum -c - \
+    && chmod +x /opt/bin/tini
+
 # Install Spark
 WORKDIR /opt/spark/client
 COPY client/package.json client/npm-shrinkwrap.json ./
@@ -90,6 +95,6 @@ ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor 
 RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/granax-dep/node_modules
 
 VOLUME /data
-ENTRYPOINT [ "scripts/docker-entrypoint.sh" ]
+ENTRYPOINT [ "tini", "-g", "--", "scripts/docker-entrypoint.sh" ]
 
 EXPOSE 9735 9737
