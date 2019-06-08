@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.8 - 2019-06-09
 
 - Security: Make npm-shrinkwrap actually ship with the npm package ([5827098ec](https://github.com/shesek/spark-wallet/commit/5827098ecc301e449e58e6077b0abf4e63aa9635))
 
