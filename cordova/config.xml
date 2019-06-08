@@ -5,6 +5,7 @@
     <author email="nadav@shesek.info" href="https://github.com/shesek">Nadav Ivgi</author>
     <content src="index.html" />
     <access origin="*" />
+    <allow-intent href="bitcoin:*" />
     <platform name="android">
         <icon density="ldpi" src="res/android/icon-36-ldpi.png" />
         <icon density="mdpi" src="res/android/icon-48-mdpi.png" />
