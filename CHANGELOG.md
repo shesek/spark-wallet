@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+- Security: Make npm-shrinkwrap actually ship with the npm package ([5827098ec](https://github.com/shesek/spark-wallet/commit/5827098ecc301e449e58e6077b0abf4e63aa9635))
+
+- Fix: Make QR scanner work in dark themes (a regression introduced in v0.2.6, #91)
+
+- Fix: Make the "Open wallet" link (bitcoin:<addr>) work in the Android app
+
+- Docker: Use tini to init the container process (#90, thanks @NicolasDorier)
+
 ## 0.2.7 - 2019-06-07
 
 - Fix a bug in the homepage on-chain/channel balances display
