@@ -10,6 +10,8 @@
 
 - Docker: Use tini to init the container process (#90, thanks @NicolasDorier)
 
+- Update client-side npm dependencies
+
 ## 0.2.7 - 2019-06-07
 
 - Fix a bug in the homepage on-chain/channel balances display

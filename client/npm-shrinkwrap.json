@@ -3073,9 +3073,9 @@
       "integrity": "sha1-mGbfOVECEw449/mWvOtlRDIJwls="
     },
     "js-yaml": {
-      "version": "3.12.1",
-      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.12.1.tgz",
-      "integrity": "sha512-um46hB9wNOKlwkHgiuyEVAybXBjwFUV0Z/RaHJblRd9DXltue9FTYvzCr9ErQrK9Adz5MU4gHWVaNUfdmrC8qA==",
+      "version": "3.13.1",
+      "resolved": "https://registry.npmjs.org/js-yaml/-/js-yaml-3.13.1.tgz",
+      "integrity": "sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==",
       "requires": {
         "argparse": "^1.0.7",
         "esprima": "^4.0.0"
@@ -3376,9 +3376,9 @@
       "optional": true
     },
     "nanoid": {
-      "version": "1.3.4",
-      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-1.3.4.tgz",
-      "integrity": "sha512-4ug4BsuHxiVHoRUe1ud6rUFT3WUMmjXt1W0quL0CviZQANdan7D8kqN5/maw53hmAApY/jfzMRkC57BNNs60ZQ=="
+      "version": "2.0.3",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-2.0.3.tgz",
+      "integrity": "sha512-NbaoqdhIYmY6FXDRB4eYtDVC9Z9eCbn8TyaiC16LNKtpPv/aqa0tOPD8y6gNE4yUNnaZ7LLhYtXOev/6+cBtfw=="
     },
     "next-tick": {
       "version": "1.0.0",
@@ -3460,9 +3460,9 @@
       }
     },
     "ordinal": {
-      "version": "1.0.2",
-      "resolved": "https://registry.npmjs.org/ordinal/-/ordinal-1.0.2.tgz",
-      "integrity": "sha1-ofS8S6Vr+Rv54xM1uenKRW7Zyng="
+      "version": "1.0.3",
+      "resolved": "https://registry.npmjs.org/ordinal/-/ordinal-1.0.3.tgz",
+      "integrity": "sha512-cMddMgb2QElm8G7vdaa02jhUNbTSrhsgAGUz1OokD83uJTwSUn+nKoNoKVVaRa08yF6sgfO7Maou1+bgLd9rdQ=="
     },
     "os-browserify": {
       "version": "0.3.0",
@@ -3623,9 +3623,9 @@
       "dev": true
     },
     "path-to-regexp": {
-      "version": "2.4.0",
-      "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-2.4.0.tgz",
-      "integrity": "sha512-G6zHoVqC6GGTQkZwF4lkuEyMbVOjoBKAEybQUypI1WTkqinCOrq2x6U2+phkJ1XsEMTy4LjtwPI7HW+NVrRR2w=="
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/path-to-regexp/-/path-to-regexp-3.0.0.tgz",
+      "integrity": "sha512-ZOtfhPttCrqp2M1PBBH4X13XlvnfhIwD7yCLx+GoGoXRPQyxGOTdQMpIzPSPKXAJT/JQrdfFrgdJOyAzvgpQ9A=="
     },
     "pbkdf2": {
       "version": "3.0.17",
@@ -3944,9 +3944,9 @@
       "dev": true
     },
     "pwacompat": {
-      "version": "2.0.8",
-      "resolved": "https://registry.npmjs.org/pwacompat/-/pwacompat-2.0.8.tgz",
-      "integrity": "sha512-rJmmvZnsIISddbcqS4TTDqHtZQ+wp+B4ldR3h1MTjNr4BhxDRBKnfuYjPXoKUWDLvaurx4MDOOiSsni5+Oh8pw=="
+      "version": "2.0.9",
+      "resolved": "https://registry.npmjs.org/pwacompat/-/pwacompat-2.0.9.tgz",
+      "integrity": "sha512-84c/fNFCqdcRIJMPs+7+w+jUTdaefTSlFpupAqL09Dtxh5/qKzY59elpXL8lRuyoSm9x8plD+K9hLVFPYmKTTQ=="
     },
     "qrcode": {
       "version": "1.3.3",
@@ -4216,9 +4216,9 @@
       }
     },
     "rtcpeerconnection-shim": {
-      "version": "1.2.14",
-      "resolved": "https://registry.npmjs.org/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.14.tgz",
-      "integrity": "sha512-/sl1vgarkFPU2rbXy+EMmytMQIzCKNbIm3fChjPnsdytKAROgoivB0KLE7PQRjKx/d/nr/Yx+6qu0/eCpoxn/A==",
+      "version": "1.2.15",
+      "resolved": "https://registry.npmjs.org/rtcpeerconnection-shim/-/rtcpeerconnection-shim-1.2.15.tgz",
+      "integrity": "sha512-C6DxhXt7bssQ1nHb154lqeL0SXz5Dx4RczXZu2Aa/L1NJFnEVDxFwCBo3fqtuljhHIGceg5JKBV4XJ0gW5JKyw==",
       "requires": {
         "sdp": "^2.6.0"
       }
@@ -4440,9 +4440,9 @@
       }
     },
     "string-argv": {
-      "version": "0.1.1",
-      "resolved": "https://registry.npmjs.org/string-argv/-/string-argv-0.1.1.tgz",
-      "integrity": "sha512-El1Va5ehZ0XTj3Ekw4WFidXvTmt9SrC0+eigdojgtJMVtPkF0qbBe9fyNSl9eQf+kUHnTSQxdQYzuHfZy8V+DQ=="
+      "version": "0.3.0",
+      "resolved": "https://registry.npmjs.org/string-argv/-/string-argv-0.3.0.tgz",
+      "integrity": "sha512-NGZHq3nkSXVtGZXTBjFru3MNfoZyIzN25T7BmvdgnSC0LCJczAGLLMQLyjywSIaAoqSemgLzBRHOsnrHbt60+Q=="
     },
     "string-width": {
       "version": "2.1.1",
@@ -4991,9 +4991,9 @@
       "integrity": "sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8="
     },
     "xstream": {
-      "version": "11.10.0",
-      "resolved": "https://registry.npmjs.org/xstream/-/xstream-11.10.0.tgz",
-      "integrity": "sha512-jzFCiRqGtrJi2S1/RPxVFgJwWVBzy4suMPBXlhOi0BJC7VvsXgo2yOHWnOasnj24n2Dlj2Mgfl6fJXPOYmpHFA==",
+      "version": "11.11.0",
+      "resolved": "https://registry.npmjs.org/xstream/-/xstream-11.11.0.tgz",
+      "integrity": "sha512-0zF3PLsHrmbToPBgX1jYZFNw+t5octSFJgVRH44HGlGBBjY7gscvDQOZvty8IQV15Snia1RcLPECWDfEaE4aXg==",
       "requires": {
         "symbol-observable": "1.2.0"
       }
