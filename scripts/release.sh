@@ -53,8 +53,17 @@ fi
 
 # Build Docker server image
 if [[ -z "$SKIP_DOCKER" ]]; then
-  docker build -t $docker_name:$version .
-  docker build -t $docker_name:$version-standalone --build-arg STANDALONE=1 .
+  docker build -t $docker_name:$version-amd64 .
+  docker tag $docker_name:$version-amd64 $docker_name:$version
+  docker build -t $docker_name:$version-standalone-amd64 --build-arg STANDALONE=1 .
+  docker build -t $docker_name:$version-standalone-arm32v7 -f arm32v7.Dockerfile .
+
+  # We need to create the multi arch image for -standalone
+  # Make sure experimental docker cli feature is on: echo "{ \"experimental\": \"enabled\" }" >> $HOME/.docker/config.json
+  docker manifest create --amend $docker_name:$version-standalone $docker_name:$version-standalone-amd64 $docker_name:$version-standalone-arm32v7
+  docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-amd64 --os linux --arch amd64
+  docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-arm32v7 --os linux --arch arm --variant v7
+
   docker tag $docker_name:$version $docker_name:latest
   docker tag $docker_name:$version-standalone $docker_name:standalone
   # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
