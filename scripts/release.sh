@@ -54,7 +54,6 @@ fi
 # Build Docker server image
 if [[ -z "$SKIP_DOCKER" ]]; then
   docker build -t $docker_name:$version-amd64 .
-  docker tag $docker_name:$version-amd64 $docker_name:$version
   docker build -t $docker_name:$version-standalone-amd64 --build-arg STANDALONE=1 .
   docker build -t $docker_name:$version-standalone-arm32v7 -f arm32v7.Dockerfile .
 
@@ -64,7 +63,8 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-amd64 --os linux --arch amd64
   docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-arm32v7 --os linux --arch arm --variant v7
 
-  docker tag $docker_name:$version $docker_name:latest
+  docker tag $docker_name:$version-amd64 $docker_name:$version
+  docker tag $docker_name:$version-amd64 $docker_name:latest
   docker tag $docker_name:$version-standalone $docker_name:standalone
   # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
   # and is needed for the SHA256SUMS file. https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
