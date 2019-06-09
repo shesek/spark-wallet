@@ -54,4 +54,4 @@ RUN ln -s $TOR_PATH/tor-installation/node_modules dist/transport/granax-dep/node
 VOLUME /data
 ENTRYPOINT [ "tini", "-g", "--", "scripts/docker-entrypoint.sh" ]
 
-EXPOSE 9735
+EXPOSE 9737
