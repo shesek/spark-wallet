@@ -40,7 +40,11 @@ ENV STANDALONE=1
 
 WORKDIR /opt/spark
 COPY --from=builder /usr/bin/qemu-arm-static /usr/bin/qemu-arm-static
-RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotify-tools netcat-openbsd
+RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotify-tools netcat-openbsd \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -s /opt/spark/dist/cli.js /usr/bin/spark-wallet \
+    && mkdir /data \
+    && ln -s /data/lightning $HOME/.lightning
 
 COPY --from=builder /opt/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark

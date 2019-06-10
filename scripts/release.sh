@@ -77,7 +77,9 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
   # and is needed for the SHA256SUMS file. https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
   # https://github.com/moby/moby/issues/16482 https://github.com/docker/distribution/issues/1662
-  docker push $docker_name
+  docker push $docker_name:$version
+  docker push $docker_name:$version:latest
+  docker push $docker_name:$version:standalone
 fi
 
 # Make SHA256SUMS & sign it
