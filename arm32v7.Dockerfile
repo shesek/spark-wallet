@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
 RUN npm config set unsafe-perm true
 
 # Install tini
-RUN wget -qO /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0.18.0/tini-armhf" \
+RUN mkdir /opt/bin && wget -qO /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0.18.0/tini-armhf" \
     && echo "01b54b934d5f5deb32aa4eb4b0f71d0e76324f4f0237cc262d59376bf2bdc269 /opt/bin/tini" | sha256sum -c - \
     && chmod +x /opt/bin/tini
 
