@@ -53,6 +53,8 @@ fi
 
 # Build Docker server image
 if [[ -z "$SKIP_DOCKER" ]]; then
+  # Register qemu on the host to build arm32v7 image
+  docker run --rm --privileged multiarch/qemu-user-static:register --reset
   docker build -t $docker_name:$version-amd64 .
   docker build -t $docker_name:$version-standalone-amd64 --build-arg STANDALONE=1 .
   docker build -t $docker_name:$version-standalone-arm32v7 -f arm32v7.Dockerfile .
