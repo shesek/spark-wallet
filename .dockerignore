@@ -16,4 +16,5 @@ docker-builds
 .dockerignore
 Dockerfile
 scripts/builder.Dockerfile
+scripts/release.sh
 .env
