@@ -59,11 +59,17 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   docker build -t $docker_name:$version-standalone-amd64 --build-arg STANDALONE=1 .
   docker build -t $docker_name:$version-standalone-arm32v7 -f arm32v7.Dockerfile .
 
+  # Need to push architecture specific images to make the manifest
+  docker push $docker_name:$version-standalone-amd64
+  docker push $docker_name:$version-standalone-arm32v7
   # We need to create the multi arch image for -standalone
   # Make sure experimental docker cli feature is on: echo "{ \"experimental\": \"enabled\" }" >> $HOME/.docker/config.json
   docker manifest create --amend $docker_name:$version-standalone $docker_name:$version-standalone-amd64 $docker_name:$version-standalone-arm32v7
   docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-amd64 --os linux --arch amd64
   docker manifest annotate $docker_name:$version-standalone $docker_name:$version-standalone-arm32v7 --os linux --arch arm --variant v7
+  docker manifest push $docker_name:$version-standalone -p
+  # We need to pull the manifest in order to tag it after...
+  docker pull $docker_name:$version-standalone
 
   docker tag $docker_name:$version-amd64 $docker_name:$version
   docker tag $docker_name:$version-amd64 $docker_name:latest
