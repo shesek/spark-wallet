@@ -85,5 +85,5 @@ process.env.PROXY && (process.env.ALL_PROXY = process.env.PROXY) // PROXY is an 
 
 if (process.env.TLS_PATH || process.env.TLS_NAME || process.env.LETSENCRYPT) process.env.FORCE_TLS = true
 
-require('babel-polyfill')
+require('@babel/polyfill')
 require('./app')
