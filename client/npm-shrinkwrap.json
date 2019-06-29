@@ -1937,6 +1937,23 @@
         "rxjs": "< 6.0.0",
         "symbol-observable": "^1.2.0",
         "xstream": "*"
+      },
+      "dependencies": {
+        "rxjs": {
+          "version": "5.5.12",
+          "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-5.5.12.tgz",
+          "integrity": "sha512-xx2itnL5sBbqeeiVgNPVuQQ1nC8Jp2WfNJhXWHmElW9YmrpS9UVnNzhP3EH3HFqexO5Tlp8GhYY+WEcqcVMvGw==",
+          "requires": {
+            "symbol-observable": "1.0.1"
+          },
+          "dependencies": {
+            "symbol-observable": {
+              "version": "1.0.1",
+              "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.1.tgz",
+              "integrity": "sha1-g0D8RwLDEi310iKI+IKD9RPT/dQ="
+            }
+          }
+        }
       }
     },
     "@cycle/storage": {
@@ -6092,19 +6109,17 @@
       }
     },
     "rxjs": {
-      "version": "5.5.12",
-      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-5.5.12.tgz",
-      "integrity": "sha512-xx2itnL5sBbqeeiVgNPVuQQ1nC8Jp2WfNJhXWHmElW9YmrpS9UVnNzhP3EH3HFqexO5Tlp8GhYY+WEcqcVMvGw==",
+      "version": "6.5.2",
+      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-6.5.2.tgz",
+      "integrity": "sha512-HUb7j3kvb7p7eCUHE3FqjoDsC1xfZQ4AHFWfTKSpZ+sAhhz5X1WX0ZuUqWbzB2QhSLp3DoLUG+hMdEDKqWo2Zg==",
       "requires": {
-        "symbol-observable": "1.0.1"
-      },
-      "dependencies": {
-        "symbol-observable": {
-          "version": "1.0.1",
-          "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.1.tgz",
-          "integrity": "sha1-g0D8RwLDEi310iKI+IKD9RPT/dQ="
-        }
+        "tslib": "^1.9.0"
       }
+    },
+    "rxjs-compat": {
+      "version": "6.5.2",
+      "resolved": "https://registry.npmjs.org/rxjs-compat/-/rxjs-compat-6.5.2.tgz",
+      "integrity": "sha512-TRMkTp4FgSxE2HtGvxmgRukh3JqdFM7ejAj1Ti/VdodbPGfWvZR5+KdLKRV9jVDFyu2SknM8RD+PR54KGnoLjg=="
     },
     "safe-buffer": {
       "version": "5.1.1",
@@ -6810,6 +6825,11 @@
       "resolved": "https://registry.npmjs.org/trim-right/-/trim-right-1.0.1.tgz",
       "integrity": "sha1-yy4SAwZ+DI3h9hQJS5/kVwTqYAM=",
       "dev": true
+    },
+    "tslib": {
+      "version": "1.10.0",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-1.10.0.tgz",
+      "integrity": "sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ=="
     },
     "tty-browserify": {
       "version": "0.0.1",
