@@ -56,7 +56,7 @@
     "bundle-collapser": "^1.3.0",
     "envify": "^4.1.0",
     "nib": "^1.1.2",
-    "pug": "^2.0.3",
+    "pug": "^2.0.4",
     "pug-cli": "^1.0.0-alpha6",
     "pugify": "^2.2.0",
     "stylus": "^0.54.5",
