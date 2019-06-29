@@ -13,10 +13,10 @@ cp src/transport/granax-dep/{package,npm-shrinkwrap}.json dist/transport/granax-
 # Build client-side www assets
 (cd client && DEST=../dist/www npm run dist)
 
-# Remove sources of non-determinism
-chmod -R 755 dist package.json npm-shrinkwrap.json README.md CHANGELOG.md LICENSE
-TZ=UTC touch -t "1711081658.41" package.json npm-shrinkwrap.json README.md CHANGELOG.md LICENSE
-TZ=UTC find dist -exec touch -t "1711081658.41" {} \;
+# Match the fixed timestamp and permission attributes used by the npm registry
+# chmod -R 755 dist
+TZ=UTC touch -t "8510260815.00" package.json npm-shrinkwrap.json README.md CHANGELOG.md LICENSE
+TZ=UTC find dist -exec touch -t "8510260815.00" {} \;
 # this is done automatically since npm v5.7.1, but the latest stable 5.7.x and 5.8.x are currently buggy (https://github.com/npm/npm/issues/19989)
 
 # Package to spark-wallet-[x.y.z]-npm.tgz
