@@ -28,6 +28,9 @@ if (process.env.BUILD_TARGET !== 'web' && !localStorage.serverInfo) {
   throw new Error('Missing server settings, redirecting')
 }
 
+// Get cyclejs to use rxjs-compat-enabled streams
+require("@cycle/run/lib/adapt").setAdapt(stream$ => O.from(stream$))
+
 const serverInfo = process.env.BUILD_TARGET === 'web'
   ? { serverUrl: '.', accessKey: document.querySelector('[name=access-key]').content }
   : JSON.parse(localStorage.serverInfo)
