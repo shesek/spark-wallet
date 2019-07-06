@@ -43,7 +43,7 @@ fi
 # Browserify bundles
 
 bundle() {
-  browserify -p bundle-collapser/plugin $BROWSERIFY_OPT $1 \
+  browserify $BROWSERIFY_OPT $1 \
     | ( [[ "$NODE_ENV" != "development" ]] && terser --compress warnings=false --mangle || cat )
 }
 
