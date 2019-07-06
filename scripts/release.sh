@@ -77,9 +77,10 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   docker manifest push $target -p
   done
 
-  # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
-  # and is needed for the SHA256SUMS file. https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
+  # Need to push image to get its checksum in dist-shasums below. See https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
   # https://github.com/moby/moby/issues/16482 https://github.com/docker/distribution/issues/1662
+  docker push $docker_name:$version-amd64
+
   docker tag $docker_name:$version-amd64 $docker_name:$version
   docker tag $docker_name:$version-amd64 $docker_name:latest
 fi
