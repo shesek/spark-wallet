@@ -1,6 +1,5 @@
 import '@babel/polyfill'
 import 'webrtc-adapter'
-import 'pwacompat'
 
 import run from '@cycle/rxjs-run'
 
@@ -21,6 +20,10 @@ import intent from './intent'
 import model  from './model'
 import view   from './view'
 import rpc    from './rpc'
+
+if (process.env.BUILD_TARGET === 'web') {
+  require('pwacompat')
+}
 
 // Send Cordova/Electron users directly to server settings if there are none
 if (process.env.BUILD_TARGET !== 'web' && !localStorage.serverInfo) {
