@@ -53,14 +53,36 @@ fi
 
 # Build Docker server image
 if [[ -z "$SKIP_DOCKER" ]]; then
-  docker build -t $docker_name:$version .
-  docker build -t $docker_name:$version-standalone --build-arg STANDALONE=1 .
-  docker tag $docker_name:$version $docker_name:latest
-  docker tag $docker_name:$version-standalone $docker_name:standalone
-  # we shouldn't push docker this early in the script, but the docker image hash is not available until we do
-  # and is needed for the SHA256SUMS file. https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
+
+  # Building the arm32v7 image requires registering qemu on the host, which can be done using one of the following:
+  # sudo apt-get install qemu binfmt-support qemu-user-static
+  # docker run --rm --privileged multiarch/qemu-user-static:register --reset
+
+  docker build -t $docker_name:$version-amd64 .
+  docker build -t $docker_name:$version-standalone-amd64 --build-arg STANDALONE=1 .
+  docker build -t $docker_name:$version-standalone-arm32v7 -f arm32v7.Dockerfile .
+
+  # Need to push architecture specific images to make the manifest
+  docker push $docker_name:$version-standalone-amd64
+  docker push $docker_name:$version-standalone-arm32v7
+
+  # Tagging a manifest does not work, so we need to create a manifest list for both tags
+  for target in "$docker_name:$version-standalone" "$docker_name:standalone"
+  do
+  # We need to create the multi arch image for -standalone
+  # Make sure experimental docker cli feature is on: echo "{ \"experimental\": \"enabled\" }" >> $HOME/.docker/config.json
+  docker manifest create --amend $target $docker_name:$version-standalone-amd64 $docker_name:$version-standalone-arm32v7
+  docker manifest annotate $target $docker_name:$version-standalone-amd64 --os linux --arch amd64
+  docker manifest annotate $target $docker_name:$version-standalone-arm32v7 --os linux --arch arm --variant v7
+  docker manifest push $target -p
+  done
+
+  # Need to push image to get its checksum in dist-shasums below. See https://groups.google.com/forum/#!topic/docker-user/PvAcxDrvP30
   # https://github.com/moby/moby/issues/16482 https://github.com/docker/distribution/issues/1662
-  docker push $docker_name
+  docker push $docker_name:$version-amd64
+
+  docker tag $docker_name:$version-amd64 $docker_name:$version
+  docker tag $docker_name:$version-amd64 $docker_name:latest
 fi
 
 # Make SHA256SUMS & sign it
