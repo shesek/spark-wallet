@@ -4,9 +4,13 @@ import serialize from 'form-serialize'
 import { Observable as O } from './rxjs'
 import { makeDOMDriver } from '@cycle/dom'
 import { makeHashHistoryDriver, captureClicks } from '@cycle/history'
+import storageDriver from '@cycle/storage'
+
+// Get cyclejs to use rxjs-compat-enabled streams
+require("@cycle/run/lib/adapt").setAdapt(stream$ => O.from(stream$))
+
 import makeRouteDriver from './driver/route'
 import makeConfDriver  from './driver/conf'
-import storageDriver from '@cycle/storage'
 
 import { combine, dbg } from './util'
 
@@ -15,7 +19,6 @@ import view from './views/server-settings'
 
 // Settings manager for Cordova/Electron builds.
 // This is a standalone cycle app loaded using a separate HTML file (settings.html).
-
 
 const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   const
