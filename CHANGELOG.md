@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Docker: Add standalone arm32v7 image (https://github.com/shesek/spark-wallet/pull/93)
+
+  Available using the new multiarch image at shesek/spark-wallet:standalone and shesek/spark-wallet:VERSION-standalone,
+  or directly at shesek/spark-wallet:standalone-arm32v7 and shesek/spark-wallet:VERSION-standalone-arm32v7.
+
+  Thanks @NicolasDorier!
+
+- Upgrade to RxJS v6, Cycle-run v10, Babel v7, and more
+
 ## 0.2.8 - 2019-06-09
 
 - Security: Make npm-shrinkwrap actually ship with the npm package ([5827098ec](https://github.com/shesek/spark-wallet/commit/5827098ecc301e449e58e6077b0abf4e63aa9635))
