@@ -8,7 +8,7 @@
   "author": "Nadav Ivgi",
   "license": "MIT",
   "dependencies": {
-    "@cycle/dom": "^22.3.0",
+    "@cycle/dom": "^20.4.0",
     "@cycle/history": "^7.1.0",
     "@cycle/http": "^15.1.0",
     "@cycle/rxjs-run": "^10.2.0",
