@@ -81,6 +81,8 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   # https://github.com/moby/moby/issues/16482 https://github.com/docker/distribution/issues/1662
   docker push $docker_name:$version-amd64
 
+  docker tag $docker_name:$version-standalone-arm32v7 $docker_name:standalone-arm32v7
+  docker tag $docker_name:$version-standalone-amd64 $docker_name:standalone-amd64
   docker tag $docker_name:$version-amd64 $docker_name:$version
   docker tag $docker_name:$version-amd64 $docker_name:latest
 fi
