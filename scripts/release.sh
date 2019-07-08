@@ -85,10 +85,15 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   docker push $docker_name:$version-amd64
 
   docker tag $docker_name:$version-standalone-arm32v7 $docker_name:standalone-arm32v7
+  docker push $docker_name:standalone-arm32v7
   docker tag $docker_name:$version-standalone-arm64v8 $docker_name:standalone-arm64v8
+  docker push $docker_name:standalone-arm64v8
   docker tag $docker_name:$version-standalone-amd64 $docker_name:standalone-amd64
+  docker push $docker_name:standalone-amd64
   docker tag $docker_name:$version-amd64 $docker_name:$version
+  docker push $docker_name:$version
   docker tag $docker_name:$version-amd64 $docker_name:latest
+  docker push $docker_name:latest
 fi
 
 # Make SHA256SUMS & sign it
