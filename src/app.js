@@ -23,6 +23,7 @@
   app.use(require('body-parser').json())
   app.use(require('./auth')(app, process.env.COOKIE_FILE, process.env.LOGIN))
   app.use(require('compression')())
+  app.use(require('cors')())
   app.use(require('helmet')({ contentSecurityPolicy: { directives: {
     defaultSrc: [ "'self'" ]
   , scriptSrc:  [ "'self'", "'unsafe-eval'" ]
