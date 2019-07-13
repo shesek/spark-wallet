@@ -7,7 +7,7 @@ The Linux `AppImage`/`deb` builds are currently not. :-(
 
 ### Reproduce with Docker
 
-A `Dockerfile` for reproducing the builds is available at `scripts/build-releases.Dockerfile`.
+A `Dockerfile` for reproducing the builds is available at `scripts/builder.Dockerfile`.
 It can be used as follows:
 
 ```bash
