@@ -300,6 +300,7 @@ $ spark-wallet --help
     -P, --pairing-url        print URL with embedded access key [default: false]
     --public-url <url>       override public URL used for QR codes [default: http(s)://{host}/]
 
+    --allow-cors <origin>    allow browser CORS requests from <origin> (USE WITH CARE) [default: off]
     --no-webui               run API server without serving client assets [default: false]
     --no-test-conn           skip testing access to c-lightning rpc (useful for init scripts) [default: false]
 
