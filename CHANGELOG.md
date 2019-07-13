@@ -9,7 +9,11 @@
 
   Thanks @NicolasDorier!
 
-- Upgrade to RxJS v6, Cycle-run v10, Babel v7, and more
+- Docker: Upgrade to Bitcoin Core v0.18.0
+
+- Docker: Upgrade to c-lightning v0.17.1
+
+- Upgrade to RxJS v6, Cycle-run v10, Babel v7
 
 ## 0.2.8 - 2019-06-09
 

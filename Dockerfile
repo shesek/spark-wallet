@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential libtool libgmp-dev \
                                      libsqlite3-dev python python3 wget zlib1g-dev")
 
-ENV LIGHTNINGD_VERSION=v0.6.3
+ENV LIGHTNINGD_VERSION=v0.7.1
 ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || ( \
@@ -22,10 +22,10 @@ RUN [ -n "$STANDALONE" ] || ( \
     && make)
 
 # Install bitcoind
-ENV BITCOIN_VERSION 0.17.1
+ENV BITCOIN_VERSION 0.18.0
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 53ffca45809127c9ba33ce0080558634101ec49de5224b2998c489b6d0fc2b17
+ENV BITCOIN_SHA256 5146ac5310133fbb01439666131588006543ab5364435b748ddfc95a8cb8d63f
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
