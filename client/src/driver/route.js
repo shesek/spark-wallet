@@ -5,7 +5,8 @@ const isStr = x => typeof x === 'string'
 
 module.exports = history => goto$ => {
   const history$ = O.from(history(
-    goto$.map(goto => isStr(goto) ? { type: 'push', pathname: goto } : goto)
+    // default the `type` to push, but allow to override it
+    goto$.map(goto => ({ type: 'push', ...goto }))
   ))
 
   return (path, re=path && pathRegexp(path)) =>

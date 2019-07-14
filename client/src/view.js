@@ -44,15 +44,18 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
 
 // Navigation
 exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, payreq$, funded$ }) => O.merge(
-  // navto '/' when receiving payments for the last invoice created by the user
-  in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label).mapTo('/?r')
+  // navto '/' when receiving payments for the active invoice
+  inPayActive(in$, inv$).mapTo({ pathname: '/', search: '?r' })
   // navto '/' after sending payments
-, out$.mapTo('/?r')
+, out$.mapTo                  ({ pathname: '/', search: '?r' })
   // navto '/confirm' when viewing a payment request
-, payreq$.mapTo('/confirm')
+, payreq$.mapTo               ({ pathname: '/confirm' })
   // navto /channels after opening channel
-, funded$.mapTo('/channels?r')
+, funded$.mapTo               ({ pathname: '/channels', search: '?r' })
 )
+
+// returns a stream of incoming payments received to the latest invoice created by the user
+const inPayActive = (in$, inv$) => in$.withLatestFrom(inv$).filter(([ pay, inv ]) => pay.label === inv.label)
 
 // HTML5 notifications
 exports.notif = ({ incoming$, state$ }) =>
