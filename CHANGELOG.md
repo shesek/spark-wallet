@@ -2,18 +2,16 @@
 
 ## Unreleased
 
-- Docker: Add standalone arm32v7 image (https://github.com/shesek/spark-wallet/pull/93)
+- Docker: Add standalone arm32v7 image (#93)
 
-  Available using the new multiarch image at shesek/spark-wallet:standalone and shesek/spark-wallet:VERSION-standalone,
-  or directly at shesek/spark-wallet:standalone-arm32v7 and shesek/spark-wallet:VERSION-standalone-arm32v7.
+  Available using the new multiarch image at `shesek/spark-wallet:standalone` and `shesek/spark-wallet:VERSION-standalone`,
+  or directly using `shesek/spark-wallet:standalone-arm32v7` and `shesek/spark-wallet:VERSION-standalone-arm32v7`.
 
   Thanks @NicolasDorier!
 
-- Docker: Upgrade to Bitcoin Core v0.18.0
+- Docker: Upgrade to Bitcoin Core v0.18.0 and c-lightning v0.17.1
 
-- Docker: Upgrade to c-lightning v0.17.1
-
-- Upgrade to RxJS v6, Cycle-run v10, Babel v7
+- Upgrade to RxJS v6, Babel v7, Cycle-run v10
 
 - Allow enabling CORS using `--allow-cors <origin>` (#101)
 
