@@ -78,7 +78,7 @@ if (!process.env.NO_COOKIE_FILE && !process.env.COOKIE_FILE)
   process.env.COOKIE_FILE = path.join(os.homedir(), '.spark-wallet', 'cookie')
 
 process.env.NODE_ENV || (process.env.NODE_ENV = 'production')
-process.env.VERBOSE && (process.env.DEBUG = `lightning-client,spark,superagent,${process.env.DEBUG||''}`)
+process.env.VERBOSE && (process.env.DEBUG = `clightning-client,spark,superagent,${process.env.DEBUG||''}`)
 process.env.ONION_PATH && (process.env.ONION = true) // --onion-path implies --onion
 process.env.ONION_NONANONYMOUS && (process.env.ONION = true) // --onion-nonanonymous implies --onion
 process.env.PAIRING_QR && (process.env.PRINT_QR = true) // --pairing-qr implies --print-qr

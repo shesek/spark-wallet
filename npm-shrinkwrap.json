@@ -1441,6 +1441,30 @@
         }
       }
     },
+    "clightning-client": {
+      "version": "0.1.0",
+      "resolved": "https://registry.npmjs.org/clightning-client/-/clightning-client-0.1.0.tgz",
+      "integrity": "sha512-YhnQkykMNX4Uv7IJpGFqwqAZNcgLHAcdsVk/1WEDQwxpxU3xPSMhw3h/brNr6b7gd65fo8nWwJ247nWnb5H3Dg==",
+      "requires": {
+        "debug": "^3.1.0",
+        "error": "github:shesek/error"
+      },
+      "dependencies": {
+        "debug": {
+          "version": "3.2.6",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-3.2.6.tgz",
+          "integrity": "sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==",
+          "requires": {
+            "ms": "^2.1.1"
+          }
+        },
+        "ms": {
+          "version": "2.1.2",
+          "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.2.tgz",
+          "integrity": "sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w=="
+        }
+      }
+    },
     "cliui": {
       "version": "4.1.0",
       "resolved": "https://registry.npmjs.org/cliui/-/cliui-4.1.0.tgz",
@@ -1864,6 +1888,14 @@
       "integrity": "sha512-1MkrZNvWTKCaigbn+W15elq2BB/L22nqrSY5DKlo3X6+vclJm8Bb5djXJBmEX6fS3+zCh/F4VBK5Z2KxJt4s2Q==",
       "requires": {
         "once": "^1.4.0"
+      }
+    },
+    "error": {
+      "version": "github:shesek/error#7e0e5c5b5efc52f58db25aa5d15e67cd6adcb8da",
+      "from": "github:shesek/error",
+      "requires": {
+        "string-template": "~0.2.1",
+        "xtend": "~4.0.0"
       }
     },
     "error-ex": {
@@ -3562,11 +3594,6 @@
         }
       }
     },
-    "jsonparse": {
-      "version": "1.3.1",
-      "resolved": "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz",
-      "integrity": "sha1-P02uSpH6wxX3EGL4UhzCOfE2YoA="
-    },
     "kind-of": {
       "version": "6.0.2",
       "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-6.0.2.tgz",
@@ -3618,33 +3645,6 @@
       "requires": {
         "prelude-ls": "~1.1.2",
         "type-check": "~0.3.2"
-      }
-    },
-    "lightning-client": {
-      "version": "github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
-      "from": "lightning-client@github:shesek/lightning-client-js#ccb565d889803bce65a1a0e42d3948332a7fcdac",
-      "requires": {
-        "debug": "^3.1.0",
-        "error": "github:shesek/error",
-        "jsonparse": "^1.3.1"
-      },
-      "dependencies": {
-        "debug": {
-          "version": "3.1.0",
-          "resolved": "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz",
-          "integrity": "sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==",
-          "requires": {
-            "ms": "2.0.0"
-          }
-        },
-        "error": {
-          "version": "github:shesek/error#7e0e5c5b5efc52f58db25aa5d15e67cd6adcb8da",
-          "from": "github:shesek/error",
-          "requires": {
-            "string-template": "~0.2.1",
-            "xtend": "~4.0.0"
-          }
-        }
       }
     },
     "load-json-file": {

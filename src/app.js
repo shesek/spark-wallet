@@ -1,6 +1,6 @@
 (async function() { // IIFE
   const app = require('express')()
-      , ln  = require('lightning-client')(process.env.LN_PATH)
+      , ln  = require('clightning-client')(process.env.LN_PATH)
       , cmd = require('./cmd')(ln)
 
   // Test connection

@@ -1,4 +1,4 @@
-import LightningClient from 'lightning-client'
+import LightningClient from 'clightning-client'
 import EventEmitter from 'events'
 import { fetchRate } from './exchange-rate'
 
