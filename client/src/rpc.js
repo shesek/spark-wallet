@@ -21,7 +21,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   // periodic updates
   , info$:     reply('getinfo').map(r => r.body)
   , peers$:    reply('listpeers').map(r => r.body.peers)
-  , payments$: reply('listpayments').map(r => r.body.payments)
+  , payments$: reply('listsendpays').map(r => r.body.payments)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
   , funds$:    reply('listfunds').map(r => r.body)
 
@@ -29,7 +29,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
-  , newaddr$:  reply('newaddr').map(r => ({ address: r.body.address, type: r.request.send.params[0] }))
+  , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
+                               .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
   , funded$:   reply('connectfund').map(r => r.body)
   , closed$:   reply('closeget').map(r => r.body)
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
@@ -56,7 +57,7 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, 
 , goDeposit$.map(type => [ 'newaddr',   [ type ] ])
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
-, timer(60000).mapTo(    [ 'listpayments', [], { bg: true } ])
+, timer(60000).mapTo(    [ 'listsendpays', [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
               .mapTo(    [ 'listpeers',    [], { bg: true } ])

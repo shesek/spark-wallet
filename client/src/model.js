@@ -100,7 +100,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
-  // Periodically re-sync from listpayments (completed only),
+  // Periodically re-sync from listsendpays (completed only),
   // continuously patch with known outgoing payments
   , freshPays$ = O.merge(
       payments$.map(payments => _ => payments.filter(p => p.status === 'complete'))

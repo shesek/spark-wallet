@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Dropped support for c-lightning before 0.7.x
+
 - Docker: Add standalone arm32v7 image (#93)
 
   Available using the new multiarch image at `shesek/spark-wallet:standalone` and `shesek/spark-wallet:VERSION-standalone`,
@@ -9,7 +11,7 @@
 
   Thanks @NicolasDorier!
 
-- Docker: Upgrade to Bitcoin Core v0.18.0 and c-lightning v0.17.1
+- Docker: Upgrade to Bitcoin Core v0.18.0 and c-lightning v0.7.1
 
 - Upgrade to RxJS v6, Babel v7, Cycle-run v10
 
