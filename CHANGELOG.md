@@ -2,9 +2,11 @@
 
 ## Unreleased
 
-- Dropped support for c-lightning before 0.7.x
+- *BREAKING CHANGE:* Dropped support for c-lightning before 0.7.0
 
-- Docker: Add standalone arm32v7 image (#93)
+- Compatibility with c-lightning v0.7.3 (upcoming, currently rc), as well as previous v0.7.x with allow-deprecated-apis=false
+
+- Docker: Add standalone arm32v7 and arm64v8 images (#93)
 
   Available using the new multiarch image at `shesek/spark-wallet:standalone` and `shesek/spark-wallet:VERSION-standalone`,
   or directly using `shesek/spark-wallet:standalone-arm32v7` and `shesek/spark-wallet:VERSION-standalone-arm32v7`.
