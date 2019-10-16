@@ -18,16 +18,7 @@ const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels
   ])
 
  // Balance overview
-, channels && funds ? div('.balance-overview.card.text-center.mb-3', div('.card-body.p-2',
-    div('.row', [
-      div('.col-6', div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${channels.length} channel`) ])
-      ]))
-     , div('.col-6', div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
-      ]))
-    ])
-  )) : ''
+, channels && funds ? balanceOverview({ obalance, cbalance, channels, funds, unitf }) : ''
 
 
   // Payments feed
@@ -74,5 +65,23 @@ const paging = (total, start) => total <= perPage ? '' :
 const pageLink = (label, start, active) =>
   start == null ? button('.btn.btn-sm.btn-link.invisible', label)
                 : button('.btn.btn-sm.btn-link', { dataset: { feedStart: ''+start } }, label)
+
+const balanceOverview = ({ obalance, cbalance, channels, funds, unitf }) => {
+  if (!obalance && !cbalance) return;
+
+  const colSize = obalance && cbalance ? 6 : 12
+      , chanNum = channels.filter(c => c.chan.state == 'CHANNELD_NORMAL').length
+
+  return div('.balance-overview.card.text-center.mb-3', div('.card-body.p-2',
+    div('.row', [
+      cbalance ? div(`.col-${colSize}`, div('.container', [
+        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${chanNum} channel`) ])
+      ])) : ''
+    , obalance ? div(`.col-${colSize}`, div('.container', [
+        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
+      ])) : ''
+    ])
+  ))
+}
 
 module.exports = { home }
