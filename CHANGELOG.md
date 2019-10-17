@@ -13,7 +13,7 @@
 
   Thanks @NicolasDorier!
 
-- Docker: Upgrade to Bitcoin Core v0.18.0 and c-lightning v0.7.2
+- Docker: Upgrade to Bitcoin Core v0.18.1 and c-lightning v0.7.2
 
 - Upgrade to RxJS v6, Babel v7, Cycle-run v10
 
