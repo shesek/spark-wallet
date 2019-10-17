@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.9 - 2019-10-17
 
 - *BREAKING CHANGE:* Dropped support for c-lightning before 0.7.0
 
