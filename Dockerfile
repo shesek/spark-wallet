@@ -6,10 +6,10 @@ ENV STANDALONE=$STANDALONE
 
 # Install build c-lightning for third-party packages (c-lightning/bitcoind)
 RUN apt-get update && apt-get install -y --no-install-recommends git \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential libtool libgmp-dev \
-                                     libsqlite3-dev python python3 wget zlib1g-dev")
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
+                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
 
-ENV LIGHTNINGD_VERSION=v0.7.1
+ENV LIGHTNINGD_VERSION=v0.7.2
 ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || ( \
@@ -18,6 +18,9 @@ RUN [ -n "$STANDALONE" ] || ( \
     && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
     && git verify-tag $LIGHTNINGD_VERSION \
     && git checkout $LIGHTNINGD_VERSION \
+    # `sed` below needed for v0.7.2, can be removed in v0.7.3.
+    # see https://github.com/ElementsProject/lightning/issues/2970, https://github.com/ElementsProject/lightning/pull/2967
+    && sed -i 's#$(EXTERNAL_HEADERS)#$(EXTERNAL_HEADERS) tools/test/gen_test.h#' tools/test/Makefile \
     && DEVELOPER=$DEVELOPER ./configure \
     && make)
 
