@@ -68,6 +68,9 @@ if [[ -z "$SKIP_DOCKER" ]]; then
   docker push $docker_name:$version-standalone-arm32v7
   docker push $docker_name:$version-standalone-arm64v8
 
+  # Required for `docker manifest` (as of docker v19.03.3)
+  export DOCKER_CLI_EXPERIMENTAL=enabled
+
   # Tagging a manifest does not work, so we need to create a manifest list for both tags
   for target in "$docker_name:$version-standalone" "$docker_name:standalone"
   do
