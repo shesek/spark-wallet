@@ -4,11 +4,11 @@
   "author": "Nadav Ivgi",
   "license": "MIT",
   "dependencies": {
-    "typeface-lato": "0.0.54",
-    "typeface-nunito-sans": "0.0.54",
-    "typeface-open-sans": "0.0.54",
-    "typeface-roboto": "0.0.54",
-    "typeface-source-sans-pro": "0.0.54",
-    "typeface-ubuntu": "0.0.54"
+    "typeface-lato": "0.0.75",
+    "typeface-nunito-sans": "0.0.72",
+    "typeface-open-sans": "0.0.75",
+    "typeface-roboto": "0.0.75",
+    "typeface-source-sans-pro": "0.0.75",
+    "typeface-ubuntu": "0.0.65"
   }
 }
