@@ -90,8 +90,12 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
       , isClosed   = [ 'closing', 'closed' ].includes(stateGroup)
       , ours       = chan.msatoshi_to_us
       , theirs     = chan.msatoshi_total - ours
-      , receivable = theirs - (chan.their_channel_reserve_satoshis*1000)
-      , spendable  = ours - (chan.our_channel_reserve_satoshis*1000)
+      // the channel reserve fields appear to be sometimes (incorrectly?) missing,
+      // defaulting them to 0 isn't quite right but should work for now
+      , ourReserve = chan.our_channel_reserve_satoshis*1000 || 0
+      , thrReserve = chan.their_channel_reserve_satoshis*1000 || 0
+      , receivable = theirs - ourReserve
+      , spendable  = ours - thrReserve
 
   const channelHeight = chan.short_channel_id && +chan.short_channel_id.split(/[:x]/)[0]
       , channelAge    = channelHeight && blockheight && (blockheight - channelHeight + 1)
@@ -108,10 +112,10 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
     ])
 
   , div('.progress.channel-bar', !isClosed ? [
-      bar('Our reserve', 'warning', chan.our_channel_reserve_satoshis * 1000)
-    , spendable  > 0 ? bar('Spendable', 'success', spendable) : ''
+      ourReserve ? bar('Our reserve', 'warning', ourReserve) : ''
+    , spendable  > 0 ? bar('Spendable', 'success', spendabl) : ''
     , receivable > 0 ? bar('Receivable', 'info', receivable) : ''
-    , bar('Their reserve', 'warning', chan.their_channel_reserve_satoshis * 1000)
+    , thrReserve ? bar('Their reserve', 'warning', thrReserve) : ''
     ] : [
       ours   > 0 ? bar('Ours', 'success', ours) : ''
     , theirs > 0 ? bar('Theirs', 'info', theirs) : ''
