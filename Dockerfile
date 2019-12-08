@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
                                      libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
 
-ENV LIGHTNINGD_VERSION=v0.7.2
-ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
+ENV LIGHTNINGD_VERSION=v0.7.3
+ENV LIGHTNINGD_PGP_KEY=30DE693AE0DE9E37B3E7EB6BBFF0F67810C1EED1
 
 RUN [ -n "$STANDALONE" ] || ( \
     git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
