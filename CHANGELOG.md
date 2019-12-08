@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Docker: Update to Bitcoin Core v0.19.0.1 and c-lightning v0.7.3
+
+- Fix bug with missing channel reserve (3d1f3b2cc84627ac38ff64bd09aa1d3b5fd74bfe)
+
 ## 0.2.9 - 2019-10-17
 
 - *BREAKING CHANGE:* Dropped support for c-lightning before 0.7.0
