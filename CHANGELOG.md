@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.10 - 2019-12-08
 
 - Docker: Update to Bitcoin Core v0.19.0.1 and c-lightning v0.7.3
 
