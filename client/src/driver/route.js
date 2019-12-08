@@ -1,4 +1,4 @@
-import pathRegexp from 'path-to-regexp'
+import { pathToRegexp } from 'path-to-regexp'
 import { Observable as O } from '../rxjs'
 
 const isStr = x => typeof x === 'string'
@@ -9,7 +9,7 @@ module.exports = history => goto$ => {
     goto$.map(goto => ({ type: 'push', ...goto }))
   ))
 
-  return (path, re=path && pathRegexp(path)) =>
+  return (path, re=path && pathToRegexp (path)) =>
     path ? history$.map(loc => ({ ...loc, params: loc.pathname.match(re) })).filter(loc => !!loc.params)
          : history$
 }
