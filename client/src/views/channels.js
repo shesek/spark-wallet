@@ -113,7 +113,7 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
 
   , div('.progress.channel-bar', !isClosed ? [
       ourReserve ? bar('Our reserve', 'warning', ourReserve) : ''
-    , spendable  > 0 ? bar('Spendable', 'success', spendabl) : ''
+    , spendable  > 0 ? bar('Spendable', 'success', spendable) : ''
     , receivable > 0 ? bar('Receivable', 'info', receivable) : ''
     , thrReserve ? bar('Their reserve', 'warning', thrReserve) : ''
     ] : [
