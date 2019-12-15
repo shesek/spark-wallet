@@ -4,6 +4,8 @@
 
 - Fix channels view (#128)
 
+- Fix Android crashes caused by plugin-local-notifications (https://github.com/katzer/cordova-plugin-local-notifications/issues/1541)
+
 ## 0.2.10 - 2019-12-08
 
 - Docker: Update to Bitcoin Core v0.19.0.1 and c-lightning v0.7.3

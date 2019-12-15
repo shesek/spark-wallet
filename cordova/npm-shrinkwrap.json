@@ -5259,9 +5259,8 @@
             "integrity": "sha512-Jb3V72btxf3XHpkPQsGdyc8N6tVBYn1vsxSFj43fIz9vonJDUThYPCJJHqk6PX6N4dJw6I4FjxkpfCR4LDYMlw=="
         },
         "cordova-plugin-local-notification": {
-            "version": "0.9.0-beta.3",
-            "resolved": "https://registry.npmjs.org/cordova-plugin-local-notification/-/cordova-plugin-local-notification-0.9.0-beta.3.tgz",
-            "integrity": "sha512-L3Z1velxrkm9nHFcvLnMgBPZjKFt6hwM6hn1lA+JFwIR26Yw6UF72z+/lRMBclAcOxBIDYCqeaLgvezmajjuEg=="
+            "version": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#caff55ec758fdf298029ae98aff7f6a8a097feac",
+            "from": "git+https://github.com/katzer/cordova-plugin-local-notifications.git#caff55ec758fdf298029ae98aff7f6a8a097feac"
         },
         "cordova-plugin-qrscanner": {
             "version": "3.0.1",

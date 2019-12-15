@@ -13,7 +13,7 @@
         "cordova-plugin-badge": "^0.8.8",
         "cordova-plugin-customurlscheme": "^4.4.0",
         "cordova-plugin-device": "^2.0.3",
-        "cordova-plugin-local-notification": "^0.9.0-beta.3",
+        "cordova-plugin-local-notification": "https://github.com/katzer/cordova-plugin-local-notifications.git#caff55ec758fdf298029ae98aff7f6a8a097feac",
         "cordova-plugin-qrscanner": "^3.0.1",
         "cordova-plugin-screen-orientation": "^3.0.2",
         "cordova-plugin-whitelist": "^1.3.4",
