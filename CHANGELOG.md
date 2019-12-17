@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Docker: Update to c-lightning v0.8.0
+
 ## 0.2.11 - 2019-12-15
 
 - Fix channels view (#128)
