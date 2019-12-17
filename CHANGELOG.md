@@ -4,6 +4,14 @@
 
 - Docker: Update to c-lightning v0.8.0
 
+- Docker: Compatibility with c-lightning v0.8.0 network subdirectories
+
+- Detect if the "base directory" is provided and default to the bitcoin mainnet network subdirectory within in. (#130)
+
+  This allows users to start spark using the existing command they use (with i.e. `--ln-path ~/.lightning`)
+  to ease the upgrade to c-lightning v0.8.0, but this usage is considered deprecated and will eventually be removed.
+  Users are advised to explicitly specify the path to the network subdirectory with `--ln-path ~/.lightning/<network>`.
+
 ## 0.2.11 - 2019-12-15
 
 - Fix channels view (#128)
