@@ -11,7 +11,10 @@ trap 'jobs -p | xargs -r kill' SIGTERM
 if [ -d /etc/lightning ]; then
   echo -n "Using lightningd directory mounted in /etc/lightning... "
   LN_PATH=/etc/lightning
-
+  if [ ! -f $LN_PATH/lightningd.sqlite3 ] && [ -f $LN_PATH/$NETWORK/lightningd.sqlite3 ]; then
+    echo -n "Using $LN_PATH/$NETWORK... "
+    LN_PATH=$LN_PATH/$NETWORK
+  fi
 else
 
   # Setup bitcoind (only needed when we're starting our own lightningd instance)
@@ -59,13 +62,16 @@ else
   # Setup lightning
   echo -n "Starting lightningd... "
 
-  LN_PATH=/data/lightning
-  mkdir -p $LN_PATH
+  LN_BASE=/data/lightning
+  mkdir -p $LN_BASE
 
-  lnopt=($LIGHTNINGD_OPT --network=$NETWORK --lightning-dir="$LN_PATH" --log-file=debug.log)
+  lnopt=($LIGHTNINGD_OPT --network=$NETWORK --lightning-dir=$LN_BASE --log-file=debug.log)
   [[ -z "$LN_ALIAS" ]] || lnopt+=(--alias="$LN_ALIAS")
 
   lightningd "${lnopt[@]}" $(echo "$RPC_OPT" | sed -r 's/(^| )-/\1--bitcoin-/g') > /dev/null &
+
+  LN_PATH=$LN_BASE/$NETWORK
+  mkdir -p $LN_PATH
 fi
 
 if [ ! -S $LN_PATH/lightning-rpc ] || ! echo | nc -q0 -U $LN_PATH/lightning-rpc; then
@@ -76,8 +82,12 @@ fi
 # lightning-cli is unavailable in standalone mode, so we can't check the rpc connection.
 # Spark itself also checks the connection when starting up, so this is not too bad.
 if command -v lightning-cli > /dev/null; then
-  lightning-cli --lightning-dir=$LN_PATH getinfo > /dev/null
+  # workaround for https://github.com/ElementsProject/lightning/issues/3352
+  # (patch is on its way! but this will have to be kept around for v0.8.0 compatibility)
+  mkdir -p /tmp/dummy /tmp/dummy/bitcoin
+  lightning-cli --lightning-dir /tmp/dummy --rpc-file $LN_PATH/lightning-rpc getinfo > /dev/null
   echo -n "c-lightning RPC ready."
+  rm -r /tmp/dummy
 fi
 
 mkdir -p $TOR_PATH/tor-installation/node_modules
