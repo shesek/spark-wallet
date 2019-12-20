@@ -5,8 +5,9 @@ import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './ut
 const msatbtc = big(100000000000) // msat in 1 btc
 
 const
-  sumChans = chans => chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
-                           .reduce((T, c) => T + Math.max(0, c.chan.msatoshi_to_us), 0)
+  sumChans = chans =>
+    chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
+         .reduce((T, c) => T + c.chan.msatoshi_to_us, 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
