@@ -14,6 +14,11 @@
 
 - Don't display unconfirmed onchain balance (#129)
 
+- Cordova Android: Allow connecting to server in cleartext (#132)
+
+  This was possible before v0.2.11 which updated the Android SDK to version 28.
+  Not really recommended, but useful for development and testnet/regtest demonstrations.
+
 ## 0.2.11 - 2019-12-15
 
 - Fix channels view (#128)

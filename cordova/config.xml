@@ -13,6 +13,9 @@
         <icon density="xhdpi" src="res/android/icon-96-xhdpi.png" />
         <icon density="xxhdpi" src="res/android/icon-144-xxhdpi.png" />
         <icon density="xxxhdpi" src="res/android/icon-192-xxxhdpi.png" />
+        <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config>
     </platform>
     <plugin name="cordova-plugin-customurlscheme" spec="^4.3.0">
         <variable name="URL_SCHEME" value="lightning" />
