@@ -18,7 +18,7 @@
     "form-serialize": "^0.7.2",
     "instascan": "github:shesek/instascan#packaged-lib",
     "js-yaml": "^3.13.1",
-    "nanoid": "^2.1.7",
+    "nanoid": "^2.1.8",
     "numbro": "^2.1.2",
     "ordinal": "^1.0.3",
     "path-to-regexp": "^6.1.0",
@@ -46,9 +46,9 @@
     ]
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/preset-env": "^7.7.6",
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "babelify": "^10.0.0",
     "browserify": "^16.5.0",
     "browserify-middleware": "^8.1.1",
@@ -59,7 +59,7 @@
     "pug-cli": "^1.0.0-alpha6",
     "pugify": "^2.2.0",
     "stylus": "^0.54.7",
-    "terser": "^4.4.2",
+    "terser": "^4.4.3",
     "uglifyify": "^5.0.2"
   }
 }
