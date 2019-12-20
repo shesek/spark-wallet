@@ -12,6 +12,8 @@
   to ease the upgrade to c-lightning v0.8.0, but this usage is considered deprecated and will eventually be removed.
   Users are advised to explicitly specify the path to the network subdirectory with `--ln-path ~/.lightning/<network>`.
 
+- Don't display unconfirmed onchain balance (#129)
+
 ## 0.2.11 - 2019-12-15
 
 - Fix channels view (#128)

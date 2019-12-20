@@ -9,6 +9,10 @@ const
     chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
          .reduce((T, c) => T + c.chan.msatoshi_to_us, 0)
 
+, sumOuts = outs =>
+    outs.filter(o => o.status === 'confirmed')
+        .reduce((T, o) => T + o.value*1000, 0)
+
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
 , idx = xs => x => xs.indexOf(x)
@@ -79,7 +83,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
 
   // On-chain balance
   // TODO: patch with known outgoing payments
-  , obalance$ = funds$.map(funds => funds.outputs.reduce((T, o) => T+o.value*1000, 0))
+  , obalance$ = funds$.map(funds => sumOuts(funds.outputs))
       .distinctUntilChanged()
 
   // List of active channels
