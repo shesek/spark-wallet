@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.12 - 2019-12-22
 
 - Docker: Update to c-lightning v0.8.0
 
