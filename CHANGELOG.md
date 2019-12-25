@@ -4,6 +4,8 @@
 
 - Fix: Resolve TLS issues with NodeJS 10 (#55, h/t @sumBTC!)
 
+- Fix: Some QR codes not read properly in the web QR scanner (#134)
+
 ## 0.2.12 - 2019-12-22
 
 - Docker: Update to c-lightning v0.8.0

@@ -15,8 +15,10 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   const makeScanDriver = (opt={}) => {
     const video    = document.createElement('video')
         , scanner$ = Scanner$.map(Scanner => new Scanner({ ...opt, video })).shareReplay(1)
-        , scan$    = scanner$.flatMap(scanner => O.fromEvent(scanner, 'scan')).share()
         , active$  = scanner$.flatMap(scanner => O.fromEvent(scanner, 'active')).share()
+        , scan$    = scanner$.flatMap(scanner => O.fromEvent(scanner, 'scan'))
+                             .map(x => Array.isArray(x) ? x[0] : x)
+                             .share()
 
     video.className = 'qr-video'
     document.body.appendChild(video)
