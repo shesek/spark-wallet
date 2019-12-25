@@ -124,7 +124,7 @@ const createMultiServer = (tlsOpt, tlsHandler, plainHandler) => {
       socket.server = server[proto]
       server[proto].emit('connection', socket)
 
-      socket.resume()
+      process.nextTick(_ => socket.resume())
     })
   })
 

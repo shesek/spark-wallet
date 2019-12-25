@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fix: Resolve TLS issues with NodeJS 10 (#55, h/t @sumBTC!)
+
 ## 0.2.12 - 2019-12-22
 
 - Docker: Update to c-lightning v0.8.0
