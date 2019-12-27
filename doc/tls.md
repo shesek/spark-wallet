@@ -60,6 +60,8 @@ by following these steps:
 Note that adding a user trusted certificate causes android to display a "Network may be monitored" notification.
 It can be flicked off.
 
-Unfortunately, adding a user trusted certificate is not enough for Android to allow installing the PWA.
-This requires a CA-signed certificate.
-
+> ⚠️  NOTE: Recent android versions no longer respect user-trusted certificates for connections
+> made by apps ([#135](https://github.com/shesek/spark-wallet/issues/135)) or for allowing PWAs.
+>
+> Adding a user-trusted certificate only enables access through the mobile web browser.
+> To use the native android app or the PWA, setup a CA-signed certificate (see above).
