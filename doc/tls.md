@@ -47,6 +47,13 @@ If you're having troubles, set `--le-debug` to show more debug information.
 
 ### Add as Trusted Certificate to Android
 
+> ⚠️  NOTE: Recent android versions no longer respect user-trusted certificates.
+> You'll need to setup a CA-signed certificate (see instructions above for the built-in LetsEncrypt integration),
+> or use a separate encryption layer like an [onion hidden service](https://github.com/shesek/spark-wallet/blob/master/doc/onion.md),
+> VPN or SSH tunnel.
+>
+> The instructions below may work for some older Android devices.
+
 To avoid the self-signed certificate warnings (without a CA), you can add the certificate to your Android's "user trusted certificates"
 by following these steps:
 
@@ -59,9 +66,3 @@ by following these steps:
 
 Note that adding a user trusted certificate causes android to display a "Network may be monitored" notification.
 It can be flicked off.
-
-> ⚠️  NOTE: Recent android versions no longer respect user-trusted certificates for connections
-> made by apps ([#135](https://github.com/shesek/spark-wallet/issues/135)) or for allowing PWAs.
->
-> Adding a user-trusted certificate only enables access through the mobile web browser.
-> To use the native android app or the PWA, setup a CA-signed certificate (see above).
