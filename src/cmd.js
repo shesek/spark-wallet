@@ -2,11 +2,11 @@ import assert from 'assert'
 
 // Custom RPC commands that are exposed on top of c-lightning's built-in ones
 module.exports = ln => ({
-  connectfund: async (peeruri, msatoshi, feerate) => {
+  connectfund: async (peeruri, satoshi, feerate) => {
     const peerid = peeruri.split('@')[0]
     await ln.connect(peeruri)
 
-    const res = await ln.fundchannel(peerid, msatoshi, feerate)
+    const res = await ln.fundchannel(peerid, satoshi, feerate)
     assert(res && res.channel_id, 'cannot open channel')
 
     return getChannel(ln, peerid, res.channel_id)
