@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.13 - 2020-04-11
 
 - Fix: Resolve TLS issues with NodeJS 10 (#55, h/t @sumBTC!)
 
