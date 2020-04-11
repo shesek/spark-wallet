@@ -2,6 +2,6 @@
   "name": "granax-dep",
   "private": "true",
   "dependencies": {
-    "@deadcanaries/granax": "^3.2.4"
+    "@deadcanaries/granax": "^3.2.5"
   }
 }

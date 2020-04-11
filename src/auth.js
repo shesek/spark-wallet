@@ -3,8 +3,7 @@ import path from 'path'
 import assert from 'assert'
 import mkdirp from 'mkdirp'
 import basicAuth from 'basic-auth'
-import nanoid from 'nanoid'
-import nanogen from 'nanoid/generate'
+import { nanoid, customAlphabet } from 'nanoid'
 import cookieParser from 'cookie-parser'
 import {createHmac} from 'crypto'
 
@@ -25,7 +24,7 @@ module.exports = (app, cookieFile, login) => {
     ;[ username, password, accessKey ] = fs.readFileSync(cookieFile).toString('utf-8').trim().split(':')
     assert(password, `Invalid login file at ${cookieFile}, expecting "username:pwd[:access-key]"`)
   } else { // generate random
-    username = nanogen('abcdefghijklmnopqrstuvwxyz', 5)
+    username = customAlphabet('abcdefghijklmnopqrstuvwxyz', 5)
     password = nanoid(15)
     accessKey = hmacStr(`${username}:${password}`, 'access-key')
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)

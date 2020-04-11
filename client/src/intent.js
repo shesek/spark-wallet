@@ -1,6 +1,6 @@
 import { Observable as O } from './rxjs'
 import serialize from 'form-serialize'
-import nanoid from 'nanoid'
+import { nanoid } from 'nanoid'
 import { dbg, parseUri, parseRpcCmd } from './util'
 
 module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
@@ -49,7 +49,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , togExp$   = click('.toggle-exp')
 
   // Dismiss alert message
-  , dismiss$ = O.merge(submit('form'), click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
+  , dismiss$ = O.merge(click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
                      , page$.filter(p => p.search != '?r'))
 
   // Payments feed page navigation and click-to-toggle
