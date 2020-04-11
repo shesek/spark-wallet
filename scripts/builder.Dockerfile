@@ -6,7 +6,7 @@ ENV PATH=./node_modules/.bin:$PATH
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
-RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u4 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
+RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+deb9u5 binutils=2.28-5 software-properties-common=0.96.20.2-1 \
   apt-transport-https=1.4.9 unzip=6.0-21+deb9u2 faketime=0.9.6-7+b1 fuse=2.9.7-1+deb9u2 disorderfs=0.5.1-1+b1
 
 # Wine for Electron Windows builds
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git=1:2.11.0-3+
 RUN dpkg --add-architecture i386 \
   && apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys D43F640145369C51D786DDEA76F1A20FF987672F \
   && apt-add-repository https://dl.winehq.org/wine-builds/debian \
-  && apt-get update && apt-get install -y --no-install-recommends winehq-stable=4.0.3~stretch
+  && apt-get update && apt-get install -y --no-install-recommends winehq-stable=5.0.0~stretch
 ENV WINEDEBUG -all,err+all
 ENV WINEDLLOVERRIDES winemenubuilder.exe=d
 
@@ -29,7 +29,7 @@ ENV ANDROID_HOME=/root/sdktools
 ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/root/gradle-4.1/bin
 WORKDIR /root
 # Java 8 (OpenJDK)
-RUN apt-get install -y --no-install-recommends openjdk-8-jdk-headless=8u232-b09-1~deb9u1
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk-headless=8u242-b08-1~deb9u1
 
 # Android SKD tools
 RUN wget -q -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
