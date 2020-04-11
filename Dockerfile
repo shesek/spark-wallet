@@ -9,8 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends git \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
                                      libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
 
-ENV LIGHTNINGD_VERSION=v0.8.0
-ENV LIGHTNINGD_PGP_KEY=B7C4BE81184FC203D52C35C51416D83DC4F0E86D
+ENV LIGHTNINGD_VERSION=v0.8.1
+ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
 
 RUN [ -n "$STANDALONE" ] || ( \
     git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
@@ -18,17 +18,14 @@ RUN [ -n "$STANDALONE" ] || ( \
     && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
     && git verify-tag $LIGHTNINGD_VERSION \
     && git checkout $LIGHTNINGD_VERSION \
-    # `sed` below needed for v0.7.2, can be removed in v0.7.3.
-    # see https://github.com/ElementsProject/lightning/issues/2970, https://github.com/ElementsProject/lightning/pull/2967
-    && sed -i 's#$(EXTERNAL_HEADERS)#$(EXTERNAL_HEADERS) tools/test/gen_test.h#' tools/test/Makefile \
     && DEVELOPER=$DEVELOPER ./configure \
     && make)
 
 # Install bitcoind
-ENV BITCOIN_VERSION 0.19.0.1
+ENV BITCOIN_VERSION 0.19.1
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 732cc96ae2e5e25603edf76b8c8af976fe518dd925f7e674710c6c8ee5189204
+ENV BITCOIN_SHA256 5fcac9416e486d4960e1a946145566350ca670f9aaba99de6542080851122e4c
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
