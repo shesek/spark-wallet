@@ -11,7 +11,7 @@ command -v faketime && alias electron-builder="TZ=UTC faketime -f '2017-11-08 16
 if [[ -z "$SKIP_CLIENT" ]]; then
   export BUILD_TARGET=electron
   export DEST=`pwd`/www
-  export BROWSERIFY_OPT='--insert-global-vars __filename,__dirname,global,process'
+  export BROWSERIFY_OPT='--insert-global-vars __filename,__dirname,global,process,Buffer'
 
   mkdir -p $DEST && rm -rf $DEST/*
 
