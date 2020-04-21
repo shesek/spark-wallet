@@ -1,4 +1,4 @@
-FROM node:8.15-slim as builder
+FROM node:12.16-slim as builder
 
 ARG DEVELOPER
 ENV STANDALONE=1
@@ -34,7 +34,7 @@ RUN npm run dist:npm \
 
 # Prepare final image
 
-FROM arm64v8/node:8.15-slim
+FROM arm64v8/node:12.16-slim
 
 ENV STANDALONE=1
 

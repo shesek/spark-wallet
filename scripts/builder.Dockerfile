@@ -1,5 +1,4 @@
-FROM node:8.11.3-stretch
-# with npm v5.6.0
+FROM node:12.16-stretch
 
 ENV TZ=UTC
 ENV PATH=./node_modules/.bin:$PATH
