@@ -4,7 +4,7 @@ ARG DEVELOPER
 ENV STANDALONE=1
 
 # Install build c-lightning for third-party packages (c-lightning/bitcoind)
-RUN apt-get update && apt-get install -y --no-install-recommends git \
+RUN apt-get update && apt-get install -y --no-install-recommends git wget ca-certificates \
     qemu qemu-user-static qemu-user binfmt-support
 
 RUN npm config set unsafe-perm true

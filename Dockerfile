@@ -5,7 +5,7 @@ ARG STANDALONE
 ENV STANDALONE=$STANDALONE
 
 # Install build c-lightning for third-party packages (c-lightning/bitcoind)
-RUN apt-get update && apt-get install -y --no-install-recommends git \
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates gpg dirmngr wget  \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
                                      libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
 
