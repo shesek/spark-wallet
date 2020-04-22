@@ -1,4 +1,5 @@
-FROM node:12.16-stretch
+# nodejs v12.5 doesn't play well with the `faketime` library used for deterministic builds
+FROM node:12.4-stretch
 
 ENV TZ=UTC
 ENV PATH=./node_modules/.bin:$PATH
