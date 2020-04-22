@@ -1,10 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- Fix: Resolve desktop app regression introduced in the last release (#143)
+
+- Electron: Update to v8
+
+- Docker: Updade nodejs to v12
+
 ## 0.2.13 - 2020-04-11
 
 - Fix: Resolve TLS issues with NodeJS 10 (#55, h/t @sumBTC!)
 
 - Fix: Some QR codes not read properly in the web QR scanner (#134)
+
+- Docker: Update Bitcoin Core to v0.19.1 and c-lightning to v0.8.1
 
 ## 0.2.12 - 2019-12-22
 
