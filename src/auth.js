@@ -24,7 +24,7 @@ module.exports = (app, cookieFile, login) => {
     ;[ username, password, accessKey ] = fs.readFileSync(cookieFile).toString('utf-8').trim().split(':')
     assert(password, `Invalid login file at ${cookieFile}, expecting "username:pwd[:access-key]"`)
   } else { // generate random
-    username = customAlphabet('abcdefghijklmnopqrstuvwxyz', 5)
+    username = customAlphabet('abcdefghijklmnopqrstuvwxyz', 5)()
     password = nanoid(15)
     accessKey = hmacStr(`${username}:${password}`, 'access-key')
     console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)

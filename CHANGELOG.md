@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Fix bug in automatic credentials generation (#145)
+
 ## 0.2.14 - 2020-04-22
 
 - Fix: Resolve desktop app regression introduced in the last release (#143)
