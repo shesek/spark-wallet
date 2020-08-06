@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, getChannels, formatAmt, recvAmt, parsePayAmt, combine, isConnError } from './util'
+import { dbg, getChannels, formatAmt, recvAmt, parsePayment, combine, isConnError } from './util'
 
 const msatbtc = big(100000000000) // msat in 1 btc
 
@@ -109,7 +109,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // continuously patch with known outgoing payments
   , freshPays$ = O.merge(
       payments$.map(payments => _ =>
-        payments.filter(p => p.status === 'complete').map(parsePayAmt))
+        payments.filter(p => p.status === 'complete').map(parsePayment))
     , outgoing$.map(pay => payments => payments &&
         [ ...payments.filter(p => p.payment_hash !== pay.payment_hash), pay ])
     )

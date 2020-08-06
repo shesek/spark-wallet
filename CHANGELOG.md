@@ -4,6 +4,8 @@
 
 - Support multi-part payments, grouped together in the UI (#147)
 
+- Extract destination and description of outgoing payments from the BOLT11 request
+
 - Fix bug in automatic credentials generation (#145)
 
 ## 0.2.14 - 2020-04-22
