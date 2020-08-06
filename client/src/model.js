@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, getChannels, formatAmt, recvAmt, combine, isConnError } from './util'
+import { dbg, getChannels, formatAmt, recvAmt, parsePayAmt, combine, isConnError } from './util'
 
 const msatbtc = big(100000000000) // msat in 1 btc
 
@@ -108,8 +108,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Periodically re-sync from listsendpays (completed only),
   // continuously patch with known outgoing payments
   , freshPays$ = O.merge(
-      payments$.map(payments => _ => payments.filter(p => p.status === 'complete'))
-    , outgoing$.map(pay => payments => payments && [ ...payments.filter(p => p.id !== pay.id), pay ])
+      payments$.map(payments => _ =>
+        payments.filter(p => p.status === 'complete').map(parsePayAmt))
+    , outgoing$.map(pay => payments => payments &&
+        [ ...payments.filter(p => p.payment_hash !== pay.payment_hash), pay ])
     )
     .startWith(null).scan((payments, mod) => mod(payments))
     .filter(Boolean)
@@ -133,8 +135,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
 
   // Collapsed payment/invoice on home feed list
   , feedActive$ = togFeed$.merge( // display feed items manually toggled by the user, and...
-      incoming$.map(inv => `in-${inv.pay_index}`) // auto display incoming payments
-    , outgoing$.map(pay => `out-${pay.id}`) // auto display outgoing payments
+      incoming$.map(inv => `in-${inv.payment_hash}`) // auto display incoming payments
+    , outgoing$.map(pay => `out-${pay.payment_hash}`) // auto display outgoing payments
     , feedStart_$.mapTo(null) // reset on feed paging
     , goHome$.filter(p => p.search != '?r').mapTo(null) // reset on home navigation (unless auto-redirected)
     ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item again toggles it off

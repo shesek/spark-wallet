@@ -26,6 +26,13 @@ export const recvAmt = ({ msatoshi: expected, msatoshi_received: actual }) =>
 // Parse "listpeers" to get all channels as a list of (peer,channel) tuples
 export const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
 
+// Parse the `sat`-suffixed amount string fields into numbers
+export const parsePayAmt = p => ({
+  ...p
+, msatoshi: +p.amount_msat.slice(0, -4)
+, msatoshi_sent: +p.amount_sent_msat.slice(0, -4)
+})
+
 export const combine = obj => {
   const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))
   return O.combineLatest(...Object.values(obj), (...xs) =>

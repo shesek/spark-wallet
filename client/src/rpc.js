@@ -21,7 +21,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   // periodic updates
   , info$:     reply('getinfo').map(r => r.body)
   , peers$:    reply('listpeers').map(r => r.body.peers)
-  , payments$: reply('listsendpays').map(r => r.body.payments)
+  , payments$: reply('listpaysext').map(r => r.body.pays)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
   , funds$:    reply('listfunds').map(r => r.body)
 
@@ -43,7 +43,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 }
 
 // RPC commands to send
-// NOTE: "connectfund" and "closeget" are custom rpc commands provided by the Spark server.
+// NOTE: "connectfund", "closeget" and "listpays_ext" are custom rpc commands provided by the Spark server.
 exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
@@ -57,7 +57,7 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, 
 , goDeposit$.map(type => [ 'newaddr',   [ type ] ])
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
-, timer(60000).mapTo(    [ 'listsendpays', [], { bg: true } ])
+, timer(60000).mapTo(    [ 'listpaysext',  [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
               .mapTo(    [ 'listpeers',    [], { bg: true } ])

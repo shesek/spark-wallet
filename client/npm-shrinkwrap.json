@@ -4301,11 +4301,6 @@
         "wrappy": "1"
       }
     },
-    "ordinal": {
-      "version": "1.0.3",
-      "resolved": "https://registry.npmjs.org/ordinal/-/ordinal-1.0.3.tgz",
-      "integrity": "sha512-cMddMgb2QElm8G7vdaa02jhUNbTSrhsgAGUz1OokD83uJTwSUn+nKoNoKVVaRa08yF6sgfO7Maou1+bgLd9rdQ=="
-    },
     "os-browserify": {
       "version": "0.3.0",
       "resolved": "https://registry.npmjs.org/os-browserify/-/os-browserify-0.3.0.tgz",
