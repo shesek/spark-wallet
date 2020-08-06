@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.15 - 2020-08-07
 
 - Support multi-part payments, grouped together in the UI (#147)
 
