@@ -215,6 +215,7 @@ Spark can be built from source using the following commands (more efficient than
 
 ```bash
 $ git clone https://github.com/shesek/spark-wallet && cd spark-wallet
+$ npm install
 $ npm run dist:npm
 $ ./dist/cli.js --ln-path /data/lightning
 ```
