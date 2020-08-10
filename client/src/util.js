@@ -41,12 +41,17 @@ export const parseBolt11 = (cached => p => {
   if (!p.bolt11 || p.bolt11 == '(null)') return {}
   if (cached[p.payment_hash]) return cached[p.payment_hash]
 
-  const decoded = bolt11.decode(p.bolt11)
-      , destination = decoded.payeeNodeKey
-      , desc_tag = decoded.tags.find(t => t.tagName == 'description')
-      , description = desc_tag ? desc_tag.data : null
+  try {
+    const decoded = bolt11.decode(p.bolt11)
+        , destination = decoded.payeeNodeKey
+        , desc_tag = decoded.tags.find(t => t.tagName == 'description')
+        , description = desc_tag ? desc_tag.data : null
 
-  return cached[p.payment_hash] = { destination, description }
+    return cached[p.payment_hash] = { destination, description }
+  } catch (err) {
+    console.error('failed decoding bolt11:', err)
+    return cached[p.payment_hash] = {}
+  }
 })({})
 
 export const combine = obj => {
