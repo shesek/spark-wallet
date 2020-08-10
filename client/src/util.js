@@ -38,7 +38,7 @@ export const parsePayment = p => ({
 })
 
 export const parseBolt11 = (cached => p => {
-  if (!p.bolt11) return {}
+  if (!p.bolt11 || p.bolt11 == '(null)') return {}
   if (cached[p.payment_hash]) return cached[p.payment_hash]
 
   const decoded = bolt11.decode(p.bolt11)
