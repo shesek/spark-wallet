@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.16 - 2020-08-11
 
 Hotfix release
 
