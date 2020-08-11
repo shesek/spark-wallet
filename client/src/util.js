@@ -33,8 +33,8 @@ export const parsePayment = p => ({
   ...p
 , msatoshi: p.amount_msat ? +p.amount_msat.slice(0, -4) : null
 , msatoshi_sent: +p.amount_sent_msat.slice(0, -4)
-, destination: p.destination || parseBolt11(p).destination // expected to become available in the next c-lightning release
-, description: p.description || parseBolt11(p).description
+, destination: p.destination || parseBolt11(p).destination || null // expected to become available in the next c-lightning release
+, description: p.description || parseBolt11(p).description || null
 })
 
 export const parseBolt11 = (cached => p => {
