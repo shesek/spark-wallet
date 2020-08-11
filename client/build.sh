@@ -13,7 +13,7 @@ export VERSION=`node -p 'require("../package").version'`
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch
 
-[[ -d node_modules ]] || npm install
+[[ -d node_modules ]] || NODE_ENV=development npm install
 
 # Static assets
 cp -r www/* $DEST/
