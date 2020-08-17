@@ -2,7 +2,9 @@
 
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
 [![build status](https://api.travis-ci.org/shesek/spark-wallet.svg)](https://travis-ci.org/shesek/spark-wallet)
-[![docker release](https://img.shields.io/docker/pulls/shesek/spark-wallet.svg)](https://hub.docker.com/r/shesek/spark-wallet)
+[![docker pulls](https://img.shields.io/docker/pulls/shesek/spark-wallet.svg)](https://hub.docker.com/r/shesek/spark-wallet)
+[![npm installs](https://img.shields.io/npm/dt/spark-wallet?label=npm%20installs)](https://www.npmjs.com/package/spark-wallet)
+[![downloads](https://img.shields.io/github/downloads/shesek/spark-wallet/total.svg?color=blueviolet)](https://github.com/shesek/spark-wallet/releases)
 [![MIT license](https://img.shields.io/github/license/shesek/spark-wallet.svg)](https://github.com/shesek/spark-wallet/blob/master/LICENSE)
 [![Pull Requests Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 [![IRC](https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg)](https://webchat.freenode.net/?channels=spark-wallet)
