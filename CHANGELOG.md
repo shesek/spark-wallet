@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.2.17 - 2020-09-03
 
-Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests in expert mode.
+Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests when expert mode is enabled.
 
 ## 0.2.16 - 2020-08-11
 
