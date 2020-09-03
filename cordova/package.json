@@ -11,7 +11,7 @@
     "dependencies": {
         "cordova-android": "^7.1.4",
         "cordova-plugin-badge": "^0.8.8",
-        "cordova-plugin-customurlscheme": "^4.4.0",
+        "cordova-plugin-customurlscheme": "^5.0.2",
         "cordova-plugin-device": "^2.0.3",
         "cordova-plugin-local-notification": "https://github.com/katzer/cordova-plugin-local-notifications.git#caff55ec758fdf298029ae98aff7f6a8a097feac",
         "cordova-plugin-qrscanner": "^3.0.1",

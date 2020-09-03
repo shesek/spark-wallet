@@ -24,9 +24,9 @@
       "integrity": "sha512-VrR/IiH00Z1tFP4vDGfwZ1esNqTiDMchBEXYY9kilT6wRGgFoCAlgkEUMHb1E3mB0FsfZhv756IF0+R+SFPfdg=="
     },
     "typeface-source-sans-pro": {
-      "version": "0.0.75",
-      "resolved": "https://registry.npmjs.org/typeface-source-sans-pro/-/typeface-source-sans-pro-0.0.75.tgz",
-      "integrity": "sha512-8aI6ywe+5py1MoMQjdnuQKepOATSLpFoyatVMweF6JNUD8cu+sWaVEfZBN08CRxPrSC4KYTArf6prrQzcqpyQA=="
+      "version": "1.1.5",
+      "resolved": "https://registry.npmjs.org/typeface-source-sans-pro/-/typeface-source-sans-pro-1.1.5.tgz",
+      "integrity": "sha512-a+KZN2X7gzZ91RUKB/9zAiEtRuD+aX7dwNTo121vpZz2MVODWSJfw81XZQmIwZ4jD/5658EMvPJHttS6qT0gZA=="
     },
     "typeface-ubuntu": {
       "version": "0.0.65",

@@ -8,7 +8,7 @@
     "typeface-nunito-sans": "0.0.72",
     "typeface-open-sans": "0.0.75",
     "typeface-roboto": "0.0.75",
-    "typeface-source-sans-pro": "0.0.75",
+    "typeface-source-sans-pro": "^1.1.5",
     "typeface-ubuntu": "0.0.65"
   }
 }
