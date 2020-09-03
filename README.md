@@ -54,9 +54,7 @@ This might change someday.
 Spark has a responsive UI suitable for mobile, tablet and desktop devices,
 but is best optimized for use on mobile.
 
-> ⚠️ Spark is alpha-quality software under active development.
-> Please use with care, preferably on testnet or with insignificant amounts.
-> Spark comes with no guarantees, use at your own risk.
+> ⚠️ Spark is beta-quality software under active development, please use with care.
 
 Big shout out to [Blockstream](https://blockstream.com) for generously sponsoring this work!
 
@@ -82,6 +80,10 @@ and persist them to `~/.spark-wallet/cookie` (can be controlled with `--cookie-f
 To specify your own login credentials, set `--login [user]:[pass]` or the `LOGIN` environment variable.
 
 To access the wallet, open `http://localhost:9737/` in your browser and login with the username/password.
+
+You may also start Spark with `--pairing-url`, which will print a URL with an embedded access token,
+which you can open in your browser to login into the wallet without using the username/password.
+`--pairing-qr` provides the same URL as a QR (useful for mobile pairing).
 
 See `$ spark-wallet --help` for the full list of command-line options (also available under [*CLI options*](#cli-options)).
 
