@@ -11,7 +11,7 @@ const rateProviders = {
   }
 
 , wasabi: {
-    url: 'http://wasabiukrxmkdgve5kynjztuovbg43uxcbcxn6y2okcrsg7gb6jdmbad.onion/api/v3/btc/Offchain/exchange-rates'
+    url: 'http://wasabiukrxmkdgve5kynjztuovbg43uxcbcxn6y2okcrsg7gb6jdmbad.onion/api/v4/btc/Offchain/exchange-rates'
   , parser: r => r.body[0].rate
   }
 }
