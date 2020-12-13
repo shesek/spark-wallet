@@ -10,6 +10,11 @@ const rateProviders = {
   , parser: r => r.body.last
   }
 
+, bitstamp_eur: {
+    url: 'https://www.bitstamp.net/api/v2/ticker/btceur'
+  , parser: r => r.body.last
+  }
+
 , wasabi: {
     url: 'http://wasabiukrxmkdgve5kynjztuovbg43uxcbcxn6y2okcrsg7gb6jdmbad.onion/api/v4/btc/Offchain/exchange-rates'
   , parser: r => r.body[0].rate
