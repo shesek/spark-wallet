@@ -48,6 +48,7 @@
   "devDependencies": {
     "@babel/cli": "^7.11.5",
     "@babel/core": "^7.11.5",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.11.5",
     "babelify": "^10.0.0",
     "browserify": "^16.5.2",
