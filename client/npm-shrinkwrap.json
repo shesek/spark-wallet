@@ -996,6 +996,27 @@
         "@babel/helper-plugin-utils": "^7.10.4"
       }
     },
+    "@babel/polyfill": {
+      "version": "7.12.1",
+      "resolved": "https://registry.npmjs.org/@babel/polyfill/-/polyfill-7.12.1.tgz",
+      "integrity": "sha512-X0pi0V6gxLi6lFZpGmeNa4zxtwEmCs42isWLNjZZDE0Y8yVfgu0T2OAHlzBbdYlqbW/YXVvoBHpATEM+goCj8g==",
+      "requires": {
+        "core-js": "^2.6.5",
+        "regenerator-runtime": "^0.13.4"
+      },
+      "dependencies": {
+        "core-js": {
+          "version": "2.6.12",
+          "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz",
+          "integrity": "sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ=="
+        },
+        "regenerator-runtime": {
+          "version": "0.13.7",
+          "resolved": "https://registry.npmjs.org/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz",
+          "integrity": "sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew=="
+        }
+      }
+    },
     "@babel/preset-env": {
       "version": "7.11.5",
       "resolved": "https://registry.npmjs.org/@babel/preset-env/-/preset-env-7.11.5.tgz",

@@ -8,6 +8,7 @@
   "author": "Nadav Ivgi",
   "license": "MIT",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "@cycle/dom": "^22.8.0",
     "@cycle/history": "^7.4.0",
     "@cycle/http": "^15.4.0",
