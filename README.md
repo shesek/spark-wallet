@@ -281,7 +281,7 @@ $ spark-wallet --help
     -C, --cookie-file <path> persist generated login credentials to <path> or load them [default: ~/.spark-wallet/cookie]
     --no-cookie-file         disable cookie file [default: false]
 
-    --rate-provider <name>   exchange rate provider, one of "bitstamp" or "wasabi" (requires tor) [default: bitstamp]
+    --rate-provider <name>   exchange rate provider: "bitstamp", "bitstamp_eur" or "wasabi" (requires tor) [default: bitstamp]
     --no-rates               disable exchange rate lookup [default: false]
     --proxy <uri>            set a proxy for looking up rates, e.g. socks5h://127.0.0.1:9050 [default: none]
 
