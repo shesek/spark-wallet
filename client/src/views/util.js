@@ -6,7 +6,7 @@ import { isConnError } from '../util'
 
 const isOnion = global.location && /\.onion$/.test(location.hostname)
 
-export const yaml = data => pre('.mt-3.text-left.text-muted', typeof data == 'string' ? data : YAML.safeDump(data))
+export const yaml = data => pre('.mt-3.text-left.text-muted', typeof data == 'string' ? data : YAML.dump(data))
 
 // use server-generated QRs when browsed over .onion
 // (the canvas fingerprint protection in Tor Browser breaks client-side generation)
