@@ -4,7 +4,7 @@ import crypto from 'crypto'
 // Custom RPC commands that are exposed on top of c-lightning's built-in ones
 module.exports = ln => ({
   // connect & fund in one go
-  connectfund: async (peeruri, satoshi, feerate) => {
+  async _connectfund(peeruri, satoshi, feerate) {
     const peerid = peeruri.split('@')[0]
     await ln.connect(peeruri)
 
@@ -14,8 +14,8 @@ module.exports = ln => ({
     return getChannel(ln, peerid, res.channel_id)
   }
 
-  // close channel and return its information
-, closeget: async (peerid, chanid, force, timeout) => {
+  // close channel and return it
+, async _close(peerid, chanid, force, timeout) {
     const res = await ln.close(chanid, force, timeout)
     assert(res && res.txid, 'cannot close channel')
 
@@ -25,7 +25,7 @@ module.exports = ln => ({
 
   // `listpays` with the addition of payment hashes and timestamps, which are missing
   // in c-lightning v0.9.0 and expected to be added in the next release.
-, listpaysext: async () => {
+, async _listpays() {
     const res = await ln.listpays()
     // these are not currently available, but be prepared for when they are
     if (res.pays.length && res.pays[0].payment_hash && res.pays[0].created_at)
@@ -43,7 +43,6 @@ module.exports = ln => ({
       return { ...p, created_at: pp.created_at }
     }) }
   }
-
 })
 
 const getChannel = async (ln, peerid, chanid) => {

@@ -21,7 +21,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   // periodic updates
   , info$:     reply('getinfo').map(r => r.body)
   , peers$:    reply('listpeers').map(r => r.body.peers)
-  , payments$: reply('listpaysext').map(r => r.body.pays)
+  , payments$: reply('_listpays').map(r => r.body.pays)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
   , funds$:    reply('listfunds').map(r => r.body)
 
@@ -31,8 +31,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
   , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
                                .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
-  , funded$:   reply('connectfund').map(r => r.body)
-  , closed$:   reply('closeget').map(r => r.body)
+  , funded$:   reply('_connectfund').map(r => r.body)
+  , closed$:   reply('_close').map(r => r.body)
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
   , logs$:     reply('getlog').map(r => ({ ...r.body, log: r.body.log.slice(-200) }))
 
@@ -43,7 +43,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 }
 
 // RPC commands to send
-// NOTE: "connectfund", "closeget" and "listpays_ext" are custom rpc commands provided by the Spark server.
+// commands prefixed with an '_' are custom extensions provided by the Spark server
 exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
   viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
 , confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
@@ -51,13 +51,13 @@ exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, 
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , updChan$.mapTo(        [ 'listpeers' ] )
-, openChan$.map(d     => [ 'connectfund', [ d.nodeuri, d.channel_capacity_sat, d.feerate ] ])
-, closeChan$.map(d    => [ 'closeget',  [ d.peerid, d.chanid ] ])
+, openChan$.map(d     => [ '_connectfund', [ d.nodeuri, d.channel_capacity_sat, d.feerate ] ])
+, closeChan$.map(d    => [ '_close',       [ d.peerid, d.chanid ] ])
 
 , goDeposit$.map(type => [ 'newaddr',   [ type ] ])
 
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
-, timer(60000).mapTo(    [ 'listpaysext',  [], { bg: true } ])
+, timer(60000).mapTo(    [ '_listpays',    [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
               .mapTo(    [ 'listpeers',    [], { bg: true } ])
