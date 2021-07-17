@@ -44,6 +44,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
     , type == 'out' && obj.destination ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
     , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
+    , obj.local_offer_id ? li([ strong('Offer ID:'), ' ', small('.break-all', obj.local_offer_id) ]) : ''
     , expert ? li(yaml(obj)) : ''
     ])
   ])

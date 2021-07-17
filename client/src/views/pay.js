@@ -1,4 +1,4 @@
-import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
+import { div, form, button, textarea, a, span, p, strong, h2, ul, li, em } from '@cycle/dom'
 import { showDesc, formGroup, yaml, amountField } from './util'
 
 // user-agent sniffing is used purely to display suggestions to the user.
@@ -24,30 +24,46 @@ const scanReq = div('.qr-scanner', [
     p('.text-muted', 'or')
   , a('.btn.btn-lg.btn-primary', { attrs: { href: '#/payreq' } }, 'Paste request')
   ])
-
 ])
 
 const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
   formGroup('Payment request'
-  , textarea('.form-control.form-control-lg', { attrs: { name: 'bolt11', required: true, rows: 5 } }))
+  , textarea('.form-control.form-control-lg', { attrs: { name: 'paystr', required: true, rows: 5 } }))
 , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Decode request')
 , ' '
 , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
 , hasCam ? '' : p('.text-muted.mt-4.small', 'Your browser does not support WebRTC, which is requires for scanning QRs with your camera. '+camSuggest)
 ])
 
-// @TODO show expiry
+// User confirmation for BOLT11/BOLT12 payment requests
 const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
   form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
-    ...(payreq.msatoshi ? [
-      h2('Confirm payment')
-    , p([ 'Confirm paying ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?'])
-    ] : [
-      h2('Send payment')
-    , formGroup('Amount to pay', amountField(amtData, 'custom_msat', true))
-    ])
+    payreq.msatoshi ? h2('Confirm payment') : h2('Send payment')
+
+  , payreq.msatoshi ? p([ 'Confirm paying ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?']) : ''
+
+
+  , expert ? p([ 'Node ID: ', small('.text-muted.break-all', payreq.node_id) ]) : ''
+  , expert ? p([ 'Offer ID: ', small('.text-muted.break-all', payreq.offer_id) ]) : ''
+
+  , payreq.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
 
   , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-word', payreq.description) ]) : ''
+
+  , payreq.quantity ? p([ 'Quantity: ', span('.text-muted', payreq.quantity) ]) : ''
+
+  , !payreq.msatoshi ? formGroup('Amount to pay', amountField(amtData, 'custom_msat', true)) : ''
+
+  , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
+      p('.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
+    , ul([
+        payreq.changes.description_appended ? li([ 'The description was appended with: ', em('.text-muted', payreq.changes.description_appended) ]) : ''
+      , payreq.changes.description ? li([ 'The description was completely replaced. The original was: ', em('.text-muted', payreq.changes.description) ]) : ''
+      , payreq.changes.vendor_removed ? li([ 'The vendor name was removed. The original was: ', em('.text-muted', payreq.changes.vendor_removed) ]) : ''
+      , payreq.changes.vendor ? li([ 'The vendor name was replaced. The original was: ', em('.text-muted', payreq.changes.vendor) ]) : ''
+      , payreq.changes.msat ? li([ 'The amount was changed. The original was: ', em('.text-muted', unitf(payreq.changes.msat.slice(0,-4))) ]) : ''
+      ])
+    ] : [])
 
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')

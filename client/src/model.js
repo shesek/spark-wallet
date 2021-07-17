@@ -29,8 +29,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
                   , fundMaxChan$
                   , conf$: savedConf$
-                  , req$$, error$, invoice$, incoming$, outgoing$, payments$, invoices$, funds$
+                  , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
+                  , offer$, offerPayQuantity$: offerPayQuantityInput$
                   , btcusd$, info$, peers$ }) => {
   const
 
@@ -150,7 +151,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , amtData$ = combine({
       msatoshi: amtMsat$
     , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitprec[unit], false))
-                     .merge(goRecv$.mapTo(''))
+                     .merge(goRecv$.merge(offer$).merge(payreq$).mapTo(''))
     , unit:     unit$
     , step:     unit$.map(unit => unitstep[unit])
     })
@@ -162,6 +163,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , goChan$.filter(p => p.search != '?r').mapTo(null) // reset when opening channels page
   ).startWith(null).scan((S, chanid) => S == chanid ? null : chanid)
 
+  // Offers
+  , offerPayQuantity$ = offerPayQuantityInput$
+      .merge(offer$.map(offer => offer.quantity_min))
+      .startWith(null)
 
   // RPC console history
   , rpcHist$ = execRes$.startWith([]).merge(clrHist$.mapTo('clear'))
@@ -179,6 +184,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
   , fundMaxChan$
+  , offerPayQuantity$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }

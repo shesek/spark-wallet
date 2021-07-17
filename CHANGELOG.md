@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Initial support for BOLT12 offers
+
 ## 0.2.17 - 2020-09-03
 
 Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests when expert mode is enabled.
