@@ -14,6 +14,10 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
   dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'spark:reply')
 
+  const
+    paydetail$ = reply('_getpaydetail').map(r => ({ ...r.request.ctx, ...r.body }))
+  , offerpay$ = reply('_fetchinvoicepay').map(r => r.body)
+
   return {
     req$$:     HTTP.select()
   , error$:    extractErrors(HTTP.select()).map(formatError)
@@ -26,9 +30,12 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , funds$:    reply('listfunds').map(r => r.body)
 
   // replies to actions
-  , payreq$:   reply('decodepay').map(r => ({ ...r.body, ...r.request.ctx }))
+  , payreq$:   paydetail$.filter(d => d.type == 'bolt11 invoice' || d.type == 'bolt12 invoice')
+                         .merge(offerpay$.filter(t => t.action == 'reconfirm'))
+  , offer$:    paydetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
+                 .merge(offerpay$.filter(t => t.action == 'paid'))
   , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
                                .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
   , funded$:   reply('_connectfund').map(r => r.body)
@@ -44,10 +51,12 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
 // RPC commands to send
 // commands prefixed with an '_' are custom extensions provided by the Spark server
-exports.makeReq = ({ viewPay$, confPay$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
-  viewPay$.map(bolt11 => [ 'decodepay', [ bolt11 ], { bolt11 } ])
-, confPay$.map(pay    => [ 'pay',       [ pay.bolt11, ...(pay.custom_msat ? [ pay.custom_msat ] : []) ], pay ])
-, newInv$.map(inv     => [ 'invoice',   [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
+exports.makeReq = ({ viewPay$, confPay$, offerPay$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
+
+  viewPay$.map(paystr => [ '_getpaydetail',    [ paystr ], { paystr } ])
+, confPay$.map(pay    => [ 'pay',              [ pay.paystr, pay.custom_msat ], pay ])
+, offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity ] ])
+, newInv$.map(inv     => [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , updChan$.mapTo(        [ 'listpeers' ] )

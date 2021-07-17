@@ -26,7 +26,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
-                .merge(submit('[do=decode-pay]').map(r => r.bolt11.trim()).map(bolt11 => parseUri(bolt11) || bolt11))
+                .merge(submit('[do=decode-pay]').map(r => r.paystr.trim()).map(paystr => parseUri(paystr) || paystr))
   , confPay$ = submit('[do=confirm-pay]')
 
   // RPC console actions
@@ -74,10 +74,15 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .merge(goNewChan$.mapTo(false))
       .startWith(false)
 
+  // Offers
+  , offerPay$ = submit('[do=offer-pay]')
+  , offerPayQuantity$ = on('.offer-pay [name=quantity]', 'input').map(e => e.target.value)
+
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
          , goChan$, goNewChan$
          , viewPay$, confPay$
+         , offerPay$, offerPayQuantity$
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$

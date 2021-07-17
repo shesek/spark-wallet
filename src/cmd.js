@@ -43,6 +43,84 @@ module.exports = ln => ({
       return { ...p, created_at: pp.created_at }
     }) }
   }
+
+  // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
+, async _decode(paystr) {
+    const offersEnabled = (await getConfigs(ln))['experimental-offers']
+    if (offersEnabled) {
+      // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10+ when offers support is enabled
+      const decoded = await ln.decode(paystr)
+      // fix for https://github.com/ElementsProject/lightning/pull/4501
+      if (decoded.valid == null) decoded.valid = true
+      assert(decoded.valid, "invalid payment string") // TODO add error description
+      // make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
+      if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
+      return decoded
+    } else {
+      // 'decodepay' only supports BOLT11 invoices
+      const decoded = await ln.decodepay(paystr)
+      // add 'type' and 'valid' fields to match the format returned by decode()
+      return { ...decoded, type: 'bolt11 invoice', valid: true }
+    }
+  }
+
+  // Fetch an invoice for the given offer and decode it in one go
+, async _fetchinvoice(bolt12_offer) {
+    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer)
+    const decoded = await this._decode(invoice)
+    assert(decoded.type == 'bolt12 invoice')
+    return { paystr: invoice, changes, ...decoded }
+  }
+
+  // Get payment details for the given BOLT11/BOLT12 payment string
+, async _getpaydetail(paystr) {
+    const decoded = await this._decode(paystr)
+
+    switch (decoded.type) {
+      case 'bolt11 invoice':
+      case 'bolt12 invoice':
+        return decoded
+
+      case 'bolt12 offer':
+        assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
+        assert(!decoded.currency, 'Offers with fiat amounts are unsupported')
+        assert(!decoded.send_invoice, 'Offers to send payments are unsupported')
+        assert(decoded.msatoshi || decoded.quantity_min == null, 'Offers with quantity but no payment amount are unsupported')
+
+        if (!decoded.msatoshi || decoded.quantity_min != null) {
+          // If user input is necessary (for the amount/quantity), return the offer to the user
+          return decoded
+        } else {
+          // Otherwise, fetch the invoice straight ahead and return it
+          const invoice = await this._fetchinvoice(paystr)
+          invoice.changes = {} // the user never saw the original offer, no need to confirm changes
+          return { ...invoice, origin_offer: decoded }
+        }
+
+      default: throw new Error(`Unhandled payment string type: ${decoded.type}`)
+    }
+  }
+
+  // Fetch an invoice for the given offer, and immediately pay it if it matches the offer
+, async _fetchinvoicepay(bolt12_offer, msatoshi, quantity) {
+    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, msatoshi, quantity)
+
+    // Don't consider the `msat` amount as changed if the user provided an explicit amount and it matches it
+    if (msatoshi != null && changes.msat == `${msatoshi}msat`) {
+      delete changes.msat
+    }
+
+    if (Object.keys(changes).length == 0) {
+      // Nothing changed, go ahead and pay it
+      const pay_result = await ln.pay(invoice)
+      return { action: 'paid', ...pay_result }
+    } else {
+      // Return the invoice for user confirmation
+      const decoded = await this._decode(invoice)
+      assert(decoded.type == 'bolt12 invoice')
+      return { action: 'reconfirm', paystr: invoice, changes, ...decoded }
+    }
+  }
 })
 
 const getChannel = async (ln, peerid, chanid) => {
@@ -56,6 +134,10 @@ const getChannel = async (ln, peerid, chanid) => {
 
   return { peer, chan }
 }
+
+const getConfigs = ln =>
+  ln._configs || (ln._configs = ln.listconfigs()
+    .catch(err => { delete ln._configs; return Promise.reject(err) }))
 
 const hash = preimage =>
   crypto.createHash('sha256')
