@@ -47,9 +47,7 @@ module.exports = ln => ({
     await Promise.all(pays.map(async pay => {
       if (pay.bolt11 || pay.bolt12) {
         const invoice = await this._decode(pay.bolt11 || pay.bolt12)
-        ;[ 'description', 'vendor', 'quantity', 'offer_id' ]
-          .filter(k => invoice[k] != null && pay[k] == null)
-          .forEach(k => pay[k] = invoice[k])
+        attachInvoiceMeta(pay, invoice)
       }
     }))
 
@@ -77,10 +75,10 @@ module.exports = ln => ({
   }
 
   // Fetch an invoice for the given offer and decode it in one go
-, async _fetchinvoice(bolt12_offer) {
-    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer)
+, async _fetchinvoice(bolt12_offer, msatoshi=null, quantity=null) {
+    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, msatoshi, quantity)
     const decoded = await this._decode(invoice)
-    assert(decoded.type == 'bolt12 invoice')
+    assert(decoded.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
     return { paystr: invoice, changes, ...decoded }
   }
 
@@ -115,7 +113,7 @@ module.exports = ln => ({
 
   // Fetch an invoice for the given offer, and immediately pay it if it matches the offer
 , async _fetchinvoicepay(bolt12_offer, msatoshi, quantity) {
-    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, msatoshi, quantity)
+    const { changes, ...invoice } = await this._fetchinvoice(bolt12_offer, msatoshi, quantity)
 
     // Don't consider the `msat` amount as changed if the user provided an explicit amount and it matches it
     if (msatoshi != null && changes.msat == `${msatoshi}msat`) {
@@ -124,13 +122,12 @@ module.exports = ln => ({
 
     if (Object.keys(changes).length == 0) {
       // Nothing changed, go ahead and pay it
-      const pay_result = await ln.pay(invoice)
+      const pay_result = await ln.pay(invoice.paystr)
+      attachInvoiceMeta(pay_result, invoice)
       return { action: 'paid', ...pay_result }
     } else {
       // Return the invoice for user confirmation
-      const decoded = await this._decode(invoice)
-      assert(decoded.type == 'bolt12 invoice')
-      return { action: 'reconfirm', paystr: invoice, changes, ...decoded }
+      return { action: 'reconfirm', changes, ...invoice }
     }
   }
 })
@@ -150,6 +147,11 @@ const getChannel = async (ln, peerid, chanid) => {
 const getConfigs = ln =>
   ln._configs || (ln._configs = ln.listconfigs()
     .catch(err => { delete ln._configs; return Promise.reject(err) }))
+
+const attachInvoiceMeta = (pay, invoice) =>
+  [ 'description', 'vendor', 'quantity', 'offer_id' ]
+    .filter(k => invoice[k] != null && pay[k] == null)
+    .forEach(k => pay[k] = invoice[k])
 
 const hash = preimage =>
   crypto.createHash('sha256')
