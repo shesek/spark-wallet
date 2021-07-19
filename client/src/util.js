@@ -66,7 +66,7 @@ export const dropErrors = r$$ => r$$.flatMap(r$ => r$.catch(_ => O.empty()))
 
 export const extractErrors = r$$ =>
   r$$.flatMap(r$ => r$.flatMap(_ => O.empty()).catch(err => O.of(err)))
-    .map(e => e.response && (e.response.body && e.response.body.message || e.response.body) || e)
+    .map(e => e.response && (e.response.body && e.response.body.message || e.response.body || e.response.text) || e)
 
 export const formatError = err => (err.message && err.message.startsWith('Request has been terminated'))
   ? new Error('Connection to server lost.')

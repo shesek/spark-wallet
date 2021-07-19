@@ -57,7 +57,7 @@
   // Error handler
   app.use((err, req, res, next) => {
     console.error(err.stack || err.toString())
-    res.status(err.status || 500).send(err.type && err || err.stack || err)
+    res.status(err.status || 500).send(err.type && err || err.message || err)
   })
 
   // HTTPS server (the default for non-localhost hosts)
