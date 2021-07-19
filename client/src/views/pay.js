@@ -1,7 +1,7 @@
 import { div, form, button, textarea, a, span, p, strong, h2 } from '@cycle/dom'
 import { showDesc, formGroup, yaml, amountField } from './util'
 
-// user-agent sniffing is purely for display suggestions to the user.
+// user-agent sniffing is used purely to display suggestions to the user.
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     , isiOS = (/iP(hone|od|ad)/.test(navigator.platform) && navigator.vendor && navigator.vendor.includes('Apple'))
     , iOSVer = isiOS && +(navigator.appVersion.match(/OS (\d+)_\d+_/) || [])[1] || NaN
@@ -10,6 +10,7 @@ const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
       : iOSVer < 11 ? 'WebRTC is only available since iOS 11.2+.'
       : isPWAiOS ? 'PWAs on iOS cannot access WebRTC. Try opening Spark in your regular Safari browser without using "Add to homescreen".'
       : isiOS ? 'On iOS, only Safari can access WebRTC. Try changing or updating your browser.'
+      : process.env.BUILD_TARGET == 'web' && location.protocol != 'https:' ? 'WebRTC requires using a secure https connection.'
       : 'Try updating your browser.'
 
 const scanReq = div('.qr-scanner', [
