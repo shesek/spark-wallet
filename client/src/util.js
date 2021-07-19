@@ -1,5 +1,4 @@
 import debug  from 'debug'
-import bolt11 from 'bolt11'
 import numbro from 'numbro'
 import stringArgv from 'string-argv'
 import { Big as big } from 'big.js'
@@ -28,31 +27,11 @@ export const recvAmt = ({ msatoshi: expected, msatoshi_received: actual }) =>
 export const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
 
 // Parse the `sat`-suffixed amount string fields into numbers
-// and extract additional information from the bolt11 request
 export const parsePayment = p => ({
   ...p
 , msatoshi: p.amount_msat ? +p.amount_msat.slice(0, -4) : null
 , msatoshi_sent: +p.amount_sent_msat.slice(0, -4)
-, destination: p.destination || parseBolt11(p).destination || null // expected to become available in the next c-lightning release
-, description: p.description || parseBolt11(p).description || null
 })
-
-export const parseBolt11 = (cached => p => {
-  if (!p.bolt11 || p.bolt11 == '(null)') return {}
-  if (cached[p.payment_hash]) return cached[p.payment_hash]
-
-  try {
-    const decoded = bolt11.decode(p.bolt11)
-        , destination = decoded.payeeNodeKey
-        , desc_tag = decoded.tags.find(t => t.tagName == 'description')
-        , description = desc_tag ? desc_tag.data : null
-
-    return cached[p.payment_hash] = { destination, description }
-  } catch (err) {
-    console.error('failed decoding bolt11:', err)
-    return cached[p.payment_hash] = {}
-  }
-})({})
 
 export const combine = obj => {
   const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))

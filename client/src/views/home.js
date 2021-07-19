@@ -30,6 +30,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
   const fid     = `${type}-${obj.payment_hash}`
       , visible = fid == feedActive
       , tsStr   = new Date(ts*1000).toLocaleString()
+      , offerId = obj.local_offer_id || obj.offer_id
 
   return li('.list-group-item', { class: { active: visible, 'list-group-item-action': !visible }, dataset: { feedToggle: fid } }, [
     div('.clearfix', [
@@ -41,10 +42,12 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', tsStr ])
     , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
     , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+    , obj.vendor != null ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
+    , obj.quantity != null ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
     , type == 'out' && obj.destination ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
     , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
-    , obj.local_offer_id ? li([ strong('Offer ID:'), ' ', small('.break-all', obj.local_offer_id) ]) : ''
+    , offerId ? li([ strong('Offer ID:'), ' ', small('.break-all', offerId) ]) : ''
     , expert ? li(yaml(obj)) : ''
     ])
   ])

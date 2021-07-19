@@ -23,25 +23,37 @@ module.exports = ln => ({
     return { peer, chan, closing: res }
   }
 
-  // `listpays` with the addition of payment hashes and timestamps, which are missing
-  // in c-lightning v0.9.0 and expected to be added in the next release.
+  // `listpays` with the addition of metadata extracted from the BOLT11/BOLT12 invoice,
+  // as well as a fix for payment hashes and timestamps which were missing in c-lightning v0.9.0
+  // (and may still be missing in newer releases for old payments made with v0.9).
+  // Returns completed payments only.
 , async _listpays() {
     const res = await ln.listpays()
-    // these are not currently available, but be prepared for when they are
-    if (res.pays.length && res.pays[0].payment_hash && res.pays[0].created_at)
-      return res
+    const pays = res.pays.filter(p => p.status == 'complete')
 
-    const pays = res.pays
-      .filter(p => p.status == 'complete')
-      .map(p => ({ ...p, payment_hash: hash(p.preimage) }))
+    if (!pays.length) return { pays }
 
-    const pay_parts = await Promise.all(
-      pays.map(p => ln.listsendpays(null, p.payment_hash)))
+    // Fix for payments made with c-lightning v0.9.0
+    if (!pays[0].payment_hash) {
+      pays.forEach(p => p.payment_hash = hash(p.preimage))
+    }
+    if (!pays[0].created_at) {
+      const pay_parts = await Promise.all(
+        pays.map(p => ln.listsendpays(null, p.payment_hash)))
+      pays.forEach((p, i) => p.created_at = pay_parts[i].payments[0].created_at )
+    }
 
-    return { pays: pays.map((p, i) => {
-      const pp = pay_parts[i].payments[0]
-      return { ...p, created_at: pp.created_at }
-    }) }
+    // Extract additional metadata from the BOLT11/BOLT12 invoice
+    await Promise.all(pays.map(async pay => {
+      if (pay.bolt11 || pay.bolt12) {
+        const invoice = await this._decode(pay.bolt11 || pay.bolt12)
+        ;[ 'description', 'vendor', 'quantity', 'offer_id' ]
+          .filter(k => invoice[k] != null && pay[k] == null)
+          .forEach(k => pay[k] = invoice[k])
+      }
+    }))
+
+    return { pays }
   }
 
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
