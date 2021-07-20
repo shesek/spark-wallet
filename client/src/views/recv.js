@@ -1,7 +1,7 @@
 import { div, form, input, button, a, span, p, img, h2, h3, small } from '@cycle/dom'
-import { formGroup, yaml, qrinv, amountField, omitKey } from './util'
+import { formGroup, yaml, qrinv, amountField, omitKey, fancyCheckbox } from './util'
 
-const recv = ({ amtData }) =>
+const recv = ({ amtData, offersEnabled, invUseOffer }) =>
   form({ attrs: { do: 'new-invoice' } }, [
     h2('Request payment')
   , formGroup('Payment amount', amountField(amtData, 'msatoshi', false))
@@ -9,6 +9,8 @@ const recv = ({ amtData }) =>
   , formGroup('Description'
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
     , 'Embedded in the QR and presented to the payer.')
+
+  , offersEnabled ? fancyCheckbox('reusable-offer', 'Reusable offer (BOLT 12)', invUseOffer) : ''
 
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, 'Request')

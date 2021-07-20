@@ -9,6 +9,7 @@ const INVOICE_TTL = 18000 // 5 hours
 const timer = ms => O.timer(Math.random()*ms, ms).startWith(-1)
 
 // Parse incoming RPC replies
+// RPC commands prefixed with an '_' are custom extensions provided by the Spark server
 exports.parseRes = ({ HTTP, SSE }) => {
   const reply = category => dropErrors(HTTP.select(category))
 
@@ -28,6 +29,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , payments$: reply('_listpays').map(r => r.body.pays)
   , invoices$: reply('listinvoices').map(r => r.body.invoices)
   , funds$:    reply('listfunds').map(r => r.body)
+  , lnconfig$: reply('_listconfigs').map(r => r.body)
 
   // replies to actions
   , payreq$:   paydetail$.filter(d => d.type == 'bolt11 invoice' || d.type == 'bolt12 invoice')
@@ -37,6 +39,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
                            .merge(offerpay$.filter(t => t.action == 'paid'))
   , sinvoice$: reply('sendinvoice').map(r => r.body)
+  , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
   , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
                                .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
   , funded$:   reply('_connectfund').map(r => r.body)
@@ -51,15 +54,17 @@ exports.parseRes = ({ HTTP, SSE }) => {
 }
 
 // RPC commands to send
-// commands prefixed with an '_' are custom extensions provided by the Spark server
 exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
 
   // initiated by user actions
   viewPay$.map(paystr => [ '_getpaydetail',    [ paystr ], { paystr } ])
 , confPay$.map(pay    => [ 'pay',              [ pay.paystr, pay.custom_msat ], pay ])
+, newInv$.map(inv => !inv.reusable_offer
+                       ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
+                       : [ 'offer',            [ inv.msatoshi, inv.description, null, inv.label ], inv ])
 , offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity ] ])
 , offerRecv$.map(recv => [ 'sendinvoice',      [ recv.paystr, recv.label ] ])
-, newInv$.map(inv     => [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
+
 , goLogs$.mapTo(         [ 'getlog' ] )
 
 , updChan$.mapTo(        [ 'listpeers' ] )
@@ -68,6 +73,10 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 
 , goDeposit$.map(type => [ 'newaddr',   [ type ] ])
 
+  // requested once
+, O.of(                  [ '_listconfigs', [], { bg: true } ])
+
+  // periodic updates
 , timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
 , timer(60000).mapTo(    [ '_listpays',    [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])

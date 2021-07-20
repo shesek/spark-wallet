@@ -56,7 +56,7 @@ module.exports = ln => ({
 
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
 , async _decode(paystr) {
-    const offersEnabled = (await getConfigs(ln))['experimental-offers']
+    const offersEnabled = (await this._listconfigs())['experimental-offers']
     if (offersEnabled) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10+ when offers support is enabled
       const decoded = await ln.decode(paystr)
@@ -135,6 +135,13 @@ module.exports = ln => ({
       return { action: 'reconfirm', changes, ...invoice }
     }
   }
+
+
+  // `listconfigs` with caching
+, _listconfigs() {
+    return this._configs || (this._configs = ln.listconfigs()
+      .catch(err => { delete this._configs; return Promise.reject(err) }))
+  }
 })
 
 const getChannel = async (ln, peerid, chanid) => {
@@ -148,10 +155,6 @@ const getChannel = async (ln, peerid, chanid) => {
 
   return { peer, chan }
 }
-
-const getConfigs = ln =>
-  ln._configs || (ln._configs = ln.listconfigs()
-    .catch(err => { delete ln._configs; return Promise.reject(err) }))
 
 const attachInvoiceMeta = (pay, invoice) =>
   [ 'description', 'vendor', 'quantity', 'offer_id' ]
