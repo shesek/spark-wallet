@@ -35,7 +35,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , offer$:    paydetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
-                 .merge(offerpay$.filter(t => t.action == 'paid'))
+                           .merge(offerpay$.filter(t => t.action == 'paid'))
+  , sinvoice$: reply('sendinvoice').map(r => r.body)
   , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
                                .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
   , funded$:   reply('_connectfund').map(r => r.body)
@@ -51,11 +52,13 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
 // RPC commands to send
 // commands prefixed with an '_' are custom extensions provided by the Spark server
-exports.makeReq = ({ viewPay$, confPay$, offerPay$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
+exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
 
+  // initiated by user actions
   viewPay$.map(paystr => [ '_getpaydetail',    [ paystr ], { paystr } ])
 , confPay$.map(pay    => [ 'pay',              [ pay.paystr, pay.custom_msat ], pay ])
 , offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity ] ])
+, offerRecv$.map(recv => [ 'sendinvoice',      [ recv.paystr, recv.label ] ])
 , newInv$.map(inv     => [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ])
 , goLogs$.mapTo(         [ 'getlog' ] )
 

@@ -76,13 +76,14 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   // Offers
   , offerPay$ = submit('[do=offer-pay]')
+  , offerRecv$ = submit('[do=offer-recv]').map(({ paystr }) => ({ paystr, label: nanoid() }))
   , offerPayQuantity$ = on('.offer-pay [name=quantity]', 'input').map(e => e.target.value)
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
          , goChan$, goNewChan$
          , viewPay$, confPay$
-         , offerPay$, offerPayQuantity$
+         , offerPay$, offerRecv$, offerPayQuantity$
          , execRpc$, clrHist$
          , newInv$, amtVal$
          , togExp$, togTheme$, togUnit$
