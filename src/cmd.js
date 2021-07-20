@@ -92,16 +92,21 @@ module.exports = ln => ({
         return decoded
 
       case 'bolt12 offer':
+        // Detect unsupported features
         assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
         assert(!decoded.currency, 'Offers with fiat amounts are unsupported')
-        assert(!decoded.send_invoice, 'Offers to send payments are unsupported')
         assert(decoded.msatoshi || decoded.quantity_min == null, 'Offers with quantity but no payment amount are unsupported')
+        assert(!decoded.send_invoice || decoded.msatoshi, 'send_invoice offers with no amount are unsupported')
+        assert(!decoded.send_invoice || decoded.min_quantity == null, 'send_invoice offers with quantity are unsupported')
 
-        if (!decoded.msatoshi || decoded.quantity_min != null) {
-          // If user input is necessary (for the amount/quantity), return the offer to the user
+        // Always return send_invoice offers back for inspection
+        if (decoded.send_invoice) {
           return decoded
+        // If user input is necessary (for the amount/quantity), return the offer to the user
+        } else if (!decoded.msatoshi || decoded.quantity_min != null) {
+          return decoded
+        // Otherwise, fetch the invoice straight ahead and return it
         } else {
-          // Otherwise, fetch the invoice straight ahead and return it
           const invoice = await this._fetchinvoice(paystr)
           invoice.changes = {} // the user never saw the original offer, no need to confirm changes
           return { ...invoice, origin_offer: decoded }

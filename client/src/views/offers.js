@@ -39,7 +39,28 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
   ])
 
 // Display an offer to receive a payment
-const offerRecv = offer => S => { throw new Error('unimplemented') }
+const offerRecv = offer => ({ unitf, conf: { expert} }) =>
+  form('.offer-recv', { attrs: { do: 'offer-recv' }, dataset: offer }, [
+    h2('Receive payment')
+
+  , p([ 'You were offered a payment of ', strong('.toggle-unit', unitf(offer.msatoshi)), '. Do you accept it?' ])
+
+  , expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
+  , expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
+
+  , offer.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
+
+  , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
+
+  , div('.form-buttons', [
+      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
+      , `Receive ${unitf(offer.msatoshi)}`)
+    , ' '
+    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+    ])
+
+  , expert ? yaml(offer) : ''
+  ])
 
 export const offer = offer =>
   (offer.send_invoice ? offerRecv : offerPay)(offer)
