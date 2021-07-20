@@ -31,7 +31,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , conf$: savedConf$
                   , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
-                  , offer$, offerPayQuantity$: offerPayQuantityInput$
+                  , offer$, sinvoice$, offerPayQuantity$: offerPayQuantityInput$
                   , btcusd$, info$, peers$ }) => {
   const
 
