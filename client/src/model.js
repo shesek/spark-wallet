@@ -31,8 +31,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , conf$: savedConf$
                   , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$
                   , funded$, closed$
-                  , offer$, sinvoice$, offerPayQuantity$: offerPayQuantityInput$
-                  , btcusd$, info$, peers$ }) => {
+                  , offer$, offerPayQuantity$: offerPayQuantityInput$, invUseOffer$
+                  , btcusd$, info$, lnconfig$, peers$ }) => {
   const
 
   // Config options
@@ -164,6 +164,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   ).startWith(null).scan((S, chanid) => S == chanid ? null : chanid)
 
   // Offers
+  , offersEnabled$ = lnconfig$.map(conf => !!conf['experimental-offers']).startWith(null)
   , offerPayQuantity$ = offerPayQuantityInput$
       .merge(offer$.map(offer => offer.quantity_min))
       .startWith(null)
@@ -184,7 +185,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
   , fundMaxChan$
-  , offerPayQuantity$
+  , offersEnabled$, offerPayQuantity$, invUseOffer$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }

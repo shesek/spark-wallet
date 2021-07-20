@@ -1,8 +1,8 @@
-import { div, form, button, input, a, span, p, strong, h2, small } from '@cycle/dom'
+import { div, form, button, input, a, span, p, strong, h2, img, small } from '@cycle/dom'
 import Big from 'big.js'
-import { showDesc, formGroup, yaml, amountField } from './util'
+import { showDesc, formGroup, yaml, amountField, qrinv, omitKey } from './util'
 
-// Display an offer to send a payment
+// Display a remote offer for us to send a payment
 // This is only used when user input is required to fulfill the offer (amount/quantity),
 // and offers with quantity but no fixed amount are unsupported (rejected by the server side).
 // This means that the user will be promoted for either the amount or the quantity,
@@ -38,7 +38,8 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
   , expert ? yaml(offer) : ''
   ])
 
-// Display an offer to receive a payment
+// Display a remote offer for us to receive a payment (send_invoice=true)
+// Receive offers with no fixed amounts are currently unsupported (rejected by the server side).
 const offerRecv = offer => ({ unitf, conf: { expert} }) =>
   form('.offer-recv', { attrs: { do: 'offer-recv' }, dataset: offer }, [
     h2('Receive payment')
@@ -62,8 +63,28 @@ const offerRecv = offer => ({ unitf, conf: { expert} }) =>
   , expert ? yaml(offer) : ''
   ])
 
+
+// Display a remote offer
 export const offer = offer =>
   (offer.send_invoice ? offerRecv : offerPay)(offer)
+
+// Display a local offer
+// Currently supports receive offers only (send_invoice=false)
+export const localOffer = offer => qrinv(offer).then(qr => ({ unitf, conf: { expert } }) =>
+  div('.local-offer-recv', [
+    div('.row', [
+      div('.col-sm-6.text-center', [
+        h2('Receive payment(s)')
+      , p(`You can receive multiple payments${offer.msatoshi != 'any'?` of ${unitf(offer.msatoshi)} each`:''} using the reusable BOLT12 offer:`)
+      , small('.d-none.d-sm-block.text-muted.break-all.mt-3', offer.bolt12)
+      ])
+    , div('.col-sm-6.text-center', [
+        img('.qr', { attrs: { src: qr } })
+      , small('.d-block.d-sm-none.text-muted.break-all.mt-3', offer.bolt12)
+      ])
+    ])
+  , expert ? yaml(omitKey('bolt12', offer)) : ''
+  ]))
 
 const mul = (msatoshi, quantity=1) =>
   quantity == 1 ? msatoshi : Big(msatoshi).mul(quantity).toFixed(0)
