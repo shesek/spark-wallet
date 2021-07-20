@@ -6,7 +6,7 @@ import themeColors from '../theme-colors.json'
 const isFunc = x => typeof x == 'function'
 
 // DOM view
-exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, offer$, invoice$, newaddr$, logs$ }) => {
+exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, offer$, localOffer$, invoice$, newaddr$, logs$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -22,6 +22,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
   , payreq$.map(views.confirmPay)
   , offer$.map(views.offer)
   , invoice$.flatMap(views.invoice)
+  , localOffer$.flatMap(views.localOffer)
   , newaddr$.flatMap(views.deposit)
   , logs$.map(views.logs)
 

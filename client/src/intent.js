@@ -34,11 +34,16 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , execRpc$ = submit('[do=exec-rpc]').map(r => parseRpcCmd(r.cmd))
       .merge(click('[do=rpc-help]').mapTo([ 'help' ]))
 
-  // New invoice actions
+  // New invoice/offer action
   , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
     , msatoshi:    r.msatoshi || 'any'
-    , description: r.description || '⚡' }))
+    , description: r.description || '⚡'
+    , reusable_offer: !!r['reusable-offer'] }))
+  , invUseOffer$ = on('[do=new-invoice] [name=reusable-offer]', 'input')
+      .map(e => e.target.checked)
+      .merge(goRecv$.mapTo(false))
+      .startWith(false)
 
   // Payment amount field, shared for creating new invoices and for paying custom amounts
   , amtVal$ = on('[name=amount]', 'input').map(e => e.target.value)
@@ -79,13 +84,14 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , offerRecv$ = submit('[do=offer-recv]').map(({ paystr }) => ({ paystr, label: nanoid() }))
   , offerPayQuantity$ = on('.offer-pay [name=quantity]', 'input').map(e => e.target.value)
 
+
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
          , goChan$, goNewChan$
          , viewPay$, confPay$
          , offerPay$, offerRecv$, offerPayQuantity$
          , execRpc$, clrHist$
-         , newInv$, amtVal$
+         , newInv$, invUseOffer$, amtVal$
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
          , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
