@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -xeo pipefail
 shopt -s extglob
 
@@ -21,7 +21,9 @@ cp -r fonts/node_modules/typeface-* $DEST/fonts/
 cp -r node_modules/bootswatch/dist/!(darkly|litera|minty|sketchy|journal|pulse) $DEST/swatch/
 cp -r swatch/*/ $DEST/swatch/
 find $DEST/swatch -type f ! -name '*.min.css' -delete
-find $DEST/fonts -type f -regex '.*\.\(md\|json\)' -delete
+find $DEST/fonts -type f -name "*.md" -delete
+find $DEST/fonts -type f -name "*.json" -delete
+
 ./fonts/rewrite-css.sh $DEST/swatch/*/*.css
 
 if [[ "$BUILD_TARGET" == "web" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then

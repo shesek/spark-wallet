@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Rewrite @import statements in CSS themes to use local fonts,
 # instead of loading them from Google.
