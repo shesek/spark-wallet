@@ -15,6 +15,10 @@ androidVer=`node -p 'require("../package").androidVer'`
 
 build_type=${BUILD_TYPE:-debug}
 
+# Update the human-visible versionName string. The internal versionCode integer
+# is set through `cordova build` below.
+sed -ri 's/(<widget id="com.spark.wallet" version=")[^"]+"/\1'$version'"/' config.xml
+
 cordova prepare
 cordova build android --$build_type "$@" -- --versionCode=$androidVer
 
