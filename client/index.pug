@@ -33,4 +33,4 @@ body(class='build-'+process.env.BUILD_TARGET)
   if process.env.BUILD_TARGET == 'web'
     noscript
       link(rel='stylesheet', href='noscript.css')
-      p Spark requires JavaScript to be turned on.
+      p.noscript-msg Spark requires JavaScript to be turned on.
