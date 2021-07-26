@@ -26,11 +26,12 @@ You can use `--no-tls` to turn it off.
 #### With existing `lightningd`
 
 To connect to an existing `lightningd` instance running on the same machine,
-mount the lightning data directory to `/etc/lightning`:
+mount the lightning data subdirectory for the network (e.g. `~/.lightning/bitcoin`)
+into `/etc/lightning`:
 
 ```bash
 $ docker run -it -v ~/.spark-docker:/data -p 9737:9737 \
-             -v ~/.lightning:/etc/lightning \
+             -v ~/.lightning/bitcoin:/etc/lightning \
              shesek/spark-wallet:standalone
 ```
 
