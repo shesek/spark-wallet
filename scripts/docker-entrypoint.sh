@@ -11,7 +11,7 @@ trap 'jobs -p | xargs -r kill' SIGTERM
 if [ -d /etc/lightning ]; then
   echo -n "Using lightningd directory mounted in /etc/lightning... "
   LN_PATH=/etc/lightning
-  if [ ! -f $LN_PATH/lightningd.sqlite3 ] && [ -f $LN_PATH/$NETWORK/lightningd.sqlite3 ]; then
+  if [ ! -f $LN_PATH/lightning-rpc ] && [ -f $LN_PATH/$NETWORK/lightning-rpc ]; then
     echo -n "Using $LN_PATH/$NETWORK... "
     LN_PATH=$LN_PATH/$NETWORK
   fi
