@@ -3,10 +3,8 @@ import Big from 'big.js'
 import { showDesc, formGroup, yaml, amountField, qrinv, omitKey } from './util'
 
 // Display a remote offer for us to send a payment
-// This is only used when user input is required to fulfill the offer (amount/quantity),
-// and offers with quantity but no fixed amount are unsupported (rejected by the server side).
-// This means that the user will be promoted for either the amount or the quantity,
-// never for both.
+// Offers with quantity but no fixed amount are unsupported (rejected by the server side),
+// so the user will be promoted for either the amount or the quantity, never both.
 const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } }) =>
   form('.offer-pay', { attrs: { do: 'offer-pay' }, dataset: offer }, [
     h2('Send payment')
@@ -20,8 +18,9 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 
   , offer.msatoshi
-      ? p([ 'Price per unit: ', strong('.toggle-unit', unitf(offer.msatoshi)) ])
-      : formGroup('Amount to pay:', amountField(amtData, 'custom_msat', true))
+      ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount: '
+        , strong('.toggle-unit', unitf(offer.msatoshi)) ])
+      : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
 
   , offer.quantity_min != null ? formGroup('Quantity:'
     , input('.form-control.form-control-lg', { attrs: { type: 'number', name: 'quantity', value: offerPayQuantity
@@ -69,7 +68,7 @@ export const offer = offer =>
   (offer.send_invoice ? offerRecv : offerPay)(offer)
 
 // Display a local offer
-// Currently supports receive offers only (send_invoice=false)
+// Currently supports receive offers only (send_invoice=false) and doesn't support quantity/recurrence
 export const localOffer = offer => qrinv(offer).then(qr => ({ unitf, conf: { expert } }) =>
   div('.local-offer-recv', [
     div('.row', [

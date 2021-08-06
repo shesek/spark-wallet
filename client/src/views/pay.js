@@ -52,7 +52,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
 
   , payreq.quantity ? p([ 'Quantity: ', span('.text-muted', payreq.quantity) ]) : ''
 
-  , !payreq.msatoshi ? formGroup('Amount to pay', amountField(amtData, 'custom_msat', true)) : ''
+  , !payreq.msatoshi ? formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true)) : ''
 
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
       p('.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')

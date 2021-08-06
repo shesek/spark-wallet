@@ -82,38 +82,25 @@ module.exports = ln => ({
     return { paystr: invoice, changes, ...decoded }
   }
 
-  // Get payment details for the given BOLT11/BOLT12 payment string
-, async _getpaydetail(paystr) {
+  // Decode the payment string and verify that it is supported by Spark
+, async _decodecheck(paystr) {
     const decoded = await this._decode(paystr)
 
     switch (decoded.type) {
-      case 'bolt11 invoice':
-      case 'bolt12 invoice':
-        return decoded
-
       case 'bolt12 offer':
-        // Detect unsupported features
         assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
         assert(!decoded.currency, 'Offers with fiat amounts are unsupported')
         assert(decoded.msatoshi || decoded.quantity_min == null, 'Offers with quantity but no payment amount are unsupported')
         assert(!decoded.send_invoice || decoded.msatoshi, 'send_invoice offers with no amount are unsupported')
         assert(!decoded.send_invoice || decoded.min_quantity == null, 'send_invoice offers with quantity are unsupported')
-
-        // Always return send_invoice offers back for inspection
-        if (decoded.send_invoice) {
-          return decoded
-        // If user input is necessary (for the amount/quantity), return the offer to the user
-        } else if (!decoded.msatoshi || decoded.quantity_min != null) {
-          return decoded
-        // Otherwise, fetch the invoice straight ahead and return it
-        } else {
-          const invoice = await this._fetchinvoice(paystr)
-          invoice.changes = {} // the user never saw the original offer, no need to confirm changes
-          return { ...invoice, origin_offer: decoded }
-        }
-
+        break
+      case 'bolt11 invoice':
+      case 'bolt12 invoice':
+        break
       default: throw new Error(`Unhandled payment string type: ${decoded.type}`)
     }
+
+    return decoded
   }
 
   // Fetch an invoice for the given offer, and immediately pay it if it matches the offer
@@ -135,7 +122,6 @@ module.exports = ln => ({
       return { action: 'reconfirm', changes, ...invoice }
     }
   }
-
 
   // `listconfigs` with caching
 , _listconfigs() {
