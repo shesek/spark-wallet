@@ -44,6 +44,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , obj.vendor != null ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
+    , obj.payer_note ? li([ strong('Payer note:'), ' ', span('.break-word', obj.payer_note) ]) : ''
     , obj.quantity != null ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
     , type == 'out' && obj.destination ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
     , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])

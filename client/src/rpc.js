@@ -62,7 +62,7 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 , newInv$.map(inv => !inv.reusable_offer
                        ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
                        : [ 'offer',            [ inv.msatoshi, inv.description, null, inv.label ], inv ])
-, offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity ] ])
+, offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity, pay.payer_note ] ])
 , offerRecv$.map(recv => [ 'sendinvoice',      [ recv.paystr, recv.label ] ])
 
 , goLogs$.mapTo(         [ 'getlog' ] )
