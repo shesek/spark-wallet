@@ -16,7 +16,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'spark:reply')
 
   const
-    paydetail$ = reply('_getpaydetail').map(r => ({ ...r.request.ctx, ...r.body }))
+    paydetail$ = reply('_decodecheck').map(r => ({ ...r.request.ctx, ...r.body }))
   , offerpay$ = reply('_fetchinvoicepay').map(r => r.body)
 
   return {
@@ -57,7 +57,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
 
   // initiated by user actions
-  viewPay$.map(paystr => [ '_getpaydetail',    [ paystr ], { paystr } ])
+  viewPay$.map(paystr => [ '_decodecheck',     [ paystr ], { paystr } ])
 , confPay$.map(pay    => [ 'pay',              [ pay.paystr, pay.custom_msat ], pay ])
 , newInv$.map(inv => !inv.reusable_offer
                        ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
