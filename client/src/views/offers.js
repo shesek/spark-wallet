@@ -27,6 +27,10 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
                                              , min: offer.quantity_min, max: offer.quantity_max, step: 1 } })
     ) : ''
 
+  , formGroup('Send note:'
+    , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'payer_note', placeholder: '(optional)' } })
+    , 'A note to send to the payee along with the payment.')
+
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
       , offer.msatoshi ? `Pay ${unitf(mul(offer.msatoshi, offerPayQuantity))}` : 'Send Payment')

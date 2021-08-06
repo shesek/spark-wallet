@@ -75,8 +75,8 @@ module.exports = ln => ({
   }
 
   // Fetch an invoice for the given offer and decode it in one go
-, async _fetchinvoice(bolt12_offer, msatoshi=null, quantity=null) {
-    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, msatoshi, quantity)
+, async _fetchinvoice(bolt12_offer, ...args) {
+    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, ...args)
     const decoded = await this._decode(invoice)
     assert(decoded.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
     return { paystr: invoice, changes, ...decoded }
@@ -104,8 +104,9 @@ module.exports = ln => ({
   }
 
   // Fetch an invoice for the given offer, and immediately pay it if it matches the offer
-, async _fetchinvoicepay(bolt12_offer, msatoshi, quantity) {
-    const { changes, ...invoice } = await this._fetchinvoice(bolt12_offer, msatoshi, quantity)
+  // Some parameters are unsupported (recurrence/timeout)
+, async _fetchinvoicepay(bolt12_offer, msatoshi, quantity, payer_note) {
+    const { changes, ...invoice } = await this._fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
 
     // Don't consider the `msat` amount as changed if the user provided an explicit amount and it matches it
     if (msatoshi != null && changes.msat == `${msatoshi}msat`) {
@@ -143,7 +144,7 @@ const getChannel = async (ln, peerid, chanid) => {
 }
 
 const attachInvoiceMeta = (pay, invoice) =>
-  [ 'description', 'vendor', 'quantity', 'offer_id' ]
+  [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id' ]
     .filter(k => invoice[k] != null && pay[k] == null)
     .forEach(k => pay[k] = invoice[k])
 
