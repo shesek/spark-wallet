@@ -1,6 +1,6 @@
 import { div, form, button, input, a, span, p, strong, h2, img, small } from '@cycle/dom'
 import Big from 'big.js'
-import { showDesc, formGroup, yaml, amountField, qrinv, omitKey } from './util'
+import { showDesc, formGroup, yaml, amountField, omitKey, qrinv, fmtFiatAmount } from './util'
 
 // Display a remote offer for us to send a payment
 // Offers with quantity but no fixed amount are unsupported (rejected by the server side),
@@ -13,10 +13,22 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 
-  , offer.msatoshi
-      ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
-        , strong('.toggle-unit', unitf(offer.msatoshi)) ])
-      : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
+  ,
+    // Bitcoin denominated amount
+    offer.msatoshi
+    ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
+      , strong('.toggle-unit', unitf(offer.msatoshi)) ])
+
+    // Fiat denominated amount
+    : offer.amount
+    ? div('.form-group', [
+        p('.mb-0', [ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
+        , strong(fmtFiatAmount(offer)) ])
+      , small('.form-text.text-muted', [ strong('Informative only.'), ' The BTC amount displayed for confirmation on the next screen is the determining amount.' ])
+      ])
+
+    // Amount chosen by the payer
+    : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
 
   , offer.quantity_min != null ? formGroup('Quantity:'
     , input('.form-control.form-control-lg', { attrs: { type: 'number', name: 'quantity', value: offerPayQuantity
@@ -27,11 +39,16 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'payer_note', placeholder: '(optional)' } })
     , 'A note to send to the payee along with the payment.')
 
+
   , div('.form-buttons', [
-      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
-      , offer.msatoshi ? `Pay ${unitf(mul(offer.msatoshi, offerPayQuantity))}` : 'Send Payment')
-    , ' '
-    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+      div([
+        button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
+        , offer.msatoshi ? `Pay ${unitf(mul(offer.msatoshi, offerPayQuantity))}`
+        : offer.amount   ? 'Continue'
+                         : 'Send Payment')
+      , ' '
+      , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+      ])
     ])
 
   , expert ? yaml(offer) : ''
