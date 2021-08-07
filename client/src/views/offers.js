@@ -20,7 +20,7 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
       , strong('.toggle-unit', unitf(offer.msatoshi, true)) ])
 
     // Fiat denominated amount
-    : offer.amount
+    : offer.currency
     ? div('.form-group', [
         p('.mb-0', [ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
         , strong(fmtFiatAmount(offer)) ])
@@ -39,15 +39,15 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'payer_note', placeholder: '(optional)' } })
     , 'A note to send to the payee along with the payment.')
 
-
   , div('.form-buttons', [
-      div([
-        button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
+      !offer.currency ? div('.mb-3', 'Do you confirm making this payment?') : ''
+    , div([
+        button('.btn.btn-lg.btn-primary.mb-1', { attrs: { type: 'submit' } }
         , offer.msatoshi ? `Pay ${unitf(mul(offer.msatoshi, offerPayQuantity))}`
         : offer.amount   ? 'Continue'
                          : 'Send Payment')
       , ' '
-      , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+      , a('.btn.btn-lg.btn-secondary.mb-1', { attrs: { href: '#/' } }, 'Cancel')
       ])
     ])
 
@@ -62,10 +62,10 @@ const offerRecv = offer => ({ unitf, conf: { expert} }) =>
 
   , p([ 'You were offered a payment of ', strong('.toggle-unit', unitf(offer.msatoshi)), '. Do you accept it?' ])
 
-  , expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
-  , expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
+  //, expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
+  //, expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
 
-  , offer.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
+  , offer.vendor ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 

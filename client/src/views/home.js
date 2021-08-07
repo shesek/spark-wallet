@@ -42,12 +42,12 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', tsStr ])
     , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
     , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
-    , obj.vendor != null ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
+    , obj.vendor ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
+    , obj.quantity ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
     , obj.payer_note ? li([ strong('Payer note:'), ' ', span('.break-word', obj.payer_note) ]) : ''
-    , obj.quantity != null ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
     , type == 'out' && obj.destination ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
-    , li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
+    //, li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
     , offerId ? li([ strong('Offer ID:'), ' ', small('.break-all', offerId) ]) : ''
     , expert ? li(yaml(obj)) : ''
     ])
