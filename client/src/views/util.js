@@ -65,3 +65,6 @@ export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ?
 
 export const fmtFiatAmount = ({ amount, currency, minor_unit }, quantity=1) =>
   `${Big(amount).div(Math.pow(10, minor_unit)).mul(quantity).toFixed(0)} ${currency}`
+
+export const getPricePerUnit = ({ msatoshi, quantity }) =>
+  Big(msatoshi).div(quantity).toFixed(0)
