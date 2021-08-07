@@ -1,5 +1,5 @@
-import { div, form, button, textarea, a, span, p, strong, h2, ul, li, em } from '@cycle/dom'
-import { showDesc, formGroup, yaml, amountField } from './util'
+import { div, form, button, textarea, a, span, p, strong, h2, ul, li, em, small } from '@cycle/dom'
+import { showDesc, formGroup, yaml, amountField, fmtFiatAmount } from './util'
 
 // user-agent sniffing is used purely to display suggestions to the user.
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
@@ -36,22 +36,41 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 ])
 
 // User confirmation for BOLT11/BOLT12 payment requests
-const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
-  form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
+const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
+
+  // If the original offer had a fiat-denominated amount, exclude the 'msat' field
+  // from being displayed in the changes list. The bitcoin and fiat amounts are
+  // displayed separately.
+  if (payreq.offer && !payreq.offer.msatoshi && payreq.offer.amount && payreq.msatoshi) {
+    delete payreq.changes.msat
+  }
+
+  return form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
     h2('Send payment')
 
   , payreq.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
 
   , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-word', payreq.description) ]) : ''
 
+  ,
+    // Bitcoin-denominated amount that was previously displayed in fiat
+    (payreq.msatoshi && payreq.offer && payreq.offer.amount)
+    ? div('.form-group', [
+        p('.mb-0', [ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi)) ])
+      , div('.form-text.text-muted', [ 'Quoted as: ', strong(fmtFiatAmount(payreq.offer, payreq.quantity)) ])
+      ])
+
+    // Bitcoin denominated amount
+    : payreq.msatoshi
+    ? p([ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi)) ])
+
+    // Amount chosen by the payer
+    : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
+
   , payreq.quantity ? p([ 'Quantity: ', span('.text-muted', payreq.quantity) ]) : ''
 
-  , payreq.msatoshi
-      ? p([ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi)) ])
-      : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
-
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
-      p('.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
+      div('.mb-3.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
     , ul([
         payreq.changes.description_appended ? li([ 'The description was appended with: ', em('.text-muted', payreq.changes.description_appended) ]) : ''
       , payreq.changes.description ? li([ 'The description was completely replaced. The original was: ', em('.text-muted', payreq.changes.description) ]) : ''
@@ -70,5 +89,6 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
 
   , expert ? yaml(payreq) : ''
   ])
+}
 
 module.exports = { scanReq, pasteReq, confirmPay }

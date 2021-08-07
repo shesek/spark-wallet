@@ -74,12 +74,16 @@ module.exports = ln => ({
     }
   }
 
-  // Fetch an invoice for the given offer and decode it in one go
+  // Fetch an invoice for the given offer, decode it and return the original offer alongside it
 , async _fetchinvoice(bolt12_offer, ...args) {
-    const { invoice, changes } = await ln.fetchinvoice(bolt12_offer, ...args)
-    const decoded = await this._decode(invoice)
-    assert(decoded.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
-    return { paystr: invoice, changes, ...decoded }
+    const { invoice: bolt12_invoice, changes } = await ln.fetchinvoice(bolt12_offer, ...args)
+
+    const invoice = await this._decode(bolt12_invoice)
+    assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
+
+    const offer = await this._decode(bolt12_offer)
+
+    return { paystr: bolt12_invoice, offer, changes, ...invoice }
   }
 
   // Decode the payment string and verify that it is supported by Spark
@@ -89,8 +93,7 @@ module.exports = ln => ({
     switch (decoded.type) {
       case 'bolt12 offer':
         assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
-        assert(!decoded.currency, 'Offers with fiat amounts are unsupported')
-        assert(decoded.msatoshi || decoded.quantity_min == null, 'Offers with quantity but no payment amount are unsupported')
+        assert(decoded.quantity_min == null || decoded.msatoshi || decoded.amount, 'Offers with quantity but no payment amount are unsupported')
         assert(!decoded.send_invoice || decoded.msatoshi, 'send_invoice offers with no amount are unsupported')
         assert(!decoded.send_invoice || decoded.min_quantity == null, 'send_invoice offers with quantity are unsupported')
         break
