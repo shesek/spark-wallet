@@ -84,11 +84,12 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
       ])
     ] : [])
 
-  , div('.form-buttons', [
-      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
+  , div('.form-buttons.mt-4', [
+      div('.mb-3', 'Do you confirm making this payment?')
+    , button('.btn.btn-lg.btn-primary.mb-1', { attrs: { type: 'submit' } }
       , payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
     , ' '
-    , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
+    , a('.btn.btn-lg.btn-secondary.mb-1', { attrs: { href: '#/' } }, 'Cancel')
     ])
 
   , expert ? yaml(payreq) : ''
