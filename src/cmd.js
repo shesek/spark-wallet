@@ -45,9 +45,16 @@ module.exports = ln => ({
 
     // Extract additional metadata from the BOLT11/BOLT12 invoice
     await Promise.all(pays.map(async pay => {
-      if (pay.bolt11 || pay.bolt12) {
-        const invoice = await this._decode(pay.bolt11 || pay.bolt12)
-        attachInvoiceMeta(pay, invoice)
+      if (pay.bolt11 || isCompatibleBolt12(pay)) {
+        try {
+          const invoice = await this._decode(pay.bolt11 || pay.bolt12)
+          attachInvoiceMeta(pay, invoice)
+        } catch (e) {
+          // This can happen for BOLT12 invoices created with v0.10.0 after the v0.10.1 release date.
+          // Report the error and ignore it.
+          if (pay.bolt12) console.error('Failed decoding pay string, deprecated old-style bolt12?', pay)
+          else throw e
+        }
       }
     }))
 
@@ -145,6 +152,17 @@ const getChannel = async (ln, peerid, chanid) => {
 
   return { peer, chan }
 }
+
+
+// Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in prior releases
+// used an incompatible encoding format and are therefore ignored. Using the timestamp to
+// detect them is prune to false positives/negatives, but there is no better way to do that.
+//
+// TODO: update with the actual release timestamp
+const CLN_0_10_1_TS = 1628294840
+
+const isCompatibleBolt12 = pay =>
+  pay.bolt12 && pay.created_at >= CLN_0_10_1_TS
 
 const attachInvoiceMeta = (pay, invoice) =>
   [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id' ]
