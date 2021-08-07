@@ -30,7 +30,6 @@ module.exports = ln => ({
 , async _listpays() {
     const res = await ln.listpays()
     const pays = res.pays.filter(p => p.status == 'complete')
-
     if (!pays.length) return { pays }
 
     // Fix for payments made with c-lightning v0.9.0
@@ -44,23 +43,21 @@ module.exports = ln => ({
     }
 
     // Extract additional metadata from the BOLT11/BOLT12 invoice
-    await Promise.all(pays.map(async pay => {
-      if (pay.bolt11 || isCompatibleBolt12(pay)) {
-        try {
-          const invoice = await this._decode(pay.bolt11 || pay.bolt12)
-          attachInvoiceMeta(pay, invoice)
-        } catch (e) {
-          // This can happen for BOLT12 invoices created with v0.10.0 after the v0.10.1 release date.
-          // Report the error and ignore it.
-          if (pay.bolt12) console.error('Failed decoding pay string, deprecated old-style bolt12?', pay)
-          else throw e
-        }
-      }
-    }))
+    await Promise.all(pays.map(pay => attachInvoiceMeta(pay, this)))
 
     return { pays }
   }
 
+  // `listinvoices` with the addition of metadata extracted from the BOLT11/BOLT12 invoice,
+  // Returns paid invoices only.
+, async _listinvoices() {
+    const res = await ln.listinvoices()
+    const invoices = res.invoices.filter(i => i.status == 'paid')
+
+    await Promise.all(invoices.map(invoice => attachInvoiceMeta(invoice, this)))
+
+    return { invoices }
+  }
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
 , async _decode(paystr) {
     const offersEnabled = (await this._listconfigs())['experimental-offers']
@@ -126,7 +123,7 @@ module.exports = ln => ({
     if (Object.keys(changes).length == 0) {
       // Nothing changed, go ahead and pay it
       const pay_result = await ln.pay(invoice.paystr)
-      attachInvoiceMeta(pay_result, invoice)
+      extendInvoiceMeta(pay_result, invoice)
       return { action: 'paid', ...pay_result }
     } else {
       // Return the invoice for user confirmation
@@ -161,10 +158,25 @@ const getChannel = async (ln, peerid, chanid) => {
 // TODO: update with the actual release timestamp
 const CLN_0_10_1_TS = 1628294840
 
-const isCompatibleBolt12 = pay =>
-  pay.bolt12 && pay.created_at >= CLN_0_10_1_TS
+const isCompatibleBolt12 = obj =>
+  obj.bolt12 && (obj.created_at || obj.paid_at) >= CLN_0_10_1_TS
 
-const attachInvoiceMeta = (pay, invoice) =>
+// Get and attach metadata extracted from the bolt11/bolt12 of invoices/payments
+const attachInvoiceMeta = async (obj, ln) => {
+  if (obj.bolt11 || isCompatibleBolt12(obj)) {
+    try {
+      const invoice = await ln._decode(obj.bolt11 || obj.bolt12)
+      extendInvoiceMeta(obj, invoice)
+    } catch (e) {
+      // This can happen for BOLT12 invoices created with v0.10.0 after the v0.10.1 release date.
+      // Report the error and ignore it.
+      if (obj.bolt12) console.error('Failed decoding pay string, deprecated old-style bolt12?', obj)
+      else throw e
+    }
+  }
+}
+
+const extendInvoiceMeta = (pay, invoice) =>
   [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id' ]
     .filter(k => invoice[k] != null && pay[k] == null)
     .forEach(k => pay[k] = invoice[k])

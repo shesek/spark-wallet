@@ -27,7 +27,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , info$:     reply('getinfo').map(r => r.body)
   , peers$:    reply('listpeers').map(r => r.body.peers)
   , payments$: reply('_listpays').map(r => r.body.pays)
-  , invoices$: reply('listinvoices').map(r => r.body.invoices)
+  , invoices$: reply('_listinvoices').map(r => r.body.invoices)
   , funds$:    reply('listfunds').map(r => r.body)
   , lnconfig$: reply('_listconfigs').map(r => r.body)
 
@@ -77,7 +77,7 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 , O.of(                  [ '_listconfigs', [], { bg: true } ])
 
   // periodic updates
-, timer(60000).mapTo(    [ 'listinvoices', [], { bg: true } ])
+, timer(60000).mapTo(    [ '_listinvoices', [], { bg: true } ])
 , timer(60000).mapTo(    [ '_listpays',    [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])
 , timer(60000).merge(goChan$).throttleTime(2000)
