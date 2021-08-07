@@ -1,7 +1,12 @@
-(async function() { // IIFE
-  const app = require('express')()
-      , ln  = require('clightning-client')(process.env.LN_PATH)
-      , cmd = require('./cmd')(ln)
+import express from 'express'
+import clightning from 'clightning-client'
+
+// Extend clightning-client with custom RPC commands
+Object.assign(clightning.LightningClient.prototype, require('./cmd').commands)
+
+;(async function() { // IIFE
+  const app = express()
+      , ln  = clightning(process.env.LN_PATH)
 
   // Test connection
   if (!process.env.NO_TEST_CONN) {
@@ -33,7 +38,6 @@
   // CSRF protection. Require the X-Access header or access-key query string arg for POST requests.
   app.post('*', (req, res, next) => !req.csrfSafe ? res.sendStatus(403) : next())
 
-
   // CORS
   process.env.ALLOW_CORS && app.use((req, res, next) => {
     res.set('Access-Control-Allow-Origin', process.env.ALLOW_CORS)
@@ -44,8 +48,8 @@
 
   // RPC API
   app.post('/rpc', (req, res, next) =>
-    (cmd[req.body.method] ? cmd[req.body.method](...req.body.params)
-                          : ln.call(req.body.method, req.body.params)
+    (ln[req.body.method] ? ln[req.body.method](...req.body.params)
+                         : ln.call(req.body.method, req.body.params)
     ).then(r => res.send(r)).catch(next))
 
   // Streaming API
