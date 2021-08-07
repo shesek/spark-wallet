@@ -92,11 +92,11 @@ export const localOffer = offer => qrinv(offer).then(qr => ({ unitf, conf: { exp
       div('.col-sm-6.text-center', [
         h2('Receive payment(s)')
       , p(`You can receive multiple payments${offer.msatoshi != 'any'?` of ${unitf(offer.msatoshi)} each`:''} using the reusable BOLT12 offer:`)
-      , small('.d-none.d-sm-block.text-muted.break-all.mt-3', offer.bolt12)
+      , small('.d-none.d-sm-block.text-muted.break-all.mt-3', offer.bolt12_unsigned)
       ])
     , div('.col-sm-6.text-center', [
         img('.qr', { attrs: { src: qr } })
-      , small('.d-block.d-sm-none.text-muted.break-all.mt-3', offer.bolt12)
+      , small('.d-block.d-sm-none.text-muted.break-all.mt-3', offer.bolt12_unsigned)
       ])
     ])
   , expert ? yaml(omitKey('bolt12', offer)) : ''
