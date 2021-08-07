@@ -9,16 +9,12 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
   form('.offer-pay', { attrs: { do: 'offer-pay' }, dataset: offer }, [
     h2('Send payment')
 
-  , expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
-  , expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
-
   , offer.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
-  // TODO warning?
 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 
   , offer.msatoshi
-      ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount: '
+      ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
         , strong('.toggle-unit', unitf(offer.msatoshi)) ])
       : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
 
@@ -27,7 +23,7 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
                                              , min: offer.quantity_min, max: offer.quantity_max, step: 1 } })
     ) : ''
 
-  , formGroup('Send note:'
+  , formGroup('Attach note:'
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'payer_note', placeholder: '(optional)' } })
     , 'A note to send to the payee along with the payment.')
 
