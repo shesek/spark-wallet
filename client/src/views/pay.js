@@ -38,13 +38,7 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 // User confirmation for BOLT11/BOLT12 payment requests
 const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
   form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
-    payreq.msatoshi ? h2('Confirm payment') : h2('Send payment')
-
-  , payreq.msatoshi ? p([ 'Confirm paying ', strong('.toggle-unit', unitf(payreq.msatoshi)), '?']) : ''
-
-
-  , expert ? p([ 'Node ID: ', small('.text-muted.break-all', payreq.node_id) ]) : ''
-  , expert ? p([ 'Offer ID: ', small('.text-muted.break-all', payreq.offer_id) ]) : ''
+    h2('Send payment')
 
   , payreq.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
 
@@ -52,7 +46,9 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
 
   , payreq.quantity ? p([ 'Quantity: ', span('.text-muted', payreq.quantity) ]) : ''
 
-  , !payreq.msatoshi ? formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true)) : ''
+  , payreq.msatoshi
+      ? p([ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi)) ])
+      : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
 
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
       p('.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
@@ -66,7 +62,8 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) =>
     ] : [])
 
   , div('.form-buttons', [
-      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }, payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
+      button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
+      , payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
     , ' '
     , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
     ])
