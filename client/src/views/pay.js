@@ -1,5 +1,5 @@
 import { div, form, button, textarea, a, span, p, strong, h2, ul, li, em, small } from '@cycle/dom'
-import { showDesc, formGroup, yaml, amountField, fmtFiatAmount } from './util'
+import { showDesc, formGroup, yaml, amountField, fmtFiatAmount, getPricePerUnit } from './util'
 
 // user-agent sniffing is used purely to display suggestions to the user.
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
@@ -48,7 +48,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   return form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
     h2('Send payment')
 
-  , payreq.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
+  , payreq.vendor ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
 
   , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-word', payreq.description) ]) : ''
 
@@ -67,7 +67,11 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
     // Amount chosen by the payer
     : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
 
-  , payreq.quantity ? p([ 'Quantity: ', span('.text-muted', payreq.quantity) ]) : ''
+  , payreq.quantity ? div('.form-group', [
+      p('.mb-0', [ 'Quantity: ', span('.text-muted', payreq.quantity) ])
+      , payreq.quantity > 1
+        ? div('.form-text.text-muted', [ 'Per unit: ', strong(unitf(getPricePerUnit(payreq))) ]) : ''
+    ]) : ''
 
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
       div('.mb-3.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
