@@ -1,25 +1,26 @@
 import assert from 'assert'
 import crypto from 'crypto'
 
-// Custom RPC commands that are exposed on top of c-lightning's built-in ones
-module.exports = ln => ({
-  // connect & fund in one go
+// Custom RPC commands added on top of c-lightning's built-in ones
+// and exposed to the client side.
+export const commands = {
+  // Connect to node & fund channel in one go
   async _connectfund(peeruri, satoshi, feerate) {
     const peerid = peeruri.split('@')[0]
-    await ln.connect(peeruri)
+    await this.connect(peeruri)
 
-    const res = await ln.fundchannel(peerid, satoshi, feerate)
+    const res = await this.fundchannel(peerid, satoshi, feerate)
     assert(res && res.channel_id, 'cannot open channel')
 
-    return getChannel(ln, peerid, res.channel_id)
+    return getChannel(this, peerid, res.channel_id)
   }
 
-  // close channel and return it
+  // Close channel and return its details
 , async _close(peerid, chanid, force, timeout) {
-    const res = await ln.close(chanid, force, timeout)
+    const res = await this.close(chanid, force, timeout)
     assert(res && res.txid, 'cannot close channel')
 
-    const { peer, chan } = await getChannel(ln, peerid, chanid)
+    const { peer, chan } = await getChannel(this, peerid, chanid)
     return { peer, chan, closing: res }
   }
 
@@ -28,7 +29,7 @@ module.exports = ln => ({
   // (and may still be missing in newer releases for old payments made with v0.9).
   // Returns completed payments only.
 , async _listpays() {
-    const res = await ln.listpays()
+    const res = await this.listpays()
     const pays = res.pays.filter(p => p.status == 'complete')
     if (!pays.length) return { pays }
 
@@ -38,12 +39,12 @@ module.exports = ln => ({
     }
     if (!pays[0].created_at) {
       const pay_parts = await Promise.all(
-        pays.map(p => ln.listsendpays(null, p.payment_hash)))
+        pays.map(p => this.listsendpays(null, p.payment_hash)))
       pays.forEach((p, i) => p.created_at = pay_parts[i].payments[0].created_at )
     }
 
     // Extract additional metadata from the BOLT11/BOLT12 invoice
-    await Promise.all(pays.map(pay => attachInvoiceMeta(pay, this)))
+    await Promise.all(pays.map(pay => attachInvoiceMeta(this, pay)))
 
     return { pays }
   }
@@ -51,10 +52,10 @@ module.exports = ln => ({
   // `listinvoices` with the addition of metadata extracted from the BOLT11/BOLT12 invoice,
   // Returns paid invoices only.
 , async _listinvoices() {
-    const res = await ln.listinvoices()
+    const res = await this.listinvoices()
     const invoices = res.invoices.filter(i => i.status == 'paid')
 
-    await Promise.all(invoices.map(invoice => attachInvoiceMeta(invoice, this)))
+    await Promise.all(invoices.map(invoice => attachInvoiceMeta(this, invoice)))
 
     return { invoices }
   }
@@ -63,7 +64,7 @@ module.exports = ln => ({
     const offersEnabled = (await this._listconfigs())['experimental-offers']
     if (offersEnabled) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10+ when offers support is enabled
-      const decoded = await ln.decode(paystr)
+      const decoded = await this.decode(paystr)
       // fix for https://github.com/ElementsProject/lightning/pull/4501
       if (decoded.valid == null) decoded.valid = true
       assert(decoded.valid, "invalid payment string") // TODO add error description
@@ -72,7 +73,7 @@ module.exports = ln => ({
       return decoded
     } else {
       // 'decodepay' only supports BOLT11 invoices
-      const decoded = await ln.decodepay(paystr)
+      const decoded = await this.decodepay(paystr)
       // add 'type' and 'valid' fields to match the format returned by decode()
       return { ...decoded, type: 'bolt11 invoice', valid: true }
     }
@@ -80,7 +81,7 @@ module.exports = ln => ({
 
   // Fetch an invoice for the given offer, decode it and return the original offer alongside it
 , async _fetchinvoice(bolt12_offer, ...args) {
-    const { invoice: bolt12_invoice, changes } = await ln.fetchinvoice(bolt12_offer, ...args)
+    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, ...args)
 
     const invoice = await this._decode(bolt12_invoice)
     assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
@@ -122,7 +123,7 @@ module.exports = ln => ({
 
     if (Object.keys(changes).length == 0) {
       // Nothing changed, go ahead and pay it
-      const pay_result = await ln.pay(invoice.paystr)
+      const pay_result = await this.pay(invoice.paystr)
       extendInvoiceMeta(pay_result, invoice)
       return { action: 'paid', ...pay_result }
     } else {
@@ -133,12 +134,12 @@ module.exports = ln => ({
 
   // `listconfigs` with caching
 , _listconfigs() {
-    return this._configs || (this._configs = ln.listconfigs()
+    return this._configs || (this._configs = this.listconfigs()
       .catch(err => { delete this._configs; return Promise.reject(err) }))
   }
-})
+}
 
-const getChannel = async (ln, peerid, chanid) => {
+async function getChannel(ln, peerid, chanid) {
   const peer = await ln.listpeers(peerid).then(r => r.peers[0])
   assert(peer, 'cannot find peer')
 
@@ -149,7 +150,6 @@ const getChannel = async (ln, peerid, chanid) => {
 
   return { peer, chan }
 }
-
 
 // Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in prior releases
 // used an incompatible encoding format and are therefore ignored. Using the timestamp to
@@ -162,7 +162,7 @@ const isCompatibleBolt12 = obj =>
   obj.bolt12 && (obj.created_at || obj.paid_at) >= CLN_0_10_1_TS
 
 // Get and attach metadata extracted from the bolt11/bolt12 of invoices/payments
-const attachInvoiceMeta = async (obj, ln) => {
+export async function attachInvoiceMeta(ln, obj) {
   if (obj.bolt11 || isCompatibleBolt12(obj)) {
     try {
       const invoice = await ln._decode(obj.bolt11 || obj.bolt12)

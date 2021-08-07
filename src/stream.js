@@ -1,6 +1,7 @@
 import LightningClient from 'clightning-client'
 import EventEmitter from 'events'
 import { fetchRate } from './exchange-rate'
+import { attachInvoiceMeta } from './cmd'
 
 const rateInterval = 60000 // 1 minute
 
@@ -12,6 +13,7 @@ module.exports = lnPath => {
   async function waitany(last_index) {
     try {
       const inv = await ln.waitanyinvoice(last_index)
+      await attachInvoiceMeta(ln, inv)
       em.emit('payment', inv)
       waitany(inv.pay_index)
     } catch (err) {
