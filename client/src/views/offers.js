@@ -17,7 +17,7 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
     // Bitcoin denominated amount
     offer.msatoshi
     ? p([ offer.quantity_min ? 'Price per unit: ' : 'Amount to pay: '
-      , strong('.toggle-unit', unitf(offer.msatoshi)) ])
+      , strong('.toggle-unit', unitf(offer.msatoshi, true)) ])
 
     // Fiat denominated amount
     : offer.amount

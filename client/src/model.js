@@ -45,7 +45,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, rate$, (unit, rate) => msat => `${rate ? formatAmt(msat, rate, unitprec[unit]) : 'n/a'} ${unit}`)
+  , unitf$   = O.combineLatest(unit$, msatusd$, unit_formatter)
 
   // Keep track of connection status
   , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
@@ -188,4 +188,18 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , offersEnabled$, offerPayQuantity$, invUseOffer$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
+}
+
+const unit_formatter = (unit, msatusd) => (msat, display_alt=false) => {
+  const unit_rate = unitrate[unit] || msatusd
+  let display_str = `${unit_rate ? formatAmt(msat, unit_rate, unitprec[unit]) : 'n/a'} ${unit}`
+
+  if (display_alt) {
+    const alt_unit = unit == 'usd' ? 'sat' : 'usd'
+    if (unit != 'usd' || msatusd) {
+      display_str += ` (${unit_formatter(alt_unit, msatusd)(msat)})`
+    }
+  }
+
+  return display_str
 }
