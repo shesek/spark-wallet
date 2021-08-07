@@ -74,13 +74,13 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
     ]) : ''
 
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [
-      div('.mb-3.text-warning', 'This invoice differs from the original payment offer, do you still approve paying it?')
+      div('.mb-3.text-warning', 'This invoice differs from the original payment offer:')
     , ul([
-        payreq.changes.description_appended ? li([ 'The description was appended with: ', em('.text-muted', payreq.changes.description_appended) ]) : ''
+       payreq.changes.msat ? li([ 'The amount was changed from ', ...displayAmountChange(payreq, unitf) ]) : ''
+      , payreq.changes.description_appended ? li([ 'The description was appended with: ', em('.text-muted', payreq.changes.description_appended) ]) : ''
       , payreq.changes.description ? li([ 'The description was completely replaced. The original was: ', em('.text-muted', payreq.changes.description) ]) : ''
       , payreq.changes.vendor_removed ? li([ 'The vendor name was removed. The original was: ', em('.text-muted', payreq.changes.vendor_removed) ]) : ''
       , payreq.changes.vendor ? li([ 'The vendor name was replaced. The original was: ', em('.text-muted', payreq.changes.vendor) ]) : ''
-      , payreq.changes.msat ? li([ 'The amount was changed. The original was: ', em('.text-muted', unitf(payreq.changes.msat.slice(0,-4))) ]) : ''
       ])
     ] : [])
 
@@ -93,6 +93,20 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
 
   , expert ? yaml(payreq) : ''
   ])
+}
+
+const displayAmountChange = ({ msatoshi: final, changes }, unitf) => {
+  const original = +changes.msat.slice(0, -4)
+  const klass = final < original ? '.text-success' : '.text-danger'
+  const change = final < original ? `${((1 - (final/original))*100).toFixed(1)}% less`
+                                  : `${(((final/original) - 1)*100).toFixed(1)}% more`
+  return [
+    strong(unitf(original))
+  , ' to '
+  , strong(unitf(final))
+  , ' '
+  , span(klass, `(${change})`)
+  ]
 }
 
 module.exports = { scanReq, pasteReq, confirmPay }
