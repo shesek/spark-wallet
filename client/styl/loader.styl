@@ -4,22 +4,26 @@
   > *
     opacity 0.5
 
-#loader
-  position fixed
-  left 50%
-  top 50%
+.loader
   z-index 1001
   opacity 1
   width 150px
   height 150px
-  margin -75px 0 0 -75px
   border-radius 50%
   border 3px solid transparent
   border-top-color #3498db
   animation spin 2s linear infinite
 
-  &:before, &:after
+  &.fixed
+    position fixed
+    left 50%
+    top 50%
+    margin -75px 0 0 -75px
 
+  &.inline
+    margin 3rem auto 0
+
+  &:before, &:after
     content ""
     position absolute
     border-radius 50%

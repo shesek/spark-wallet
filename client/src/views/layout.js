@@ -6,7 +6,7 @@ import { alertBox } from './util'
 const layout = ({ state: S, body }) =>
   div({ props: { className: `d-flex flex-column theme-${S.conf.theme}${S.loading?' loading':'' }` } }, [
     navbar(S)
-  , S.loading ? div('#loader') : ''
+  , S.loading ? div('.loader.fixed') : ''
   , S.alert ? div('.container', alertBox(S.alert, !!S.info)) : ''
   , div('.content.container', body)
   , S.info ? footer(S) : ''
