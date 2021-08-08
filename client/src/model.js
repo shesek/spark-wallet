@@ -58,14 +58,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
       .flatMap(r$ => r$.catch(_ => O.of(null)).mapTo(-1).startWith(+1))
       .startWith(0).scan((N, a) => N+a)
 
-  // Is all the initial state necessary for the app ready?
-  , initLoaded$ = O.combineLatest(...[ info$, peers$, payments$, invoices$ ].map(x$ => x$.startWith(null))
-    , (info, peers, payments, invs) => !!(info && peers && payments && invs))
-
-  // Show loading indicator if we have active in-flight requests,
-  // OR when (the init state is still missing AND we don't have an error to show)
-  , loading$ = O.combineLatest(inflight$, initLoaded$, error$.startWith(null)
-    , (inflight, initLoaded, error) => inflight || (!initLoaded && !error))
+  // Show loading indicator if we have active in-flight foreground requests
+  , loading$ = inflight$.map(inflight => inflight > 0)
 
   // User-visible alert messages
   , alert$ = O.merge(

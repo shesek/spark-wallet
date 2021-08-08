@@ -6,25 +6,35 @@ const perPage = 10
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     , preferCam = hasCam && ('ontouchstart' in window)
 
-const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels, funds, conf: { expert } }) => !feed ? '' : div([
+const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels, funds, conf: { expert } }) => {
+  const balanceAvailable = !!(channels && funds)
+      , displayLoader = !balanceAvailable || !feed
 
-  // Main buttons
-  div('.row.mb-2', [
-    div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: preferCam ? '#/scan' : '#/payreq' } }, 'Pay'))
-  , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
-  , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs')) : ''
-  , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
+  return div([
+
+    // Main buttons
+    div('.row.mb-2', [
+      div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-primary.btn-block', { attrs: { href: preferCam ? '#/scan' : '#/payreq' } }, 'Pay'))
+    , div('.col-sm-6.mb-2', a('.btn.btn-lg.btn-secondary.btn-block', { attrs: { href: '#/recv' } }, 'Request'))
+    , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs')) : ''
+    , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
+    ])
+
+    // Balance overview
+  , balanceAvailable ? balanceOverview({ obalance, cbalance, channels, funds, unitf }) : ''
+
+    // Payments feed
+  , !feed || !balanceAvailable ? '' // hidden until the balance is available to prevent the UI from jumping around
+    : !feed.length ? p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.')
+    : div([
+        ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(itemRenderer({ feedActive, unitf, expert })))
+      , paging(feed.length, feedStart)
+      ])
+
+  , displayLoader ? div('.loader.inline') : ''
+
   ])
-
- // Balance overview
-, channels && funds ? balanceOverview({ obalance, cbalance, channels, funds, unitf }) : ''
-
-
-  // Payments feed
-, ...(!feed.length ? [ p('.text-center.text-muted.mt-4', 'You have no incoming or outgoing payments.') ] : [
-    ul('.list-group.feed', feed.slice(feedStart, feedStart+perPage).map(itemRenderer({ feedActive, unitf, expert })))
-  , paging(feed.length, feedStart)
-  ])])
+}
 
 const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]) => {
   const fid     = `${type}-${obj.payment_hash}`
@@ -64,7 +74,7 @@ const paging = (total, start) => total <= perPage ? '' :
   , pageLink('older', start+perPage < total ? start+perPage : null)
   ])
 
-const pageLink = (label, start, active) =>
+const pageLink = (label, start) =>
   start == null ? button('.btn.btn-sm.btn-link.invisible', label)
                 : button('.btn.btn-sm.btn-link', { dataset: { feedStart: ''+start } }, label)
 
