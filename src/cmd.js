@@ -64,9 +64,15 @@ export const commands = {
     if (checkOffersEnabled(this)) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
       const decoded = await this.decode(paystr)
-      assert(decoded.valid, "invalid payment string") // TODO add error description
+
+      if (!decoded.valid) {
+        const error_msg = extractWarnings(decoded).join(' · ')
+        throw new Error(`Invalid payment string: ${ error_msg || 'unknown error' }`)
+      }
+
       // make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
       if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
+
       return decoded
     } else {
       // 'decodepay' only supports BOLT11 invoices
@@ -177,6 +183,11 @@ const extendInvoiceMeta = (pay, invoice) =>
   [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id' ]
     .filter(k => invoice[k] != null && pay[k] == null)
     .forEach(k => pay[k] = invoice[k])
+
+const extractWarnings = obj =>
+  Object.entries(obj)
+    .filter(([ k, _ ]) => k.startsWith('warning_'))
+    .map(([ _, v ]) => v)
 
 const hash = preimage =>
   crypto.createHash('sha256')
