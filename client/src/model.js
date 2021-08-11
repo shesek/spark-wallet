@@ -158,7 +158,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   ).startWith(null).scan((S, chanid) => S == chanid ? null : chanid)
 
   // Offers
-  , offersEnabled$ = lnconfig$.map(conf => !!conf['experimental-offers']).startWith(null)
+  , offersEnabled$ = lnconfig$.map(checkOffersEnabled).startWith(null)
   , offerPayQuantity$ = offerPayQuantityInput$
       .merge(offer$.map(offer => offer.quantity_min))
       .startWith(null)
@@ -197,3 +197,8 @@ const unit_formatter = (unit, msatusd) => (msat, display_alt=false) => {
 
   return display_str
 }
+
+// Check if experimental offers support is enabled
+// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+const checkOffersEnabled = conf =>
+  !!(conf['experimental-offers'] && !/^0\.(9\.|10\.0)/.test(conf['# version']))
