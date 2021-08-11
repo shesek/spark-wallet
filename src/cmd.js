@@ -61,12 +61,9 @@ export const commands = {
   }
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
 , async _decode(paystr) {
-    const offersEnabled = (await this._listconfigs())['experimental-offers']
-    if (offersEnabled) {
-      // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10+ when offers support is enabled
+    if (checkOffersEnabled(this)) {
+      // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
       const decoded = await this.decode(paystr)
-      // fix for https://github.com/ElementsProject/lightning/pull/4501
-      if (decoded.valid == null) decoded.valid = true
       assert(decoded.valid, "invalid payment string") // TODO add error description
       // make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
       if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
@@ -116,11 +113,6 @@ export const commands = {
 , async _fetchinvoicepay(bolt12_offer, msatoshi, quantity, payer_note) {
     const { changes, ...invoice } = await this._fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
 
-    // Don't consider the `msat` amount as changed if the user provided an explicit amount and it matches it
-    if (msatoshi != null && changes.msat == `${msatoshi}msat`) {
-      delete changes.msat
-    }
-
     if (Object.keys(changes).length == 0) {
       // Nothing changed, go ahead and pay it
       const pay_result = await this.pay(invoice.paystr)
@@ -151,12 +143,17 @@ async function getChannel(ln, peerid, chanid) {
   return { peer, chan }
 }
 
-// Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in prior releases
-// used an incompatible encoding format and are therefore ignored. Using the timestamp to
-// detect them is prune to false positives/negatives, but there is no better way to do that.
-//
-// TODO: update with the actual release timestamp
-const CLN_0_10_1_TS = 1628294840
+// Check if experimental offers/bolt12 support is enabled
+// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+async function checkOffersEnabled(ln) {
+  const conf = await ln._listconfigs()
+  return conf['experimental-offers'] && !/^0\.(9\.|10\.0)/.test(conf['# version'])
+}
+
+// Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in v0.10.0 are
+// incompatible and therefore ignored. Using the timestamp to detect them is prune to
+// false positives/negatives, but its the best that can be done.
+const CLN_0_10_1_TS = 1628557020
 
 const isCompatibleBolt12 = obj =>
   obj.bolt12 && (obj.created_at || obj.paid_at) >= CLN_0_10_1_TS
