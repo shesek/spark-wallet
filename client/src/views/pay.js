@@ -1,5 +1,5 @@
 import { div, form, button, textarea, a, span, p, strong, h2, ul, li, em, small } from '@cycle/dom'
-import { showDesc, formGroup, yaml, amountField, fmtFiatAmount, getPricePerUnit } from './util'
+import { showDesc, formGroup, yaml, amountField, fmtFiatAmount, getPricePerUnit, fmtAmountWithAlt } from './util'
 
 // user-agent sniffing is used purely to display suggestions to the user.
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
@@ -56,13 +56,13 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
     // Bitcoin-denominated amount that was previously displayed in fiat
     (payreq.msatoshi && payreq.offer && payreq.offer.amount)
     ? div('.form-group', [
-        p('.mb-0', [ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi, true)) ])
+        p('.mb-0.toggle-unit', [ 'Final amount: ', fmtAmountWithAlt(payreq.msatoshi, unitf) ])
       , div('.form-text.text-muted', [ 'Quoted as: ', strong(fmtFiatAmount(payreq.offer, payreq.quantity)) ])
       ])
 
     // Bitcoin denominated amount
     : payreq.msatoshi
-    ? p([ 'Amount to pay: ', strong('.toggle-unit', unitf(payreq.msatoshi, true)) ])
+    ? p('.toggle-unit', [ 'Amount: ', fmtAmountWithAlt(payreq.msatoshi, unitf) ])
 
     // Amount chosen by the payer
     : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
@@ -70,7 +70,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   , payreq.quantity ? div('.form-group', [
       p('.mb-0', [ 'Quantity: ', strong(payreq.quantity) ])
       , payreq.quantity > 1
-        ? div('.form-text.text-muted', [ 'Per unit: ', strong(unitf(getPricePerUnit(payreq), true)) ]) : ''
+        ? div('.form-text.text-muted', [ 'Per unit: ', fmtAmountWithAlt(getPricePerUnit(payreq), unitf) ]) : ''
     ]) : ''
 
   , ...(payreq.changes && Object.keys(payreq.changes).length > 0 ? [

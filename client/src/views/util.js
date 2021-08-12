@@ -3,7 +3,7 @@ import YAML from 'js-yaml'
 import qrcode from 'qrcode'
 import numbro from 'numbro'
 import vagueTime from 'vague-time'
-import { div, span, pre, label, small, input, button, a } from '@cycle/dom'
+import { div, span, pre, label, small, input, button, a, strong } from '@cycle/dom'
 import { isConnError } from '../util'
 
 const isOnion = global.location && /\.onion$/.test(location.hostname)
@@ -63,6 +63,14 @@ export const fancyCheckbox = (name, desc, checked, klass='') => {
 export const omitKey = (k, { [k]: _, ...rest }) => rest
 
 export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ? 's' : ''}`
+
+export const fmtAmountWithAlt = (msatoshi, unitf) => span([
+  strong(unitf(msatoshi))
+, fmtNullable(unitf(msatoshi, true), amt => small(` (${amt})`))
+])
+
+export const fmtNullable = (value, format, null_format='') =>
+  value != null ? format(value) : null_format
 
 export const fmtFiatAmount = ({ amount, currency, minor_unit }, quantity=1) => {
   const amount_fmt = numbro(
