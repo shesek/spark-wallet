@@ -1,6 +1,7 @@
 import Big from 'big.js'
 import YAML from 'js-yaml'
 import qrcode from 'qrcode'
+import numbro from 'numbro'
 import vagueTime from 'vague-time'
 import { div, span, pre, label, small, input, button, a } from '@cycle/dom'
 import { isConnError } from '../util'
@@ -63,8 +64,13 @@ export const omitKey = (k, { [k]: _, ...rest }) => rest
 
 export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ? 's' : ''}`
 
-export const fmtFiatAmount = ({ amount, currency, minor_unit }, quantity=1) =>
-  `${Big(amount).div(Math.pow(10, minor_unit)).mul(quantity).toFixed(0)} ${currency}`
+export const fmtFiatAmount = ({ amount, currency, minor_unit }, quantity=1) => {
+  const amount_fmt = numbro(
+    Big(amount).div(Math.pow(10, minor_unit)).mul(quantity).toFixed(minor_unit)
+  ).format({ thousandSeparated: true, mantissa: minor_unit, optionalMantissa: true })
+
+  return `${amount_fmt} ${currency}`
+}
 
 export const getPricePerUnit = ({ msatoshi, quantity }) =>
   Big(msatoshi).div(quantity).toFixed(0)
