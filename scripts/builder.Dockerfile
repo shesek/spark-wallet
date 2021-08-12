@@ -29,7 +29,7 @@ ENV ANDROID_HOME=/root/sdktools
 ENV PATH=$PATH:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:/root/gradle-4.1/bin
 WORKDIR /root
 # Java 8 (OpenJDK)
-RUN apt-get install -y --no-install-recommends openjdk-8-jdk-headless=8u275-b01-1~deb9u1
+RUN apt-get install -y --no-install-recommends openjdk-8-jdk-headless=8u302-b08-1~deb9u1
 
 # Android SKD tools
 RUN wget -q -O sdktools.zip https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip \
