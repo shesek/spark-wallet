@@ -45,7 +45,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
   , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, msatusd$, unit_formatter)
+  , unitf$   = O.combineLatest(unit$, msatusd$, unitFormatter)
 
   // Keep track of connection status
   , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
@@ -184,18 +184,19 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   }).shareReplay(1)
 }
 
-const unit_formatter = (unit, msatusd) => (msat, display_alt=false) => {
-  const unit_rate = unitrate[unit] || msatusd
-  let display_str = `${unit_rate ? formatAmt(msat, unit_rate, unitprec[unit]) : 'n/a'} ${unit}`
+const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false) => {
+  const unit_d = !as_alt_unit ? unit : (unit == 'USD' ? 'sat' : 'USD')
+  const unit_rate = unit_d == 'USD' ? msatusd : unitrate[unit_d]
 
-  if (display_alt) {
-    const alt_unit = unit == 'USD' ? 'sat' : 'USD'
-    if (alt_unit != 'USD' || msatusd) {
-      display_str += ` (${unit_formatter(alt_unit, msatusd)(msat)})`
-    }
-  }
+  // Use less precision for USD when displayed as the alt unit
+  const unit_prec = unit_d == 'USD' && as_alt_unit ? 2 : unitprec[unit_d]
 
-  return display_str
+  // If the alt unit's rate is missing, hide it entirely. The primary one
+  // is returned as 'n/a' (below).
+  if (as_alt_unit && !unit_rate) return null
+
+  // Separated by a non-breaking space (U+00A0)
+  return `${unit_rate ? formatAmt(msat, unit_rate, unit_prec) : 'n/a'}\xa0${unit_d}`
 }
 
 // Check if experimental offers support is enabled
