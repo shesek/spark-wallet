@@ -8,6 +8,9 @@ const labelType = { bech32: 'Bech32', 'p2sh-segwit': 'P2SH' }
 const addrQr = (address, type) => qruri(`bitcoin:${type == 'bech32' ? address.toUpperCase() : address}`)
 
 export const deposit = ({ address, type }) => addrQr(address, type).then(qr => ({ funds, obalance, unitf, conf: { expert } }) =>
+
+  obalance == null ? div('.loader.inline') :
+
   div('.onchain-deposit', [
     div('.row', [
       div('.col-sm-6.text-center', [

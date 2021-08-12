@@ -26,7 +26,7 @@ const chanSorting = ({ peer, chan }) =>
 : 0
 
 export const channels = ({ channels, chanActive, unitf, info, conf: { expert } }) => {
-  if (!channels) return '';
+  if (!channels) return div('.loader.inline')
 
   const blockheight = info && info.blockheight
 

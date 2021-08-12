@@ -2,7 +2,7 @@ import { div, h2, img, p, a } from '@cycle/dom'
 import { yaml, qruri } from './util'
 
 exports.nodeInfo = async ({ info, peers, conf: { expert } }) => {
-  if (!info) return '';
+  if (!info) return div('.loader.inline')
 
   const uri = info.address[0] ? `${info.id}@${info.address[0].address}:${info.address[0].port}` : info.id
       , qr  = await qruri(uri)
