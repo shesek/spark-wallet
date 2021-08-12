@@ -46,6 +46,8 @@ export const commands = {
     // Extract additional metadata from the BOLT11/BOLT12 invoice
     await Promise.all(pays.map(pay => attachInvoiceMeta(this, pay)))
 
+    truncatePayerNotes(pays)
+
     return { pays }
   }
 
@@ -62,6 +64,8 @@ export const commands = {
       .filter(invoice => !!invoice.bolt12)
       .map(invoice => attachInvoiceMeta(this, invoice)))
 
+    truncatePayerNotes(invoices)
+
     return { invoices }
   }
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
@@ -75,7 +79,7 @@ export const commands = {
         throw new Error(`Invalid payment string: ${ error_msg || 'unknown error' }`)
       }
 
-      // make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
+      // Make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
       if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
 
       return decoded
@@ -193,6 +197,14 @@ const extractWarnings = obj =>
   Object.entries(obj)
     .filter(([ k, _ ]) => k.startsWith('warning_'))
     .map(([ _, v ]) => v)
+
+// Truncate long `payer_note`s. They can get pretty big - up to 32kb
+const truncatePayerNotes = elements => elements
+  .filter(el => el.payer_note && el.payer_note.length > 1024)
+  .forEach(el => {
+    el.payer_note = el.payer_note.substr(0, 1024) + '…'
+    el.payer_note_truncated = true
+  })
 
 const hash = preimage =>
   crypto.createHash('sha256')
