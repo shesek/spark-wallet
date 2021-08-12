@@ -20,10 +20,10 @@ const
 
 const
   themes   = 'cerulean cosmo cyborg dark flatly lumen lux materia sandstone simplex slate solar spacelab superhero united yeti'.split(' ')
-, units    = 'sat bits milli btc usd'.split(' ')
-, unitprec = { sat: 3, bits: 5, milli: 8, btc: 11, usd: 6 }
-, unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, btc: 0.00000000001 }
-, unitstep = { ...unitrate, usd: 0.000001 }
+, units    = 'sat bits milli BTC USD'.split(' ')
+, unitprec = { sat: 3, bits: 5, milli: 8, BTC: 11, USD: 6 }
+, unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, BTC: 0.00000000001 }
+, unitstep = { ...unitrate, USD: 0.000001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
                   , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
@@ -189,8 +189,8 @@ const unit_formatter = (unit, msatusd) => (msat, display_alt=false) => {
   let display_str = `${unit_rate ? formatAmt(msat, unit_rate, unitprec[unit]) : 'n/a'} ${unit}`
 
   if (display_alt) {
-    const alt_unit = unit == 'usd' ? 'sat' : 'usd'
-    if (unit != 'usd' || msatusd) {
+    const alt_unit = unit == 'USD' ? 'sat' : 'USD'
+    if (alt_unit != 'USD' || msatusd) {
       display_str += ` (${unit_formatter(alt_unit, msatusd)(msat)})`
     }
   }
