@@ -55,7 +55,12 @@ export const commands = {
     const res = await this.listinvoices()
     const invoices = res.invoices.filter(i => i.status == 'paid')
 
-    await Promise.all(invoices.map(invoice => attachInvoiceMeta(this, invoice)))
+    // Extract additional metadata from the BOLT12 invoice
+    // Not needed for BOLT11 invoices, since the only relevant field they have is the 'description',
+    // which c-lightning already makes available directly in the `listinvoices` reply.
+    await Promise.all(invoices
+      .filter(invoice => !!invoice.bolt12)
+      .map(invoice => attachInvoiceMeta(this, invoice)))
 
     return { invoices }
   }
