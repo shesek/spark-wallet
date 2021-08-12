@@ -64,7 +64,7 @@ export const omitKey = (k, { [k]: _, ...rest }) => rest
 
 export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ? 's' : ''}`
 
-export const fmtAmountWithAlt = (msatoshi, unitf) => span([
+export const fmtSatAmountWithAlt = (msatoshi, unitf) => span([
   strong(unitf(msatoshi))
 , fmtNullable(unitf(msatoshi, true), amt => small(` (${amt})`))
 ])
@@ -72,7 +72,7 @@ export const fmtAmountWithAlt = (msatoshi, unitf) => span([
 export const fmtNullable = (value, format, null_format='') =>
   value != null ? format(value) : null_format
 
-export const fmtFiatAmount = ({ amount, currency, minor_unit }, quantity=1) => {
+export const fmtOfferFiatAmount = ({ amount, currency, minor_unit }, quantity=1) => {
   const amount_fmt = numbro(
     Big(amount).div(Math.pow(10, minor_unit)).mul(quantity).toFixed(minor_unit)
   ).format({ thousandSeparated: true, mantissa: minor_unit, optionalMantissa: true })

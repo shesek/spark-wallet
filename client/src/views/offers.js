@@ -1,6 +1,6 @@
 import { div, form, button, input, a, span, p, strong, h2, img, small } from '@cycle/dom'
 import Big from 'big.js'
-import { showDesc, formGroup, yaml, amountField, omitKey, qrinv, fmtFiatAmount, fmtAmountWithAlt } from './util'
+import { showDesc, formGroup, yaml, amountField, omitKey, qrinv, fmtOfferFiatAmount, fmtSatAmountWithAlt } from './util'
 
 // Display a remote offer for us to send a payment
 // Offers with quantity but no fixed amount are unsupported (rejected by the server side),
@@ -17,13 +17,13 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
     // Bitcoin denominated amount
     offer.msatoshi
     ? p('.toggle-unit', [ offer.quantity_min ? 'Price per unit: ' : 'Amount: '
-      , fmtAmountWithAlt(offer.msatoshi, unitf) ])
+      , fmtSatAmountWithAlt(offer.msatoshi, unitf) ])
 
     // Fiat denominated amount
     : offer.currency
     ? div('.form-group', [
         p('.mb-0', [ offer.quantity_min ? 'Price per unit: ' : 'Quoted amount: '
-        , strong(fmtFiatAmount(offer)) ])
+        , strong(fmtOfferFiatAmount(offer)) ])
       , small('.form-text.text-muted', [ strong('Informative only.'), ' The final BTC amount will be displayed for confirmation on the next screen.' ])
       ])
 
