@@ -87,10 +87,12 @@ const balanceOverview = ({ obalance, cbalance, channels, funds, unitf }) => {
   return div('.balance-overview.card.text-center.mb-3', div('.card-body.p-2',
     div('.row', [
       cbalance ? div(`.col-${colSize}`, div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${chanNum} channel`) ])
+        a('.mb-0.font-weight-light.d-block', { attrs: { href: '#/channels' } }
+        , [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${chanNum} channel`) ])
       ])) : ''
     , obalance ? div(`.col-${colSize}`, div('.container', [
-        p('.mb-0.font-weight-light', [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
+        p('.mb-0.font-weight-light'
+        , [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
       ])) : ''
     ])
   ))
