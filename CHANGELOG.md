@@ -2,9 +2,32 @@
 
 ## Unreleased
 
-- Initial support for BOLT12 offers
+- BOLT12 offers! ✨🎉
 
-- Improve the main screen initial loading times
+  - Send payments using BOLT12 offers, including support for `any` amounts, quantities, fiat denomination and sending a note to the payee (`payer_note`).
+
+  - Create reusable BOLT12 offers to receive (many!) payments (basic support only).
+
+  - Receive payments using reverse BOLT12 offers (`send_invoice=true`)
+
+  - Recurrence is not supported yet -- to be added in a followup release.
+
+  **Requires c-lightning v0.10.1+** with `experimental-offers` enabled.
+
+- UI: Improve the main screen initial loading times
+
+  Pay/Request can now be used immediately, without waiting for the wallet's data to load first.
+
+- UI: Always display payment amounts in USD terms too
+
+- UI: Improved error reporting and display
+
+- Docker: Allow (and recommend) mounting the directory with the `lightning-rpc` socket file
+  (fixes a [compatibility issue with BTCPay](https://github.com/btcpayserver/btcpayserver-docker/pull/462))
+
+- Fix: Properly display the NoScript message on Firefox (#183)
+
+- Update clightning-client to v0.1.3
 
 ## 0.2.17 - 2020-09-03
 
