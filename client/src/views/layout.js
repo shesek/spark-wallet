@@ -31,7 +31,7 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
       , ` · `, a({ attrs: { href: '#/node' } }, `node: ${info.id.substr(0,10)}`)
 
       , btcusd ? (
-          [ 'usd', 'btc' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
+          [ 'USD', 'BTC' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
         : useCents(unit, btcusd) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msatusd, 4, false)}¢`
         : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msatusd, 3, false)}`
         ) : ''
