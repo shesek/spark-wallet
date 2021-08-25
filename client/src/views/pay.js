@@ -32,7 +32,9 @@ const pasteReq = form({ attrs: { do: 'decode-pay' } }, [
 , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit' } }, 'Decode request')
 , ' '
 , a('.btn.btn-lg.btn-secondary.mb-2', { attrs: { href: '#/' } }, 'Cancel')
-, hasCam ? '' : p('.text-muted.mt-4.small', 'Your browser does not support WebRTC, which is required for scanning QRs with your camera. '+camSuggest)
+
+, hasCam ? p(a('.text-muted', { attrs: { href: '#/scan' } }, 'Scan QR with camera »'))
+  : p('.text-muted.mt-4.small', 'Your browser does not support WebRTC, which is required for scanning QRs with your camera. '+camSuggest)
 ])
 
 // User confirmation for BOLT11/BOLT12 payment requests
