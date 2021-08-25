@@ -79,7 +79,7 @@ const pageLink = (label, start) =>
                 : button('.btn.btn-sm.btn-link', { dataset: { feedStart: ''+start } }, label)
 
 const balanceOverview = ({ obalance, cbalance, channels, funds, unitf }) => {
-  if (!obalance && !cbalance) return;
+  if (!obalance && !cbalance) return ''
 
   const colSize = obalance && cbalance ? 6 : 12
       , chanNum = channels.filter(c => c.chan.state == 'CHANNELD_NORMAL').length
@@ -88,11 +88,11 @@ const balanceOverview = ({ obalance, cbalance, channels, funds, unitf }) => {
     div('.row', [
       cbalance ? div(`.col-${colSize}`, div('.container', [
         a('.mb-0.font-weight-light.d-block', { attrs: { href: '#/channels' } }
-        , [ unitf(cbalance), ' ', span('.text-muted', pluralize`in ${chanNum} channel`) ])
+        , [ unitf(cbalance, false, false), ' ', span('.text-muted', pluralize`in ${chanNum} channel`) ])
       ])) : ''
     , obalance ? div(`.col-${colSize}`, div('.container', [
         p('.mb-0.font-weight-light'
-        , [ unitf(obalance), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
+        , [ unitf(obalance, false, false), ' ', span('.text-muted', pluralize`in ${funds.outputs.length} output`) ])
       ])) : ''
     ])
   ))

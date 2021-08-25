@@ -189,7 +189,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   }).shareReplay(1)
 }
 
-const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false) => {
+const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false, non_breaking=true) => {
   const unit_d = !as_alt_unit ? unit : (unit == 'USD' ? 'sat' : 'USD')
   const unit_rate = unit_d == 'USD' ? msatusd : unitrate[unit_d]
 
@@ -200,8 +200,8 @@ const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false) => {
   // is returned as 'n/a' (below).
   if (as_alt_unit && !unit_rate) return null
 
-  // Separated by a non-breaking space (U+00A0)
-  return `${unit_rate ? formatAmt(msat, unit_rate, unit_prec) : 'n/a'}\xa0${unit_d}`
+  const separator = non_breaking ? '\xa0' : ' '
+  return `${unit_rate ? formatAmt(msat, unit_rate, unit_prec) : 'n/a'}${separator}${unit_d}`
 }
 
 // Check if experimental offers support is enabled
