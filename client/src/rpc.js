@@ -40,8 +40,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
                            .merge(offerpay$.filter(t => t.action == 'paid'))
   , sinvoice$: reply('sendinvoice').map(r => r.body)
   , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
-  , newaddr$:  reply('newaddr').map(r => [ r.body, r.request.send.params[0] ])
-                               .map(([ b, type ]) => ({ type, address: b[type] || b.address }))
+  , newaddr$:  reply('newaddr').map(r => r.body)
   , funded$:   reply('_connectfund').map(r => r.body)
   , closed$:   reply('_close').map(r => r.body)
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
@@ -71,7 +70,7 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 , openChan$.map(d     => [ '_connectfund', [ d.nodeuri, d.channel_capacity_sat, d.feerate ] ])
 , closeChan$.map(d    => [ '_close',       [ d.peerid, d.chanid ] ])
 
-, goDeposit$.map(type => [ 'newaddr',   [ type ] ])
+, goDeposit$.mapTo(      [ 'newaddr',      [ 'all' ] ])
 
   // requested once
 , O.of(                  [ '_listconfigs', [], { bg: true } ])

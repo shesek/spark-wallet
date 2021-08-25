@@ -29,6 +29,10 @@
 
 - Update clightning-client to v0.1.3
 
+- Use `newaddr all` to avoid creating new addresses when switching types
+
+  This raises the minimally supported c-lightning version to v0.7.1.
+
 ## 0.2.17 - 2020-09-03
 
 Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests when expert mode is enabled.

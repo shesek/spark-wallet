@@ -23,7 +23,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
   , offer$.map(views.offer)
   , invoice$.flatMap(views.invoice)
   , localOffer$.flatMap(views.localOffer)
-  , newaddr$.flatMap(views.deposit)
+  , newaddr$.map(views.deposit)
   , logs$.map(views.logs)
 
   ).switchMap(view => isFunc(view) ? state$.map(view).flatMap(toObs) : O.of(view))

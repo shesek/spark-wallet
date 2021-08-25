@@ -21,8 +21,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
 
   , goChan$ = route('/channels')
   , goNewChan$ = route('/channels/new')
-  , goDeposit$ = route('/deposit').mapTo('bech32')
-      .merge(click('[data-newaddr-type]').map(e => e.ownerTarget.dataset.newaddrType))
+  , goDeposit$ = route('/deposit')
 
   // Display and confirm payment requests (from QR, lightning: URIs and manual entry)
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
@@ -79,6 +78,9 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
       .merge(goNewChan$.mapTo(false))
       .startWith(false)
 
+  // On-chain deposit
+  , togAddrType$ = click('[do=toggle-addr-type]')
+
   // Offers
   , offerPay$ = submit('[do=offer-pay]')
   , offerRecv$ = submit('[do=offer-recv]').map(({ paystr }) => ({ paystr, label: nanoid() }))
@@ -95,6 +97,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
          , togExp$, togTheme$, togUnit$
          , feedStart$, togFeed$
          , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
+         , togAddrType$
          , dismiss$
          }
 }

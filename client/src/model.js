@@ -26,7 +26,7 @@ const
 , unitstep = { ...unitrate, USD: 0.000001 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
-                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$
+                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
                   , fundMaxChan$
                   , conf$: savedConf$
                   , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$
@@ -157,6 +157,11 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , goChan$.filter(p => p.search != '?r').mapTo(null) // reset when opening channels page
   ).startWith(null).scan((S, chanid) => S == chanid ? null : chanid)
 
+  // On-chain deposit
+  , depositAddrType$ = togAddrType$
+      .startWith('bech32')
+      .scan(t => t == 'bech32' ? 'p2sh-segwit' : 'bech32')
+
   // Offers
   , offersEnabled$ = lnconfig$.map(checkOffersEnabled).startWith(null)
   , offerPayQuantity$ = offerPayQuantityInput$
@@ -178,7 +183,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , info$: info$.startWith(null), peers$: peers$.startWith(null), channels$: channels$.startWith(null)
   , feed$: feed$.startWith(null), feedStart$, feedActive$
   , amtData$, chanActive$, rpcHist$
-  , fundMaxChan$
+  , fundMaxChan$, depositAddrType$
   , offersEnabled$, offerPayQuantity$, invUseOffer$
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
