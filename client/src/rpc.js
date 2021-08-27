@@ -36,8 +36,8 @@ exports.parseRes = ({ HTTP, SSE }) => {
                          .merge(offerpay$.filter(t => t.action == 'reconfirm'))
   , offer$:    paydetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
-  , outgoing$: reply('pay').map(r => ({ ...r.body, ...r.request.ctx }))
-                           .merge(offerpay$.filter(t => t.action == 'paid'))
+  , outgoing$: reply('_pay').map(r => ({ ...r.body, ...r.request.ctx }))
+                            .merge(offerpay$.filter(t => t.action == 'paid'))
   , sinvoice$: reply('sendinvoice').map(r => r.body)
   , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
   , newaddr$:  reply('newaddr').map(r => r.body)
@@ -48,6 +48,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
   // push updates via server-sent events
   , incoming$: SSE('inv-paid')
+  , payupdates$: SSE('pay-updates')
   , btcusd$:   SSE('btcusd')
   }
 }
@@ -57,7 +58,7 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 
   // initiated by user actions
   viewPay$.map(paystr => [ '_decodecheck',     [ paystr ], { paystr } ])
-, confPay$.map(pay    => [ 'pay',              [ pay.paystr, pay.custom_msat ], pay ])
+, confPay$.map(pay    => [ '_pay',             [ pay.paystr, pay.custom_msat ], pay ])
 , newInv$.map(inv => !inv.reusable_offer
                        ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
                        : [ 'offer',            [ inv.msatoshi, inv.description, null, inv.label ], inv ])

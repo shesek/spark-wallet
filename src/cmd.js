@@ -24,27 +24,29 @@ export const commands = {
     return { peer, chan, closing: res }
   }
 
-  // `listpays` with the addition of metadata extracted from the BOLT11/BOLT12 invoice,
-  // as well as a fix for payment hashes and timestamps which were missing in c-lightning v0.9.0
-  // (and may still be missing in newer releases for old payments made with v0.9).
-  // Returns completed payments only.
-, async _listpays() {
-    const res = await this.listpays()
-    const pays = res.pays.filter(p => p.status == 'complete')
+  // `listpays` with the addition of metadata extracted from the BOLT11/BOLT12 invoice, the
+  // paystatus of pending payments, and a fix for payment hashes and timestamps which were missing
+  // in c-lightning v0.9.0 (and may still be missing in newer releases for old payments made with v0.9).
+, async _listpays(...args) {
+    const { pays } = await this.listpays(...args)
     if (!pays.length) return { pays }
 
     // Fix for payments made with c-lightning v0.9.0
-    if (!pays[0].payment_hash) {
-      pays.forEach(p => p.payment_hash = hash(p.preimage))
-    }
-    if (!pays[0].created_at) {
-      const pay_parts = await Promise.all(
-        pays.map(p => this.listsendpays(null, p.payment_hash)))
-      pays.forEach((p, i) => p.created_at = pay_parts[i].payments[0].created_at )
-    }
+    pays.filter(p => p.preimage && !p.payment_hash)
+        .forEach(p => p.payment_hash = hash(p.preimage))
+    await Promise.all(pays.filter(p => p.payment_hash && !p.created_at).map(async p => {
+      const listpays = await this.listsendpays(null, p.payment_hash)
+      p.created_at = listpays.payments[0].created_at
+    }))
 
     // Extract additional metadata from the BOLT11/BOLT12 invoice
     await Promise.all(pays.map(pay => attachInvoiceMeta(this, pay)))
+
+    // Attach the paystatus result of pending payments
+    await Promise.all(pays.filter(p => p.status == 'pending' && (p.bolt11 || p.bolt12)).map(async p => {
+      const paystatus = (await this.paystatus(p.bolt11 || p.bolt12)).pay[0]
+      if (paystatus) p.attempts = paystatus.attempts
+    }))
 
     truncatePayerNotes(pays)
 
@@ -68,7 +70,7 @@ export const commands = {
 
     return { invoices }
   }
-  // Wrapper for the 'decode'/'decodepay' commands with some convenience enchantments
+  // Wrapper for the 'decode'/'decodepay' commands with some convenience enhancements
 , async _decode(paystr) {
     if (checkOffersEnabled(this)) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
@@ -89,6 +91,15 @@ export const commands = {
       // add 'type' and 'valid' fields to match the format returned by decode()
       return { ...decoded, type: 'bolt11 invoice', valid: true }
     }
+  }
+
+  // Pay the given invoice, emit an event that can be observed externally (by stream.js),
+  // and return it with the invoice metadata.
+, async _pay(paystr, ...args) {
+    this.emit('paying', paystr)
+    const pay_result = await this.pay(paystr, ...args)
+    await attachInvoiceMeta(this, pay_result)
+    return pay_result
   }
 
   // Fetch an invoice for the given offer, decode it and return the original offer alongside it
@@ -130,7 +141,7 @@ export const commands = {
 
     if (Object.keys(changes).length == 0) {
       // Nothing changed, go ahead and pay it
-      const pay_result = await this.pay(invoice.paystr)
+      const pay_result = await this._pay(invoice.paystr)
       extendInvoiceMeta(pay_result, invoice)
       return { action: 'paid', ...pay_result }
     } else {
@@ -189,7 +200,7 @@ export async function attachInvoiceMeta(ln, obj) {
 }
 
 const extendInvoiceMeta = (pay, invoice) =>
-  [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id' ]
+  [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id', 'amount_msat' ]
     .filter(k => invoice[k] != null && pay[k] == null)
     .forEach(k => pay[k] = invoice[k])
 

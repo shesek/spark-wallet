@@ -53,7 +53,7 @@ Object.assign(clightning.LightningClient.prototype, require('./cmd').commands)
     ).then(r => res.send(r)).catch(next))
 
   // Streaming API
-  app.get('/stream', require('./stream')(ln.rpcPath))
+  app.get('/stream', require('./stream')(ln))
 
   // Frontend
   process.env.NO_WEBUI || require('./webui')(app)
