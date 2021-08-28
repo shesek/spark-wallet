@@ -130,7 +130,6 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Collapsed payment/invoice on home feed list
   , feedActive$ = togFeed$.merge( // display feed items manually toggled by the user, and...
       incoming$.map(inv => `in-${inv.payment_hash}`) // auto display incoming payments
-    , outgoing$.map(pay => `out-${pay.payment_hash}`) // auto display outgoing payments
     , feedStart_$.mapTo(null) // reset on feed paging
     , goHome$.filter(p => p.search != '?r').mapTo(null) // reset on home navigation (unless auto-redirected)
     ).startWith(null).scan((S, fid) => S == fid ? null : fid) // clicking the visible feed item again toggles it off

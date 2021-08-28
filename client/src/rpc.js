@@ -40,7 +40,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
                          .merge(offerReconf$)
   , offer$:    payDetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
-  , outgoing$: reply('_pay').map(r => ({ ...r.body, ...r.request.ctx }))
+  , outgoing$: reply('_pay').map(r => ({ ...r.body, ...r.request.ctx.pay }))
   , offerInv$
   , sinvoice$: reply('sendinvoice').map(r => r.body)
   , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
@@ -62,7 +62,7 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 
   // Initiated by user actions
   viewPay$.map(paystr => [ '_decodecheck',     [ paystr ], { paystr } ])
-, confPay$.map(pay    => [ '_pay',             [ pay.paystr, pay.custom_msat ], pay ])
+, confPay$.map(pay    => [ '_pay',             [ pay.paystr, pay.custom_msat ], { pay, bg: true } ])
 , newInv$.map(inv => !inv.reusable_offer
                        ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
                        : [ 'offer',            [ inv.msatoshi, inv.description, null, inv.label ], inv ])

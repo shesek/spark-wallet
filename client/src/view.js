@@ -45,13 +45,13 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
 }
 
 // Navigation
-exports.navto = ({ incoming$: in$, outgoing$: out$, invoice$: inv$, sinvoice$, payreq$, funded$ }) => O.merge(
+exports.navto = ({ incoming$: in$, confPay$, invoice$: inv$, sinvoice$, payreq$, funded$ }) => O.merge(
   // navto '/' when receiving payments for the active invoice
   inPayActive(in$, inv$).mapTo({ pathname: '/', search: '?r' })
   // navto '/' after an incoming payment following a send_invoice offer
 , sinvoice$.mapTo             ({ pathname: '/', search: '?r' })
-  // navto '/' after sending payments
-, out$.mapTo                  ({ pathname: '/', search: '?r' })
+  // navto '/' after initiating a payment
+, confPay$.mapTo              ({ pathname: '/' })
   // navto '/confirm' when viewing a payment request
 , payreq$.mapTo               ({ pathname: '/confirm' })
   // navto /channels after opening channel
