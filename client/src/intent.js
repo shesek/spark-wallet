@@ -3,7 +3,7 @@ import serialize from 'form-serialize'
 import { nanoid } from 'nanoid'
 import { dbg, parseUri, parseRpcCmd } from './util'
 
-module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
+module.exports = ({ DOM, route, conf$, scan$, urihandler$, offerInv$ }) => {
   const
     on     = (sel, ev, pd=false) => DOM.select(sel).events(ev, { preventDefault: pd })
   , click  = sel => on(sel, 'click')
@@ -27,6 +27,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , viewPay$ = O.merge(scan$, urihandler$).map(parseUri).filter(x => !!x)
                 .merge(submit('[do=decode-pay]').map(r => r.paystr.trim()).map(paystr => parseUri(paystr) || paystr))
   , confPay$ = submit('[do=confirm-pay]')
+      // Automatically pay the offer's invoice when there are no changes
+      .merge(offerInv$.filter(inv => !Object.keys(inv.changes).length))
 
   // RPC console actions
   , clrHist$ = click('[do=clear-console-history]')
@@ -85,7 +87,6 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$ }) => {
   , offerPay$ = submit('[do=offer-pay]')
   , offerRecv$ = submit('[do=offer-recv]').map(({ paystr }) => ({ paystr, label: nanoid() }))
   , offerPayQuantity$ = on('.offer-pay [name=quantity]', 'input').map(e => e.target.value)
-
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$

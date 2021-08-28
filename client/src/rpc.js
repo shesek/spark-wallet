@@ -16,14 +16,18 @@ exports.parseRes = ({ HTTP, SSE }) => {
   dbg({ reply$: reply().map(r => [ r.request.category, r.body, r.request ]) }, 'spark:reply')
 
   const
-    paydetail$ = reply('_decodecheck').map(r => ({ ...r.request.ctx, ...r.body }))
-  , offerpay$ = reply('_fetchinvoicepay').map(r => r.body)
+    payDetail$ = reply('_decodecheck').map(r => ({ ...r.request.ctx, ...r.body }))
+  , offerInv$ = reply('_fetchinvoice').map(r => r.body)
+
+  // Present fetched invoices with changes for re-confirmation
+  // Invoices when no changes are paid automatically (via intent)
+  , offerReconf$ = offerInv$.filter(inv => Object.keys(inv.changes).length > 0)
 
   return {
     req$$:     HTTP.select()
   , error$:    extractErrors(HTTP.select()).map(formatError)
 
-  // periodic updates
+  // Periodic updates
   , info$:     reply('getinfo').map(r => r.body)
   , peers$:    reply('listpeers').map(r => r.body.peers)
   , payments$: reply('_listpays').map(r => r.body.pays)
@@ -31,13 +35,13 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , funds$:    reply('listfunds').map(r => r.body)
   , lnconfig$: reply('_listconfigs').map(r => r.body)
 
-  // replies to actions
-  , payreq$:   paydetail$.filter(d => d.type == 'bolt11 invoice' || d.type == 'bolt12 invoice')
-                         .merge(offerpay$.filter(t => t.action == 'reconfirm'))
-  , offer$:    paydetail$.filter(d => d.type == 'bolt12 offer')
+  // Replies to actions
+  , payreq$:   payDetail$.filter(d => d.type == 'bolt11 invoice' || d.type == 'bolt12 invoice')
+                         .merge(offerReconf$)
+  , offer$:    payDetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
   , outgoing$: reply('_pay').map(r => ({ ...r.body, ...r.request.ctx }))
-                            .merge(offerpay$.filter(t => t.action == 'paid'))
+  , offerInv$
   , sinvoice$: reply('sendinvoice').map(r => r.body)
   , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
   , newaddr$:  reply('newaddr').map(r => r.body)
@@ -46,7 +50,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
   , execRes$:  reply('console').map(r => ({ ...r.request.send, res: r.body }))
   , logs$:     reply('getlog').map(r => ({ ...r.body, log: r.body.log.slice(-200) }))
 
-  // push updates via server-sent events
+  // Push updates via server-sent events
   , incoming$: SSE('inv-paid')
   , payupdates$: SSE('pay-updates')
   , btcusd$:   SSE('btcusd')
@@ -56,13 +60,13 @@ exports.parseRes = ({ HTTP, SSE }) => {
 // RPC commands to send
 exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$, goChan$, goNewChan$, goDeposit$, updChan$, openChan$, closeChan$, execRpc$ }) => O.merge(
 
-  // initiated by user actions
+  // Initiated by user actions
   viewPay$.map(paystr => [ '_decodecheck',     [ paystr ], { paystr } ])
 , confPay$.map(pay    => [ '_pay',             [ pay.paystr, pay.custom_msat ], pay ])
 , newInv$.map(inv => !inv.reusable_offer
                        ? [ 'invoice',          [ inv.msatoshi, inv.label, inv.description, INVOICE_TTL ], inv ]
                        : [ 'offer',            [ inv.msatoshi, inv.description, null, inv.label ], inv ])
-, offerPay$.map(pay   => [ '_fetchinvoicepay', [ pay.paystr, pay.custom_msat, pay.quantity, pay.payer_note ] ])
+, offerPay$.map(pay   => [ '_fetchinvoice',    [ pay.paystr, pay.custom_msat, pay.quantity, pay.payer_note ] ])
 , offerRecv$.map(recv => [ 'sendinvoice',      [ recv.paystr, recv.label ] ])
 
 , goLogs$.mapTo(         [ 'getlog' ] )
@@ -73,10 +77,10 @@ exports.makeReq = ({ viewPay$, confPay$, offerPay$, offerRecv$, newInv$, goLogs$
 
 , goDeposit$.mapTo(      [ 'newaddr',      [ 'all' ] ])
 
-  // requested once
+  // Requested once
 , O.of(                  [ '_listconfigs', [], { bg: true } ])
 
-  // periodic updates
+  // Periodic updates
 , timer(60000).mapTo(    [ '_listinvoices', [], { bg: true } ])
 , timer(60000).mapTo(    [ '_listpays',    [], { bg: true } ])
 , timer(60000).mapTo(    [ 'getinfo',      [], { bg: true } ])

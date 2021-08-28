@@ -40,8 +40,8 @@ const serverInfo = process.env.BUILD_TARGET === 'web'
 
 const main = ({ DOM, HTTP, SSE, route, conf$, scan$, urihandler$ }) => {
 
-  const actions = intent({ DOM, route, conf$, scan$, urihandler$ })
-      , resps   = rpc.parseRes({ HTTP, SSE })
+  const resps   = rpc.parseRes({ HTTP, SSE })
+      , actions = intent({ DOM, route, conf$, scan$, urihandler$, ...resps })
 
       , state$  = model({ HTTP, ...actions, ...resps })
 

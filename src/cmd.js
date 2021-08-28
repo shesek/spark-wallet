@@ -103,8 +103,9 @@ export const commands = {
   }
 
   // Fetch an invoice for the given offer, decode it and return the original offer alongside it
-, async _fetchinvoice(bolt12_offer, ...args) {
-    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, ...args)
+  // Some parameters are unsupported (recurrence/timeout).
+, async _fetchinvoice(bolt12_offer, msatoshi, quantity, payer_note) {
+    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
 
     const invoice = await this._decode(bolt12_invoice)
     assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
@@ -132,22 +133,6 @@ export const commands = {
     }
 
     return decoded
-  }
-
-  // Fetch an invoice for the given offer, and immediately pay it if it matches the offer
-  // Some parameters are unsupported (recurrence/timeout)
-, async _fetchinvoicepay(bolt12_offer, msatoshi, quantity, payer_note) {
-    const { changes, ...invoice } = await this._fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
-
-    if (Object.keys(changes).length == 0) {
-      // Nothing changed, go ahead and pay it
-      const pay_result = await this._pay(invoice.paystr)
-      extendInvoiceMeta(pay_result, invoice)
-      return { action: 'paid', ...pay_result }
-    } else {
-      // Return the invoice for user confirmation
-      return { action: 'reconfirm', changes, ...invoice }
-    }
   }
 
   // `listconfigs` with caching
