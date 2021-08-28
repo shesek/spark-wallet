@@ -1,6 +1,6 @@
 import big from 'big.js'
 import { Observable as O } from './rxjs'
-import { dbg, getChannels, formatAmt, recvAmt, parsePayment, combine, isConnError } from './util'
+import { dbg, getChannels, formatAmt, recvAmt, parsePayment, combine, isConnError, only } from './util'
 
 const msatbtc = big(100000000000) // msat in 1 btc
 
@@ -25,11 +25,11 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, BTC: 0.00000000001 }
 , unitstep = { ...unitrate, USD: 0.000001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$
-                  , amtVal$, execRpc$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$, confPay$
+                  , amtVal$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
                   , fundMaxChan$
                   , conf$: savedConf$
-                  , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$
+                  , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$, payupdates$
                   , funded$, closed$
                   , offer$, offerPayQuantity$: offerPayQuantityInput$, invUseOffer$
                   , btcusd$, info$, lnconfig$, peers$ }) => {
@@ -100,17 +100,16 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
     , outgoing$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
-  // Periodically re-sync from listsendpays (completed only),
-  // continuously patch with known outgoing payments
+  // Periodically re-sync from listpays, continuously patch with known outgoing
+  // payments and payment status update notifications
   , freshPays$ = O.merge(
-      payments$.map(payments => _ =>
-        payments.filter(p => p.status === 'complete').map(parsePayment))
-    , outgoing$.map(pay => payments => payments &&
-        [ ...payments.filter(p => p.payment_hash !== pay.payment_hash), pay ])
+      payments$.map(payments => _ => payments.map(parsePayment))
+    , outgoing$.map(pay => payments => payments && mergePayUpdates(payments, [ pay ]))
+    , payupdates$.map(updates => payments => payments && mergePayUpdates(payments, updates))
+    , confPay$.map(o => payments => payments && mergePayUpdates(payments, [ pendingPayStub(o) ]))
     )
     .startWith(null).scan((payments, mod) => mod(payments))
     .filter(Boolean)
-    .distinctUntilChanged((prev, next) => prev.length === next.length)
 
   // Periodically re-sync from listinvoices (paid only),
   // continuously patch with known incoming payments
@@ -188,6 +187,23 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , msatusd$, btcusd$: btcusd$.startWith(null)
   }).shareReplay(1)
 }
+
+function mergePayUpdates(payments, updates) {
+  const updated = new Set(updates.map(p => p.payment_hash))
+  return [ ...payments.filter(p => !updated.has(p.payment_hash))
+         , ...updates.map(parsePayment) ]
+}
+
+// Create a stub entry for a newly sent pending payment that doesn't yet have a `listpays` entry
+// Will be replaced with the real entry as soon as its received.
+const pendingPayStub = inv => ({
+  status: 'pending'
+, created_at: Date.now()/1000|0
+, msatoshi: inv.custom_msat || inv.msatoshi
+, msatoshi_sent: 0
+, destination: inv.payee || inv.node_id || inv.destination
+, ...only(inv, 'payment_hash', 'description', 'offer_id', 'vendor', 'quantity', 'payer_note' )
+})
 
 const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false, non_breaking=true) => {
   const unit_d = !as_alt_unit ? unit : (unit == 'USD' ? 'sat' : 'USD')

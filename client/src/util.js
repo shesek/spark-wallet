@@ -29,8 +29,8 @@ export const getChannels = peers => [].concat(...peers.map(peer => peer.channels
 // Parse the `sat`-suffixed amount string fields into numbers
 export const parsePayment = p => ({
   ...p
-, msatoshi: p.amount_msat ? +p.amount_msat.slice(0, -4) : null
-, msatoshi_sent: +p.amount_sent_msat.slice(0, -4)
+, msatoshi: p.msatoshi != null ? p.msatoshi : p.amount_msat ? +p.amount_msat.slice(0, -4) : null
+, msatoshi_sent: p.amount_sent_msat ? +p.amount_sent_msat.slice(0, -4) : null
 })
 
 export const combine = obj => {
@@ -66,3 +66,8 @@ export const parseRpcCmd = str => {
   const [ method, ...args ] = stringArgv(str)
   return [ method, ...args.map(arg => arg in specialArgs ? specialArgs[arg] : arg) ]
 }
+
+export const only = (obj, ...keys) => keys.reduce((R, k) => {
+  if (obj[k] != null) R[k] = obj[k]
+  return R
+}, {})
