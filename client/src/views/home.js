@@ -1,4 +1,4 @@
-import { div, ul, li, a, span, button, small, p, strong } from '@cycle/dom'
+import { div, ul, li, a, span, button, small, p, strong, em } from '@cycle/dom'
 import { yaml, ago, showDesc, pluralize } from './util'
 
 const perPage = 10
@@ -41,17 +41,25 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       , visible = fid == feedActive
       , tsStr   = new Date(ts*1000).toLocaleString()
       , offerId = obj.local_offer_id || obj.offer_id
+      , status  = type == 'in' ? 'complete' : obj.status // in payments are always completed, out payments may be pending/failed
+      , tsLabel = status == 'complete' ? (type == 'in' ? 'Received:' : 'Sent:') : 'Time:'
+
+  const leftBadge = type == 'out' && status == 'failed'
+    ? span('.amt.badge.badge-warning.badge-pill', [ span('.icon.icon-cancel'), ' failed' ])
+    : span(`.amt.badge.badge-${type=='in'?'success':'danger'}.badge-pill`, `${type == 'in' ? '+' : '-'}${ unitf(msat) }`)
+
+  const rightBadge = type == 'out' && status == 'pending'
+    ? span('.ts.badge.badge-primary.float-right', [ span('.icon.icon-spin1.animate-spin'), ' sending...' ])
+    : span('.ts.badge.badge-secondary.float-right', { attrs: { title: tsStr } }, ago(ts))
 
   return li('.list-group-item', { class: { active: visible, 'list-group-item-action': !visible }, dataset: { feedToggle: fid } }, [
-    div('.clearfix', [
-      type === 'in' ? span('.amt.badge.badge-success.badge-pill', `+${ unitf(msat) }`)
-                    : span('.amt.badge.badge-danger.badge-pill', `-${ unitf(msat) }`)
-    , span('.ts.badge.badge-secondary.float-right', { attrs: { title: tsStr } }, ago(ts))
-    ])
+    div('.clearfix', [ leftBadge, rightBadge ])
   , !visible ? '' : ul('.list-unstyled.my-3', [
-      li([ strong(type == 'in' ? 'Received:' : 'Sent:'), ' ', tsStr ])
+      status == 'pending' ? pendingStatus(obj) : ''
+    , li([ strong(tsLabel), ' ', tsStr ])
+    , status == 'failed' && msat ? li([ strong('Amount:'), ' ', unitf(msat) ]) : ''
     , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
-    , type == 'out' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+    , type == 'out' && status == 'complete' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , obj.vendor ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
     , obj.quantity ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
@@ -66,6 +74,15 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
 
 const feesText = ({ msatoshi: quoted, msatoshi_sent: sent }, unitf) =>
   `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
+
+const pendingStatus = ({ attempts, number_of_parts }) => {
+  if (!attempts) return li('Payment in progress...')
+
+  const strategies = attempts.filter(a => !!a.strategy)
+      , strategy = strategies.length && strategies[strategies.length-1].strategy
+
+  return li(`${pluralize `${attempts.length} attempt`}${number_of_parts > 1 ? ` · ${number_of_parts} parts` : ''}${strategy ? ` · ${strategy}` : ''}`)
+}
 
 const paging = (total, start) => total <= perPage ? '' :
   div('.d-flex.justify-content-between.mt-2', [
