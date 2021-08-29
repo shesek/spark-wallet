@@ -1,8 +1,12 @@
 // fix icon position
 .theme-slate  .navbar-brand .icon { left: -2px }
-.theme-slate  .navbar-brand .icon:before { vertical-align: baseline }
-.theme-lux    .navbar-brand .icon:before { vertical-align: text-top }
-.theme-cosmo  .navbar-brand .icon:before { vertical-align: text-top }
+
+
+.navbar-brand .icon:before
+  .theme-lux &, .theme-materia &, .theme-cyborg &, .theme-lumen &, .theme-sandstone &, .theme-cerulean &
+    vertical-align top
+  .theme-solar &, .theme-cosmo &, .theme-simplex &, .theme-spacelab &
+    vertical-align text-top
 
 // slate touchups
 .theme-slate
