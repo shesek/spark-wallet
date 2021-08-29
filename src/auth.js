@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import assert from 'assert'
 import mkdirp from 'mkdirp'
+import morgan from 'morgan'
 import basicAuth from 'basic-auth'
 import { nanoid, customAlphabet } from 'nanoid'
 import cookieParser from 'cookie-parser'
@@ -27,7 +28,7 @@ module.exports = (app, cookieFile, login) => {
     username = customAlphabet('abcdefghijklmnopqrstuvwxyz', 5)()
     password = nanoid(15)
     accessKey = hmacStr(`${username}:${password}`, 'access-key')
-    console.log(`No LOGIN or --login specified, picked username "${username}" with password "${password}"`)
+    console.log(`No LOGIN or --login specified, generated random credentials. Start with --pairing-url or --print-key to view them.`)
 
     if (cookieFile) {
       console.log(`Writing login credentials to ${cookieFile}`)
@@ -45,6 +46,10 @@ module.exports = (app, cookieFile, login) => {
       , cookieOpt   = { signed: true, httpOnly: true, sameSite: true, secure: app.enabled('tls'), maxAge: cookieAge }
 
   Object.assign(app.settings, { manifestKey, accessKey })
+
+  // Prevent the access key from showing up in the http request logs
+  morgan.token('url', (({ url } = morgan) => req =>
+    url(req).replace(accessKey, '*****'))())
 
   app.use(cookieParser(cookieKey))
 
