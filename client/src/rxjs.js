@@ -29,5 +29,6 @@ import 'rxjs/add/operator/concat'
 import 'rxjs/add/operator/windowTime'
 import 'rxjs/add/operator/delay'
 import 'rxjs/add/operator/throttleTime'
+import 'rxjs/add/operator/partition'
 
 module.exports = { Observable }

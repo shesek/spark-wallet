@@ -29,7 +29,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , amtVal$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
                   , fundMaxChan$
                   , conf$: savedConf$
-                  , req$$, error$, payreq$, incoming$, outgoing$, payments$, invoices$, funds$, payupdates$
+                  , req$$, error$, payreq$, incoming$, payResult$, payments$, invoices$, funds$, payUpdates$
                   , funded$, closed$
                   , offer$, offerPayQuantity$: offerPayQuantityInput$, invUseOffer$
                   , btcusd$, info$, lnconfig$, peers$ }) => {
@@ -61,11 +61,14 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Show loading indicator if we have active in-flight foreground requests
   , loading$ = inflight$.map(inflight => inflight > 0)
 
+  // Split up successful and unsuccessful payment attempts
+  , [ paySent$, payFail$ ] = payResult$.partition(p => !p.err)
+
   // User-visible alert messages
   , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
-    , outgoing$.map(p => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
+    , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
     , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.msatoshi_total}}}, awaiting on-chain confirmation` ])
     , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
     , dismiss$.mapTo(null)
@@ -97,15 +100,16 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , cbalance$ = O.merge(
       channels$.map(chans => _ => sumChans(chans))
     , incoming$.map(inv => N => N + inv.msatoshi_received)
-    , outgoing$.map(pay => N => N - pay.msatoshi_sent)
+    , paySent$.map(pay => N => N - pay.msatoshi_sent)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // Periodically re-sync from listpays, continuously patch with known outgoing
   // payments and payment status update notifications
   , freshPays$ = O.merge(
       payments$.map(payments => _ => payments.map(parsePayment))
-    , outgoing$.map(pay => payments => payments && mergePayUpdates(payments, [ pay ]))
-    , payupdates$.map(updates => payments => payments && mergePayUpdates(payments, updates))
+    , paySent$.map(pay => payments => payments && mergePayUpdates(payments, [ pay ]))
+    , payFail$.map(fail => payments => payments && markFailed(payments, fail.pay.payment_hash))
+    , payUpdates$.map(updates => payments => payments && mergePayUpdates(payments, updates))
     , confPay$.map(o => payments => payments && mergePayUpdates(payments, [ pendingPayStub(o) ]))
     )
     .startWith(null).scan((payments, mod) => mod(payments))
@@ -192,6 +196,9 @@ function mergePayUpdates(payments, updates) {
   return [ ...payments.filter(p => !updated.has(p.payment_hash))
          , ...updates.map(parsePayment) ]
 }
+
+const markFailed = (payments, payment_hash) => payments.map(pay =>
+  pay.payment_hash == payment_hash ? { ...pay, status: 'failed' } : pay)
 
 // Create a stub entry for a newly sent pending payment that doesn't yet have a `listpays` entry
 // Will be replaced with the real entry as soon as its received.

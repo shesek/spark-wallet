@@ -23,6 +23,11 @@ exports.parseRes = ({ HTTP, SSE }) => {
   // Invoices when no changes are paid automatically (via intent)
   , offerReconf$ = offerInv$.filter(inv => Object.keys(inv.changes).length > 0)
 
+  // Pay attempt results, including failed payments. This is the only stream (apart from
+  // error$) that includes errors.
+  , payResult$ = HTTP.select('_pay').flatMap(r$ => r$.map(r => r.body).catch(err =>
+      err.response?.body?.type == 'lightning' ? O.of({ err, pay: r$.request.ctx.pay }) : O.empty()))
+
   return {
     req$$:     HTTP.select()
   , error$:    extractErrors(HTTP.select()).map(formatError)
@@ -40,7 +45,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
                          .merge(offerReconf$)
   , offer$:    payDetail$.filter(d => d.type == 'bolt12 offer')
   , invoice$:  reply('invoice').map(r => ({ ...r.body, ...r.request.ctx }))
-  , outgoing$: reply('_pay').map(r => ({ ...r.body, ...r.request.ctx.pay }))
+  , payResult$
   , offerInv$
   , sinvoice$: reply('sendinvoice').map(r => r.body)
   , localOffer$: reply('offer').map(r => ({ ...r.body, ...r.request.ctx }))
@@ -52,7 +57,7 @@ exports.parseRes = ({ HTTP, SSE }) => {
 
   // Push updates via server-sent events
   , incoming$: SSE('inv-paid')
-  , payupdates$: SSE('pay-updates')
+  , payUpdates$: SSE('pay-updates')
   , btcusd$:   SSE('btcusd')
   }
 }
