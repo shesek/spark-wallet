@@ -4,6 +4,8 @@ import clightning from 'clightning-client'
 // Extend clightning-client with custom RPC commands
 Object.assign(clightning.LightningClient.prototype, require('./cmd').commands)
 
+const proute = fn => (req, res, next) => fn(req, res).catch(next)
+
 ;(async function() { // IIFE
   const app = express()
       , ln  = clightning(process.env.LN_PATH)
@@ -47,10 +49,12 @@ Object.assign(clightning.LightningClient.prototype, require('./cmd').commands)
   })
 
   // RPC API
-  app.post('/rpc', (req, res, next) =>
-    (ln[req.body.method] ? ln[req.body.method](...req.body.params)
-                         : ln.call(req.body.method, req.body.params)
-    ).then(r => res.send(r)).catch(next))
+  app.post('/rpc', proute(async (req, res) => {
+    req.setTimeout(5 * 60 * 1000)
+    res.send(await (ln[req.body.method]
+      ? ln[req.body.method](...req.body.params)
+      : ln.call(req.body.method, req.body.params)))
+  }))
 
   // Streaming API
   app.get('/stream', require('./stream')(ln))
