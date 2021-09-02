@@ -4,6 +4,8 @@ import { fetchRate } from './exchange-rate'
 import { attachInvoiceMeta } from './cmd'
 import assert from 'assert'
 
+EventEmitter.defaultMaxListeners = 20
+
 const rateInterval = 60000 // 1 minute
 
 module.exports = ln => {
