@@ -1,31 +1,30 @@
-FROM node:12.16-slim as builder
+FROM node:16.8-bullseye-slim as builder
 
 ARG DEVELOPER
 ARG STANDALONE
 ENV STANDALONE=$STANDALONE
 
-# Install build c-lightning for third-party packages (c-lightning/bitcoind)
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates gpg dirmngr wget  \
-    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext libtool libgmp-dev \
-                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev")
+# Install build dependencies for third-party packages (c-lightning/bitcoind)
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates dirmngr wget  \
+    $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext gpg gpg-agent libtool libgmp-dev \
+                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev unzip")
 
-ENV LIGHTNINGD_VERSION=v0.8.1
-ENV LIGHTNINGD_PGP_KEY=15EE8D6CAB0E7F0CF999BFCBD9200E6CD1ADB8F1
+ENV LIGHTNINGD_VERSION=0.10.1
+ENV LIGHTNINGD_SHA256=9271e9e89d60332b66afedbf8d6eab2a4a488782ab400ee1f60667d73c5a9a96
 
 RUN [ -n "$STANDALONE" ] || ( \
-    git clone https://github.com/ElementsProject/lightning.git /opt/lightningd \
-    && cd /opt/lightningd \
-    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$LIGHTNINGD_PGP_KEY" \
-    && git verify-tag $LIGHTNINGD_VERSION \
-    && git checkout $LIGHTNINGD_VERSION \
-    && DEVELOPER=$DEVELOPER ./configure \
-    && make)
+    wget -O /tmp/lightning.zip https://github.com/ElementsProject/lightning/releases/download/v$LIGHTNINGD_VERSION/clightning-v$LIGHTNINGD_VERSION.zip \
+    && echo "$LIGHTNINGD_SHA256 /tmp/lightning.zip" | sha256sum -c \
+    && unzip /tmp/lightning.zip -d /tmp/lightning \
+    && cd /tmp/lightning/clightning* \
+    && DEVELOPER=$DEVELOPER ./configure --prefix=/opt/lightning \
+    && make && make install)
 
 # Install bitcoind
-ENV BITCOIN_VERSION 0.19.1
+ENV BITCOIN_VERSION 0.21.0
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 5fcac9416e486d4960e1a946145566350ca670f9aaba99de6542080851122e4c
+ENV BITCOIN_SHA256 da7766775e3f9c98d7a9145429f2be8297c2672fe5b118fd3dc2411fb48e0032
 ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
 ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
 RUN [ -n "$STANDALONE" ] || \
@@ -34,22 +33,21 @@ RUN [ -n "$STANDALONE" ] || \
     && echo "$BITCOIN_SHA256 $BITCOIN_FILENAME" | sha256sum -c - \
     && gpg --keyserver keyserver.ubuntu.com --recv-keys "$BITCOIN_PGP_KEY" \
     && wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
-    && gpg --verify bitcoin.asc \
-    && cat bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
+    && gpg --decrypt bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
     && BD=bitcoin-$BITCOIN_VERSION/bin \
     && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1)
 
-RUN mkdir /opt/bin && ([ -n "$STANDALONE" ] || \
-    (mv /opt/lightningd/cli/lightning-cli /opt/bin/ \
-    && mv /opt/lightningd/lightningd/lightning* /opt/bin/ \
-    && mv /opt/bitcoin/bin/* /opt/bin/))
+RUN mkdir -p /opt/bin /opt/bitcoin/bin /opt/lightning
+
 # npm doesn't normally like running as root, allow it since we're in docker
 RUN npm config set unsafe-perm true
 
 # Install tini
-RUN wget -qO /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64" \
+RUN wget -O /opt/bin/tini "https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64" \
     && echo "12d20136605531b09a2c2dac02ccee85e1b874eb322ef6baf7561cd93f93c855 /opt/bin/tini" | sha256sum -c - \
     && chmod +x /opt/bin/tini
+
+RUN ls -l /opt/lightning
 
 # Install Spark
 WORKDIR /opt/spark/client
@@ -71,7 +69,7 @@ RUN npm run dist:npm \
 
 # Prepare final image
 
-FROM node:12.16-slim
+FROM node:16.8-bullseye-slim
 
 ARG STANDALONE
 ENV STANDALONE=$STANDALONE
@@ -85,8 +83,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends xz-utils inotif
     && mkdir /data \
     && ln -s /data/lightning $HOME/.lightning
 
-COPY --from=builder /opt/bin /usr/bin
 COPY --from=builder /opt/spark /opt/spark
+COPY --from=builder /opt/lightning /opt/lightning
+COPY --from=builder /opt/bitcoin/bin/ /usr/bin
+COPY --from=builder /opt/bin/ /usr/bin
+RUN ln -s /opt/lightning/bin/* /usr/bin
 
 ENV CONFIG=/data/spark/config TLS_PATH=/data/spark/tls TOR_PATH=/data/spark/tor COOKIE_FILE=/data/spark/cookie HOST=0.0.0.0
 

@@ -33,6 +33,8 @@
 
   This raises the minimally supported c-lightning version to v0.7.1.
 
+- docker: Update to Bitcoin Core v0.21.0, c-lightning v0.10.1 and nodejs v16.8
+
 ## 0.2.17 - 2020-09-03
 
 Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests when expert mode is enabled.
