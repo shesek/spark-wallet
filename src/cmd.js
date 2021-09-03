@@ -186,8 +186,14 @@ export async function attachInvoiceMeta(ln, obj) {
 
 const extendInvoiceMeta = (pay, invoice) =>
   [ 'description', 'vendor', 'quantity', 'payer_note', 'offer_id', 'amount_msat' ]
-    .filter(k => invoice[k] != null && pay[k] == null)
+    .filter(k => invoice[k] != null && (pay[k] == null || possiblyBuggyAmount(pay, k)))
     .forEach(k => pay[k] = invoice[k])
+
+// Pending multi-part payments sometimes report an incorrect amount,
+// override it with the correct amount from the BOLT11/12 invoice.
+// See https://github.com/ElementsProject/lightning/issues/4753
+const possiblyBuggyAmount = (pay, k) =>
+  k == 'amount_msat' && pay.status == 'pending' && pay.number_of_parts > 1 && pay.amount_msat == pay.amount_sent_msat
 
 const extractWarnings = obj =>
   Object.entries(obj)
