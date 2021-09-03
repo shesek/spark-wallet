@@ -74,7 +74,7 @@ else
   mkdir -p $LN_PATH
 fi
 
-if [ ! -S $LN_PATH/lightning-rpc ] || ! echo | nc -q0 -U $LN_PATH/lightning-rpc; then
+if [ ! -S $LN_PATH/lightning-rpc ] || ! echo | nc -q0 -U $LN_PATH/lightning-rpc 2> /dev/null; then
   echo -n "waiting for RPC unix socket... "
   sed --quiet '/^lightning-rpc$/ q' <(inotifywait -e create,moved_to --format '%f' -qm $LN_PATH)
 fi
