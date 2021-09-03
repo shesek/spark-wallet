@@ -27,7 +27,7 @@
 
 - Fix: Properly display the NoScript message on Firefox (#183)
 
-- Update clightning-client to v0.1.3
+- Update clightning-client to v0.1.4
 
 - Use `newaddr all` to avoid creating new addresses when switching types
 
