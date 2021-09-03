@@ -55,7 +55,8 @@ COPY cordova/package.json cordova/npm-shrinkwrap.json cordova/config.xml ./
 COPY cordova/res ./res
 RUN npm install && cordova telemetry off
 # build a dummy cordova app to download required artifacts in docker build time
-RUN mkdir www && cordova prepare && cordova build && rm -r www platforms/android/app/build
+# `electron prepare` sometimes fails on the first attempt but works on the second. this appears related to  https://github.com/apache/cordova-plugin-screen-orientation/issues/55
+RUN mkdir www && (cordova prepare || cordova prepare) && cordova build && rm -r www platforms/android/app/build
 
 # Spark client
 WORKDIR /opt/spark/client
