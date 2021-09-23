@@ -9,7 +9,7 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
   form('.offer-pay', { attrs: { do: 'offer-pay' }, dataset: offer }, [
     h2('Send payment')
 
-  , offer.vendor != null ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
+  , offer.vendor != null ? p([ 'Issuer: ', span('.text-muted.break-word', offer.vendor) ]) : ''
 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 
@@ -65,7 +65,7 @@ const offerRecv = offer => ({ unitf, conf: { expert} }) =>
   //, expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
   //, expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
 
-  , offer.vendor ? p([ 'Vendor: ', span('.text-muted.break-word', offer.vendor) ]) : ''
+  , offer.vendor ? p([ 'Issuer: ', span('.text-muted.break-word', offer.vendor) ]) : ''
 
   , showDesc(offer) ? p([ 'Description: ', span('.text-muted.break-word', offer.description) ]) : ''
 

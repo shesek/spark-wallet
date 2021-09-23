@@ -60,7 +60,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     , status == 'failed' && msat ? li([ strong('Amount:'), ' ', unitf(msat) ]) : ''
     , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
     , type == 'out' && status == 'complete' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
-    , obj.vendor ? li([ strong('Vendor:'), ' ', span('.break-word', obj.vendor) ]) : ''
+    , obj.vendor ? li([ strong('Issuer:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
     , obj.quantity ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
     , obj.payer_note ? li([ strong('Payer note:'), ' ', span('.break-word', obj.payer_note) ]) : ''

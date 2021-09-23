@@ -50,7 +50,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   return form('.conf-pay', { attrs: { do: 'confirm-pay' }, dataset: payreq }, [
     h2('Send payment')
 
-  , payreq.vendor ? p([ 'Vendor: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
+  , payreq.vendor ? p([ 'Issuer: ', span('.text-muted.break-word', payreq.vendor) ]) : ''
 
   , showDesc(payreq) ? p([ 'Description: ', span('.text-muted.break-word', payreq.description) ]) : ''
 
