@@ -1,9 +1,8 @@
 # Reproducible builds
 
-The NPM package, Android `apk` builds, Linux `tar.gz`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
-are deterministically reproducible.
+The NPM package, Android `apk` builds, Linux `AppImage`/`snap`/`tar.gz` builds, macOS `zip` builds and Windows `exe` installer are deterministically reproducible.
 
-The Linux `AppImage`/`deb` builds are currently not. :-(
+The `deb` and Windows portable runner are currently not. :-(
 
 ### Reproduce with Docker
 
@@ -31,7 +30,7 @@ The distribution files and a `SHA256SUMS` file will be created in `./docker-buil
 ### NPM package
 
 The npm package should be reproducible even without docker.
-It should be sufficient to use node >=v6 and npm v5.4.2 to v5.6.x (preferably node v8.11.3 and npm v5.6.0).
+It should be sufficient to use a recent nodejs release (the official releases are made with nodejs v16.8.0 and npm v7.21.0).
 Run `npm run dist:npm -- --pack-tgz` to create `spark-wallet-[x.y.z]-npm.tgz` in main directory.
 
 The `npm-shrinkwrap.json` file inside the npm package commits to integrity checksums

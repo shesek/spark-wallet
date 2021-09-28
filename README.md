@@ -260,7 +260,7 @@ and install using `$ npm install -g spark-wallet-[x.y.z]-npm.tgz`.
 To install the signed Docker image, get the image hash from `SHA256SUMS.asc` and install it with
 `$ docker pull shesek/spark-wallet@sha256:[image-hash-verified-by-be-signed]`.
 
-The NPM package, Android `apk` builds, Linux `tar.gz`/`snap` builds, macOS `zip` builds and Windows builds (installer and portable)
+The NPM package, Android `apk` builds, Linux `AppImage`/`snap`/`tar.gz` builds, macOS `zip` builds and the Windows installer
 [are deterministically reproducible](doc/reproducible-builds.md).
 
 ## CLI options

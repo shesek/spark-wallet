@@ -1,4 +1,4 @@
 language: minimal
 before_install: sudo modprobe fuse
 before_script: docker build -f scripts/builder.Dockerfile -t spark-builder .
-script: docker run --cap-add SYS_ADMIN --device /dev/fuse spark-builder
+script: docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined spark-builder

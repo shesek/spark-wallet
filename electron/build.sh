@@ -4,9 +4,6 @@ shopt -s expand_aliases
 
 [[ -d node_modules ]] || npm install
 
-# use faketime (if available) to make reproducible electron builds (works for deb, snap, tar.gz and zip, but not for AppImage)
-command -v faketime && alias electron-builder="TZ=UTC faketime -f '2017-11-08 16:58:41' electron-builder"
-
 # Build UI assets
 if [[ -z "$SKIP_CLIENT" ]]; then
   export BUILD_TARGET=electron
@@ -32,9 +29,19 @@ if [[ -z "$SKIP_SERVER" ]]; then
   > server.bundle.js
 fi
 
+# Use faketime (if available) to make reproducible electron builds (works for all builds except deb and the Windows portable runner)
+: ${LIBFAKETIME:=/usr/lib/x86_64-linux-gnu/faketime/libfaketime.so.1}
+if [ -f "$LIBFAKETIME" ]; then
+  # Set a start timestamp and make the clock move *very* slowly. The build
+  # should finish in under 1 second with this speed.
+  export LD_PRELOAD=$LIBFAKETIME FAKETIME="@2017-11-08 16:58:41 x0.0000001"
+fi
+
 # Build electron package
 if [[ -z "$SKIP_PACKAGE" ]]; then
   electron-builder "$@" -c.extraMetadata.version=`node -p 'require("../package").version'`
-   # when faketime is used, correct the timestamp for the final dist files (it does not effect their hash)
-   command -v faketime && touch dist/*
+   # correct the timestamp for the final dist files (needed when faketime is used)
+   touch dist/*
 fi
+
+[ -n "$FAKETIME" ] && unset FAKETIME
