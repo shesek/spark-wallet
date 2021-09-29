@@ -2,7 +2,7 @@
 
 The NPM package, Android `apk` builds, Linux `AppImage`/`snap`/`tar.gz` builds, macOS `zip` builds and Windows `exe` installer are deterministically reproducible.
 
-The `deb` and Windows portable runner are currently not. :-(
+The Android `apk`, Linux `deb` and Windows portable runner are currently not. :-(
 
 ### Reproduce with Docker
 
@@ -37,6 +37,7 @@ The `npm-shrinkwrap.json` file inside the npm package commits to integrity check
 for the entire dependency graph using
 [Subresource Integrity](https://w3c.github.io/webappsec-subresource-integrity/).
 
+<!--
 ### Android APK
 
 Android `apk` files that are signed using the android code signing process cannot be reproduced independently.
@@ -45,6 +46,7 @@ Spark therefore provides two separate `apk` files:
 - `spark-wallet-x.y.z-release.apk` - a release build signed using android's signing process that is not reproducible.
 
 - `spark-wallet-x.y.z-debug.apk` - a debug build that is not signed using android's signing process but is reproducible.
+-->
 
 ### Travis-CI
 
