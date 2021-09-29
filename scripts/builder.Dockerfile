@@ -81,6 +81,7 @@ CMD (test ! -c /dev/fuse || (mv -f cordova cordova-src && mkdir cordova && disor
  && npm run dist:npm -- --pack-tgz \
  && npm run dist:electron -- --linux --mac --win \
  && npm run dist:cordova \
+ && ([ ! -f /etc/android-release.json ] || BUILD_TYPE=release npm run dist:cordova -- --buildConfig /etc/android-release.json) \
  && mkdir -p /target && rm -rf /target/* \
  && echo '-----BEGIN SHA256SUM-----' \
  && ./scripts/dist-shasums.sh | tee /target/SHA256SUMS \
@@ -88,6 +89,7 @@ CMD (test ! -c /dev/fuse || (mv -f cordova cordova-src && mkdir cordova && disor
  && mv -f dist /target/npm-unpacked \
  && mv -f electron/dist /target/electron \
  && mv -f cordova/platforms/android/app/build/outputs/apk/debug /target/cordova-android-debug \
+ && ([ ! -f /etc/android-release.json ] || mv -f cordova/platforms/android/app/build/outputs/apk/release /target/cordova-android-release) \
  && (test -z "$OWNER" || chown -R $OWNER /target)
 
 # disorderfs (fuse mount configured with stable file sorting) is required for reproducible android apk builds. See:
