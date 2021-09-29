@@ -90,6 +90,8 @@ CMD (test ! -c /dev/fuse || (mv -f cordova cordova-src && mkdir cordova && disor
  && mv -f cordova/platforms/android/app/build/outputs/apk/debug /target/cordova-android-debug \
  && (test -z "$OWNER" || chown -R $OWNER /target)
 
+# NOTE: The APK reproducibility described below is no longer working :<
+#
 # disorderfs (fuse mount configured with stable file sorting) is required for reproducible android apk builds. See:
 # https://lists.reproducible-builds.org/pipermail/rb-general/2018-June/001027.html
 # https://issuetracker.google.com/issues/110237303
