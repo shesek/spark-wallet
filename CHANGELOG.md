@@ -14,6 +14,11 @@
 
   **Requires c-lightning v0.10.1+** with `experimental-offers` enabled.
 
+- UI: Non-blocking payments with `paystatus` tracking
+
+  Payments are now sent in the background without blocking the UI,
+  with pending/failed payments shown in the homepage payment history.
+
 - UI: Improve the main screen initial loading times
 
   Pay/Request can now be used immediately, without waiting for the wallet's data to load first.
@@ -33,11 +38,13 @@
 
   This raises the minimally supported c-lightning version to v0.7.1.
 
-- docker: Update to Bitcoin Core v0.21.0, c-lightning v0.10.1 and nodejs v16.8
+- docker: Update to Debian 11, Bitcoin Core v0.21.0, c-lightning v0.10.1 and nodejs v16.8
+
+- Reproducibility: Due to changes in third-party dependencies, the Android `apk` build and the Windows portable runner are no longer reproducible, while the Linux `AppImage` now is. See [more details here](doc/reproducible-builds.md).
 
 ## 0.2.17 - 2020-09-03
 
-Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manfiests when expert mode is enabled.
+Hotfix release - Fix YAML rendering of payments with unknown destination/description. This bug only manifests when expert mode is enabled.
 
 ## 0.2.16 - 2020-08-11
 
