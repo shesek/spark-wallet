@@ -20,7 +20,7 @@ changelog="`sed -nr '/^## (Unreleased|'$version' )/{n;:a;n;/^## /q;p;ba}' CHANGE
 grep '## Unreleased' CHANGELOG.md && sed -i "s/^## Unreleased/## $version - `date +%Y-%m-%d`/" CHANGELOG.md
 
 # Try loading Android signing keys
-[[ -z "$ANDROID_SIGN_CONFIG" && -f ../spark-signing-keys/build.json ]] && ANDROID_SIGN_CONFIG=`pwd`/../spark-signing-keys/build.json
+[[ -z "$ANDROID_RELEASE_CONFIG" && -f ../spark-signing-keys/build.json ]] && ANDROID_KEYS=`pwd`/../spark-signing-keys
 
 echo -e "Building Spark v$version\n\n$changelog\n\n"
 
@@ -35,20 +35,22 @@ if [[ -z "$SKIP_BUILD" ]]; then
     docker build -f scripts/builder.Dockerfile -t spark-builder .
     # fuse required for reproducible apks, see doc/reproducible-builds.md
     docker run --cap-add SYS_ADMIN --device /dev/fuse --security-opt apparmor:unconfined \
-               -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` spark-builder
+               -it --rm -v `pwd`/docker-builds:/target -e OWNER=`id -u`:`id -g` \
+               $([ -n "$ANDROID_KEYS" ] && echo "-v $ANDROID_KEYS:/etc/signing-keys") \
+               spark-builder
+
     # unpack new builds to appropriate locations
     mv docker-builds/spark-wallet-*-npm.tgz .
     mv -f docker-builds/npm-unpacked dist
     mv -f docker-builds/electron electron/dist
     mv -f docker-builds/cordova-android-debug cordova/platforms/android/app/build/outputs/apk/debug
+    mv -f docker-builds/cordova-android-release cordova/platforms/android/app/build/outputs/apk/release
   else
     npm run dist:npm -- --pack-tgz
     npm run dist:electron -- --linux --mac # building windows require wine (only done in docker)
     npm run dist:cordova
+    [ -n "$ANDROID_RELEASE_CONFIG" ] && BUILD_TYPE=release npm run dist:cordova -- --buildConfig $ANDROID_RELEASE_CONFIG
   fi
-
-  # Create the non-reproducible signed release apk file (outside of docker)
-  [ -n "$ANDROID_SIGN_CONFIG" ] && BUILD_TYPE=release npm run dist:cordova -- --buildConfig $ANDROID_SIGN_CONFIG
 fi
 
 # Build Docker server image
