@@ -15,7 +15,7 @@
         "browserify": "^17.0.0",
         "browserify-package-json": "^1.0.1",
         "bundle-collapser": "^1.4.0",
-        "electron": "^8.5.5",
+        "electron": "^11.5.0",
         "electron-builder": "^22.11.7",
         "terser": "^5.7.2"
       }
@@ -1854,9 +1854,9 @@
       }
     },
     "node_modules/electron": {
-      "version": "8.5.5",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-8.5.5.tgz",
-      "integrity": "sha512-e355H+tRDial0m+X2v+l+0SnaATAPw4sNjv9qmdk/6MJz/glteVJwVJEnxTjPfEELIJSChrBWDBVpjdDvoBF4Q==",
+      "version": "11.5.0",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-11.5.0.tgz",
+      "integrity": "sha512-WjNDd6lGpxyiNjE3LhnFCAk/D9GIj1rU3GSDealVShhkkkPR3Vh4q8ErXGDl1OAO/faomVa10KoFPUN/pLbNxg==",
       "dev": true,
       "hasInstallScript": true,
       "dependencies": {
@@ -6717,9 +6717,9 @@
       }
     },
     "electron": {
-      "version": "8.5.5",
-      "resolved": "https://registry.npmjs.org/electron/-/electron-8.5.5.tgz",
-      "integrity": "sha512-e355H+tRDial0m+X2v+l+0SnaATAPw4sNjv9qmdk/6MJz/glteVJwVJEnxTjPfEELIJSChrBWDBVpjdDvoBF4Q==",
+      "version": "11.5.0",
+      "resolved": "https://registry.npmjs.org/electron/-/electron-11.5.0.tgz",
+      "integrity": "sha512-WjNDd6lGpxyiNjE3LhnFCAk/D9GIj1rU3GSDealVShhkkkPR3Vh4q8ErXGDl1OAO/faomVa10KoFPUN/pLbNxg==",
       "dev": true,
       "requires": {
         "@electron/get": "^1.0.1",
