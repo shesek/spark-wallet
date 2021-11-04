@@ -7,16 +7,17 @@ ENV STANDALONE=$STANDALONE
 # Install build dependencies for third-party packages (c-lightning/bitcoind)
 RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates dirmngr wget  \
     $([ -n "$STANDALONE" ] || echo "autoconf automake build-essential gettext gpg gpg-agent libtool libgmp-dev \
-                                     libsqlite3-dev python python3 python3-mako wget zlib1g-dev unzip")
+                                     libsqlite3-dev python python3 python3-mako python3-pip wget zlib1g-dev unzip")
 
-ENV LIGHTNINGD_VERSION=0.10.1
-ENV LIGHTNINGD_SHA256=9271e9e89d60332b66afedbf8d6eab2a4a488782ab400ee1f60667d73c5a9a96
+ENV LIGHTNINGD_VERSION=0.10.2
+ENV LIGHTNINGD_SHA256=3c9dcb686217b2efe0e988e90b95777c4591e3335e259e01a94af87e0bf01809
 
 RUN [ -n "$STANDALONE" ] || ( \
     wget -O /tmp/lightning.zip https://github.com/ElementsProject/lightning/releases/download/v$LIGHTNINGD_VERSION/clightning-v$LIGHTNINGD_VERSION.zip \
     && echo "$LIGHTNINGD_SHA256 /tmp/lightning.zip" | sha256sum -c \
     && unzip /tmp/lightning.zip -d /tmp/lightning \
     && cd /tmp/lightning/clightning* \
+    && pip3 install mrkd \
     && DEVELOPER=$DEVELOPER ./configure --prefix=/opt/lightning \
     && make && make install)
 

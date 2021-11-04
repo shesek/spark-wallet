@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Docker: Update to c-lightning v0.10.2
+
 ## 0.3.0 - 2021-11-03
 
 - BOLT12 offers! ✨🎉
