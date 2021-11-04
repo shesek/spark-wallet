@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Cordova: Target Android SDK version 30
+
 - Docker: Update to Bitcoin Core v22.0 and c-lightning v0.10.2
 
 ## 0.3.0 - 2021-11-03
