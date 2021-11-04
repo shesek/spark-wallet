@@ -22,19 +22,14 @@ RUN [ -n "$STANDALONE" ] || ( \
     && make && make install)
 
 # Install bitcoind
-ENV BITCOIN_VERSION 0.21.0
+ENV BITCOIN_VERSION 22.0
 ENV BITCOIN_FILENAME bitcoin-$BITCOIN_VERSION-x86_64-linux-gnu.tar.gz
 ENV BITCOIN_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/$BITCOIN_FILENAME
-ENV BITCOIN_SHA256 da7766775e3f9c98d7a9145429f2be8297c2672fe5b118fd3dc2411fb48e0032
-ENV BITCOIN_ASC_URL https://bitcoincore.org/bin/bitcoin-core-$BITCOIN_VERSION/SHA256SUMS.asc
-ENV BITCOIN_PGP_KEY 01EA5486DE18A882D4C2684590C8019E36C2E964
+ENV BITCOIN_SHA256 59ebd25dd82a51638b7a6bb914586201e67db67b919b2a1ff08925a7936d1b16
 RUN [ -n "$STANDALONE" ] || \
     (mkdir /opt/bitcoin && cd /opt/bitcoin \
     && wget -qO "$BITCOIN_FILENAME" "$BITCOIN_URL" \
     && echo "$BITCOIN_SHA256 $BITCOIN_FILENAME" | sha256sum -c - \
-    && gpg --keyserver keyserver.ubuntu.com --recv-keys "$BITCOIN_PGP_KEY" \
-    && wget -qO bitcoin.asc "$BITCOIN_ASC_URL" \
-    && gpg --decrypt bitcoin.asc | grep "$BITCOIN_FILENAME" | sha256sum -c - \
     && BD=bitcoin-$BITCOIN_VERSION/bin \
     && tar -xzvf "$BITCOIN_FILENAME" $BD/bitcoind $BD/bitcoin-cli --strip-components=1)
 

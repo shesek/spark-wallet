@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-- Docker: Update to c-lightning v0.10.2
+- Docker: Update to Bitcoin Core v22.0 and c-lightning v0.10.2
 
 ## 0.3.0 - 2021-11-03
 
