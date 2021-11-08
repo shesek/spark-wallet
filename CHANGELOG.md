@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 - 2021-11-08
 
 - Cordova: Target Android SDK version 30
 
