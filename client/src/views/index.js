@@ -8,4 +8,5 @@ module.exports = {
 , ...require('./channels')
 , ...require('./onchain')
 , ...require('./expert')
+, ...require('./websocket')
 }

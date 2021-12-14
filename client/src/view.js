@@ -6,7 +6,7 @@ import themeColors from '../theme-colors.json'
 const isFunc = x => typeof x == 'function'
 
 // DOM view
-exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$, payreq$, offer$, localOffer$, invoice$, newaddr$, logs$ }) => {
+exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan$, goNode$, goRpc$ ,payreq$, offer$, localOffer$, invoice$, newaddr$, logs$, websoc$ }) => {
   const body$ = O.merge(
     // user actions
     goHome$.startWith(1).mapTo(views.home)
@@ -17,6 +17,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
   , goNewChan$.mapTo(views.newChannel)
   , goNode$.mapTo(views.nodeInfo)
   , goRpc$.mapTo(views.rpc)
+  , websoc$.map(views.websocket)
 
   // server responses
   , payreq$.map(views.confirmPay)
@@ -45,7 +46,7 @@ exports.vdom = ({ state$, goHome$, goScan$, goSend$, goRecv$, goChan$, goNewChan
 }
 
 // Navigation
-exports.navto = ({ incoming$: in$, confPay$, invoice$: inv$, sinvoice$, payreq$, funded$ }) => O.merge(
+exports.navto = ({ incoming$: in$, confPay$, invoice$: inv$, sinvoice$, payreq$, funded$, websoc$}) => O.merge(
   // navto '/' when receiving payments for the active invoice
   inPayActive(in$, inv$).mapTo({ pathname: '/', search: '?r' })
   // navto '/' after an incoming payment following a send_invoice offer
@@ -56,6 +57,8 @@ exports.navto = ({ incoming$: in$, confPay$, invoice$: inv$, sinvoice$, payreq$,
 , payreq$.mapTo               ({ pathname: '/confirm' })
   // navto /channels after opening channel
 , funded$.mapTo               ({ pathname: '/channels', search: '?r' })
+  // navto /websocket after connecting it to the node
+, websoc$.mapTo               ({pathname: '/websocket'})
 )
 
 // returns a stream of incoming payments received to the latest invoice created by the user

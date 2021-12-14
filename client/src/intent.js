@@ -53,6 +53,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$, offerInv$ }) => {
   , togTheme$ = click('.toggle-theme')
   , togUnit$  = click('.toggle-unit')
   , togExp$   = click('.toggle-exp')
+  , togWeb$    = click('.toggle-web')
 
   // Dismiss alert message
   , dismiss$ = O.merge(click('[data-dismiss=alert], a.navbar-brand, .content a, .content button')
@@ -83,6 +84,8 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$, offerInv$ }) => {
   // On-chain deposit
   , togAddrType$ = click('[do=toggle-addr-type]')
 
+  , websoc$ = submit('[do=connect-websocket]')
+  
   // Offers
   , offerPay$ = submit('[do=offer-pay]')
   , offerRecv$ = submit('[do=offer-recv]').map(({ paystr }) => ({ paystr, label: nanoid() }))
@@ -90,12 +93,12 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$, offerInv$ }) => {
 
   return { conf$, page$
          , goHome$, goScan$, goSend$, goRecv$, goNode$, goLogs$, goRpc$, goDeposit$
-         , goChan$, goNewChan$
+         , goChan$, goNewChan$, websoc$
          , viewPay$, confPay$
          , offerPay$, offerRecv$, offerPayQuantity$
          , execRpc$, clrHist$
          , newInv$, invUseOffer$, amtVal$
-         , togExp$, togTheme$, togUnit$
+         , togExp$, togTheme$, togUnit$, togWeb$
          , feedStart$, togFeed$
          , togChan$, updChan$, openChan$, closeChan$, fundMaxChan$
          , togAddrType$
