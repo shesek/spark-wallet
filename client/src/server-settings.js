@@ -32,7 +32,10 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   , stopScan$ = on('.stop-scan', 'click').mapTo(false)
 
   , save$ = on('form', 'submit', true).map(e => serialize(e.target, { hash: true, disabled: true }))
-      .filter(d => d.serverUrl && d.accessKey)
+      .filter(d => (d.serverUrl && d.accessKey))
+
+  , websocc$ = on('form', 'submit', true).map(e => serialize(e.target, { hash: true, disabled: true }))
+      .filter(d => (d.ipport && d.commandorune && d.lpk))
 
   , scanner$ = O.merge(doScan$, stopScan$, scan$.mapTo(false)).startWith(false)
 
@@ -67,21 +70,23 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
   // sinks
   , body$    = state$.map(S => S.scanner ? view.scan : view.settings(S))
   , storage$ = save$.map(d => ({ key: 'serverInfo', value: JSON.stringify(d) }))
-
+  , web$ = websocc$.map(d => ({ key: 'websocketinfo', value: JSON.stringify(d) }))
+  , store$ = O.merge(web$, storage$)
   , ipc$ = process.env.BUILD_TARGET == 'electron' ? O.merge(
       on('.enable-server', 'click').map(e => [ 'enableServer', e.target.closest('form').querySelector('[name=lnPath]').value ])
     , mode$.filter(mode => mode == 'remote').mapTo([ 'disableServer' ])
     ) : O.empty()
 
-  dbg({ scan$, save$, serverInfo$, error$, alert$, state$, scanner$, ipc$ })
+  dbg({ scan$, save$, websocc$, serverInfo$, error$, alert$, state$, scanner$, ipc$ })
 
   // redirect back to wallet after saving
   save$.subscribe(_ => location.href = 'index.html')
+  websocc$.subscribe(_=> location.href = 'websocket.html')
 
   return {
     DOM: combine({ state$, body$ }).map(layout)
   , IPC: ipc$
-  , storage: storage$
+  , storage: store$
   , scan$: scanner$
   }
 }

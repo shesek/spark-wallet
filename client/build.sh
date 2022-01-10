@@ -63,5 +63,7 @@ fi
 # Settings page for Cordova/Electron
 if [[ "$BUILD_TARGET" == "cordova" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
   bundle src/server-settings.js > $DEST/settings.js
+  bundle src/websocket.js > $DEST/websocket.js
+  pug -O '{"bundle":"websocket.js"}' < index.pug > $DEST/websocket.html
   pug -O '{"bundle":"settings.js"}' < index.pug > $DEST/settings.html
 fi
