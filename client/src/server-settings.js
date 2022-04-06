@@ -35,7 +35,7 @@ const main = ({ DOM, IPC, storage, route, conf$, scan$ }) => {
       .filter(d => (d.serverUrl && d.accessKey))
 
   , websocc$ = on('form', 'submit', true).map(e => serialize(e.target, { hash: true, disabled: true }))
-      .filter(d => (d.ipport && d.commandorune && d.lpk))
+      .filter(d => (d.lnlink))
 
   , scanner$ = O.merge(doScan$, stopScan$, scan$.mapTo(false)).startWith(false)
 

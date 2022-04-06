@@ -18,8 +18,6 @@ import { combine, dbg } from './util'
 import { layout } from './views/layout'
 import { formGroup } from './views/util'
 
-
-
 const main = ({DOM , sock}) => {
   const incoming$ = sock.map(r=>r.slice(8)).startWith('')
   , vdom$ = (str) => (form({ attrs: { do: 'exec-websoc' } }, [
@@ -42,9 +40,9 @@ const main = ({DOM , sock}) => {
   , sock: ldom$
   }
 }
-
-
+const LnLink = new URL(JSON.parse(localStorage.websocketinfo).lnlink),
+lpk = process.env.LPK;
 run(main, {
   DOM: makeDOMDriver('#app')
-, sock: makeWebSocketDriver(JSON.parse(localStorage.websocketinfo).ipport, JSON.parse(localStorage.websocketinfo).lpk)
+, sock: makeWebSocketDriver(LnLink.pathname, lpk, LnLink.search.slice(7))
 })

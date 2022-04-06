@@ -274,7 +274,7 @@ class NoiseState{
     }
 };
 
-function makeWebSocketDriver(peerId, lpk) {
+function makeWebSocketDriver(peerId, lpk, rune) {
     const addr = peerId.split('@')
     let ws = new WebSocket('ws://'+addr[1]);
     function sockDriver(outgoing$){
@@ -356,7 +356,7 @@ function makeWebSocketDriver(peerId, lpk) {
             let incoming$ = new Subject();
             O.from(outgoing$).subscribe({
                 next: msg=>{
-                    var cmd={"method": msg, "rune":JSON.parse(localStorage.websocketinfo).commandorune, "params":[],"id":1}
+                    var cmd={"method": msg, "rune":rune, "params":[],"id":1}
                     ws.send(noise.encryptMessage(Buffer.concat([Buffer.from('4c4f','hex'),Buffer.from([0,0,0,0,0,0,0,0]) ,Buffer.from(JSON.stringify(cmd))])));
                     console.log('sent!');
                     ws.onmessage = function(msg){

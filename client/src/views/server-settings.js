@@ -31,12 +31,7 @@ const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath, ipport, co
       ])
     )
 
-  , mode == 'websocket'? formGroup('Node Address'
-    , input('.form-control', {
-        attrs: { type: 'text', name: 'ipport', required: true, placeholder: 'nodeid@ip:port' }
-      , props: { value: ''}
-      })
-    )
+  , mode == 'websocket'? ''
   : formGroup('Server URL'
     , input('.form-control', {
         attrs: { type: 'url', name: 'serverUrl', required: true, placeholder: 'https://localhost:9737/' }
@@ -44,12 +39,7 @@ const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath, ipport, co
       })
     )
 
-  , mode == 'websocket'? formGroup('Commando Rune'
-  , input('.form-control', {
-      attrs: { type: 'text', name: 'commandorune', required: true, placeholder: 'Commando Rune' }
-    , props: { value: ''}
-    })
-  )
+  , mode == 'websocket'? ''
   :formGroup('Access Key'
     , input('.form-control', {
         attrs: { type: 'text', name: 'accessKey', required: true, pattern: '[a-zA-Z0-9]+', placeholder: '(string of a-z, A-Z and 0-9)' }
@@ -57,12 +47,12 @@ const settings = ({ mode, serverInfo: { serverUrl, accessKey, lnPath, ipport, co
       })
     )
     
-  , mode == 'websocket'? formGroup('Local Private Key'
-    , input('.form-control', {
-        attrs: { type: 'text', name: 'lpk', required: true, placeholder: 'Private Key' }
-      , props: { value: ''}
-      })
-    )
+  , mode == 'websocket'? formGroup('LnLink'
+      , input('.form-control', {
+          attrs: { type: 'url', name: 'lnlink', required: true, placeholder: 'lnlink:nodeid@ip:port?token=rune' }
+        , props: { value: ''}
+        })
+      )
     :''
 
   , div('.form-buttons', [
