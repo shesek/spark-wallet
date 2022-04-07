@@ -448,8 +448,9 @@ function makeWebSocketDriver(outgoing$) {
             var pref = init_msg.slice(0,2).toString('hex');
             init_msg = init_msg.slice(2);
             if(pref == '0010'){
-                // ws.send(noise.encryptMessage(Buffer.from('00100000000580082a6aa201206fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d6190000000000','hex')));
-                ws.send(noise.encryptMessage(Buffer.from('00100000000580082a6aa2012043497fd7f826957108f4a30fd9cec3aeba79972084e90ead01ea330900000000','hex')));
+                ws.send(noise.encryptMessage(Buffer.from('00100000000580082a6aa201206fe28c0ab6f1b372c1a6a246ae63f74f931e8365e15a089c68d6190000000000','hex')));
+                //--------------------------------Chainhash for testnet----------------------------
+                // ws.send(noise.encryptMessage(Buffer.from('00100000000580082a6aa2012043497fd7f826957108f4a30fd9cec3aeba79972084e90ead01ea330900000000','hex')));
                 console.log('sent init message with features "80082a6aa2"!');
                 alert('Handshake Complete, Ready to send commands!!');
             }
