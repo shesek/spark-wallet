@@ -19,7 +19,7 @@ import { layout } from './views/layout'
 import { formGroup } from './views/util'
 
 const main = ({DOM , sock}) => {
-  const incoming$ = sock.map(r=>r.slice(8)).startWith('')
+  const incoming$ = sock.map(r=>r.slice(8)).startWith('Please wait till the prompt..')
   , vdom$ = (str) => (form({ attrs: { do: 'exec-websoc' } }, [
     h2('RPC Console(Websocket)')
     ,formGroup('Websocket'
@@ -40,9 +40,8 @@ const main = ({DOM , sock}) => {
   , sock: ldom$
   }
 }
-const LnLink = new URL(JSON.parse(localStorage.websocketinfo).lnlink),
-lpk = process.env.LPK;
+
 run(main, {
   DOM: makeDOMDriver('#app')
-, sock: makeWebSocketDriver(LnLink.pathname, lpk, LnLink.search.slice(7))
+, sock: makeWebSocketDriver
 })
