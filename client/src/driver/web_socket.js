@@ -429,6 +429,7 @@ function makeWebSocketDriver(outgoing$) {
     let noise = new NoiseState(vals);
     
     let rpk = Buffer.from(addr[0],'hex');
+    var flag = 0;
     let actions = {
         1: res => {
             var arr = new Uint8Array(res);
@@ -468,29 +469,22 @@ function makeWebSocketDriver(outgoing$) {
             init = Buffer.from(init)
             var len = noise.decryptLength(init.slice(0,18));
             var decr = noise.decryptMessage(init.slice(18,18+len+16));
+            flag = 0;
             if(decr.slice(0,2).toString('hex')==='4c4f'){
                 result += decr.slice(2).toString();
             }
             else if(decr.slice(0,2).toString('hex')==='594d'){
                 result += decr.slice(2).toString();
-                // ws.close(1000,'Delibrate Closing');
             }
             else if (decr.slice(0,2).toString('hex')==='0012'){
-                console.log("ping rcvd "+ decr.toString('hex'));
-
+                console.log("Ping");
+                flag = 1;
                 var rcv_ping = new Ping();
-                
                 var num_pong_bytes = rcv_ping.deserialize(decr.toString('hex')).numPongBytes;
-                
-                console.log(num_pong_bytes);
-                
                 var send_pong = new Pong(num_pong_bytes);
-                
-                result = send_pong.serialize();
-                
-                console.log(result.toString('hex'));
-                
-                ws.send(noise.encryptMessage(result));
+                var res = send_pong.serialize();
+                ws.send(noise.encryptMessage(res));
+                console.log("Pong")
             }
             return result;
         }
@@ -524,9 +518,14 @@ function makeWebSocketDriver(outgoing$) {
             var str = msg.data.arrayBuffer().then(
                 actions[4]
             )
-            str.then(res=>
-                incoming$.next(res)
-            )
+            if(flag == 0 ){
+                console.log('here')
+                str.then(res=>{
+                    if(!flag){incoming$.next(res);}
+                }
+                    
+                )
+            }
         }
     }
     ws.onclose = function(msg){
