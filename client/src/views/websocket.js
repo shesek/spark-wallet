@@ -10,17 +10,14 @@ const lyut = ({ state: S, body }) =>
   , div('.content.container', body)
 ])
 
+
 const navbar = () =>
   nav(`.navbar.navbar-dark.bg-primary.mb-3`, div('.container', [
-    div('.navbar-brand', [
-      'Spark'
+    a('.navbar-brand', { attrs: { href: 'settings.html' } }, [
+      span('.icon.icon-left-open')
+    , 'Spark'
     ])
 ]))
-
-
-const formatParams = params =>
-  params.map(p => /\W/.test(p) ? `"${p.replace(/"/g, '\\"')}"` : p).join(' ')
-
 
 
 const websocket = ( commhist ) => form({ attrs: { do: 'exec-websoc' } }, [
