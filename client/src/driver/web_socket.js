@@ -464,21 +464,19 @@ function makeWebSocketDriver(outgoing$) {
         //     var msg = noise.decryptMessage(init.slice(18,18+len+16)).toString('hex');
         // },
         4: res => {
-            var result = '';
             var init = new Uint8Array(res);
             init = Buffer.from(init)
             var len = noise.decryptLength(init.slice(0,18));
             var decr = noise.decryptMessage(init.slice(18,18+len+16));
-            flag = 0;
             if(decr.slice(0,2).toString('hex')==='4c4f'){
                 result += decr.slice(2).toString();
             }
             else if(decr.slice(0,2).toString('hex')==='594d'){
                 result += decr.slice(2).toString();
+                return result
             }
             else if (decr.slice(0,2).toString('hex')==='0012'){
                 console.log("Ping");
-                flag = 1;
                 var rcv_ping = new Ping();
                 var num_pong_bytes = rcv_ping.deserialize(decr.toString('hex')).numPongBytes;
                 var send_pong = new Pong(num_pong_bytes);
@@ -486,7 +484,7 @@ function makeWebSocketDriver(outgoing$) {
                 ws.send(noise.encryptMessage(res));
                 console.log("Pong")
             }
-            return result;
+            return 'ignore'
         }
         }, cnt = 0;
 
@@ -504,6 +502,7 @@ function makeWebSocketDriver(outgoing$) {
         }
     })
     let incoming$ = new Subject();
+    var result = '';
     ws.onmessage = function(msg){
         cnt = cnt + 1;
         console.log(cnt);
@@ -518,14 +517,14 @@ function makeWebSocketDriver(outgoing$) {
             var str = msg.data.arrayBuffer().then(
                 actions[4]
             )
-            if(flag == 0 ){
-                console.log('here')
-                str.then(res=>{
-                    if(!flag){incoming$.next(res);}
+            console.log('here')
+            str.then(res=>{
+                if(res != "ignore"){
+                    console.log("result b4 next " + res);
+                    incoming$.next(res);
+                    result = '';
                 }
-                    
-                )
-            }
+            })
         }
     }
     ws.onclose = function(msg){

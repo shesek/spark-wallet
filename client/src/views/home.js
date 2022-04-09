@@ -26,10 +26,8 @@ const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels
   , div('.row.mb-2', [
   websocket? 
   form({ attrs: { do: 'connect-websocket' } }, [
-    formGroup('IP Address:<Port>'
-    , textarea('.form-control.form-control-lg', { attrs: { name: 'ip-port', required: true, rows: 1 } }))
-    ,formGroup('Rune'
-    , textarea('.form-control.form-control-lg', { attrs: { name: 'rune', required: true, rows: 1 } }))
+    formGroup('LnLink'
+    , textarea('.form-control.form-control-lg', { attrs: { name: 'LnLink', required: true, rows: 1 } }))
   , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit'} }, 'Connect')
   ]) : ''
   ])
