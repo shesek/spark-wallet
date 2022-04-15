@@ -1,6 +1,6 @@
 {
   "name": "spark-wallet",
-  "version": "0.3.1",
+  "version": "0.3.2-rc",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
