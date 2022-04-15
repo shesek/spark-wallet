@@ -110,7 +110,7 @@ fi
 if [[ -z "$SKIP_TAG" ]]; then
   git add package.json npm-shrinkwrap.json SHA256SUMS.asc CHANGELOG.md
 
-  git commit -m v$version
+  git commit -S -m v$version
   git tag --sign -m "$changelog" v$version
   git branch -f stable HEAD
   git push gh master stable && git push gh --tags
