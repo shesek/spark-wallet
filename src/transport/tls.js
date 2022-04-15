@@ -68,6 +68,7 @@ const letsencrypt = (name, dir, email) => {
     version: 'draft-12'
   , server: 'https://acme-v02.api.letsencrypt.org/directory'
   , configDir: path.join(dir, 'letsencrypt')
+  , store: require('greenlock-store-fs')
   , approveDomains: [ name ]
   , email: email
   , agreeTos: true

@@ -6,7 +6,7 @@
   "packages": {
     "": {
       "name": "spark-wallet",
-      "version": "0.2.17",
+      "version": "0.3.1",
       "license": "MIT",
       "dependencies": {
         "@babel/polyfill": "^7.12.1",
@@ -16,6 +16,7 @@
         "compression": "^1.7.4",
         "cookie-parser": "^1.4.5",
         "express": "^4.17.1",
+        "greenlock-store-fs": "^3.2.0",
         "helmet": "^4.6.0",
         "ini": "^2.0.0",
         "is-ip": "^3.1.0",
@@ -1800,8 +1801,7 @@
     "node_modules/@root/mkdirp": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/@root/mkdirp/-/mkdirp-1.0.0.tgz",
-      "integrity": "sha512-hxGAYUx5029VggfG+U9naAhQkoMSXtOeXtbql97m3Hi6/sQSRL/4khKZPyOF6w11glyCOU38WCNLu9nUcSjOfA==",
-      "optional": true
+      "integrity": "sha512-hxGAYUx5029VggfG+U9naAhQkoMSXtOeXtbql97m3Hi6/sQSRL/4khKZPyOF6w11glyCOU38WCNLu9nUcSjOfA=="
     },
     "node_modules/@root/request": {
       "version": "1.7.0",
@@ -3758,10 +3758,9 @@
       }
     },
     "node_modules/greenlock-store-fs": {
-      "version": "3.2.2",
-      "resolved": "https://registry.npmjs.org/greenlock-store-fs/-/greenlock-store-fs-3.2.2.tgz",
-      "integrity": "sha512-92ejLB4DyV4qv/2b6VLGF2nKfYQeIfg3o+e/1cIoYLjlIaUFdbBXkzLTRozFlHsQPZt2ALi5qYrpC9IwH7GK8A==",
-      "optional": true,
+      "version": "3.2.0",
+      "resolved": "https://registry.npmjs.org/greenlock-store-fs/-/greenlock-store-fs-3.2.0.tgz",
+      "integrity": "sha512-zqcPnF+173oYq5qU7FoGtuqeG8dmmvAiSnz98kEHAHyvgRF9pE1T0MM0AuqDdj45I3kXlCj2gZBwutnRi37J3g==",
       "dependencies": {
         "@root/mkdirp": "^1.0.0",
         "safe-replace": "^1.1.0"
@@ -5762,8 +5761,7 @@
     "node_modules/safe-replace": {
       "version": "1.1.0",
       "resolved": "https://registry.npmjs.org/safe-replace/-/safe-replace-1.1.0.tgz",
-      "integrity": "sha512-9/V2E0CDsKs9DWOOwJH7jYpSl9S3N05uyevNjvsnDauBqRowBPOyot1fIvV5N2IuZAbYyvrTXrYFVG0RZInfFw==",
-      "optional": true
+      "integrity": "sha512-9/V2E0CDsKs9DWOOwJH7jYpSl9S3N05uyevNjvsnDauBqRowBPOyot1fIvV5N2IuZAbYyvrTXrYFVG0RZInfFw=="
     },
     "node_modules/safer-buffer": {
       "version": "2.1.2",
@@ -8225,8 +8223,7 @@
     "@root/mkdirp": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/@root/mkdirp/-/mkdirp-1.0.0.tgz",
-      "integrity": "sha512-hxGAYUx5029VggfG+U9naAhQkoMSXtOeXtbql97m3Hi6/sQSRL/4khKZPyOF6w11glyCOU38WCNLu9nUcSjOfA==",
-      "optional": true
+      "integrity": "sha512-hxGAYUx5029VggfG+U9naAhQkoMSXtOeXtbql97m3Hi6/sQSRL/4khKZPyOF6w11glyCOU38WCNLu9nUcSjOfA=="
     },
     "@root/request": {
       "version": "1.7.0",
@@ -9816,10 +9813,9 @@
       }
     },
     "greenlock-store-fs": {
-      "version": "3.2.2",
-      "resolved": "https://registry.npmjs.org/greenlock-store-fs/-/greenlock-store-fs-3.2.2.tgz",
-      "integrity": "sha512-92ejLB4DyV4qv/2b6VLGF2nKfYQeIfg3o+e/1cIoYLjlIaUFdbBXkzLTRozFlHsQPZt2ALi5qYrpC9IwH7GK8A==",
-      "optional": true,
+      "version": "3.2.0",
+      "resolved": "https://registry.npmjs.org/greenlock-store-fs/-/greenlock-store-fs-3.2.0.tgz",
+      "integrity": "sha512-zqcPnF+173oYq5qU7FoGtuqeG8dmmvAiSnz98kEHAHyvgRF9pE1T0MM0AuqDdj45I3kXlCj2gZBwutnRi37J3g==",
       "requires": {
         "@root/mkdirp": "^1.0.0",
         "safe-replace": "^1.1.0"
@@ -11411,8 +11407,7 @@
     "safe-replace": {
       "version": "1.1.0",
       "resolved": "https://registry.npmjs.org/safe-replace/-/safe-replace-1.1.0.tgz",
-      "integrity": "sha512-9/V2E0CDsKs9DWOOwJH7jYpSl9S3N05uyevNjvsnDauBqRowBPOyot1fIvV5N2IuZAbYyvrTXrYFVG0RZInfFw==",
-      "optional": true
+      "integrity": "sha512-9/V2E0CDsKs9DWOOwJH7jYpSl9S3N05uyevNjvsnDauBqRowBPOyot1fIvV5N2IuZAbYyvrTXrYFVG0RZInfFw=="
     },
     "safer-buffer": {
       "version": "2.1.2",

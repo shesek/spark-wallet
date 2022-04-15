@@ -38,6 +38,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
+    "greenlock-store-fs": "^3.2.0",
     "helmet": "^4.6.0",
     "ini": "^2.0.0",
     "is-ip": "^3.1.0",
