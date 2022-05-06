@@ -21,12 +21,13 @@ const navbar = ({ unitf, cbalance, obalance, page }) =>
   , cbalance != null && obalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance + obalance)) : ''
   ]))
 
-const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) =>
+const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert, websocket} }) =>
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.border-light', [
       p('.info.float-left', [
         span('.toggle-exp', `${expert?'🔧 ':''} v${process.env.VERSION}`)
-
+      , ` · `
+      , span('.toggle-web', `${websocket?'🚀 ':'WebSocket'}`)
       , ` · ${info.network}`
       , ` · `, a({ attrs: { href: '#/node' } }, `node: ${info.id.substr(0,10)}`)
 

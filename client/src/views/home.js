@@ -1,12 +1,12 @@
-import { div, ul, li, a, span, button, small, p, strong, em } from '@cycle/dom'
-import { yaml, ago, showDesc, pluralize } from './util'
+import { div, ul, li, a, span, button, small, p, strong, em, form, textarea } from '@cycle/dom'
+import { yaml, ago, showDesc, pluralize, formGroup } from './util'
 
 const perPage = 10
 
 const hasCam = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
     , preferCam = hasCam && ('ontouchstart' in window)
 
-const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels, funds, conf: { expert } }) => {
+const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels, funds, conf: { expert, websocket } }) => {
   const balanceAvailable = !!(channels && funds)
       , displayLoader = !balanceAvailable || !feed
 
@@ -19,9 +19,18 @@ const home = ({ feed, feedStart, feedActive, unitf, obalance, cbalance, channels
     , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-info.btn-block.mb-2', { attrs: { href: '#/logs' } }, 'Logs')) : ''
     , expert ? div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/rpc' } }, 'Console')) : ''
     ])
-
-    // Balance overview
+    
+    // div('.col-sm-6', a('.btn.btn-lg.btn-warning.btn-block.mb-2', { attrs: { href: '#/websocket' } },''))
   , balanceAvailable ? balanceOverview({ obalance, cbalance, channels, funds, unitf }) : ''
+
+  , div('.row.mb-2', [
+  websocket? 
+  form({ attrs: { do: 'connect-websocket' } }, [
+    formGroup('LnLink'
+    , textarea('.form-control.form-control-lg', { attrs: { name: 'LnLink', required: true, rows: 1 } }))
+  , button('.btn.btn-lg.btn-primary.mb-2', { attrs: { type: 'submit'} }, 'Connect')
+  ]) : ''
+  ])
 
     // Payments feed
   , !feed || !balanceAvailable ? '' // hidden until the balance is available to prevent the UI from jumping around

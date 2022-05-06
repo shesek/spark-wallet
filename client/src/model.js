@@ -25,7 +25,7 @@ const
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, BTC: 0.00000000001 }
 , unitstep = { ...unitrate, USD: 0.000001 }
 
-module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$, confPay$
+module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$, confPay$, togWeb$
                   , amtVal$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
                   , fundMaxChan$
                   , conf$: savedConf$
@@ -38,9 +38,10 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Config options
     conf     = (name, def, list) => savedConf$.first().map(c => c[name] || def).map(list ? idx(list) : idn)
   , expert$  = conf('expert', false)        .concat(togExp$)  .scan(x => !x)
+  , websocket$ = conf('websocket', false)   .concat(togWeb$)  .scan(x => !x)
   , theme$   = conf('theme', 'dark', themes).concat(togTheme$).scan(n => (n+1) % themes.length).map(n => themes[n])
   , unit$    = conf('unit',  'bits',  units).concat(togUnit$) .scan(n => (n+1) % units.length) .map(n => units[n])
-  , conf$    = combine({ expert$, theme$, unit$ })
+  , conf$    = combine({ expert$, theme$, unit$, websocket$ })
 
   // Currency & unit conversion handling
   , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
@@ -176,7 +177,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
 
   dbg({ loading$, connected$, alert$, rpcHist$, freshPays$, freshInvs$, feed$, feedStart$, feedActive$ }, 'spark:model')
   dbg({ error$ }, 'spark:error')
-  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$ }, 'spark:config')
+  dbg({ savedConf$, conf$, expert$, theme$, unit$, conf$, websocket$ }, 'spark:config')
 
   return combine({
     conf$, page$, loading$, alert$

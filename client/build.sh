@@ -9,6 +9,7 @@ shopt -s extglob
 export BUILD_TARGET
 export NODE_ENV
 export VERSION=`node -p 'require("../package").version'`
+export LPK=`openssl ecparam -genkey -name secp256k1 -text -noout -outform DER | xxd -p -c 1000 | sed 's/41534e31204f49443a20736563703235366b310a30740201010420//' | sed 's/a00706052b8104000aa144034200/\'$'\nPubKey: /' | sed '2d'`
 
 rm -rf $DEST/*
 mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch
@@ -63,5 +64,7 @@ fi
 # Settings page for Cordova/Electron
 if [[ "$BUILD_TARGET" == "cordova" ]] || [[ "$BUILD_TARGET" == "electron" ]]; then
   bundle src/server-settings.js > $DEST/settings.js
+  bundle src/websocket.js > $DEST/websocket.js
+  pug -O '{"bundle":"websocket.js"}' < index.pug > $DEST/websocket.html
   pug -O '{"bundle":"settings.js"}' < index.pug > $DEST/settings.html
 fi
