@@ -51,8 +51,12 @@ const proute = fn => (req, res, next) => fn(req, res).catch(next)
   // RPC API
   app.post('/rpc', proute(async (req, res) => {
     req.setTimeout(5 * 60 * 1000)
+    const [method, params] = [req.body.method, req.body.params]
+
+    // clightning-client takes a {k: v} dictionary Object, or an array with positional args
     res.send(await (ln[req.body.method]
-      ? ln[req.body.method](...req.body.params)
+      ? ( params.constructor == Object
+        ? ln[req.body.method](params) : ln[req.body.method](...params) )
       : ln.call(req.body.method, req.body.params)))
   }))
 
