@@ -16,7 +16,7 @@ export const qruri = process.env.BUILD_TARGET == 'web' && isOnion
   ? data => Promise.resolve(`qr/${ encodeURIComponent(data) }`)
   : data => qrcode.toDataURL(data)
 
-export const qrinv = inv => qruri(`lightning:${ inv.bolt11 || inv.bolt12_unsigned  }`.toUpperCase())
+export const qrinv = inv => qruri(`lightning:${ inv.bolt11 || inv.bolt12  }`.toUpperCase())
 
 // Avoid displaying our default description (of "⚡")
 export const showDesc = o => o.description && o.description !== '⚡'
