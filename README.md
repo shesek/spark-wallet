@@ -178,7 +178,7 @@ The QR scanner works if you access Spark without using the PWA "Add to homescree
 - **Pay** and **Request** are pretty intuitive and don't require much explaining. Try them!
 
 - **Display unit:** Click the balance on the top-right or the unit in the "request payment" page to toggle the currency display unit.
-  The available options are sat, bits, milli, btc and usd.
+  The available options are sat, bits, milli, btc and euro.
 
 - **Theme switcher:** Click the theme name on the bottom-right to change themes (you can choose between 16 [bootswatch](https://bootswatch.com) themes).
 

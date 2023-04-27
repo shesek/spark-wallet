@@ -20,10 +20,10 @@ const
 
 const
   themes   = 'cerulean cosmo cyborg dark flatly lumen lux materia sandstone simplex slate solar spacelab superhero united yeti'.split(' ')
-, units    = 'sat bits milli BTC USD'.split(' ')
-, unitprec = { sat: 3, bits: 5, milli: 8, BTC: 11, USD: 6 }
+, units    = 'sat bits milli BTC euro'.split(' ')
+, unitprec = { sat: 3, bits: 5, milli: 8, BTC: 11, euro: 2 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, BTC: 0.00000000001 }
-, unitstep = { ...unitrate, USD: 0.000001 }
+, unitstep = { ...unitrate, euro: 0.01 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$, confPay$
                   , amtVal$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
@@ -32,7 +32,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , req$$, error$, payreq$, incoming$, payResult$, payments$, invoices$, funds$, payUpdates$
                   , funded$, closed$
                   , offer$, offerPayQuantity$: offerPayQuantityInput$, invUseOffer$
-                  , btcusd$, info$, lnconfig$, peers$ }) => {
+                  , btceuro$, info$, lnconfig$, peers$ }) => {
   const
 
   // Config options
@@ -43,9 +43,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , conf$    = combine({ expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
-  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, msatusd$, unitFormatter)
+  , msateuro$ = btceuro$.map(rate => big(rate).div(msatbtc)).startWith(null)
+  , rate$    = O.combineLatest(unit$, msateuro$, (unit, msateuro) => unitrate[unit] || msateuro)
+  , unitf$   = O.combineLatest(unit$, msateuro$, unitFormatter)
 
   // Keep track of connection status
   , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
@@ -187,7 +187,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , amtData$, chanActive$, rpcHist$
   , fundMaxChan$, depositAddrType$
   , offersEnabled$, offerPayQuantity$, invUseOffer$
-  , msatusd$, btcusd$: btcusd$.startWith(null)
+  , msateuro$, btceuro$: btceuro$.startWith(null)
   }).shareReplay(1)
 }
 
@@ -211,12 +211,12 @@ const pendingPayStub = inv => ({
 , ...only(inv, 'payment_hash', 'description', 'offer_id', 'vendor', 'quantity', 'payer_note' )
 })
 
-const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false, non_breaking=true) => {
-  const unit_d = !as_alt_unit ? unit : (unit == 'USD' ? 'sat' : 'USD')
-  const unit_rate = unit_d == 'USD' ? msatusd : unitrate[unit_d]
+const unitFormatter = (unit, msateuro) => (msat, as_alt_unit=false, non_breaking=true) => {
+  const unit_d = !as_alt_unit ? unit : (unit == 'euro' ? 'sat' : 'euro')
+  const unit_rate = unit_d == 'euro' ? msateuro : unitrate[unit_d]
 
-  // Use less precision for USD when displayed as the alt unit
-  const unit_prec = unit_d == 'USD' && as_alt_unit ? 2 : unitprec[unit_d]
+  // Use less precision for euro when displayed as the alt unit
+  const unit_prec = unit_d == 'euro' && as_alt_unit ? 2 : unitprec[unit_d]
 
   // If the alt unit's rate is missing, hide it entirely. The primary one
   // is returned as 'n/a' (below).
