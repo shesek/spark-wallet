@@ -1,5 +1,9 @@
 # Spark Lightning Wallet
 
+This fork of Spark-wallet shows prices in euro plus bolt12 offers still work.
+
+Core Lightning version: v23.02.2
+
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
 [![build status](https://api.travis-ci.org/shesek/spark-wallet.svg)](https://travis-ci.org/shesek/spark-wallet)
 [![docker pulls](https://img.shields.io/docker/pulls/shesek/spark-wallet.svg)](https://hub.docker.com/r/shesek/spark-wallet)
