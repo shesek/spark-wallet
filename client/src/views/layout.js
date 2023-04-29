@@ -32,7 +32,7 @@ const footer = ({ info, btceuro, msateuro, rate, conf: { unit, theme, expert } }
 
       , btceuro ? (
           [ 'euro', 'BTC' ].includes(unit) ? ` · 1 btc = €${ numbro(btceuro).format(btcFormatOpt) }`
-        : useCents(unit, btceuro) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msateuro, 4, false)}€¢`
+        : useCents(unit, btceuro) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate, msateuro, 4, false)}€`
         : ` · 1 ${unitName(unit)} = €${formatAmt(1/rate, msateuro, 3, false)}`
         ) : ''
       ])
@@ -41,7 +41,7 @@ const footer = ({ info, btceuro, msateuro, rate, conf: { unit, theme, expert } }
     ])
   )
 
-// display sat and bits as cents if they're worth less than $0.01
+// display sat and bits as cents if they're worth less than €0.01
 , useCents = (unit, btceuro) => (unit == 'sat' && +btceuro < 1000000) || (unit == 'bits' && +btceuro < 10000)
 , unitName = unit => unit.replace(/s$/, '')
 , btcFormatOpt = { mantissa: 2, trimMantissa: true, optionalMantissa: true }
