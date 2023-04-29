@@ -31,9 +31,9 @@ const footer = ({ info, btceuro, msateuro, rate, conf: { unit, theme, expert } }
       , ` · `, a({ attrs: { href: '#/node' } }, `node: ${info.id.substr(0,10)}`)
 
       , btceuro ? (
-          [ 'euro', 'BTC' ].includes(unit) ? ` · 1 btc = $${ numbro(btceuro).format(btcFormatOpt) }`
-        : useCents(unit, btceuro) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msateuro, 4, false)}¢`
-        : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msateuro, 3, false)}`
+          [ 'euro', 'BTC' ].includes(unit) ? ` · 1 btc = €${ numbro(btceuro).format(btcFormatOpt) }`
+        : useCents(unit, btceuro) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msateuro, 4, false)}€¢`
+        : ` · 1 ${unitName(unit)} = €${formatAmt(1/rate, msateuro, 3, false)}`
         ) : ''
       ])
 
