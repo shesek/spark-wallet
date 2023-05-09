@@ -99,7 +99,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
 }
 
 const displayAmountChange = ({ msatoshi: final, changes }, unitf) => {
-  const original = +changes.msat.slice(0, -4)
+  const original = +changes.msat
   const klass = final < original ? '.text-success' : '.text-danger'
   const change = final < original ? `${((1 - (final/original))*100).toFixed(1)}% less`
                                   : `${(((final/original) - 1)*100).toFixed(1)}% more`

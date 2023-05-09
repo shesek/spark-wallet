@@ -82,7 +82,7 @@ export const commands = {
       }
 
       // Make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
-      if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
+      if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat
 
       return decoded
     } else {

@@ -7,11 +7,11 @@ const msatbtc = big(100000000000) // msat in 1 btc
 const
   sumChans = chans =>
     chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
-         .reduce((T, c) => T + c.chan.msatoshi_to_us, 0)
+         .reduce((T, c) => T + c.chan.to_us_msat, 0)
 
 , sumOuts = outs =>
     outs.filter(o => o.status === 'confirmed')
-        .reduce((T, o) => T + o.value*1000, 0)
+        .reduce((T, o) => T + o.amount_msat, 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -69,7 +69,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
     , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
-    , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.msatoshi_total}}}, awaiting on-chain confirmation` ])
+    , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.total_msat}}}, awaiting on-chain confirmation` ])
     , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
     , dismiss$.mapTo(null)
     )
@@ -99,8 +99,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
       channels$.map(chans => _ => sumChans(chans))
-    , incoming$.map(inv => N => N + inv.msatoshi_received)
-    , paySent$.map(pay => N => N - pay.msatoshi_sent)
+    , incoming$.map(inv => N => N + inv.amount_received_msat)
+    , paySent$.map(pay => N => N - pay.amount_sent_msat)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // Periodically re-sync from listpays, continuously patch with known outgoing
@@ -206,7 +206,7 @@ const pendingPayStub = inv => ({
   status: 'pending'
 , created_at: Date.now()/1000|0
 , msatoshi: inv.custom_msat || inv.msatoshi
-, msatoshi_sent: 0
+, amount_sent_msat: 0
 , destination: inv.payee || inv.node_id || inv.destination
 , ...only(inv, 'payment_hash', 'description', 'offer_id', 'vendor', 'quantity', 'payer_note' )
 })

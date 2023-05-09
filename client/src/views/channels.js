@@ -14,7 +14,7 @@ const stateGroups = {
 const getGroup = state => Object.keys(stateGroups).find(group => stateGroups[group].includes(state))
 
 // Sort by status first, then by amount
-const chanSorter = (a, b) => (chanSorting(b) - chanSorting(a)) || (b.chan.msatoshi_total - a.chan.msatoshi_total)
+const chanSorter = (a, b) => (chanSorting(b) - chanSorting(a)) || (b.chan.total_msat - a.chan.total_msat)
 
 const chanSorting = ({ peer, chan }) =>
   peer.connected && chan.state == 'CHANNELD_NORMAL' ? 6
@@ -82,14 +82,14 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
   const bar = (label, color, msatoshi, amtText=unitf(msatoshi)) =>
     div(`.progress-bar.bg-${color}`, {
       attrs: { role: 'progressbar', title: `${label}: ${amtText}` }
-    , style: { width: `${msatoshi / chan.msatoshi_total * 100}%` }
-    }, msatoshi/chan.msatoshi_total > 0.05 ? amtText : '')
+    , style: { width: `${msatoshi / chan.total_msat * 100}%` }
+    }, msatoshi/chan.total_msat > 0.05 ? amtText : '')
 
   const stateGroup = getGroup(chan.state)
       , stateLabel = !peer.connected && stateGroup == 'active' ? 'offline' : stateGroup
       , isClosed   = [ 'closing', 'closed' ].includes(stateGroup)
-      , ours       = chan.msatoshi_to_us
-      , theirs     = chan.msatoshi_total - ours
+      , ours       = chan.to_us_msat
+      , theirs     = chan.total_msat - ours
       // the channel reserve fields appear to be sometimes (incorrectly?) missing,
       // defaulting them to 0 isn't quite right but should work for now
       , ourReserve = chan.our_channel_reserve_satoshis*1000 || 0
@@ -107,7 +107,7 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
 
   return li('.list-group-item', { class: classes, dataset: { chanToggle: chan.channel_id } }, [
     header('.d-flex.justify-content-between.mb-2', [
-      span('.capacity', unitf(chan.msatoshi_total))
+      span('.capacity', unitf(chan.total_msat))
     , span('.state', stateLabel)
     ])
 

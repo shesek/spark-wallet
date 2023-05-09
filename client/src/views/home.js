@@ -58,7 +58,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       status == 'pending' ? pendingStatus(obj) : ''
     , li([ strong(tsLabel), ' ', tsStr ])
     , status == 'failed' && msat ? li([ strong('Amount:'), ' ', unitf(msat) ]) : ''
-    , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
+    , type == 'in' && obj.amount_received_msat > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.amount_received_msat-obj.msatoshi) ]) : ''
     , type == 'out' && status == 'complete' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , obj.vendor ? li([ strong('Issuer:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
@@ -72,7 +72,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
   ])
 }
 
-const feesText = ({ msatoshi: quoted, msatoshi_sent: sent }, unitf) =>
+const feesText = ({ msatoshi: quoted, amount_sent_msat: sent }, unitf) =>
   `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
 
 const pendingStatus = ({ attempts, number_of_parts }) => {
