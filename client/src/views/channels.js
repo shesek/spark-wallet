@@ -79,11 +79,11 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
 
 const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan, peer }) => {
 
-  const bar = (label, color, msatoshi, amtText=unitf(msatoshi)) =>
+  const bar = (label, color, amount_msat, amtText=unitf(amount_msat)) =>
     div(`.progress-bar.bg-${color}`, {
       attrs: { role: 'progressbar', title: `${label}: ${amtText}` }
-    , style: { width: `${msatoshi / chan.total_msat * 100}%` }
-    }, msatoshi/chan.total_msat > 0.05 ? amtText : '')
+    , style: { width: `${amount_msat / chan.total_msat * 100}%` }
+    }, amount_msat/chan.total_msat > 0.05 ? amtText : '')
 
   const stateGroup = getGroup(chan.state)
       , stateLabel = !peer.connected && stateGroup == 'active' ? 'offline' : stateGroup

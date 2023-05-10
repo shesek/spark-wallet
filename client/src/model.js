@@ -68,7 +68,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
-    , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
+    , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.amount_msat}}}` ])
     , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.total_msat}}}, awaiting on-chain confirmation` ])
     , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
     , dismiss$.mapTo(null)
@@ -128,7 +128,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
-    , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
+    , ...payments.map(p => [ 'out', p.created_at, p.amount_msat, p ])
     ].sort((a, b) => b[1] - a[1]))
 
   // Collapsed payment/invoice on home feed list
@@ -145,7 +145,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
                       .merge(page$.mapTo(null)).startWith(null)
   , amtData$ = combine({
-      msatoshi: amtMsat$
+      amount_msat: amtMsat$
     , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitprec[unit], false))
                      .merge(goRecv$.merge(offer$).merge(payreq$).mapTo(''))
     , unit:     unit$
@@ -205,7 +205,7 @@ const markFailed = (payments, payment_hash) => payments.map(pay =>
 const pendingPayStub = inv => ({
   status: 'pending'
 , created_at: Date.now()/1000|0
-, msatoshi: inv.custom_msat || inv.msatoshi
+, amount_msat: inv.custom_msat || inv.amount_msat
 , amount_sent_msat: 0
 , destination: inv.payee || inv.node_id || inv.destination
 , ...only(inv, 'payment_hash', 'description', 'offer_id', 'vendor', 'quantity', 'payer_note' )

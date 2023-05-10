@@ -58,8 +58,8 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       status == 'pending' ? pendingStatus(obj) : ''
     , li([ strong(tsLabel), ' ', tsStr ])
     , status == 'failed' && msat ? li([ strong('Amount:'), ' ', unitf(msat) ]) : ''
-    , type == 'in' && obj.amount_received_msat > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.amount_received_msat-obj.msatoshi) ]) : ''
-    , type == 'out' && status == 'complete' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+    , type == 'in' && obj.amount_received_msat > obj.amount_msat ? li([ strong('Overpayment:'), ' ', unitf(obj.amount_received_msat-obj.amount_msat) ]) : ''
+    , type == 'out' && status == 'complete' && obj.amount_msat ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , obj.vendor ? li([ strong('Issuer:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
     , obj.quantity ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
@@ -72,7 +72,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
   ])
 }
 
-const feesText = ({ msatoshi: quoted, amount_sent_msat: sent }, unitf) =>
+const feesText = ({ amount_msat: quoted, amount_sent_msat: sent }, unitf) =>
   `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
 
 const pendingStatus = ({ attempts, number_of_parts }) => {
