@@ -146,10 +146,11 @@ async function getChannel(ln, peerid, chanid) {
   const peer = await ln.listpeers(peerid).then(r => r.peers[0])
   assert(peer, 'cannot find peer')
 
-  const chan = peer.channels.find(chan => chan.channel_id == chanid)
-  assert(chan, 'cannot find channel')
+  const channels = await ln.listpeerchannels(peerid).then(r => r.channels)
+  assert(channels, 'cannot find channels')
 
-  delete peer.channels
+  const chan = channels.find(chan => chan.channel_id == chanid)
+  assert(chan, 'cannot find channel')
 
   return { peer, chan }
 }
