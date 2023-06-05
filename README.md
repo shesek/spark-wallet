@@ -1,8 +1,8 @@
 # Spark Lightning Wallet Euro
 
-<b>This fork of Spark-wallet shows prices in Euro plus Bolt12 offers work.
+<b>This fork of Spark-wallet shows prices in Euro plus Bolt12 offers working.
 
-Core Lightning version: v23.02.2
+Compatible with Core Lightning version v23.05 (with and without allow-deprecated-apis=false in config)
 </b>
 
 THE REST OF THE TEXT IS FROM THE ORIGINAL SPARK-WALLET:
