@@ -88,7 +88,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Periodically re-sync channel balance from "listpeers",
   // continuously patch with known channel opening/closing
   , channels$ = O.merge(
-      peers$.map(peers => _ => getChannels(peers))
+      peers$.map(channels => _ => getChannels(channels))
     , funded$.map(chan => S => [ ...S, chan ])
     , closed$.map(chan => S => [ ...S.filter(c => c.chan.channel_id != chan.chan.channel_id), chan ])
     ).startWith(null).scan((S, mod) => mod(S))

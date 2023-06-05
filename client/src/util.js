@@ -23,8 +23,10 @@ export const parseUri = uri => {
 export const recvAmt = ({ amount_msat: expected, amount_received_msat: actual }) =>
   (expected && (actual-expected)/expected<0.005) ? expected : actual
 
-// Parse "listpeers" to get all channels as a list of (peer,channel) tuples
-export const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
+// Parse "listpeerchannels" to get all channels as a list of (peer,channel) tuples
+//export const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
+//export const getChannels = channels => [].concat(...channels.map(chan => chan.peer_id.map(peer => ({ peer, chan }))))
+export const getChannels = channels => [].concat(...channels.map(chan => ({ chan })))
 
 // Parse the `sat`-suffixed amount string fields into numbers
 export const parsePayment = p => ({
