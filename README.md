@@ -4,6 +4,8 @@
 
 Compatible with Core Lightning version v23.05 (with and without allow-deprecated-apis=false in config)
 
+Note: the usd version can be found [here](https://github.com/hMsats/spark-wallet-usd.git)
+
 HOW I RUN IT ON UBUNTU LINUX:
 
 git clone https://github.com/hMsats/spark-wallet-euro.git
