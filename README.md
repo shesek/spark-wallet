@@ -3,6 +3,34 @@
 <b>This fork of Spark-wallet shows prices in Euro plus Bolt12 offers working.
 
 Compatible with Core Lightning version v23.05 (with and without allow-deprecated-apis=false in config)
+
+HOW I RUN IT ON UBUNTU LINUX:
+
+git clone https://github.com/hMsats/spark-wallet-euro.git
+
+cd spark-wallet-euro
+
+npm install
+
+npm run dist:npm
+
+Open port 9737 on your modem/router
+
+The tls certificates:
+cert.pem  key.pem
+
+are in directory:
+/home/user/.spark-wallet/tls
+
+and are the same "LetsEncrypt" signed files as used by my website "bitcoinserver.nl"
+
+Run Spark:
+/home/user/spark-wallet-euro/dist/cli.js --host 0.0.0.0 --tls-name bitcoinserver.nl --port 9737 --ln-path /media/ssd/.lightning/bitcoin --login <username>:<some large number> >& out_spark.txt &
+
+I then open spark-wallet on my website in the address bar like this:
+bitcoinserver.nl:9737
+
+and then create an link/app on my start page
 </b>
 
 THE REST OF THE TEXT IS FROM THE ORIGINAL SPARK-WALLET:
