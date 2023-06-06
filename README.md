@@ -28,7 +28,7 @@ and are the same "LetsEncrypt" signed files as used by my website "bitcoinserver
 
 Run Spark:
 
-/home/user/spark-wallet-euro/dist/cli.js --host 0.0.0.0 --tls-name bitcoinserver.nl --port 9737 --ln-path /media/ssd/.lightning/bitcoin --login <username>:&lt;some large number&gt; &gt;& out_spark.txt &
+/home/user/spark-wallet-euro/dist/cli.js --host 0.0.0.0 --tls-name bitcoinserver.nl --port 9737 --ln-path /media/ssd/.lightning/bitcoin --login &lt;username&gt;:&lt;some large number&gt; &gt;& out_spark.txt &
 
 I then open spark-wallet on my website in the address bar like this:
 bitcoinserver.nl:9737
