@@ -148,11 +148,10 @@ async function getChannel(ln, peerid, chanid) {
   return { peer, chan }
 }
 
-// Check if experimental offers/bolt12 support is enabled
-// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+// Assume experimental offers/bolt12 support is enabled
 async function checkOffersEnabled(ln) {
   const conf = await ln._listconfigs()
-  return conf['experimental-offers'] && !/(^v?|-v)0\.(9\.|10\.0)/.test(conf['# version'])
+  return true
 }
 
 // Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in v0.10.0 are

@@ -226,7 +226,6 @@ const unitFormatter = (unit, msateuro) => (msat, as_alt_unit=false, non_breaking
   return `${unit_rate ? formatAmt(msat, unit_rate, unit_prec) : 'n/a'}${separator}${unit_d}`
 }
 
-// Check if experimental offers support is enabled
-// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+// Assume experimental offers support is enabled
 const checkOffersEnabled = conf =>
-  !!(conf['experimental-offers'] && !/^0\.(9\.|10\.0)/.test(conf['# version']))
+  !!(true)
