@@ -70,7 +70,7 @@ export const commands = {
 
     return { invoices }
   }
-  // Wrapper for the 'decode'/'decodepay' commands with some convenience enhancements
+  // Wrapper for the 'decode' command with some convenience enhancements
 , async _decode(paystr) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
       const decoded = await this.decode(paystr)
@@ -101,7 +101,7 @@ export const commands = {
     const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, amount_msat, quantity, null, null, null, null, payer_note)
 
     const invoice = await this._decode(bolt12_invoice)
-//    assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
+    assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
 
     const offer = await this._decode(bolt12_offer)
 
