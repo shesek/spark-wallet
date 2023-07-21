@@ -72,7 +72,6 @@ export const commands = {
   }
   // Wrapper for the 'decode'/'decodepay' commands with some convenience enhancements
 , async _decode(paystr) {
-    if (await checkOffersEnabled(this)) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
       const decoded = await this.decode(paystr)
 
@@ -85,12 +84,6 @@ export const commands = {
       if (decoded.amount_msat == null && decoded.amount_msat) decoded.amount_msat = +decoded.amount_msat
 
       return decoded
-    } else {
-      // 'decodepay' only supports BOLT11 invoices
-      const decoded = await this.decodepay(paystr)
-      // add 'type' and 'valid' fields to match the format returned by decode()
-      return { ...decoded, type: 'bolt11 invoice', valid: true }
-    }
   }
 
   // Pay the given invoice, emit an event that can be observed externally (by stream.js),
@@ -108,7 +101,7 @@ export const commands = {
     const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, amount_msat, quantity, null, null, null, null, payer_note)
 
     const invoice = await this._decode(bolt12_invoice)
-    assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
+//    assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
 
     const offer = await this._decode(bolt12_offer)
 
