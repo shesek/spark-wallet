@@ -2,7 +2,7 @@
 
 <b>This fork of Spark-wallet shows prices in Euro plus Bolt12 offers working.
 
-Compatible with Core Lightning version v23.05 with `experimental-offers` in config. 
+Compatible with Core Lightning version v23.05 with `experimental-offers` in config mandatory. 
 
 The `allow-deprecated-apis=false` is optional in config.
 
