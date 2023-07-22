@@ -150,7 +150,6 @@ async function getChannel(ln, peerid, chanid) {
 
 // Assume experimental offers/bolt12 support is enabled
 async function checkOffersEnabled(ln) {
-  const conf = await ln._listconfigs()
   return true
 }
 

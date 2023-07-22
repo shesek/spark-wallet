@@ -4,7 +4,7 @@ import { formGroup, yaml, qrinv, amountField, omitKey, fancyCheckbox, fmtSatAmou
 const recv = ({ amtData, offersEnabled, invUseOffer }) =>
   // Wait for 'listconfigs' to tell us if offers support is enabled,
   // to prevent the UI from jumping around.
-  offersEnabled == null ? div('.loader.inline')
+  offersEnabled == null ? true
 
 : form({ attrs: { do: 'new-invoice' } }, [
     h2('Receive payment')
