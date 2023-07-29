@@ -22,7 +22,6 @@ const recv = ({ amtData, offersEnabled, invUseOffer }) =>
     , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
     ])
 
-  , offersEnabled ? p(a('.small.text-muted', { attrs: { href: '#/scan' } }, 'Receive with a withdrawal offer »')) : ''
   ])
 
 const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) =>
