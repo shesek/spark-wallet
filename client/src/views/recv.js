@@ -8,7 +8,7 @@ const recv = ({ amtData, offersEnabled, invUseOffer }) =>
 
 : form({ attrs: { do: 'new-invoice' } }, [
     h2('Receive payment')
-  , formGroup('Payment amount', amountField(amtData, 'msatoshi', false))
+  , formGroup('Payment amount', amountField(amtData, 'amount_msat', false))
 
   , formGroup('Description'
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'description', placeholder: '(optional)' } })
@@ -30,7 +30,7 @@ const invoice = inv => qrinv(inv).then(qr => ({ unitf, conf: { expert } }) =>
     div('.row', [
       div('.col-sm-6.text-center', [
         h2('Receive payment')
-      , inv.msatoshi !== 'any' ? h3('.toggle-unit', fmtSatAmountWithAlt(inv.msatoshi, unitf)) : ''
+      , inv.amount_msat !== 'any' ? h3('.toggle-unit', fmtSatAmountWithAlt(inv.amount_msat, unitf)) : ''
       , small('.d-none.d-sm-block.text-muted.break-all.mt-3', inv.bolt11)
       ])
     , div('.col-sm-6.text-center', [
