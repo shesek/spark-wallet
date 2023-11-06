@@ -3,7 +3,7 @@ if (process.env.NODE_ENV != 'development') {
 
   const cachePath = [ '', 'style.css', 'app.js', 'load-theme.js'
                     , 'lib/instascan.js'
-                    , 'swatch/dark/bootstrap.min.css'
+                    , 'swatch/darkly/bootstrap.min.css'
                     , 'fonts/typeface-open-sans/index.css'
                     , 'fonts/typeface-open-sans/files/open-sans-latin-300.woff2'
                     , 'fonts/typeface-open-sans/files/open-sans-latin-400.woff2'

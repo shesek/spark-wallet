@@ -8,4 +8,4 @@ export VERBOSE=1
 
 [ -f .env ] && source .env
 
-babel-node src/cli.js "$@"
+npx babel-node src/cli.js "$@"

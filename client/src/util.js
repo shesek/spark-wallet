@@ -20,18 +20,16 @@ export const parseUri = uri => {
 // returns the expected invoice amount when its <0.5% different from the actual amount paid,
 // or the actual amount paid otherwise. this is done to make the UX less confusing when the
 // sender uses overpayment randomization (https://github.com/ElementsProject/lightning/issues/1089)
-export const recvAmt = ({ msatoshi: expected, msatoshi_received: actual }) =>
+export const recvAmt = ({ amount_msat: expected, amount_received_msat: actual }) =>
   (expected && (actual-expected)/expected<0.005) ? expected : actual
 
 // Parse "listpeers" to get all channels as a list of (peer,channel) tuples
 export const getChannels = peers => [].concat(...peers.map(peer => peer.channels.map(chan => ({ peer, chan }))))
 
+// TODO: remove this function and refactor the code that was using it...
+// this function is not needed anymore, as a quickfix, it is now Identity
 // Parse the `sat`-suffixed amount string fields into numbers
-export const parsePayment = p => ({
-  ...p
-, msatoshi: p.msatoshi != null ? p.msatoshi : p.amount_msat ? +p.amount_msat.slice(0, -4) : null
-, msatoshi_sent: p.amount_sent_msat ? +p.amount_sent_msat.slice(0, -4) : null
-})
+export const parsePayment = p => p
 
 export const combine = obj => {
   const keys = Object.keys(obj).map(k => k.replace(/\$$/, ''))

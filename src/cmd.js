@@ -82,7 +82,7 @@ export const commands = {
       }
 
       // Make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
-      if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
+      //if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
 
       return decoded
     } else {
@@ -104,8 +104,8 @@ export const commands = {
 
   // Fetch an invoice for the given offer, decode it and return the original offer alongside it
   // Some parameters are unsupported (recurrence/timeout).
-, async _fetchinvoice(bolt12_offer, msatoshi, quantity, payer_note) {
-    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
+, async _fetchinvoice(bolt12_offer, amount_msat, quantity, payer_note) {
+    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, amount_msat, quantity, null, null, null, null, payer_note)
 
     const invoice = await this._decode(bolt12_invoice)
     assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
@@ -122,8 +122,8 @@ export const commands = {
     switch (decoded.type) {
       case 'bolt12 offer':
         assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
-        assert(decoded.quantity_min == null || decoded.msatoshi || decoded.amount, 'Offers with quantity but no payment amount are unsupported')
-        assert(!decoded.send_invoice || decoded.msatoshi, 'send_invoice offers with no amount are unsupported')
+        assert(decoded.quantity_min == null || decoded.amount_msat || decoded.amount, 'Offers with quantity but no payment amount are unsupported')
+        assert(!decoded.send_invoice || decoded.amount_msat, 'send_invoice offers with no amount are unsupported')
         assert(!decoded.send_invoice || decoded.min_quantity == null, 'send_invoice offers with quantity are unsupported')
         break
       case 'bolt11 invoice':

@@ -38,7 +38,7 @@ module.exports = ({ DOM, route, conf$, scan$, urihandler$, offerInv$ }) => {
   // New invoice/offer action
   , newInv$  = submit('[do=new-invoice]').map(r => ({
       label:       nanoid()
-    , msatoshi:    r.msatoshi || 'any'
+    , amount_msat:    r.amount_msat || 'any'
     , description: r.description || '⚡'
     , reusable_offer: !!r['reusable-offer'] }))
   , invUseOffer$ = on('[do=new-invoice] [name=reusable-offer]', 'input')
