@@ -70,9 +70,8 @@ export const commands = {
 
     return { invoices }
   }
-  // Wrapper for the 'decode'/'decodepay' commands with some convenience enhancements
+  // Wrapper for the 'decode' command with some convenience enhancements
 , async _decode(paystr) {
-    if (await checkOffersEnabled(this)) {
       // 'decode' works for both BOLT11 and BOLT12, but is only available in v0.10.1+ (without enabling offers support)
       const decoded = await this.decode(paystr)
 
@@ -82,15 +81,9 @@ export const commands = {
       }
 
       // Make BOLT12 msat amounts available as an integer, as they are for BOLT11 invoices
-      if (decoded.msatoshi == null && decoded.amount_msat) decoded.msatoshi = +decoded.amount_msat.slice(0, -4)
+      if (decoded.amount_msat == null && decoded.amount_msat) decoded.amount_msat = +decoded.amount_msat
 
       return decoded
-    } else {
-      // 'decodepay' only supports BOLT11 invoices
-      const decoded = await this.decodepay(paystr)
-      // add 'type' and 'valid' fields to match the format returned by decode()
-      return { ...decoded, type: 'bolt11 invoice', valid: true }
-    }
   }
 
   // Pay the given invoice, emit an event that can be observed externally (by stream.js),
@@ -104,8 +97,8 @@ export const commands = {
 
   // Fetch an invoice for the given offer, decode it and return the original offer alongside it
   // Some parameters are unsupported (recurrence/timeout).
-, async _fetchinvoice(bolt12_offer, msatoshi, quantity, payer_note) {
-    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, msatoshi, quantity, null, null, null, null, payer_note)
+, async _fetchinvoice(bolt12_offer, amount_msat, quantity, payer_note) {
+    const { invoice: bolt12_invoice, changes } = await this.fetchinvoice(bolt12_offer, amount_msat, quantity, null, null, null, null, payer_note)
 
     const invoice = await this._decode(bolt12_invoice)
     assert(invoice.type == 'bolt12 invoice', `Unexpected invoice type ${invoice.type}`)
@@ -122,8 +115,8 @@ export const commands = {
     switch (decoded.type) {
       case 'bolt12 offer':
         assert(!decoded.recurrence, 'Offers with recurrence are unsupported')
-        assert(decoded.quantity_min == null || decoded.msatoshi || decoded.amount, 'Offers with quantity but no payment amount are unsupported')
-        assert(!decoded.send_invoice || decoded.msatoshi, 'send_invoice offers with no amount are unsupported')
+        assert(decoded.quantity_min == null || decoded.amount_msat || decoded.amount, 'Offers with quantity but no payment amount are unsupported')
+        assert(!decoded.send_invoice || decoded.amount_msat, 'send_invoice offers with no amount are unsupported')
         assert(!decoded.send_invoice || decoded.min_quantity == null, 'send_invoice offers with quantity are unsupported')
         break
       case 'bolt11 invoice':
@@ -146,19 +139,18 @@ async function getChannel(ln, peerid, chanid) {
   const peer = await ln.listpeers(peerid).then(r => r.peers[0])
   assert(peer, 'cannot find peer')
 
-  const chan = peer.channels.find(chan => chan.channel_id == chanid)
-  assert(chan, 'cannot find channel')
+  const channels = await ln.listpeerchannels(peerid).then(r => r.channels)
+  assert(channels, 'cannot find channels')
 
-  delete peer.channels
+  const chan = channels.find(chan => chan.channel_id == chanid)
+  assert(chan, 'cannot find channel')
 
   return { peer, chan }
 }
 
-// Check if experimental offers/bolt12 support is enabled
-// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+// Assume experimental offers/bolt12 support is enabled
 async function checkOffersEnabled(ln) {
-  const conf = await ln._listconfigs()
-  return conf['experimental-offers'] && !/(^v?|-v)0\.(9\.|10\.0)/.test(conf['# version'])
+  return true
 }
 
 // Timestamp of the c-lightning v0.10.1 release. BOLT12 invoices created in v0.10.0 are

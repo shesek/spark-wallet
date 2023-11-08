@@ -43,7 +43,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   // If the original offer had a fiat-denominated amount, exclude the 'msat' field
   // from being displayed in the changes list. The bitcoin and fiat amounts are
   // displayed separately.
-  if (payreq.offer && !payreq.offer.msatoshi && payreq.offer.amount && payreq.msatoshi) {
+  if (payreq.offer && !payreq.offer.amount_msat && payreq.offer.amount && payreq.amount_msat) {
     delete payreq.changes.msat
   }
 
@@ -56,15 +56,15 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
 
   ,
     // Bitcoin-denominated amount that was previously displayed in fiat
-    (payreq.msatoshi && payreq.offer && payreq.offer.amount)
+    (payreq.amount_msat && payreq.offer && payreq.offer.amount)
     ? div('.form-group', [
-        p('.mb-0.toggle-unit', [ 'Final amount: ', fmtSatAmountWithAlt(payreq.msatoshi, unitf) ])
+        p('.mb-0.toggle-unit', [ 'Final amount: ', fmtSatAmountWithAlt(payreq.amount_msat, unitf) ])
       , div('.form-text.text-muted', [ 'Quoted as: ', strong(fmtOfferFiatAmount(payreq.offer, payreq.quantity)) ])
       ])
 
     // Bitcoin denominated amount
-    : payreq.msatoshi
-    ? p('.toggle-unit', [ 'Amount: ', fmtSatAmountWithAlt(payreq.msatoshi, unitf) ])
+    : payreq.amount_msat
+    ? p('.toggle-unit', [ 'Amount: ', fmtSatAmountWithAlt(payreq.amount_msat, unitf) ])
 
     // Amount chosen by the payer
     : formGroup('Enter amount to pay:', amountField(amtData, 'custom_msat', true))
@@ -89,7 +89,7 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   , div('.form-buttons.mt-4', [
       div('.mb-3', 'Do you confirm making this payment?')
     , button('.btn.btn-lg.btn-primary.mb-1', { attrs: { type: 'submit' } }
-      , payreq.msatoshi ? `Pay ${unitf(payreq.msatoshi)}` : 'Send Payment')
+      , payreq.amount_msat ? `Pay ${unitf(payreq.amount_msat)}` : 'Send Payment')
     , ' '
     , a('.btn.btn-lg.btn-secondary.mb-1', { attrs: { href: '#/' } }, 'Cancel')
     ])
@@ -98,8 +98,8 @@ const confirmPay = payreq => ({ unitf, amtData, conf: { expert } }) => {
   ])
 }
 
-const displayAmountChange = ({ msatoshi: final, changes }, unitf) => {
-  const original = +changes.msat.slice(0, -4)
+const displayAmountChange = ({ amount_msat: final, changes }, unitf) => {
+  const original = +changes.msat
   const klass = final < original ? '.text-success' : '.text-danger'
   const change = final < original ? `${((1 - (final/original))*100).toFixed(1)}% less`
                                   : `${(((final/original) - 1)*100).toFixed(1)}% more`

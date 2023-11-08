@@ -1,3 +1,47 @@
+# Spark Lightning Wallet Euro
+
+<b>This fork of Spark-wallet shows prices in Euro plus Bolt12 offers working.
+
+Compatible with Core Lightning version v23.05 or higher. 
+
+The `allow-deprecated-apis=false` is optional in config.
+
+Note: the usd version can be found [here](https://github.com/hMsats/spark-wallet-usd.git)
+
+HOW I RUN SPARK WALLET ON UBUNTU LINUX:
+
+git clone https://github.com/hMsats/spark-wallet-euro.git
+
+cd spark-wallet-euro
+
+npm install
+
+npm install babel
+
+npm run dist:npm
+
+Open port 9737 on your modem/router
+
+The tls certificates:
+cert.pem  key.pem
+
+are in directory:
+/home/user/.spark-wallet/tls
+
+and are the same "LetsEncrypt" signed files as used by my website "bitcoinserver.nl"
+
+Run Spark:
+
+/home/user/spark-wallet-euro/dist/cli.js --host 0.0.0.0 --tls-name bitcoinserver.nl --port 9737 --ln-path /media/ssd/.lightning/bitcoin --login &lt;username&gt;:&lt;some large number&gt; &gt;& out_spark.txt &
+
+I then open spark-wallet in the address bar of a browser like this:
+bitcoinserver.nl:9737
+
+and then create an link/app on my start page
+</b>
+
+THE REST OF THE TEXT IS FROM THE ORIGINAL SPARK-WALLET:
+
 # Spark Lightning Wallet
 
 [![npm release](https://img.shields.io/npm/v/spark-wallet.svg)](https://www.npmjs.com/package/spark-wallet)
@@ -178,7 +222,7 @@ The QR scanner works if you access Spark without using the PWA "Add to homescree
 - **Pay** and **Request** are pretty intuitive and don't require much explaining. Try them!
 
 - **Display unit:** Click the balance on the top-right or the unit in the "request payment" page to toggle the currency display unit.
-  The available options are sat, bits, milli, btc and usd.
+  The available options are sat, bits, milli, btc and euro.
 
 - **Theme switcher:** Click the theme name on the bottom-right to change themes (you can choose between 16 [bootswatch](https://bootswatch.com) themes).
 
