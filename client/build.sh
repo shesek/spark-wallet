@@ -18,7 +18,7 @@ mkdir -p $DEST $DEST/lib $DEST/fonts $DEST/swatch
 # Static assets
 cp -r www/* $DEST/
 cp -r fonts/node_modules/typeface-* $DEST/fonts/
-cp -r node_modules/bootswatch/dist/!(darkly|litera|minty|sketchy|journal|pulse) $DEST/swatch/
+cp -r node_modules/bootswatch/dist/!(litera|minty|sketchy|journal|pulse) $DEST/swatch/
 cp -r swatch/*/ $DEST/swatch/
 find $DEST/swatch -type f ! -name '*.min.css' -delete
 find $DEST/fonts -type f -name "*.md" -delete

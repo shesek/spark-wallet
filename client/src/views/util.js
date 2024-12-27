@@ -29,9 +29,9 @@ export const formGroup = (labelText, control, help) => div('.form-group', [
 , help ? small('.form-text.text-muted', help) : ''
 ])
 
-export const amountField = ({ msatoshi, amount, step, unit }, msatField, required, placeholder) =>
+export const amountField = ({ amount_msat, amount, step, unit }, msatField, required, placeholder) =>
   div('.input-group', [
-    input({ attrs: { type: 'hidden', name: msatField }, props: { value: msatoshi } })
+    input({ attrs: { type: 'hidden', name: msatField }, props: { value: amount_msat } })
   , input('.form-control.form-control-lg'
     , { attrs: { type: 'number', step, min: step, name: 'amount', required, placeholder: placeholder||(required?'':'(optional)') }
       , props: { value: amount } })
@@ -64,9 +64,9 @@ export const omitKey = (k, { [k]: _, ...rest }) => rest
 
 export const pluralize = (strs, n) => `${strs[0]}${n}${strs[1]}${n == 0 || n>1 ? 's' : ''}`
 
-export const fmtSatAmountWithAlt = (msatoshi, unitf) => span([
-  strong(unitf(msatoshi))
-, fmtNullable(unitf(msatoshi, true), amt => small(` (${amt})`))
+export const fmtSatAmountWithAlt = (amount_msat, unitf) => span([
+  strong(unitf(amount_msat))
+, fmtNullable(unitf(amount_msat, true), amt => small(` (${amt})`))
 ])
 
 export const fmtNullable = (value, format, null_format='') =>
@@ -80,5 +80,5 @@ export const fmtOfferFiatAmount = ({ amount, currency, minor_unit }, quantity=1)
   return `${amount_fmt} ${currency}`
 }
 
-export const getPricePerUnit = ({ msatoshi, quantity }) =>
-  Big(msatoshi).div(quantity).toFixed(0)
+export const getPricePerUnit = ({ amount_msat, quantity }) =>
+  Big(amount_msat).div(quantity).toFixed(0)
