@@ -42,11 +42,23 @@ export const commands = {
     // Extract additional metadata from the BOLT11/BOLT12 invoice
     await Promise.all(pays.map(pay => attachInvoiceMeta(this, pay)))
 
-    // Attach the paystatus result of pending payments
-    await Promise.all(pays.filter(p => p.status == 'pending' && (p.bolt11 || p.bolt12)).map(async p => {
-      const paystatus = (await this.paystatus(p.bolt11 || p.bolt12)).pay[0]
-      if (paystatus) p.attempts = paystatus.attempts
-    }))
+//    // Attach the paystatus result of pending payments
+//    await Promise.all(pays.filter(p => p.status == 'pending' && (p.bolt11 || p.bolt12)).map(async p => {
+//      const paystatus = (await this.paystatus(p.bolt11 || p.bolt12)).pay[0]
+//      if (paystatus) p.attempts = paystatus.attempts
+//    }))
+// chatgpt code:
+    // Attach the number of retry attempts for pending payments 
+    await Promise.all( 
+      pays 
+        .filter(p => p.status == 'pending' && (p.bolt11 || p.bolt12)) 
+        .map(async p => { 
+          const sendpays = (await this.listsendpays(null, p.payment_hash)).payments 
+          if (sendpays) { 
+            p.attempts = new Set(sendpays.map(x => x.groupid)).size 
+          } 
+        }) 
+      )
 
     truncatePayerNotes(pays)
 
