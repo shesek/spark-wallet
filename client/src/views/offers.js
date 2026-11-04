@@ -15,9 +15,9 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
 
   ,
     // Bitcoin denominated amount
-    offer.msatoshi
+    offer.offer_amount_msat
     ? p('.toggle-unit', [ offer.quantity_min ? 'Price per unit: ' : 'Amount: '
-      , fmtSatAmountWithAlt(offer.msatoshi, unitf) ])
+      , fmtSatAmountWithAlt(offer.offer_amount_msat, unitf) ])
 
     // Fiat denominated amount
     : offer.currency
@@ -35,15 +35,33 @@ const offerPay = offer => ({ unitf, amtData, offerPayQuantity, conf: { expert } 
                                              , min: offer.quantity_min, max: offer.quantity_max, step: 1 } })
     ) : ''
 
-  , formGroup('Attach note:'
+  // from chatgpt:
+  // A check box that sets do_payer_offer to 1 if checked and to 0 if unchecked
+  // do_payer_offer is set to 0 in client/src/intent.js
+  , formGroup('Attach offer:'
+    , div('.form-check', [
+        input('.form-check-input', {
+          attrs: {
+            type: 'checkbox',
+            name: 'do_payer_offer',
+            value: 1
+          }
+        })
+      , span('.form-check-label', ' Use payer offer')
+      ])
+    , small('.form-text.text-muted',
+        'If checked, an offer is send to the payee along with the payment.')
+    )
+
+    , formGroup('Attach note:'
     , input('.form-control.form-control-lg', { attrs: { type: 'text', name: 'payer_note', placeholder: '(optional)' } })
-    , 'A note to send to the payee along with the payment.')
+    , 'If attach offer is unchecked, a note to send to the payee along with the payment.')
 
   , div('.form-buttons', [
       !offer.currency ? div('.mb-3', 'Do you confirm making this payment?') : ''
     , div([
         button('.btn.btn-lg.btn-primary.mb-1', { attrs: { type: 'submit' } }
-        , offer.msatoshi ? `Pay ${unitf(mul(offer.msatoshi, offerPayQuantity))}`
+        , offer.offer_amount_msat ? `Pay ${unitf(mul(offer.offer_amount_msat, offerPayQuantity))}`
         : offer.currency ? 'Continue'
                          : 'Send Payment')
       , ' '
@@ -60,7 +78,7 @@ const offerRecv = offer => ({ unitf, conf: { expert} }) =>
   form('.offer-recv', { attrs: { do: 'offer-recv' }, dataset: offer }, [
     h2('Receive payment')
 
-  , p([ 'You were offered a payment of ', strong('.toggle-unit', unitf(offer.msatoshi)), '. Do you accept it?' ])
+  , p([ 'You were offered a payment of ', strong('.toggle-unit', unitf(offer.offer_amount_msat)), '. Do you accept it?' ])
 
   //, expert ? p([ 'Node ID: ', small('.text-muted.break-all', offer.node_id) ]) : ''
   //, expert ? p([ 'Offer ID: ', small('.text-muted.break-all', offer.offer_id) ]) : ''
@@ -71,7 +89,7 @@ const offerRecv = offer => ({ unitf, conf: { expert} }) =>
 
   , div('.form-buttons', [
       button('.btn.btn-lg.btn-primary', { attrs: { type: 'submit' } }
-      , `Receive ${unitf(offer.msatoshi)}`)
+      , `Receive ${unitf(offer.offer_amount_msat)}`)
     , ' '
     , a('.btn.btn-lg.btn-secondary', { attrs: { href: '#/' } }, 'Cancel')
     ])
@@ -91,16 +109,16 @@ export const localOffer = offer => qrinv(offer).then(qr => ({ unitf, conf: { exp
     div('.row', [
       div('.col-sm-6.text-center', [
         h2('Receive payment(s)')
-      , p(`You can receive multiple payments${offer.msatoshi != 'any'?` of ${unitf(offer.msatoshi)} each`:''} using the reusable BOLT12 offer:`)
-      , small('.d-none.d-sm-block.text-muted.break-all.mt-3', offer.bolt12_unsigned)
+      , p(`You can receive multiple payments${offer.offer_amount_msat != 'any'?` of ${unitf(offer.offer_amount_msat)} each`:''} using the reusable BOLT12 offer:`)
+      , small('.d-none.d-sm-block.text-muted.break-all.mt-3', offer.bolt12)
       ])
     , div('.col-sm-6.text-center', [
         img('.qr', { attrs: { src: qr } })
-      , small('.d-block.d-sm-none.text-muted.break-all.mt-3', offer.bolt12_unsigned)
+      , small('.d-block.d-sm-none.text-muted.break-all.mt-3', offer.bolt12)
       ])
     ])
   , expert ? yaml(omitKey('bolt12', offer)) : ''
   ]))
 
-const mul = (msatoshi, quantity=1) =>
-  quantity == 1 ? msatoshi : Big(msatoshi).mul(quantity).toFixed(0)
+const mul = (offer_amount_msat, quantity=1) =>
+  quantity == 1 ? offer_amount_msat : Big(offer_amount_msat).mul(quantity).toFixed(0)

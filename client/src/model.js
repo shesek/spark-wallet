@@ -7,11 +7,11 @@ const msatbtc = big(100000000000) // msat in 1 btc
 const
   sumChans = chans =>
     chans.filter(c => c.chan.state === 'CHANNELD_NORMAL')
-         .reduce((T, c) => T + c.chan.msatoshi_to_us, 0)
+         .reduce((T, c) => T + c.chan.to_us_msat, 0)
 
 , sumOuts = outs =>
     outs.filter(o => o.status === 'confirmed')
-        .reduce((T, o) => T + o.value*1000, 0)
+        .reduce((T, o) => T + o.amount_msat, 0)
 
 , fmtAlert = (s, unitf) => s.replace(/@\{\{(\d+)\}\}/g, (_, msat) => unitf(msat))
 
@@ -20,10 +20,10 @@ const
 
 const
   themes   = 'cerulean cosmo cyborg dark flatly lumen lux materia sandstone simplex slate solar spacelab superhero united yeti'.split(' ')
-, units    = 'sat bits milli BTC USD'.split(' ')
-, unitprec = { sat: 3, bits: 5, milli: 8, BTC: 11, USD: 6 }
+, units    = 'sat bits milli BTC euro'.split(' ')
+, unitprec = { sat: 3, bits: 5, milli: 8, BTC: 11, euro: 2 }
 , unitrate = { sat: 0.001, bits: 0.00001, milli: 0.00000001, BTC: 0.00000000001 }
-, unitstep = { ...unitrate, USD: 0.000001 }
+, unitstep = { ...unitrate, euro: 0.01 }
 
 module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRecv$, goChan$, confPay$
                   , amtVal$, execRes$, clrHist$, feedStart$: feedStart_$, togFeed$, togChan$, togAddrType$
@@ -32,7 +32,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
                   , req$$, error$, payreq$, incoming$, payResult$, payments$, invoices$, funds$, payUpdates$
                   , funded$, closed$
                   , offer$, offerPayQuantity$: offerPayQuantityInput$, invUseOffer$
-                  , btcusd$, info$, lnconfig$, peers$ }) => {
+                  , btceuro$, info$, lnconfig$, peers$ }) => {
   const
 
   // Config options
@@ -43,9 +43,9 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , conf$    = combine({ expert$, theme$, unit$ })
 
   // Currency & unit conversion handling
-  , msatusd$ = btcusd$.map(rate => big(rate).div(msatbtc)).startWith(null)
-  , rate$    = O.combineLatest(unit$, msatusd$, (unit, msatusd) => unitrate[unit] || msatusd)
-  , unitf$   = O.combineLatest(unit$, msatusd$, unitFormatter)
+  , msateuro$ = btceuro$.map(rate => big(rate).div(msatbtc)).startWith(null)
+  , rate$    = O.combineLatest(unit$, msateuro$, (unit, msateuro) => unitrate[unit] || msateuro)
+  , unitf$   = O.combineLatest(unit$, msateuro$, unitFormatter)
 
   // Keep track of connection status
   , connected$ = req$$.flatMap(r$ => r$.mapTo(true).catch(_ => O.empty()))
@@ -68,8 +68,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , alert$ = O.merge(
       error$.map(err  => [ 'danger', ''+err ])
     , incoming$.map(i => [ 'success', `Received payment of @{{${recvAmt(i)}}}` ])
-    , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.msatoshi}}}` ])
-    , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.msatoshi_total}}}, awaiting on-chain confirmation` ])
+    , paySent$.map(p  => [ 'success', `Sent payment of @{{${p.amount_msat}}}` ])
+    , funded$.map(c   => [ 'success', `Opening channel for @{{${c.chan.total_msat}}}, awaiting on-chain confirmation` ])
     , closed$.map(c   => [ 'success', `Channel ${c.chan.short_channel_id || c.chan.channel_id} is closing` ])
     , dismiss$.mapTo(null)
     )
@@ -88,7 +88,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Periodically re-sync channel balance from "listpeers",
   // continuously patch with known channel opening/closing
   , channels$ = O.merge(
-      peers$.map(peers => _ => getChannels(peers))
+      peers$.map(channels => _ => getChannels(channels))
     , funded$.map(chan => S => [ ...S, chan ])
     , closed$.map(chan => S => [ ...S.filter(c => c.chan.channel_id != chan.chan.channel_id), chan ])
     ).startWith(null).scan((S, mod) => mod(S))
@@ -99,8 +99,8 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // continuously patch with known incoming & outgoing payments
   , cbalance$ = O.merge(
       channels$.map(chans => _ => sumChans(chans))
-    , incoming$.map(inv => N => N + inv.msatoshi_received)
-    , paySent$.map(pay => N => N - pay.msatoshi_sent)
+    , incoming$.map(inv => N => N + inv.amount_received_msat)
+    , paySent$.map(pay => N => N - pay.amount_sent_msat)
     ).startWith(null).scan((N, mod) => mod(N)).distinctUntilChanged()
 
   // Periodically re-sync from listpays, continuously patch with known outgoing
@@ -128,7 +128,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   // Chronologically sorted feed of incoming and outgoing payments
   , feed$ = O.combineLatest(freshInvs$, freshPays$, (invoices, payments) => [
       ...invoices.map(i => [ 'in',  i.paid_at,    recvAmt(i), i ])
-    , ...payments.map(p => [ 'out', p.created_at, p.msatoshi, p ])
+    , ...payments.map(p => [ 'out', p.created_at, p.amount_msat, p ])
     ].sort((a, b) => b[1] - a[1]))
 
   // Collapsed payment/invoice on home feed list
@@ -145,7 +145,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , amtMsat$ = amtVal$.withLatestFrom(rate$, (amt, rate) => amt && rate && big(amt).div(rate).toFixed(0) || '')
                       .merge(page$.mapTo(null)).startWith(null)
   , amtData$ = combine({
-      msatoshi: amtMsat$
+      amount_msat: amtMsat$
     , amount:   unit$.withLatestFrom(amtMsat$, rate$, (unit, msat, rate) => formatAmt(msat, rate, unitprec[unit], false))
                      .merge(goRecv$.merge(offer$).merge(payreq$).mapTo(''))
     , unit:     unit$
@@ -187,7 +187,7 @@ module.exports = ({ dismiss$, togExp$, togTheme$, togUnit$, page$, goHome$, goRe
   , amtData$, chanActive$, rpcHist$
   , fundMaxChan$, depositAddrType$
   , offersEnabled$, offerPayQuantity$, invUseOffer$
-  , msatusd$, btcusd$: btcusd$.startWith(null)
+  , msateuro$, btceuro$: btceuro$.startWith(null)
   }).shareReplay(1)
 }
 
@@ -205,18 +205,18 @@ const markFailed = (payments, payment_hash) => payments.map(pay =>
 const pendingPayStub = inv => ({
   status: 'pending'
 , created_at: Date.now()/1000|0
-, msatoshi: inv.custom_msat || inv.msatoshi
-, msatoshi_sent: 0
+, amount_msat: inv.custom_msat || inv.amount_msat
+, amount_sent_msat: 0
 , destination: inv.payee || inv.node_id || inv.destination
 , ...only(inv, 'payment_hash', 'description', 'offer_id', 'vendor', 'quantity', 'payer_note' )
 })
 
-const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false, non_breaking=true) => {
-  const unit_d = !as_alt_unit ? unit : (unit == 'USD' ? 'sat' : 'USD')
-  const unit_rate = unit_d == 'USD' ? msatusd : unitrate[unit_d]
+const unitFormatter = (unit, msateuro) => (msat, as_alt_unit=false, non_breaking=true) => {
+  const unit_d = !as_alt_unit ? unit : (unit == 'euro' ? 'sat' : 'euro')
+  const unit_rate = unit_d == 'euro' ? msateuro : unitrate[unit_d]
 
-  // Use less precision for USD when displayed as the alt unit
-  const unit_prec = unit_d == 'USD' && as_alt_unit ? 2 : unitprec[unit_d]
+  // Use less precision for euro when displayed as the alt unit
+  const unit_prec = unit_d == 'euro' && as_alt_unit ? 2 : unitprec[unit_d]
 
   // If the alt unit's rate is missing, hide it entirely. The primary one
   // is returned as 'n/a' (below).
@@ -226,7 +226,6 @@ const unitFormatter = (unit, msatusd) => (msat, as_alt_unit=false, non_breaking=
   return `${unit_rate ? formatAmt(msat, unit_rate, unit_prec) : 'n/a'}${separator}${unit_d}`
 }
 
-// Check if experimental offers support is enabled
-// Always considered off in c-lightning <=v0.10.0 because it used an incompatible spec.
+// Assume experimental offers support is enabled
 const checkOffersEnabled = conf =>
-  !!(conf['experimental-offers'] && !/^0\.(9\.|10\.0)/.test(conf['# version']))
+  !!(true)

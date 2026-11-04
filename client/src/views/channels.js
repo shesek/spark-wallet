@@ -14,12 +14,12 @@ const stateGroups = {
 const getGroup = state => Object.keys(stateGroups).find(group => stateGroups[group].includes(state))
 
 // Sort by status first, then by amount
-const chanSorter = (a, b) => (chanSorting(b) - chanSorting(a)) || (b.chan.msatoshi_total - a.chan.msatoshi_total)
+const chanSorter = (a, b) => (chanSorting(b) - chanSorting(a)) || (b.chan.total_msat - a.chan.total_msat)
 
-const chanSorting = ({ peer, chan }) =>
-  peer.connected && chan.state == 'CHANNELD_NORMAL' ? 6
-: peer.connected && stateGroups.opening.includes(chan.state) ? 5
-: !peer.connected && chan.state == 'CHANNELD_NORMAL' ? 4
+const chanSorting = ({ chan }) =>
+  chan.peer_connected && chan.state == 'CHANNELD_NORMAL' ? 6
+: chan.peer_connected && stateGroups.opening.includes(chan.state) ? 5
+: !chan.peer_connected && chan.state == 'CHANNELD_NORMAL' ? 4
 : stateGroups.closing.includes(chan.state) ? 3
 : stateGroups.opening.includes(chan.state) ? 2
 : stateGroups.closed.includes(chan.state) ? 1
@@ -77,19 +77,19 @@ export const newChannel = ({ amtData, fundMaxChan, obalance, unitf, conf: { unit
   ])
 }
 
-const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan, peer }) => {
+const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan }) => {
 
-  const bar = (label, color, msatoshi, amtText=unitf(msatoshi)) =>
+  const bar = (label, color, amount_msat, amtText=unitf(amount_msat)) =>
     div(`.progress-bar.bg-${color}`, {
       attrs: { role: 'progressbar', title: `${label}: ${amtText}` }
-    , style: { width: `${msatoshi / chan.msatoshi_total * 100}%` }
-    }, msatoshi/chan.msatoshi_total > 0.05 ? amtText : '')
+    , style: { width: `${amount_msat / chan.total_msat * 100}%` }
+    }, amount_msat/chan.total_msat > 0.05 ? amtText : '')
 
   const stateGroup = getGroup(chan.state)
-      , stateLabel = !peer.connected && stateGroup == 'active' ? 'offline' : stateGroup
+      , stateLabel = !chan.peer_connected && stateGroup == 'active' ? 'offline' : stateGroup
       , isClosed   = [ 'closing', 'closed' ].includes(stateGroup)
-      , ours       = chan.msatoshi_to_us
-      , theirs     = chan.msatoshi_total - ours
+      , ours       = chan.to_us_msat
+      , theirs     = chan.total_msat - ours
       // the channel reserve fields appear to be sometimes (incorrectly?) missing,
       // defaulting them to 0 isn't quite right but should work for now
       , ourReserve = chan.our_channel_reserve_satoshis*1000 || 0
@@ -103,11 +103,11 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
 
   const visible = chanActive == chan.channel_id
       , classes = { active: visible, 'list-group-item-action': !visible
-                  , [`c-${stateGroup}`]: true, 'p-online': peer.connected, 'p-offline': !peer.connected }
+                  , [`c-${stateGroup}`]: true, 'p-online': chan.peer_connected, 'p-offline': !chan.peer_connected }
 
   return li('.list-group-item', { class: classes, dataset: { chanToggle: chan.channel_id } }, [
     header('.d-flex.justify-content-between.mb-2', [
-      span('.capacity', unitf(chan.msatoshi_total))
+      span('.capacity', unitf(chan.total_msat))
     , span('.state', stateLabel)
     ])
 
@@ -133,12 +133,12 @@ const channelRenderer = ({ chanActive, unitf, expert, blockheight }) => ({ chan,
     , isClosed || expert ? li([ strong('Theirs:'), ' ', unitf(theirs) ]) : ''
 
     , channelAge ? li([ strong('Age:'), ' ', `${channelAge} blocks (${channelAgeFuz})` ]) : ''
-    , li([ strong('Peer:'), ' ', small('.break-all', peer.id), ' ', em(`(${peer.connected ? 'connected' : 'disconnected'})`) ])
+    , li([ strong('Peer:'), ' ', small('.break-all', chan.peer_id), ' ', em(`(${chan.peer_connected ? 'connected' : 'disconnected'})`) ])
     , expert ? li([ strong('Funding TXID:'), ' ', small('.break-all', chan.funding_txid) ]) : ''
     , expert ? li('.status-text', chan.status.join('\n')) : ''
 
     , !isClosed ? li('.text-center'
-      , button('.btn.btn-link.btn-sm', { dataset: { closeChannel: chan.channel_id, closeChannelPeer: peer.id } }, 'Close channel')) : ''
+      , button('.btn.btn-link.btn-sm', { dataset: { closeChannel: chan.channel_id, closeChannelPeer: chan.peer_id } }, 'Close channel')) : ''
 
     , expert ? li(yaml({ peer: omitKey('channels', peer), ...omitKey('status', chan) })) : ''
     ])

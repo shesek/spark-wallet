@@ -21,7 +21,7 @@ const navbar = ({ unitf, cbalance, obalance, page }) =>
   , cbalance != null && obalance != null ? span('.toggle-unit.navbar-brand.mr-0', unitf(cbalance + obalance)) : ''
   ]))
 
-const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) =>
+const footer = ({ info, btceuro, msateuro, rate, conf: { unit, theme, expert } }) =>
   div('.main-bg',
     h('footer.container.clearfix.text-muted.border-top.border-light', [
       p('.info.float-left', [
@@ -30,10 +30,10 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
       , ` · ${info.network}`
       , ` · `, a({ attrs: { href: '#/node' } }, `node: ${info.id.substr(0,10)}`)
 
-      , btcusd ? (
-          [ 'USD', 'BTC' ].includes(unit) ? ` · 1 btc = $${ numbro(btcusd).format(btcFormatOpt) }`
-        : useCents(unit, btcusd) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate*100, msatusd, 4, false)}¢`
-        : ` · 1 ${unitName(unit)} = $${formatAmt(1/rate, msatusd, 3, false)}`
+      , btceuro ? (
+          [ 'euro', 'BTC' ].includes(unit) ? ` · 1 btc = €${ numbro(btceuro).format(btcFormatOpt) }`
+        : useCents(unit, btceuro) ? ` · 1 ${unitName(unit)} = ${formatAmt(1/rate, msateuro, 4, false)}€`
+        : ` · 1 ${unitName(unit)} = €${formatAmt(1/rate, msateuro, 3, false)}`
         ) : ''
       ])
 
@@ -41,8 +41,8 @@ const footer = ({ info, btcusd, msatusd, rate, conf: { unit, theme, expert } }) 
     ])
   )
 
-// display sat and bits as cents if they're worth less than $0.01
-, useCents = (unit, btcusd) => (unit == 'sat' && +btcusd < 1000000) || (unit == 'bits' && +btcusd < 10000)
+// display sat and bits as cents if they're worth less than €0.01
+, useCents = (unit, btceuro) => (unit == 'sat' && +btceuro < 1000000) || (unit == 'bits' && +btceuro < 10000)
 , unitName = unit => unit.replace(/s$/, '')
 , btcFormatOpt = { mantissa: 2, trimMantissa: true, optionalMantissa: true }
 

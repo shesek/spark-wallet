@@ -6,7 +6,7 @@ require('superagent-proxy')(request)
 
 const rateProviders = {
   bitstamp: {
-    url: 'https://www.bitstamp.net/api/v2/ticker/btcusd'
+    url: 'https://www.bitstamp.net/api/v2/ticker/btceur'
   , parser: r => r.body.last
   }
 

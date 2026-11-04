@@ -41,6 +41,7 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       , visible = fid == feedActive
       , tsStr   = new Date(ts*1000).toLocaleString()
       , offerId = obj.local_offer_id || obj.offer_id
+      , offerPn = obj.invreq_payer_note
       , status  = type == 'in' ? 'complete' : obj.status // in payments are always completed, out payments may be pending/failed
       , tsLabel = status == 'complete' ? (type == 'in' ? 'Received:' : 'Sent:') : 'Time:'
 
@@ -58,8 +59,8 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
       status == 'pending' ? pendingStatus(obj) : ''
     , li([ strong(tsLabel), ' ', tsStr ])
     , status == 'failed' && msat ? li([ strong('Amount:'), ' ', unitf(msat) ]) : ''
-    , type == 'in' && obj.msatoshi_received > obj.msatoshi ? li([ strong('Overpayment:'), ' ', unitf(obj.msatoshi_received-obj.msatoshi) ]) : ''
-    , type == 'out' && status == 'complete' && obj.msatoshi ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
+    , type == 'in' && obj.amount_received_msat > obj.amount_msat ? li([ strong('Overpayment:'), ' ', unitf(obj.amount_received_msat-obj.amount_msat) ]) : ''
+    , type == 'out' && status == 'complete' && obj.amount_msat ? li([ strong('Fee:'), ' ', feesText(obj, unitf) ]) : ''
     , obj.vendor ? li([ strong('Issuer:'), ' ', span('.break-word', obj.vendor) ]) : ''
     , showDesc(obj) ? li([ strong('Description:'), ' ', span('.break-word', obj.description) ]) : ''
     , obj.quantity ? li([ strong('Quantity:'), ' ', span('.break-word', obj.quantity) ]) : ''
@@ -67,12 +68,13 @@ const itemRenderer = ({ feedActive, unitf, expert }) => ([ type, ts, msat, obj ]
     , type == 'out' && obj.destination ? li([ strong('Destination:'), ' ', small('.break-all', obj.destination) ]) : ''
     //, li([ strong('Payment hash:'), ' ', small('.break-all', obj.payment_hash) ])
     , offerId ? li([ strong('Offer ID:'), ' ', small('.break-all', offerId) ]) : ''
+    , offerPn ? li([ strong('Payer note/offer:'), ' ', small('.break-all', offerPn) ]) : ''
     , expert ? li(yaml(obj)) : ''
     ])
   ])
 }
 
-const feesText = ({ msatoshi: quoted, msatoshi_sent: sent }, unitf) =>
+const feesText = ({ amount_msat: quoted, amount_sent_msat: sent }, unitf) =>
   `${unitf(sent-quoted)} (${((sent-quoted)/quoted*100).toFixed(2)}%)`
 
 const pendingStatus = ({ attempts, number_of_parts }) => {
