@@ -189,11 +189,12 @@ export async function attachInvoiceMeta(ln, obj) {
       const invoice = await ln._decode(obj.bolt11 || obj.bolt12)
       extendInvoiceMeta(obj, invoice)
     } catch (e) {
-      // This can happen for BOLT12 invoices created with v0.10.0 after the v0.10.1 release date.
-      // Report the error and ignore it.
-      if (obj.bolt12) console.error('Failed decoding pay string, deprecated old-style bolt12?', obj)
-      else throw e
+      console.error('Failed decoding payment string:', {
+      type: obj.bolt12 ? 'BOLT12' : 'BOLT11',
+      error: e.message
+      })
     }
+
   }
 }
 
